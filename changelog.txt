@@ -1,0 +1,5 @@
+[5/15/2017-8:55 pre-alpha Sergix]
+Uploaded the global changelog file to the project.
+Changed README.md "Changelog" section to require username in changelog entries.
+New entires in the changelog must be placed at the top of the file, rather than the bottom.
+Renamed my GitHub profile to simply "Sergix" rather than "Sergix7440."
