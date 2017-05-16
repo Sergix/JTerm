@@ -1,3 +1,10 @@
+[5/16/2017-17:05 pre-alpha Sergix]
+Created classpath and source directory.
+Created .vscode settings folder for VSCode preferences.
+compile.bat automatically builds classes and runs it in the console.
+Only issue at the moment is getting JARs to work for a console application, if it is even possible. Typically JARs are only used for GUI applications.
+Pushed updates to GitHub.
+
 [5/15/2017-8:55 pre-alpha Sergix]
 Uploaded the global changelog file to the project.
 Changed README.md "Changelog" section to require username in changelog entries.
