@@ -1,12 +1,26 @@
+[5/16/2017-19:09 1.0 Sergix]
+	Finally reformatted the directory.
+	Created a 'jterm' subfolder under /src that is used as the 'package' directory for eclipse.
+	Class files are generated in the /src/jterm folder (the same folder as the source files).
+	Went ahead and removed compile.bat, as it is now useless. :P
+	Added some comments to JTerm.java for more explanation.
+	Created a .gitignore for files. NOTE: zipped files (.rar, .zip) can no longer be uploaded. Create a separate branch for changes.
+	Updated the README for a change in the "Changelog" section: changelog entries must be indented (as now shown.) This adds for better readability.
+	Pushed updates to GitHub.
+
+[5/16/2017-17:36 1.0 Sergix]
+	Edited uploaded files by NCSGeek.
+	Eclipse generated some weird files... gonna have to rework the directory.
+
 [5/16/2017-17:05 pre-alpha Sergix]
-Created classpath and source directory.
-Created .vscode settings folder for VSCode preferences.
-compile.bat automatically builds classes and runs it in the console.
-Only issue at the moment is getting JARs to work for a console application, if it is even possible. Typically JARs are only used for GUI applications.
-Pushed updates to GitHub.
+	Created classpath and source directory.
+	Created .vscode settings folder for VSCode preferences.
+	compile.bat automatically builds classes and runs it in the console.
+	Only issue at the moment is getting JARs to work for a console application, if it is even possible. Typically JARs are only used for GUI applications.
+	Pushed updates to GitHub.
 
 [5/15/2017-8:55 pre-alpha Sergix]
-Uploaded the global changelog file to the project.
-Changed README.md "Changelog" section to require username in changelog entries.
-New entires in the changelog must be placed at the top of the file, rather than the bottom.
-Renamed my GitHub profile to simply "Sergix" rather than "Sergix7440."
+	Uploaded the global changelog file to the project.
+	Changed README.md "Changelog" section to require username in changelog entries.
+	New entires in the changelog must be placed at the top of the file, rather than the bottom.
+	Renamed my GitHub profile to simply "Sergix" rather than "Sergix7440."
