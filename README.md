@@ -22,24 +22,24 @@ It is highly recommended that every time you build you update the changelog. Onc
 The global changelog file is in the root folder of the project and is named "changelog.txt"; EVERY note will go into this file. It is also required that when you push a build you push an associated changelog file, formatted "(build version)-changelog.txt". This file should be pushed to the /build/changelog directory.
 New changelog entries in the global "changelog.txt" file should be placed at the _top_ of the file, not the bottom. Simply create a few newlines before the latest entry and use the newlines to enter the new entry information.
 The format for a changelog entry is as follows:
-`
+```
 [MM/DD/YYYY-HH:MM (version) (username)]   
 (entry contents)   
-(entry contents)
-(blank newline)
-`
-Here is an example changelog:
-`
-[2/2/2017-3:33 1.3 NCSGeek]   
-information uploaded.
-added files.
-pushed to github.
+(entry contents)  
+(blank newline)  
+```
+Here is an example changelog:  
+```
+[2/2/2017-3:33 1.3 NCSGeek]     
+information uploaded.   
+added files.   
+pushed to github.   
 
-[1/1/2017-3:33 1.0 Sergix]   
-information uploaded.
-pushed to github.
+[1/1/2017-3:33 1.0 Sergix]     
+information uploaded.  
+pushed to github.  
 
-`
+```
 Of course, a real changelog would be more descriptive in its entries.
 
 Timestamps should be in 24-hour (aka military) time.
