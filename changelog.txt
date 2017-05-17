@@ -1,3 +1,9 @@
+[5/16/2017-20:47 pre-alpha Sergix]
+	Created Write.java class file.
+	Adds writing to files.
+	Created "write" command in terminal.
+	Pushed to Write-File GitHub branch.
+
 [5/16/2017-19:52 pre-alpha Sergix]
 	Uploaded pre-release jar.
 	No big changes in source code since last update.
