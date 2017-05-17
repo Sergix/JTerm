@@ -37,6 +37,11 @@ public class JTerm { // Main method, call when going back to standby
 		  case "quit":
 			  return true; // Quit the program
 			  
+		  case "write":
+			  System.out.println("New File Name: ");
+			  Write.WriteFile(user_input.next());
+			  break;
+			  
 		  default:
 			  System.out.println("Unknown Command."); // Fall back when unknown command is entered
 			  break;
