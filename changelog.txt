@@ -1,4 +1,10 @@
-[5/16/2017-19:09 1.0 Sergix]
+[5/16/2017-19:52 pre-alpha Sergix]
+	Uploaded pre-release jar.
+	No big changes in source code since last update.
+	Changed .gitignore to not ignore .jars.
+	Pushed to GitHub along with associated source and changelog.
+
+[5/16/2017-19:09 pre-alpha Sergix]
 	Finally reformatted the directory.
 	Created a 'jterm' subfolder under /src that is used as the 'package' directory for eclipse.
 	Class files are generated in the /src/jterm folder (the same folder as the source files).
@@ -8,7 +14,7 @@
 	Updated the README for a change in the "Changelog" section: changelog entries must be indented (as now shown.) This adds for better readability.
 	Pushed updates to GitHub.
 
-[5/16/2017-17:36 1.0 Sergix]
+[5/16/2017-17:36 pre-alpha Sergix]
 	Edited uploaded files by NCSGeek.
 	Eclipse generated some weird files... gonna have to rework the directory.
 

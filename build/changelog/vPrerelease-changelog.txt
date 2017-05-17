@@ -1,0 +1,11 @@
+Changelog entry:
+
+[5/16/2017-19:52 pre-alpha Sergix]
+	Uploaded pre-release jar.
+	No big changes in source code since last update.
+	Changed .gitignore to not ignore .jars.
+	Pushed to GitHub along with associated source and changelog.
+
+Full changes include:
+	- Added a couple commands.
+	- Reformatted the code.

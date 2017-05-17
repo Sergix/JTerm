@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class JTerm { // Main method, call when going back to standby
 	
-	  static double version = 1.0; // Global version variable
+	  static String version = "Prerelease1.0"; // Global version variable
 	
 	  public static void main(String[] args) {
 		  
@@ -25,7 +25,7 @@ public class JTerm { // Main method, call when going back to standby
 	  
 	  public static boolean Standby(Scanner user_input) { // Standby mode, awaiting user input.
 		  
-		  System.out.println("JTerm Console> ");
+		  System.out.println("jterm> ");
 		  String input = user_input.next(); // Get a line of text
 		  
 		  switch (input) {
