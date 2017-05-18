@@ -1,4 +1,4 @@
-package jterm;
+package main.java.com.jterm;
 
 import java.io.*;
 

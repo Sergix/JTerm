@@ -1,4 +1,4 @@
-package jterm; // package = folder :P
+package main.java.com.jterm; // package = folder :P
 
 import java.util.Scanner;
 
