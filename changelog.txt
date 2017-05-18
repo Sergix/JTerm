@@ -1,3 +1,9 @@
+[5/18/2017-16:46 pre-alpha Sergix]
+	Been messing around with getting Travis CI to automate build tests for the project.
+	Attempting to get Gradle to work.... with not much luck yet.
+	Moved some directories around to hopefully work with the integrated builds.
+	Pushed updates to Git.
+
 [5/17/2017-22:03 pre-alpha Sergix]
 	Finished the WriteFile class.
 	Uploaded files to the Write-File branch.
