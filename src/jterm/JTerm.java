@@ -17,14 +17,13 @@ public class JTerm { // Main method, call when going back to standby
 			 
 		 } while (!quit); // As long as we are not quitting...
 		 
+		 user_input.close();
 		 
-		 user_input.close(); // Close the input stream once we are done
-		  
 	}
 	  
 	  
 	  public static boolean Standby(Scanner user_input) { // Standby mode, awaiting user input.
-		  
+		  	  
 		  System.out.println("jterm> ");
 		  String input = user_input.next(); // Get a line of text
 		  
@@ -38,8 +37,7 @@ public class JTerm { // Main method, call when going back to standby
 			  return true; // Quit the program
 			  
 		  case "write":
-			  System.out.println("New File Name: ");
-			  Write.WriteFile(user_input.next());
+			  Write.WriteFile();
 			  break;
 			  
 		  default:

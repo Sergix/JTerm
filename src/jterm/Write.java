@@ -4,11 +4,14 @@ import java.io.*;
 
 public class Write {
 
-	public static void WriteFile(String fileName) {
-		try {			
-			BufferedReader outputStream = new BufferedReader(new InputStreamReader(System.in), 1);
-			String output = outputStream.readLine();
-			outputStream.close();
+	public static void WriteFile() {
+		try {
+			System.out.println("New File Name: ");
+			
+			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in), 1);
+			
+			String fileName = inputStream.readLine();
+			String output   = inputStream.readLine();
 			
 			FileWriter fileWriter = new FileWriter(fileName);
 			fileWriter.write(output);
