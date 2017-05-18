@@ -1,3 +1,12 @@
+[5/18/2017-17:23 pre-alpha Sergix]
+	Attempting a different CI: CircleCI.
+	Already started building the project... hopefully everything sails smoothly.
+	Obviously, however, all issues are coming from Maven/Gradle, and I still cannot understand how to format the Maven POM or the build.gradle.
+	There MUST be an easier way to deploy Java projects.... If anyone has any insight into this I am open to any suggestions.
+	I'm probably going to give up on CI though. It's definitely nice for large projects, but Java does not seem to want to work with my CI.
+	Removing all CI dependencies now, and closing all running CI environments.
+	Pushed updates to Git.
+
 [5/18/2017-17:02 pre-alpha Sergix]
 	Updated Gradle Builds.
 	The Travis CI at least WORKS now... sort of. I don't think it's actually building/deploying anything, as every time gradle runs it just reports "UP-TO-DATE" for everything...
