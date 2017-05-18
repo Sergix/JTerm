@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-group 'com.jterm'
+group 'src.java.com.jterm'
 version '0.1'
 
 repositories {
