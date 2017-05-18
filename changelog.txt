@@ -1,3 +1,13 @@
+[5/17/2017-22:03 pre-alpha Sergix]
+	Finished the WriteFile class.
+	Uploaded files to the Write-File branch.
+	Opened a PR to merge to master.
+	Pushed to GitHub.
+	
+[5/17/2017-21:38 pre-alpha Sergix]
+	Added a logo to the readme, viewable online.
+	Also added a project page at https://sergix.github.io/projects/jterm/index.html
+
 [5/17/2017-21:38 pre-alpha Sergix]
 	Added a logo to the readme, viewable online.
 	Also added a project page at https://sergix.github.io/projects/jterm/index.html
