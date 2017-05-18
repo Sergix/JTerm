@@ -1,3 +1,7 @@
+[5/17/2017-21:38 pre-alpha Sergix]
+	Added a logo to the readme, viewable online.
+	Also added a project page at https://sergix.github.io/projects/jterm/index.html
+
 [5/16/2017-20:47 pre-alpha Sergix]
 	Created Write.java class file.
 	Adds writing to files.
