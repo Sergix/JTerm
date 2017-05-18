@@ -1,3 +1,7 @@
+[5/18/2017-17:02 pre-alpha Sergix]
+	Created gradle dependencies.
+	Pushed updates to Git.
+	
 [5/18/2017-16:46 pre-alpha Sergix]
 	Been messing around with getting Travis CI to automate build tests for the project.
 	Attempting to get Gradle to work.... with not much luck yet.
