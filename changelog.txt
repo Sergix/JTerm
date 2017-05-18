@@ -1,4 +1,11 @@
 [5/18/2017-17:02 pre-alpha Sergix]
+	Updated Gradle Builds.
+	The Travis CI at least WORKS now... sort of. I don't think it's actually building/deploying anything, as every time gradle runs it just reports "UP-TO-DATE" for everything...
+	Working and past builds can be viewed at https://travis-ci.org/Sergix/JTerm
+	Edited the directories for the java package.
+	Pushed updates to Git.
+	
+[5/18/2017-17:02 pre-alpha Sergix]
 	Created gradle dependencies.
 	Pushed updates to Git.
 	
