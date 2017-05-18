@@ -1,0 +1,9 @@
+#
+# Travis CI
+# build file
+#
+
+language: java
+
+jdk:
+  - oraclejdk8
