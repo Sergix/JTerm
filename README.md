@@ -1,4 +1,4 @@
-# JTerm
+![JTerm](https://sergix.github.io/img/jterm.png)
 
 ### Definition
 A root-like terminal written in Java for cross-platform usage.
