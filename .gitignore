@@ -1,3 +1,6 @@
+# Class files
+*.class
+
 # Log file
 *.log
 
