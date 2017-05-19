@@ -1,4 +1,11 @@
 [5/18/2017-17:23 pre-alpha Sergix]
+	Actually got Travis CI to work. Made a custom shell script that compiles the classes into the build/classes folder.
+	Added the compile.sh file for CI build scripts.
+	Updated .travis.yml to work with the new parameters.
+	Removed blocking of .class files from the .gitignore.
+	Pushed updates to Git.
+
+[5/18/2017-17:23 pre-alpha Sergix]
 	Attempting a different CI: CircleCI.
 	Already started building the project... hopefully everything sails smoothly.
 	Obviously, however, all issues are coming from Maven/Gradle, and I still cannot understand how to format the Maven POM or the build.gradle.
