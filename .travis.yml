@@ -7,4 +7,4 @@ language: java
 jdk:
   - oraclejdk8
 
-script: ./compile
+script: ./compile.sh
