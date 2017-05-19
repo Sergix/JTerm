@@ -12,6 +12,7 @@ The format of the archive's filename is as follows: "jterm-v(build version).jar"
 
 ### Source Code
 Keep all updated and current source code in the /src directory, which should be updated with every build.
+Folders are formatted for packaging and for future CI integration.
 When pushing the source code with a build, keep the file names the same. If creating a new file, simply name the file as the topic of its contents. Keep the name clear and concise, and the file's contents in line with its name.
 As mentioned in the "Builds" section, package the source code with every build into a ".zip" file that should be placed in the /build/src directory when pushing a build.
 The format for the file should be as follows: "(build version)-src.zip".
