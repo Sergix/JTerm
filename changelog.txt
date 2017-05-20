@@ -1,3 +1,8 @@
+[5/20/2017-13:45 pre-alpha Sergix]
+	Made some changes to compile.sh for Travis builds.
+	Changes to the file are no longer necessary as long as all source files stay in the current folder.
+	Pushed updates to Git.
+
 [5/19/2017-20:06 pre-alpha Sergix]
 	Input is now read as an entire line (via BufferedReader) and then iterated through as smaller "tokens" or substrings, using spaces as delimiters.
 	Removed class files from the Git folder, but keep them in your local project folder.

@@ -1,3 +1,3 @@
 #!/bin/sh
 
-javac -d build/ src/main/java/com/jterm/JTerm.java src/main/java/com/jterm/Write.java
+javac -verbose -version -Xlint:all src/main/java/com/jterm/*.java
