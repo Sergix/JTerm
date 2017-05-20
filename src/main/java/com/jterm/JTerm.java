@@ -1,6 +1,8 @@
 package main.java.com.jterm; // package = folder :P
 
 import java.util.Scanner;
+import java.io.*;
+import main.java.com.jterm.Write;
 
 public class JTerm { // Main method, call when going back to standby
 	
@@ -9,7 +11,7 @@ public class JTerm { // Main method, call when going back to standby
 	  public static void main(String[] args) {
 		  
 		 boolean quit = false; // Assign a default value of false to the quit variable
-		 Scanner user_input = new Scanner(System.in); // Setup input: String input = user_input.next();
+		 BufferedReader user_input = new BufferedReader(new InputStreamReader(System.in), 1); // Setup input: String input = user_input.next();
 		 
 		 do { // Infinite loop for getting input
 			 
@@ -17,15 +19,25 @@ public class JTerm { // Main method, call when going back to standby
 			 
 		 } while (!quit); // As long as we are not quitting...
 		 
-		 user_input.close();
-		 
 	}
 	  
 	  
-	  public static boolean Standby(Scanner user_input) { // Standby mode, awaiting user input.
+	  public static boolean Standby(BufferedReader user_input) { // Standby mode, awaiting user input.
 		  	  
 		  System.out.println("jterm> ");
-		  String input = user_input.next(); // Get a line of text
+		  String command = "";
+		  
+		  try {
+			  command = user_input.readLine();
+		  }
+		  catch (IOException ioe)
+		  {
+			  System.out.println(ioe);
+		  }
+		  
+		  Scanner tokenizer = new Scanner(command); // Get each substring of the command entered
+		  
+		  String input = tokenizer.next(); // Get the next substring
 		  
 		  switch (input) {
 		  
@@ -34,10 +46,11 @@ public class JTerm { // Main method, call when going back to standby
 			  break;
 			  
 		  case "quit":
+			  tokenizer.close();
 			  return true; // Quit the program
 			  
 		  case "write":
-			  Write.WriteFile();
+			  Write.WriteFile(tokenizer);
 			  break;
 			  
 		  default:
@@ -45,6 +58,8 @@ public class JTerm { // Main method, call when going back to standby
 			  break;
 			  
 		  }
+		  
+		  tokenizer.close();
 		  
 		  return false; // Keep looping; we don't want to quit
 		  

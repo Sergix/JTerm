@@ -1,19 +1,20 @@
 package main.java.com.jterm;
 
 import java.io.*;
+import java.util.Scanner;
 
 public class Write {
 
-	public static void WriteFile() {
+	public static void WriteFile(Scanner tokenizer) {
 		try {
-			System.out.println("New File Name: ");
+			String filename = tokenizer.next();
 			
+			System.out.println("Enter file contents:\n");
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in), 1);
 			
-			String fileName = inputStream.readLine();
 			String output   = inputStream.readLine();
 			
-			FileWriter fileWriter = new FileWriter(fileName);
+			FileWriter fileWriter = new FileWriter(filename);
 			fileWriter.write(output);
 			fileWriter.close();
 		}
