@@ -1,3 +1,9 @@
+[5/19/2017-20:06 pre-alpha Sergix]
+	Input is now read as an entire line (via BufferedReader) and then iterated through as smaller "tokens" or substrings, using spaces as delimiters.
+	Removed class files from the Git folder, but keep them in your local project folder.
+	Changed .gitignore to reject .class files.
+	Pushed updates to Git.
+
 [5/19/2017-19:47 pre-alpha Sergix]
 	Actually got Travis CI to work. Made a custom shell script that compiles the classes into the build/classes folder.
 	Added the compile.sh file for CI build scripts.
