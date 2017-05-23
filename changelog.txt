@@ -1,3 +1,10 @@
+[5/23/2017-16:32 pre-alpha Sergix]
+	Add "dir" to runnable commands in JTerm class.
+	Command syntax: dir [directory]
+	When [directory] is not specified, the function defaults to the current directory (".").
+	Running Travis builds at the moment. I have requested for review to merge the PR (#2) if successful.
+	Pushed updates to Git.
+
 [5/23/2017-8:40 pre-alpha Sergix]
 	Create Dir.java file.
 	Will contain all static methods related to directory functions.
