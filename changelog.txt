@@ -1,3 +1,10 @@
+[5/23/2017-17:58 pre-alpha Sergix]
+	Recieved approval to merge PR #2.
+	Merged into master with changes:
+		- Dir.java file
+		- "dir [directory]" command added to JTerm.Standby()
+	Pushed updates to Git.
+
 [5/23/2017-16:32 pre-alpha Sergix]
 	Add "dir" to runnable commands in JTerm class.
 	Command syntax: dir [directory]
