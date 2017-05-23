@@ -1,3 +1,10 @@
+[5/23/2017-8:40 pre-alpha Sergix]
+	Create Dir.java file.
+	Will contain all static methods related to directory functions.
+	Created PrintDir method and opened a PR on the Dir branch.
+	Travis CI ran some build tests... failed both. Checking imported libs.
+	Pushed updates to Git.
+
 [5/20/2017-13:45 pre-alpha Sergix]
 	Made some changes to compile.sh for Travis builds.
 	Changes to the file are no longer necessary as long as all source files stay in the current folder.
