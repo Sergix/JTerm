@@ -50,7 +50,18 @@ public class JTerm { // Main method, call when going back to standby
 			  return true; // Quit the program
 			  
 		  case "write":
-			  Write.WriteFile(tokenizer);
+			  String filename = tokenizer.next();
+			  Write.WriteFile(filename);
+			  break;
+			  
+		  case "dir":
+			  String path = ".";
+			  
+			  if (tokenizer.hasNext()) {
+				  path = tokenizer.next();
+			  }
+			  
+			  Dir.PrintDir(path);
 			  break;
 			  
 		  default:
