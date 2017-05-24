@@ -1,10 +1,11 @@
 package main.java.com.jterm;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class Write {
 
-	public static void WriteFile(String filename) {
+	public static void WriteFile(ArrayList<String> filename) {
 		try {
 			
 			System.out.println("Enter file contents:\n");
@@ -12,7 +13,7 @@ public class Write {
 			
 			String output   = inputStream.readLine();
 			
-			FileWriter fileWriter = new FileWriter(filename);
+			FileWriter fileWriter = new FileWriter(filename.get(filename.size()));
 			fileWriter.write(output);
 			fileWriter.close();
 			

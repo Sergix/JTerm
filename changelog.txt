@@ -1,3 +1,15 @@
+[5/23/2017-21:57 pre-alpha Sergix]
+	Added arguments for commands.
+	All class functions should take the "options" variable as the only argument.
+	Class functions will loop through the options and take out what it needs as it needs it.
+	A known error is in the Write class, where if you do not specify an filename when calling it, the program crashes.
+	Pushed updates to Git.
+
+[5/23/2017-20:48 pre-alpha Sergix]
+	Updated the output of the "dir" command with some fancy output.
+	Output details are listed in a comment block in Dir.java.
+	Pushed updates to Git.
+
 [5/23/2017-17:58 pre-alpha Sergix]
 	Recieved approval to merge PR #2.
 	Merged into master with changes:

@@ -3,6 +3,7 @@ package main.java.com.jterm; // package = folder :P
 import java.util.Scanner;
 import java.io.*;
 import main.java.com.jterm.Write;
+import java.util.ArrayList;
 
 public class JTerm { // Main method, call when going back to standby
 	
@@ -36,9 +37,19 @@ public class JTerm { // Main method, call when going back to standby
 		  }
 		  
 		  Scanner tokenizer = new Scanner(command); // Get each substring of the command entered
-		  
 		  String input = tokenizer.next(); // Get the next substring
 		  
+		  ArrayList<String> options = new ArrayList<String>();
+		  
+		  
+		  // Get command arguments
+		  
+		  while(tokenizer.hasNext()) {
+			  String next = tokenizer.next();
+			  options.add(next);
+		  }
+		  
+		  // Switch through command names
 		  switch (input) {
 		  
 		  case "help":
@@ -50,18 +61,11 @@ public class JTerm { // Main method, call when going back to standby
 			  return true; // Quit the program
 			  
 		  case "write":
-			  String filename = tokenizer.next();
-			  Write.WriteFile(filename);
+			  Write.WriteFile(options); // Get the last option, which is the filename, and send it the option list
 			  break;
 			  
 		  case "dir":
-			  String path = ".";
-			  
-			  if (tokenizer.hasNext()) {
-				  path = tokenizer.next();
-			  }
-			  
-			  Dir.PrintDir(path);
+			  Dir.PrintDir(options);
 			  break;
 			  
 		  default:
