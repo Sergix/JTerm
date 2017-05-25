@@ -2,17 +2,17 @@
 
 ![Build Status](https://travis-ci.org/Sergix/JTerm.svg?branch=master)
 
-### Definition
+## Definition
 A root-like terminal written for cross-platform usge.
 
-### Implementation
+## Implementation
 This project is written in Java using [Eclipse IDE for Java EE](http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/neon3).
 
-### Builds
+## Builds
 Once you build a file from the source code to an archive (.jar), push it to the /build/jar folder, along with the associated changelog (see Changelog section), and the source code (see Source Code section).
 The format of the archive's filename is as follows: "jterm-v(build version).jar"
 
-### Source Code
+## Source Code
 Keep all updated and current source code in the /src directory, which should be updated with every build.  
 Please review the Style Guide for more information.
 Subfolders are formatted for packaging and for CI integration.  
@@ -20,7 +20,7 @@ When pushing the source code with a build, DO NOT change the filenames. When cre
 As mentioned in the "Builds" section, package the source code with every build into a ".zip" file that should be placed in the /build/src directory when pushing a build. Subfolders in the /src directory (e.g. /src/main/java/...) should be included in packaged source.
 The format for the file should be as follows: "jterm-src-(build version).zip".
 
-### Changelog
+## Changelog
 Every time an update is pushed, the changelog will be updated and pushed as well.
 It is highly recommended that every time you build you update the changelog. Once you add something to the changelog, DO NOT remove the entry, unless if, and only if, it is incorrect (such as a typo in the version number.)
 The global changelog file is in the root folder of the project and is named "changelog.txt"; EVERY note will go into this file. It is also required that when you push a build you push an associated changelog file, formatted "jterm-changelog-(build version).txt". This file should be pushed to the /build/changelog directory.
@@ -48,15 +48,15 @@ Of course, a real changelog would be more descriptive in its entries.
 
 Timestamps should be in 24-hour (aka military) time.
 
-### Versioning
+## Versioning
 Version numbers should use [Semantic Versioning](https://github.com/mojombo/semver/blob/master/semver.md).  
 Numbering versions on files (such as released builds) should take the format of "vX.Y.Z", where "X.Y.Z" is the version.
 
-### Documentation
+## Documentation
 Documentation should be published with every major release (see Versioning).
 Documentation guidelines are to be written in Markdown formatting. Guidelines are as follows:
 
 - Main Header: \#
-- Subheadings: \#\#\#
+- Subheadings: \#\#
 - Standard text size/font, nothing special
 - Code blocks use markdown code block formatting
