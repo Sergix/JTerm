@@ -13,16 +13,16 @@ Once you build a file from the source code to an archive (.jar), push it to the 
 The format of the archive's filename is as follows: "jterm-v(build version).jar"
 
 ### Source Code
-Keep all updated and current source code in the /src directory, which should be updated with every build.
-Folders are formatted for packaging and for future CI integration.
+Keep all updated and current source code in the /src directory, which should be updated with every build.  
+Subfolders are formatted for packaging and for CI integration.
 When pushing the source code with a build, keep the file names the same. If creating a new file, simply name the file as the topic of its contents. Keep the name clear and concise, and the file's contents in line with its name.
 As mentioned in the "Builds" section, package the source code with every build into a ".zip" file that should be placed in the /build/src directory when pushing a build.
-The format for the file should be as follows: "(build version)-src.zip".
+The format for the file should be as follows: "jterm-src-(build version).zip".
 
 ### Changelog
 Every time an update is pushed, the changelog will be updated and pushed as well.
 It is highly recommended that every time you build you update the changelog. Once you add something to the changelog, DO NOT remove the entry if, and only if, it is incorrect.
-The global changelog file is in the root folder of the project and is named "changelog.txt"; EVERY note will go into this file. It is also required that when you push a build you push an associated changelog file, formatted "(build version)-changelog.txt". This file should be pushed to the /build/changelog directory.
+The global changelog file is in the root folder of the project and is named "changelog.txt"; EVERY note will go into this file. It is also required that when you push a build you push an associated changelog file, formatted "jterm-changelog-(build version).txt". This file should be pushed to the /build/changelog directory.
 New changelog entries in the global "changelog.txt" file should be placed at the _top_ of the file, not the bottom. Simply create a few newlines before the latest entry and use the newlines to enter the new entry information. Entries must also be tab-indented.
 The format for a changelog entry is as follows:
 ```
@@ -47,12 +47,15 @@ Of course, a real changelog would be more descriptive in its entries.
 
 Timestamps should be in 24-hour (aka military) time.
 
+### Versioning
+Version numbers should use ![Semantic Versioning](https://github.com/mojombo/semver/blob/master/semver.md).  
+Numbering versions on files (such as released builds) should take the format of "vX.Y.Z", where "X.Y.Z" is the version.
+
 ### Documentation
-Documentation should be published with every major release.
-A "major" release is defined as one with the version number that corresponds to the following examples: "1.x", "2.x", "3.x"
+Documentation should be published with every major release (see Versioning).
 Documentation guidelines are to be written in Markdown formatting. Guidelines are as follows:
 
 - Main Header: \#
 - Subheadings: \#\#\#
-- Standard text
+- Standard text size/font, nothing special
 - Code blocks use markdown code block formatting
