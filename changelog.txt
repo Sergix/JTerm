@@ -1,3 +1,14 @@
+[5/24/2017-20:23 0.1.0 Sergix]
+	Edited README with small changes and a new "Versioning" section.
+	Version numbers now implement the "Semantic Versioning" specification (see README for details.)
+	Changed the name of the pre-release jar to "jterm-v0.1.0.jar" to align with this specification.
+	Updated the jar file in the GitHub "release"->"Prerelease" section on the project site.
+	Changelog entries's version number has now changed from "pre-alpha" to "0.1.0". This doesn't admit any notable changes.
+	Changelog entries (if not beforehand specified) must use the version number of the last released build. This is because we don't know if the next build will end up being a major, minor, or patch release, so it only seems logical to do this.
+	Changed the format of build "src" and "changelog" files, as now specified in the README update. It only made sense that the naming conventions of all files published in a build remain similar.
+	Edited the filenames of the pre-release build files. "vPrerelease-changelog.txt" -> "jterm-changelog-v0.1.0.txt"; "vPrerelease-src.zip" -> "jterm-src-v0.1.0.zip".
+	Pushed updates to Git.
+
 [5/23/2017-21:57 pre-alpha Sergix]
 	Added arguments for commands.
 	All class functions should take the "options" variable as the only argument.

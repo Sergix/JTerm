@@ -9,7 +9,7 @@ public class Dir {
 
 	  String path = ".";
 	  boolean printFull = true, printFile = false, printHelp = false;
-
+	  
 	  for (String option: options) {
 		  
 		  if (option.equals("-f")) {
