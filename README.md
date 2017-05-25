@@ -48,7 +48,7 @@ Of course, a real changelog would be more descriptive in its entries.
 Timestamps should be in 24-hour (aka military) time.
 
 ### Versioning
-Version numbers should use ![Semantic Versioning](https://github.com/mojombo/semver/blob/master/semver.md).  
+Version numbers should use [Semantic Versioning](https://github.com/mojombo/semver/blob/master/semver.md).  
 Numbering versions on files (such as released builds) should take the format of "vX.Y.Z", where "X.Y.Z" is the version.
 
 ### Documentation
