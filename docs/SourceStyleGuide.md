@@ -12,7 +12,7 @@ This document provides information on how to style elements in the source code, 
 This section describes how variables, functions, classes, and other elements are to be named within the code.
 
 ### Classes
-Class names must meet the following criteria:
+Class names MUST meet the following criteria:
 1. Clear and concise
 2. Describe its contents
 3. No underscores/dashes/other seperators
@@ -50,7 +50,7 @@ Whitespace is used to seperate statements and to provide more readable code whil
 ### Functions, Conditionals, Variables
 Whitespace MUST be used in the following ways:
 1. A space MUST be used between the argument list and the bracket; there MUST NOT be space between the function name and the argument list (e.g. `public static void Test() {`)
-2. If/Else/For/While, and any conditional statement MUST use a space between the operation token and the parentheses and a space between the parentheses and the bracket; there MUST be no spaces in between the contents of the parentheses (e.g. `if (this) {`)
+2. If/Else/For/While, and any conditional statement MUST use a space between the operation token and the parentheses and a space between the parentheses and the bracket; there MUST NOT be spaces in between the contents of the parentheses (e.g. `if (this) {`)
 3. A space MUST be used between variable names and operators (e.g. `int value = 1 + 1;`)
 4. If using multi-level parenthetical statements, spaces MUST be used to seperate the statements and provide padding (e.g. `if ( (this) && (that) ) {`)
 
@@ -72,12 +72,12 @@ public static void Test() {
     
 }
 ```
-3. They MUST not be used after comments. e.g.:
+3. They MUST NOT be used after comments. e.g.:
 ```
 // Inserts the value "1" into the variable "input"
 int input = 1;
 ```
-4. They MUST not be used before sections of code in conditionals and methods other than functions, but a newline MUST be used after the section of code. e.g.:
+4. They MUST NOT be used before sections of code in conditionals and methods other than functions, but a newline MUST be used after the section of code. e.g.:
 ```
 while (this) {
     DoThis();
@@ -87,7 +87,7 @@ while (this) {
 
 ### Tabs and Indents
 Tabs and indents are used to define blocks of code, and code that is contained by a method or conditional. Tabs are interpreted differently by different programs; therefore it is dependent on how many times you hit the "TAB" key when indenting.  
-As an overall rule, a single tab should be used to indent code one lever further in every case it is needed. e.g.:
+As an overall rule, a single tab MUST be used to indent code one lever further in every case it is needed. e.g.:
 ```
 class Test {
 
@@ -110,13 +110,13 @@ class Test {
 
 ## Comments
 Comments are used to describe sections of code to other developers to help better understand the code, or to make notes about the code, such as a function or object.
-Comments should abide by the following criteria:  
-1. A comment describing a section of code must be used before the section of code, not after the line of code. e.g.:
+Comments MUST abide by the following criteria:  
+1. A comment describing a section of code MUST be used before the section of code, and not be placed anywhere else. e.g.:
 ```
 // Print "Hello!" to the console
 System.out.println("Hello!");
 ```
-2. In multi-line comments, every line must be preceded by a "*" character, and the first statement must be included on the second line, and the last statement must be on the next-to-last line of the comment. e.g.:
+2. In multi-line comments, every line must be preceded by a "*" character, and the first statement MUST be included on the second line, and the last statement MUST be on the next-to-last line of the comment. e.g.:
 ```
 /*
 * The following code inserts a value into the variable and then
@@ -125,13 +125,14 @@ System.out.println("Hello!");
 ```
 
 ### Documentation Comments
-Documentation comments are used to describe function definitions and other important code elements. They must abide by the following criteria:
-1. They must be a multi-level code comment
+Documentation comments are used to describe function definitions and other important code elements. They MUST abide by the following criteria:
+1. They MUST be a multi-level code comment
 2. It includes the name of the function as the first statement, with blank parenthesis after it. On the same line the return type is specified (e.g. `PrintFile() void`)
 3. A comment newline is used, and the next line includes a short summary of the function's purpose; multiple lines of the comment MAY be used (e.g. `Prints the contents of a specified file to the console.`)
-4. A comment newline is used after the before rule, and then a list of the function's arguments with their details must be included (e.g. `String filename - the name of the file to be read`)
-5. An example MAY be provided to display how the function should be used (e.g. `PrintFile("myFile.txt");`)
-6. In the example section, multiple examples MAY be included, and each example is indented by two spaces. A line showing its return contents MAY also be included directly after the example line (without newlines between), indented as well by two spaces (e.g. `=> This is my file.`)
+4. A comment newline is used after the before rule, and then a list of the function's arguments with their details MUST be included (e.g. `String filename - the name of the file to be read`)
+5. If the function interprets command options, they MUST be included and formatted as in the example below
+6. An example MAY be provided to display how the function could be used (e.g. `PrintFile("myFile.txt");`)
+7. In the example section, multiple examples MAY be included, and each example is indented by two spaces. A line showing its return contents MAY also be included directly after the example line (without newlines between), indented as well by two spaces (e.g. `=> This is my file.`)
 Here is an example of the correct usage of these rules:
 ```
 /*
@@ -143,6 +144,12 @@ Here is an example of the correct usage of these rules:
 * String filename - the name of the file to be read
 * Boolean info    - whether the function should output
 *                   extra information about the file
+*
+* -f
+*     Changes the output format to only file and directory
+*     names
+* -h
+*     Prints help information
 *
 * Examples
 *
