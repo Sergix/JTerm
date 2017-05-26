@@ -2,7 +2,11 @@
 
 ## Introduction
 This document provides information on how to style elements in the source code, including naming, comments, and whitespace.
-Requirement words used in this document abide by the specifications in [RFC 2119](https://tools.ietf.org/html/rfc2119).
+
+      The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in
+      RFC 2119.
 
 ## Naming Conventions
 This section describes how variables, functions, classes, and other elements are to be named within the code.
