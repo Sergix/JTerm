@@ -1,3 +1,9 @@
+[5/26/2017-18:23 0.1.0 Sergix]
+	Made a few small updates to the Style Guide.
+	Documentation Comments also describe command-line arguments (e.g. "-f", "-h") that are interpreted by the function.
+	Updated more of the code to adapt to the Style Guide.
+	Pushed updates to Git.
+
 [5/25/2017-23:00 0.1.0 Sergix]
 	Changed some of the code syntax to align with the new Source Code Style Guide.
 	Pushed updates to Git.

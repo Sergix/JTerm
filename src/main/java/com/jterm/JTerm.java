@@ -8,10 +8,19 @@ import java.util.ArrayList;
 
 public class JTerm {
 	
-	// Global version variable
-	  static String version = "Prerelease1.0";
+	  // Global version variable
+	  static String version = "0.1.0";
 	  
-	  // Main method, call when going back to standby
+	  /*
+	  * main() void
+	  * 
+	  * Function called when the program loads. Sets
+	  * up basic input streams and runs the command
+	  * loop.
+	  * 
+	  * String[] args - arguments passed from the 
+	  * 				console
+	  */
 	  public static void main(String[] args) {
 		  
 		 // Assign a default value of false to the quit variable
@@ -29,7 +38,15 @@ public class JTerm {
 		 
 	  }
 	  
-	  // Standby mode, awaiting user input.
+	  /*
+	  * Standby() boolean
+	  * 
+	  * Awaits user command and then runs the command
+	  * specified.
+	  *
+	  * BufferedReader user_unput - Input stream loaded from the
+	  * 							main() function
+	  */
 	  public static boolean Standby(BufferedReader user_input) {
 		  	  
 		  System.out.println("jterm> ");
@@ -51,8 +68,8 @@ public class JTerm {
 		  // Get the next substring
 		  String input = tokenizer.next();
 		  
+		  // options String array will be passed to command functions
 		  ArrayList<String> options = new ArrayList<String>();
-		  
 		  
 		  // Get command arguments
 		  while (tokenizer.hasNext()) {
@@ -63,26 +80,26 @@ public class JTerm {
 		  
 		  // Switch through command names
 		  switch (input) {
-		  case "help":
+		  	case "help":
 			  // Prints "JTerm v1.0" for example
 			  System.out.println("JTerm v" + version);
 			  break;
 			  
-		  case "quit":
-			  // Quit the program
+		  	case "quit":
+		  	  // Quit the program
 			  tokenizer.close();
 			  return true;
 			  
-		  case "write":
+		  	case "write":
 			  // Get the last option, which is the filename, and send it the option list
 			  Write.WriteFile(options);
 			  break;
 			  
-		  case "dir":
+		  	case "dir":
 			  Dir.PrintDir(options);
 			  break;
 			  
-		  default:
+		  	default:
 			  // Fall back when unknown command is entered
 			  System.out.println("Unknown Command.");
 			  break;

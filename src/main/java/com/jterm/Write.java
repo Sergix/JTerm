@@ -5,14 +5,21 @@ import java.util.ArrayList;
 
 public class Write {
 
-	public static void WriteFile(ArrayList<String> filename) {
+	/*
+	* WriteFile() void
+	* 
+	* Get input and write it to a file.
+	* 
+	* ArrayList<String> options - command options
+	*/
+	public static void WriteFile(ArrayList<String> options) {
 		
 		try {
 			System.out.println("Enter file contents:\n");
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in), 1);
 			String output = inputStream.readLine();
 			
-			FileWriter fileWriter = new FileWriter(filename.get( filename.size() ) );
+			FileWriter fileWriter = new FileWriter(options.get( options.size() ) );
 			fileWriter.write(output);
 			fileWriter.close();
 			

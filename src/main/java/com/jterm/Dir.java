@@ -4,7 +4,21 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Dir {
-
+	
+  /*
+  * PrintDir() void
+  * 
+  * Prints the contents of a specified directory
+  * to a file.
+  *
+  * ArrayList<String> options - command options
+  *
+  * Examples
+  *
+  *   PrintDir(options);
+  *     => [Contents of "dir/"]
+  *     =>     F RW 	myFile.txt		2 KB
+  */
   public static void PrintDir(ArrayList<String> options) throws NullPointerException {
 
 	  String path = ".";
