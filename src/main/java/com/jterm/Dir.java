@@ -11,18 +11,20 @@ public class Dir {
 	  boolean printFull = true, printFile = false, printHelp = false;
 	  
 	  for (String option: options) {
-		  
 		  if (option.equals("-f")) {
 			  printFull = false;
 			  printFile = true;
+			  
 		  }
 		  else if (option.equals("-h"))
 		  {
 			  printHelp = true;
+			  
 		  }
 		  else
 		  {
 			  path = option;
+			  
 		  }
 		  
 	  }
@@ -48,16 +50,20 @@ public class Dir {
 	  if (printHelp) {
 		  System.out.println("Command syntax:\n\tdir [-f] [-h] [directory]");
 		  return;
+		  
 	  }
+	  
 	  System.out.println("[Contents of \"" + path + "\"]");
 	  for (File file: files)
 	  {
 		  if (printFull) {
 			  System.out.println("\t" + (file.isFile() ? "F " : "D ") + (file.canRead() ? "R" : "") + (file.canWrite() ? "W" : "") + (file.isHidden() ? "H" : "") + "\t" + file.getName() + (file.getName().length() < 8 ? "\t\t\t" : (file.getName().length() > 15 ? "\t" : "\t\t")) + (file.length() / 1024) + " KB");
-		  }
-		  else if (printFile) {
+			  
+		  } else if (printFile) {
 			  System.out.println("\t" + file.getName());
+			  
 		  }
+		  
 	  }
 	  
   }

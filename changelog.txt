@@ -1,3 +1,7 @@
+[5/25/2017-23:00 0.1.0 Sergix]
+	Changed some of the code syntax to align with the new Source Code Style Guide.
+	Pushed updates to Git.
+
 [5/25/2017-18:29 0.1.0 Sergix]
 	Created a Source Style Guide located at /docs/SourceStyleGuide.md
 	Provides extensive information on how source code is to be formatted.
