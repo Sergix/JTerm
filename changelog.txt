@@ -1,3 +1,8 @@
+[5/27/2017-15:51 0.1.0 Sergix]
+	Created a Documentation Style Guide located at /docs/DocStyleGuide.md
+	This file includes infomation about writing documentation for new releases.
+	Pushed updates to Git.
+
 [5/26/2017-18:23 0.1.0 Sergix]
 	Made a few small updates to the Style Guide.
 	Documentation Comments also describe command-line arguments (e.g. "-f", "-h") that are interpreted by the function.
