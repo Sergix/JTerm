@@ -53,10 +53,6 @@ Version numbers should use [Semantic Versioning](https://github.com/mojombo/semv
 Numbering versions on files (such as released builds) should take the format of "vX.Y.Z", where "X.Y.Z" is the version.
 
 ## Documentation
-Documentation should be published with every major release (see Versioning).
-Documentation guidelines are to be written in Markdown formatting. Guidelines are as follows:
-
-- Main Header: \#
-- Subheadings: \#\#
-- Standard text size/font, nothing special
-- Code blocks use markdown code block formatting
+Documentation is published with every:
+- Major and minor release ([Documentation Style Guide](https://github.com/Sergix/JTerm/blob/master/docs/DocStyleGuide.md))
+- Patch ([Patch Notes Documentation Style Guide](https://github.com/Sergix/JTerm/blob/master/docs/PatchDocStyleGuide.md))
