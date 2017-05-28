@@ -1,3 +1,9 @@
+[5/27/2017-22:18 0.1.0 Sergix]
+	Created a Patch Notes Documentation Style Guide located at /docs/PatchDocStyleGuide.md
+	Updated Documentation Style Guide.
+	Changed README to include new documentation files.
+	Pushed updates to Git.
+
 [5/27/2017-15:51 0.1.0 Sergix]
 	Created a Documentation Style Guide located at /docs/DocStyleGuide.md
 	This file includes infomation about writing documentation for new releases.
