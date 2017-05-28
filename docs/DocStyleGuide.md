@@ -36,8 +36,8 @@ The following tokens are reserved by the language:
 ```
 ## Documentation Contents
 Release and development documentation MUST include the following sections in the following order, with any amound of extra sections describing new features and implementations in-between. Required documentation contents are as follows, and in the following order:
-1. Overview - introduction describing the documentation and its contents
-2. Table of Contents - formatted as shown in the section "Table of Contents"
+1. Table of Contents - formatted as shown in the section "Table of Contents"
+2. Overview - introduction describing the documentation and its contents
 3. Build Targets - formatted as shown in the section "Build Targets"
 4. Changelog - formatted as shown in the section "Changelog"
 5. Document contents are placed here (all other sections pertaining to release information)
@@ -57,7 +57,8 @@ I. Top-level
     B. Second-level
 II. Top-level
 ```
-An implied rule for this listing format is, except for top-level, "where there is an A, there is a B; where there is a 1, there is a 2, etc." If there is only one point on a level, and it does not have sub-levels, use the format as show for "Note" above: the line is preceded by the "-" character.
+An implied rule for this listing format is, except for top-level, "where there is an A, there is a B; where there is a 1, there is a 2, etc." If there is only one point on a level, and it does not have sub-levels, use the format as show for "Note" above: the line is preceded by the "-" character.  
+The table of contents MUST include _every_ section in the document, including the required sections. It must also include itself as the first point.
 
 ### Build Targets
 The purpose of the Build Targets section is to list all versions published of the project at the time of writing. This section is formatted in 3 columns, each seperated by a couple tabs. The first column is `[VERSION]`, which is the version number of the release. The second column is `[FILE]`, which specifies the name of the associated build located in the `/build/jar` directory. The last column is `[STATE]`, and it specifies whether a build is still active and supported for use (`OK`), or if there are known issues that prevent it from being fully accessible (`DEPRECATED`). An example for this section is as follows:
