@@ -11,6 +11,10 @@ public class JTerm {
 	  // Global version variable
 	  static String version = "0.1.0";
 	  
+	  // Global directory variable (use "cd" command to change)
+	  // Default value "." is equal to the default directory set when the program starts
+	  static String currentDirectory = ".";
+	  
 	  /*
 	  * main() void
 	  * 
@@ -48,10 +52,11 @@ public class JTerm {
 	  * 							main() function
 	  */
 	  public static boolean Standby(BufferedReader user_input) {
-		  	  
-		  System.out.println("jterm> ");
+
+		  System.out.print(JTerm.currentDirectory + " ");
 		  String command = "";
 		  
+		  // Attempt to read a line from the input
 		  try {
 			  command = user_input.readLine();
 			  
@@ -59,6 +64,9 @@ public class JTerm {
 		  catch (IOException ioe)
 		  {
 			  System.out.println(ioe);
+			  
+			  // Quit because of error
+			  return true;
 			  
 		  }
 		  
@@ -81,31 +89,40 @@ public class JTerm {
 		  // Switch through command names
 		  switch (input) {
 		  	case "help":
-			  // Prints "JTerm v1.0" for example
-			  System.out.println("JTerm v" + version);
-			  break;
+		  		// Prints "JTerm v1.0" for example
+		  		System.out.println("JTerm v" + version);
+			  	break;
 			  
 		  	case "quit":
-		  	  // Quit the program
-			  tokenizer.close();
-			  return true;
+		  		// Quit the program
+		  		tokenizer.close();
+		  		return true;
 			  
 		  	case "write":
-			  // Get the last option, which is the filename, and send it the option list
-			  Write.WriteFile(options);
-			  break;
+		  		// Get the last option, which is the filename, and send it the option list
+		  		Write.WriteFile(options);
+		  		break;
 			  
 		  	case "dir":
-			  Dir.PrintDir(options);
-			  break;
+		  		Dir.PrintDir(options);
+		  		break;
+			  
+		  	case "cd":
+		  		Dir.ChangeDir(options);
+		  		break;
+		  		
+		  	case "pwd":
+		  		Dir.PrintWorkingDir(options);
+		  		break;
 			  
 		  	default:
-			  // Fall back when unknown command is entered
-			  System.out.println("Unknown Command.");
-			  break;
+		  		// Fall back when unknown command is entered
+		  		System.out.println("Unknown Command.");
+		  		break;
 			  
 		  }
 		  
+		  // Close the string stream
 		  tokenizer.close();
 		  
 		  // Keep looping; we don't want to quit
