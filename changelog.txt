@@ -1,3 +1,10 @@
+[5/29/2017-16:00 0.2.0 Sergix]
+	Merged a PR from the Dir branch.
+	Published build 0.2.0!
+	Exported new jar to the /build/jar directory.
+	Created documentation in the new /docs/release folder of the project.
+	Pushed updates to Git.
+
 [5/29/2017-15:00 0.1.0 Sergix]
 	Added command details to cd, dir, pwd.
 	Moved some code around in the dir function to be more efficient.
