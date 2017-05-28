@@ -1,3 +1,19 @@
+[5/29/2017-15:00 0.1.0 Sergix]
+	Added command details to cd, dir, pwd.
+	Moved some code around in the dir function to be more efficient.
+	Created Dir branch for this code to be reviewed and a PR.
+	Pushed updates to Git.
+
+[5/29/2017-14:41 0.1.0 Sergix]
+	Fixed a couple issues mentioned in previous entry.
+	The "dir" command now prints from the "currentDirectory" global variable unless otherwise specified.
+
+[5/28/2017-23:22 0.1.0 Sergix]
+	Added the "cd" and "pwd" commands.
+	"cd" changes the directory to the specified input.
+	"pwd" prints the working directory of the console.
+	There are known issues and will be resolved ASAP.
+
 [5/27/2017-22:18 0.1.0 Sergix]
 	Created a Patch Notes Documentation Style Guide located at /docs/PatchDocStyleGuide.md
 	Updated Documentation Style Guide.
