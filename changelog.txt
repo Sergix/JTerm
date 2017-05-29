@@ -1,25 +1,30 @@
-[5/29/2017-21:01 0.2.0 Sergix]
+[5/28/2017-22:02 0.2.0 Sergix]
+	Changed the dates of the last few entries to be "5/28/2017" rather than "5/29/2017".
+	Created a Contributing Guidelines document to be followed by any new contributers.
+	Pushed updates to Git.
+
+[5/28/2017-21:01 0.2.0 Sergix]
 	Created a Code of Conduct for new contributers and the W.I.P. Guidelines.
 	Pushed updates to Git.
 
-[5/29/2017-16:08 0.2.0 Sergix]
+[5/28/2017-16:08 0.2.0 Sergix]
 	Created build files and metadeta at /build/src and /build/changelog directories.
 	Pushed updates to Git.
 
-[5/29/2017-16:00 0.2.0 Sergix]
+[5/28/2017-16:00 0.2.0 Sergix]
 	Merged a PR from the Dir branch.
 	Published build 0.2.0!
 	Exported new jar to the /build/jar directory.
 	Created documentation in the new /docs/release folder of the project.
 	Pushed updates to Git.
 
-[5/29/2017-15:00 0.1.0 Sergix]
+[5/28/2017-15:00 0.1.0 Sergix]
 	Added command details to cd, dir, pwd.
 	Moved some code around in the dir function to be more efficient.
 	Created Dir branch for this code to be reviewed and a PR.
 	Pushed updates to Git.
 
-[5/29/2017-14:41 0.1.0 Sergix]
+[5/28/2017-14:41 0.1.0 Sergix]
 	Fixed a couple issues mentioned in previous entry.
 	The "dir" command now prints from the "currentDirectory" global variable unless otherwise specified.
 
