@@ -1,3 +1,7 @@
+[5/29/2017-21:01 0.2.0 Sergix]
+	Created a Code of Conduct for new contributers and the W.I.P. Guidelines.
+	Pushed updates to Git.
+
 [5/29/2017-16:08 0.2.0 Sergix]
 	Created build files and metadeta at /build/src and /build/changelog directories.
 	Pushed updates to Git.
