@@ -1,15 +1,18 @@
-![JTerm](https://sergix.github.io/img/jterm.png)
+[![JTerm](https://sergix.github.io/img/jterm.png)](https://sergix.github.io/projects/jterm/index.html)
 
 ![Build Status](https://travis-ci.org/Sergix/JTerm.svg?branch=master)
 
 ## Definition
-A root-like terminal written for cross-platform usge.
+A terminal written for cross-platform usge.
 
 ## Implementation
 This project is written in Java using [Eclipse IDE for Java EE](http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/neon3).
 
+## Contributing
+View the [Contributing Guidelines](https://github.com/Sergix/JTerm/blob/master/CONTRIBUTING.md) for more information. The JTerm project is open to anyone and any code!
+
 ## Builds
-Once you build a file from the source code to an archive (.jar), push it to the /build/jar folder, along with the associated changelog (see Changelog section), and the source code (see Source Code section).
+Once you build a file from the source code to an archive (.jar), push it to the /build/jar folder, along with the associated changelog (see Changelog section), source code (see Source Code section), and documentation (see Documentation section.)
 The format of the archive's filename is as follows: "jterm-v(build version).jar"
 
 ## Source Code
