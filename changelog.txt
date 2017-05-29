@@ -1,3 +1,7 @@
+[5/28/2017-22:09 0.2.0 Sergix]
+	Created a "Source Code" section of the Contributing Guidelines for more information on source code and files.
+	Pushed updates to Git.
+
 [5/28/2017-22:02 0.2.0 Sergix]
 	Changed the dates of the last few entries to be "5/28/2017" rather than "5/29/2017".
 	Created a Contributing Guidelines document to be followed by any new contributers.
