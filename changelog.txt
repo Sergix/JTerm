@@ -1,3 +1,7 @@
+[5/28/2017-22:12 0.2.0 Sergix]
+	Updated README; now contains "Contributing" section.
+	Pushed updates to Git.
+
 [5/28/2017-22:09 0.2.0 Sergix]
 	Created a "Source Code" section of the Contributing Guidelines for more information on source code and files.
 	Pushed updates to Git.
