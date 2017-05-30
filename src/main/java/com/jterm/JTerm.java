@@ -114,6 +114,11 @@ public class JTerm {
 		  	case "pwd":
 		  		Dir.PrintWorkingDir(options);
 		  		break;
+		  		
+		  	
+		  	case "echo":
+		  		Echo.EchoInput(options);
+		  		break;
 			  
 		  	default:
 		  		// Fall back when unknown command is entered
