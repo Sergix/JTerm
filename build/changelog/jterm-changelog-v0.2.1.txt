@@ -1,0 +1,12 @@
+Changelog entry:
+
+[5/29/2017-20:50 0.2.1 NCSGeek]
+	Created Echo.java
+	Added Echo command
+
+Full changes include:
+	- Created "Echo" class
+  		- Added "echo" command; called with Echo.EchoInput() function
+	- Reformatted code to comply with Source Style Guide
+
+More information provided in published patch notes.
