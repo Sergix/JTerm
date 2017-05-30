@@ -20,7 +20,7 @@ Update 0.2.1 of JTerm adds the "echo" command, which takes the input specified a
   - Help output included
 - Added "echo" command to JTerm command switch
 
-> `JTerm 0.1.0`  
-> `jterm-v0.1.0.jar`  
+> `JTerm 0.2.1`  
+> `jterm-v0.2.1.jar`  
 > This project and its source are held under the GNU General Public License, located in the LICENSE file in the project's directory.  
 > (c) 2017  
