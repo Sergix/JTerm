@@ -1,4 +1,15 @@
-[5/29/2017-21:07 0.2.1 Sergix]
+[5/31/2017-16:04 0.2.1 Sergix]
+	Quite a few changes made. Here is a full list:
+		- Removed Write.java file and moved the WriteFile function to the new "Files" class
+		- Added "delete"/"del" command which deletes the specified file
+		- Added command option parsing for WriteFile
+		- Made inputed commands (not options) default to lowercase
+		- Files.Delete deletes both files AND directories
+		- 
+	Created "dev" branch that will be used for development.
+	Fixed incorrect date in last changelog entry.
+
+[5/31/2017-15:30 0.2.1 Sergix]
 	So according to semantic versioning, patch 0.2.1 should actually be version "0.3.0".
 	However, to is not possible under the Semantic Versioning specifications to change a release or patch version number.
 	Updated the 0.2.1 docs to include this statement in the patch notes section.
