@@ -132,6 +132,12 @@ public class Dir {
 		  
 	  }
 	  
+	  if (!newDirectory.endsWith("/"))
+	  {
+		  newDirectory += "/";
+		  
+	  }
+	  
 	  // It does exist, and it is a directory, so just change the global working directory variable to the input
 	  JTerm.currentDirectory = newDirectory;
 	  
