@@ -123,7 +123,8 @@ public class JTerm {
 		  		Files.Delete(options);
 		  		break;
 		  		
-		  	case "":
+		  	case "md":
+		  		Dir.NewDir(options);
 		  		break;
 			  
 		  	default:
