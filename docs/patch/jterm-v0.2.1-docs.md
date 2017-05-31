@@ -12,6 +12,8 @@ This document provides information on version 0.2.1 of the JTerm project. Releas
 ## Patch Notes
 Update 0.2.1 of JTerm adds the "echo" command, which takes the input specified and outputs it to the console. It is a simplistic but useful command, as the creation of programmable scripts will soon come as an update into the project.
 
+NOTE: This version was actually intended to be version "0.3.0", but was accidentally specified as a patch. No changes will occur.
+
 ## Changelog
 - Added "Echo" class file
   - Includes "echo" command; called with Echo.EchoInput()
