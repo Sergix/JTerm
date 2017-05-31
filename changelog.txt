@@ -1,4 +1,10 @@
 [5/29/2017-21:07 0.2.1 Sergix]
+	So according to semantic versioning, patch 0.2.1 should actually be version "0.3.0".
+	However, to is not possible under the Semantic Versioning specifications to change a release or patch version number.
+	Updated the 0.2.1 docs to include this statement in the patch notes section.
+	Pushed updates to Git.
+
+[5/29/2017-21:07 0.2.1 Sergix]
 	Pushed v0.2.1 dependencies.
 	Changelog and documentation have been finished writing and other smaller formatting changes.
 	Pusehd updates to Git.
