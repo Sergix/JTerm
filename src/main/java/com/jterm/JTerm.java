@@ -126,6 +126,13 @@ public class JTerm {
 		  	case "md":
 		  		Dir.NewDir(options);
 		  		break;
+		  		
+		  	case "read":
+		  		break;
+		  		
+		  	case "connect":
+		  		Client.Connect(options);
+		  		break;
 			  
 		  	default:
 		  		// Fall back when unknown command is entered
