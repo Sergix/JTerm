@@ -1,3 +1,19 @@
+[5/31/2017-20:43 0.2.1 Sergix]
+	Created a "Client" class that can connect to open TCP servers using a specified port and IP address.
+	Two-way messaging is also enabled from the console.
+	Client.Connect() is the connect function.
+	The Client class also implements a runnable thread for reading input while writing messages.
+	Pushed updates to Git.
+
+[5/31/2017-17:03 0.2.1 Sergix]
+	Made the change directory function not require a full directory list;
+	directory paths relative to the current directory can be entered.
+	Pushed updates to Git.
+
+[5/31/2017-16:31 0.2.1 Sergix]
+	Added a directory creation command, "md".
+	Function is in Dir.NewDir().
+
 [5/31/2017-16:04 0.2.1 Sergix]
 	Quite a few changes made. Here is a full list:
 		- Removed Write.java file and moved the WriteFile function to the new "Files" class
