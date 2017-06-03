@@ -133,6 +133,10 @@ public class JTerm {
 		  	case "connect":
 		  		Client.Connect(options);
 		  		break;
+		  		
+		  	case "server":
+		  		Server.Start(options);
+		  		break;
 			  
 		  	default:
 		  		// Fall back when unknown command is entered

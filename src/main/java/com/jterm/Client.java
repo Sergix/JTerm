@@ -35,6 +35,7 @@ public class Client implements Runnable {
 			if (option.equals("-h"))
 			{
 				System.out.println("Command syntax:\n\tconnect [-h] [-p port] address\n\nConnect to the specified IP address using TCP/IP. Default address is \"0.0.0.0\". Default port is 80.");
+				return;
 				
 			}
 			else if (option.equals("-p"))
@@ -73,7 +74,6 @@ public class Client implements Runnable {
 			InputStream input 					= connection.getInputStream();
 			OutputStream output 				= connection.getOutputStream();
 			BufferedReader bufferedSocketInput 	= new BufferedReader(new InputStreamReader(input));
-			BufferedReader bufferedSocketOutput = new BufferedReader(new InputStreamReader(System.in), 1);
 			
 			Client.input 						= bufferedSocketInput;
 			
@@ -84,19 +84,24 @@ public class Client implements Runnable {
 			System.out.println("Connected to server. Enter a blank line to quit. Reading for input...");
 			
 			while (true) {
+				BufferedReader bufferedSocketOutput = new BufferedReader(new InputStreamReader(System.in), 1);
 				String line = bufferedSocketOutput.readLine();
+				
 				if (line.equals(""))
 					break;
 				output.write(line.getBytes());
 				
+				output.close();
+				bufferedSocketOutput.close();
+				
 			}
-			
+
 			connection.close();
 			
 		}
 		catch (IOException ioe)
 		{
-			System.out.println("ERROR: " + ioe);
+			System.out.println("Connection severed.");
 			
 		}
 		
