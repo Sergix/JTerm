@@ -137,6 +137,10 @@ public class JTerm {
 		  	case "server":
 		  		Server.Start(options);
 		  		break;
+		  		
+		  	case "jwindow":
+		  		new Window(options);
+		  		break;
 			  
 		  	default:
 		  		// Fall back when unknown command is entered

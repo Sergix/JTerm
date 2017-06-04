@@ -1,3 +1,11 @@
+[6/3/2017-23:04 0.2.1 Sergix]
+	Created "jwindow" command that creates a new OS window.
+	Main class is the "Window" class.
+	Function called by JTerm command is "new Window(options)"
+	Options are defined in function documentation comment.
+	Release v0.3.0 is planned for tomorrow.
+	Pushed updates to Git.
+
 [6/3/2017-18:50 0.2.1 Sergix]
 	Ceasing updates on Client/Server model until script interpreter is made.
 	DO NOT run the "connect" or "server" command; they are DEPRECATED.
