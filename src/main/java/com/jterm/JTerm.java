@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class JTerm {
 	
 	  // Global version variable
-	  static String version = "0.1.0";
+	  static String version = "0.3.0";
 	  
 	  // Global directory variable (use "cd" command to change)
 	  // Default value "./" is equal to the default directory set when the program starts
@@ -130,15 +130,15 @@ public class JTerm {
 		  	case "read":
 		  		break;
 		  		
-		  	case "connect":
+		  	/*case "connect":
 		  		Client.Connect(options);
 		  		break;
 		  		
 		  	case "server":
 		  		Server.Start(options);
-		  		break;
+		  		break;*/
 		  		
-		  	case "jwindow":
+		  	case "window":
 		  		new Window(options);
 		  		break;
 			  

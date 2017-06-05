@@ -47,7 +47,7 @@ public class Window {
 		{
 			if (option.equals("-h"))
 			{
-				System.out.println("Command syntax:\t\njwindow [-h] [-r] [-w width] [-l height] [-t title]\n\nCreates a new programmable GUI window. Default title is \"JTerm Window\", and the default width and height of the window is 500 x 500.");
+				System.out.println("Command syntax:\t\nwindow [-h] [-r] [-w width] [-l height] [-t title]\n\nCreates a new programmable GUI window.\nDefault title is \"JTerm Window\", and the default width and height of the window is 500 x 500.");
 				return;
 				
 			}
