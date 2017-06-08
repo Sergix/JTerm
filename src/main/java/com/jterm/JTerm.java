@@ -3,17 +3,16 @@ package main.java.com.jterm;
 
 import java.util.Scanner;
 import java.io.*;
-import main.java.com.jterm.Write;
 import java.util.ArrayList;
 
 public class JTerm {
 	
 	  // Global version variable
-	  static String version = "0.1.0";
+	  static String version = "0.3.0";
 	  
 	  // Global directory variable (use "cd" command to change)
-	  // Default value "." is equal to the default directory set when the program starts
-	  static String currentDirectory = ".";
+	  // Default value "./" is equal to the default directory set when the program starts
+	  static String currentDirectory = "./";
 	  
 	  /*
 	  * main() void
@@ -87,7 +86,7 @@ public class JTerm {
 		  }
 		  
 		  // Switch through command names
-		  switch (input) {
+		  switch (input.toLowerCase()) {
 		  	case "help":
 		  		// Prints "JTerm v1.0" for example
 		  		System.out.println("JTerm v" + version);
@@ -100,7 +99,7 @@ public class JTerm {
 			  
 		  	case "write":
 		  		// Get the last option, which is the filename, and send it the option list
-		  		Write.WriteFile(options);
+		  		Files.WriteFile(options);
 		  		break;
 			  
 		  	case "dir":
@@ -115,9 +114,32 @@ public class JTerm {
 		  		Dir.PrintWorkingDir(options);
 		  		break;
 		  		
-		  	
 		  	case "echo":
 		  		Echo.EchoInput(options);
+		  		break;
+		  		
+		  	case "delete":
+		  	case "del":
+		  		Files.Delete(options);
+		  		break;
+		  		
+		  	case "md":
+		  		Dir.NewDir(options);
+		  		break;
+		  		
+		  	case "read":
+		  		break;
+		  		
+		  	/*case "connect":
+		  		Client.Connect(options);
+		  		break;
+		  		
+		  	case "server":
+		  		Server.Start(options);
+		  		break;*/
+		  		
+		  	case "window":
+		  		new Window(options);
 		  		break;
 			  
 		  	default:

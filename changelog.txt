@@ -21,7 +21,6 @@
 		- Added command option parsing for WriteFile
 		- Made inputed commands (not options) default to lowercase
 		- Files.Delete deletes both files AND directories
-		- 
 	Created "dev" branch that will be used for development.
 	Fixed incorrect date in last changelog entry.
 

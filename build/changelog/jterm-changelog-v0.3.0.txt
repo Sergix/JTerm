@@ -1,0 +1,26 @@
+Changelog entry:
+
+[6/4/2017-20:08 0.3.0 Sergix]
+	Release 0.3.0 has been pushed with the associated documentation and other data.
+	Documentation now includes a section covering commands that JTerm provides.
+	The Client/Server classes are included in the packaged source, although they are not actually used in the release executable; see associated release documentation for more details.
+	Pushed updates to Git.
+
+Full changes include:
+	- Created "Client" class
+  		- Added "connect" command; called with `Client.Connect()` function
+  		- NOT FUNCTIONING in this release; source is included
+	- Created "Server" class
+  		- Added "server" command; called with `Server.Start()` function
+  		- NOT FUNCTIONING in this release; source is included
+	- Created "Window" class
+  		- Added "window" command; called with `new Window()` function
+	- Added the "md" command (Make Directory) that calls the new `Dir.NewDir()` function
+	- Added the "del" command (DELete) that calls the new `Files.Delete()` function
+	- In-development source code is now pushed to the `dev` branch on the repository, which will be merged with `master` on release
+	- Inputed commands convert to all lowercase
+	- `Write` class has been removed; member function moved to `Files` class
+	- The current directory will always end with a single "forward slash" (e.g. `/usr/home/`)
+	- Other minor fixes
+
+More information provided in published release documentation.

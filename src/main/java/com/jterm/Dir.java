@@ -126,9 +126,22 @@ public class Dir {
 	  
 	  // Test if the input exists and if it is a directory
 	  File dir = new File(newDirectory);
-	  if (!dir.exists() || !dir.isDirectory()) {
+	  File newDir = new File(JTerm.currentDirectory + newDirectory);
+	  
+	  if (newDir.exists() && newDir.isDirectory()) {
+		  newDirectory = JTerm.currentDirectory + newDirectory;
+		  
+	  }
+	  else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory()))
+	  {
 		  System.out.println("ERROR: Directory \"" + newDirectory + "\" is either does not exist or is not a valid directory.");
 		  return;
+		  
+	  }
+	  
+	  if (!newDirectory.endsWith("/"))
+	  {
+		  newDirectory += "/";
 		  
 	  }
 	  
@@ -163,4 +176,36 @@ public class Dir {
 	  System.out.println(JTerm.currentDirectory);
 	  
   }
+  
+  /*
+  * NewDir() void
+  * 
+  * Creates a new directory.
+  * 
+  * -h
+  * 	Prints help information
+  *
+  * ArrayList<String> options - command options
+  */
+  public static void NewDir(ArrayList<String> options) {
+	  
+	  String name = "";
+	  
+	  for (String option: options) {
+		  if (option.equals("-h"))
+		  {
+			  System.out.println("Command syntax:\n\tmd [-h] name\n\nCreates a new directory.");
+			  return;
+			  
+		  }
+		  else
+		  {
+			  name = JTerm.currentDirectory + option;
+		  }
+	  }
+	  
+	  File dir = new File(name);
+	  dir.mkdir();
+  }
+  
 }
