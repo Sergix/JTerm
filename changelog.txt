@@ -1,3 +1,8 @@
+[6/11/2017-15:46 0.3.0 Sergix]
+	Moved some code around in the JTerm class.
+	Standby() now calls JTerm.Parse() to parse commands. This makes the code reusable with the Exec.Parse() function.
+	Pushed updates to Git.
+
 [6/4/2017-20:08 0.3.0 Sergix]
 	Release 0.3.0 has been pushed with the associated documentation and other data.
 	Documentation now includes a section covering commands that JTerm provides.

@@ -25,7 +25,7 @@ public class JTerm {
 	  * 				console
 	  */
 	  public static void main(String[] args) {
-		  
+		
 		 // Assign a default value of false to the quit variable
 		 boolean quit = false;
 		 
@@ -72,9 +72,6 @@ public class JTerm {
 		  // Get each substring of the command entered
 		  Scanner tokenizer = new Scanner(command);
 		  
-		  // Get the next substring
-		  String input = tokenizer.next();
-		  
 		  // options String array will be passed to command functions
 		  ArrayList<String> options = new ArrayList<String>();
 		  
@@ -85,8 +82,29 @@ public class JTerm {
 			  
 		  }
 		  
+		  if (Parse(options))
+		  {
+			  tokenizer.close();
+			  return true;
+		  }
+		  
+		  // Close the string stream
+		  tokenizer.close();
+		  
+		  // Keep looping; we don't want to quit
+		  return false;
+		  
+	  }
+	  
+	  
+	  public static boolean Parse(ArrayList<String> options)
+	  {
+		  
+		  String command = options.get(0).toLowerCase();
+		  options.remove(0);
+		  
 		  // Switch through command names
-		  switch (input.toLowerCase()) {
+		  switch (command) {
 		  	case "help":
 		  		// Prints "JTerm v1.0" for example
 		  		System.out.println("JTerm v" + version);
@@ -94,7 +112,6 @@ public class JTerm {
 			  
 		  	case "quit":
 		  		// Quit the program
-		  		tokenizer.close();
 		  		return true;
 			  
 		  	case "write":
@@ -142,6 +159,10 @@ public class JTerm {
 		  		new Window(options);
 		  		break;
 			  
+		  	case "exec":
+		  		Exec.Run(options);
+		  		break;
+		  		
 		  	default:
 		  		// Fall back when unknown command is entered
 		  		System.out.println("Unknown Command.");
@@ -149,13 +170,8 @@ public class JTerm {
 			  
 		  }
 		  
-		  // Close the string stream
-		  tokenizer.close();
-		  
-		  // Keep looping; we don't want to quit
 		  return false;
 		  
 	  }
-	  
 	  
 }
