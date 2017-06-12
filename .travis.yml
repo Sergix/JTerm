@@ -8,4 +8,4 @@ jdk:
   - oraclejdk8
 
 before_script: chmod +x compile.sh
-script: ./compile.sh
+script: mvn install -source 7 -DskipTests=true -Dmaven.javadoc.skip=true -B -V
