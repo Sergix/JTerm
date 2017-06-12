@@ -1,3 +1,21 @@
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 // package = folder :P
 package main.java.jterm;
 
@@ -29,6 +47,13 @@ public class JTerm {
 		 // Assign a default value of false to the quit variable
 		 boolean quit = false;
 		 
+		 System.out.println(
+				 "JTerm Copyright (C) 2017 Sergix, NCSGeek\n" +
+		 		"This program comes with ABSOLUTELY NO WARRANTY.\n" +
+		 		"This is free software, and you are welcome to redistribute it\n" +
+		 		"under certain conditions.\n"
+		 );
+		 
 		 BufferedReader user_input = new BufferedReader(new InputStreamReader(System.in), 1); // Setup input: String input = user_input.next();
 		 
 		 // Infinite loop for getting input
@@ -44,8 +69,8 @@ public class JTerm {
 	  /*
 	  * Standby() boolean
 	  * 
-	  * Awaits user command and then runs the command
-	  * specified.
+	  * Awaits user command and then calls Parse() with the
+	  * input.
 	  *
 	  * BufferedReader user_unput - Input stream loaded from the
 	  * 							main() function
@@ -101,12 +126,18 @@ public class JTerm {
 		  
 	  }
 	  
-	  
+	  /*
+	  * Parse() boolean
+	  * 
+	  * Checks input and passes command options to the function
+	  * that runs the requested command.
+	  *
+	  * ArrayList<String> options - command options
+	  */
 	  public static boolean Parse(ArrayList<String> options)
 	  {
-		  String command = "";
-		  if (options != new ArrayList<String>())
-			  command = options.get(0).toLowerCase();
+		  
+		  String command = options.get(0).toLowerCase();
 		  
 		  options.remove(0);
 		  
@@ -167,9 +198,9 @@ public class JTerm {
 		  		new Window(options);
 		  		break;
 			  
-		  	case "exec":
+		  	/*case "exec":
 		  		Exec.Run(options);
-		  		break;
+		  		break;*/
 		  		
 		  	default:
 		  		// Fall back when unknown command is entered
