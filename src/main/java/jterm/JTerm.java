@@ -1,5 +1,23 @@
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 // package = folder :P
-package main.java.com.jterm;
+package main.java.jterm;
 
 import java.util.Scanner;
 import java.io.*;
@@ -8,7 +26,7 @@ import java.util.ArrayList;
 public class JTerm {
 	
 	  // Global version variable
-	  static String version = "0.3.0";
+	  static String version = "0.3.1";
 	  
 	  // Global directory variable (use "cd" command to change)
 	  // Default value "./" is equal to the default directory set when the program starts
@@ -25,9 +43,16 @@ public class JTerm {
 	  * 				console
 	  */
 	  public static void main(String[] args) {
-		  
+		
 		 // Assign a default value of false to the quit variable
 		 boolean quit = false;
+		 
+		 System.out.println(
+				 "JTerm Copyright (C) 2017 Sergix, NCSGeek\n" +
+		 		"This program comes with ABSOLUTELY NO WARRANTY.\n" +
+		 		"This is free software, and you are welcome to redistribute it\n" +
+		 		"under certain conditions.\n"
+		 );
 		 
 		 BufferedReader user_input = new BufferedReader(new InputStreamReader(System.in), 1); // Setup input: String input = user_input.next();
 		 
@@ -44,8 +69,8 @@ public class JTerm {
 	  /*
 	  * Standby() boolean
 	  * 
-	  * Awaits user command and then runs the command
-	  * specified.
+	  * Awaits user command and then calls Parse() with the
+	  * input.
 	  *
 	  * BufferedReader user_unput - Input stream loaded from the
 	  * 							main() function
@@ -58,6 +83,11 @@ public class JTerm {
 		  // Attempt to read a line from the input
 		  try {
 			  command = user_input.readLine();
+			  if (command.equals(""))
+			  {
+				  return false;
+				  
+			  }
 			  
 		  }
 		  catch (IOException ioe)
@@ -72,9 +102,6 @@ public class JTerm {
 		  // Get each substring of the command entered
 		  Scanner tokenizer = new Scanner(command);
 		  
-		  // Get the next substring
-		  String input = tokenizer.next();
-		  
 		  // options String array will be passed to command functions
 		  ArrayList<String> options = new ArrayList<String>();
 		  
@@ -85,8 +112,37 @@ public class JTerm {
 			  
 		  }
 		  
+		  if (Parse(options))
+		  {
+			  tokenizer.close();
+			  return true;
+		  }
+		  
+		  // Close the string stream
+		  tokenizer.close();
+		  
+		  // Keep looping; we don't want to quit
+		  return false;
+		  
+	  }
+	  
+	  /*
+	  * Parse() boolean
+	  * 
+	  * Checks input and passes command options to the function
+	  * that runs the requested command.
+	  *
+	  * ArrayList<String> options - command options
+	  */
+	  public static boolean Parse(ArrayList<String> options)
+	  {
+		  
+		  String command = options.get(0).toLowerCase();
+		  
+		  options.remove(0);
+		  
 		  // Switch through command names
-		  switch (input.toLowerCase()) {
+		  switch (command) {
 		  	case "help":
 		  		// Prints "JTerm v1.0" for example
 		  		System.out.println("JTerm v" + version);
@@ -94,7 +150,6 @@ public class JTerm {
 			  
 		  	case "quit":
 		  		// Quit the program
-		  		tokenizer.close();
 		  		return true;
 			  
 		  	case "write":
@@ -106,6 +161,7 @@ public class JTerm {
 		  		Dir.PrintDir(options);
 		  		break;
 			  
+		  	case "chdir":
 		  	case "cd":
 		  		Dir.ChangeDir(options);
 		  		break;
@@ -142,20 +198,19 @@ public class JTerm {
 		  		new Window(options);
 		  		break;
 			  
+		  	/*case "exec":
+		  		Exec.Run(options);
+		  		break;*/
+		  		
 		  	default:
 		  		// Fall back when unknown command is entered
-		  		System.out.println("Unknown Command.");
+		  		System.out.println("Unknown Command \"" + command + "\"");
 		  		break;
 			  
 		  }
 		  
-		  // Close the string stream
-		  tokenizer.close();
-		  
-		  // Keep looping; we don't want to quit
 		  return false;
 		  
 	  }
-	  
 	  
 }

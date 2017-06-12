@@ -1,0 +1,27 @@
+Changelog entry:
+
+[6/12/2017-14:52 0.3.0 Sergix]
+	Entering "cd /" only adds a slash ('/') to the current working directory (which is still valid, but not what the user desires
+	and can potentially cause confusion.)
+	Entering a single slash now changes the directory to the highest-level directory available.
+	Wrote documentation for version "0.3.1".
+	Updated source builds and JAR builds.
+	Created version changelog and release notes.
+	Put License commenting in the source code.
+	Opened a PR and requested for merging into master.
+
+Full changes include:
+	- Created JTerm.Parse() function that is the dedicated command parser (called by JTerm.Standby())
+	- Added checking for blank input in the Parse() function
+	- Entering an invalid command now outputs "Unknown Command '(command)'"
+	- Window() class changes
+		- Window.ToggleVisible() function that toggles the visibility of the window
+		- Window.visible property (private) (visibility is automatically set to false)
+		- Added command option [-v] which turns on visibility of the window
+		- Fixed possible issue with the Window title being null
+		- Window.GetTitle() returns title of the window
+		- Window.title property (private)
+	- GNU General Public License comments were put at the head of each source file in the project
+	- When opening the terminal, a quick note about JTerm's license is displayed, along with JTerm's version and authors
+
+More information provided in published release documentation.
