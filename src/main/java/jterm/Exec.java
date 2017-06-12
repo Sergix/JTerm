@@ -10,6 +10,9 @@ public class Exec {
 	
 	private static Hashtable<String, String> vars = new Hashtable<>();
 	
+	// Var name, window object
+	private static Hashtable<String, Window> windows = new Hashtable<>();
+	
 	public static void Run(ArrayList<String> options)
 	{	
 		
@@ -18,7 +21,7 @@ public class Exec {
 		for (String option: options) {
 			if (option.equals("-h"))
 			{
-				System.out.println("Command syntax:\n\texec file\n\nExecutes a batch script.");
+				System.out.println("Command syntax:\n\texec [-h] file\n\nExecutes a batch script.");
 				
 			}
 			else
@@ -70,14 +73,22 @@ public class Exec {
 	
 	public static void Parse(String directive)
 	{
-		
+		String command = "";
 		Scanner tokenizer = new Scanner(directive);
 		ArrayList<String> options = new ArrayList<String>();
 		while (tokenizer.hasNext())
 			options.add(tokenizer.next());
 		
-		String command = options.get(0).toLowerCase();
+		if (options.size() != 0)
+			command = options.get(0).toLowerCase();
 		
+		else
+		{
+			tokenizer.close();
+			return;
+			
+		}
+			
 		switch (command)
 		{
 		case "set":
@@ -85,10 +96,10 @@ public class Exec {
 			{
 				String element = "";
 				for (Enumeration<String> e = vars.keys(); e.hasMoreElements();)
-					
 				       System.out.println((element = e.nextElement()) + "=" + vars.get(element));
 				       
 				break;
+				
 			}
 			
 			String key = options.get(1), value = "";
@@ -96,6 +107,17 @@ public class Exec {
 			{
 				tokenizer.close();
 				return;
+				
+			}
+			
+			if (options.get(3).equals("window"))
+			{
+				for (int i = 0; i < 4; i++)
+					options.remove(0);
+				
+				Window newWindow = new Window(options);
+				windows.put(key, newWindow);
+				break;
 				
 			}
 			
@@ -108,14 +130,98 @@ public class Exec {
 			vars.put(key, value);
 			break;
 			
+		case "pause":
+			if (options.size() == 1)
+				System.out.println("Press any key to continue...");
+			else
+			{
+				String message = "";
+				for (int i = 1; i < options.size(); i++)
+				{
+					if (i != options.size() - 1)
+						message = options.get(i) + " ";
+					else
+						message = options.get(i);
+				}
+				
+				System.out.print(message);
+			}
+			
+			try {
+				System.in.read();
+				
+			} catch (IOException ioe) {
+				System.out.println(ioe);
+				
+			}
+			
+			tokenizer.close();
+			return;
+			
+		// These commands are system-level/OS-dependent and are not possible to integrate into JTerm.
+		// Just skip over them.
+		case "bcdedit":
+		case "chkdsk":
+		case "chkntfs":
 		case "cls":
+		case "cmd":
 		case "color":
+		case "convert":
+		case "diskpart":
+		case "driverquery":
+		case "format":
+		case "fsutil":
+		case "gpresult":
+		case "mode":
+		case "sc":
+		case "shutdown":
+		case "start":
+		case "tasklist":
+		case "taskkill":
+		case "ver":
+		case "vol":
+		case "wmic":
 			break;
 			
 		default:
+			for (int i = 0; i < vars.size(); i++)
+			{
+				if ( vars.containsKey(options.get(0)) )
+				{
+					tokenizer.close();
+					return;
+					
+				}
+				if ( windows.containsKey(options.get(0)) )
+				{
+					switch(options.get(1))
+					{
+					case "visible":
+						windows.get(options.get(0)).ToggleVisible();
+						break;
+						
+					case "title":
+						String newTitle = "";
+						for (int j = 2; j < options.size(); j++)
+							newTitle = options.get(j) + " ";
+
+						windows.get(options.get(0)).GetFrame().setTitle(newTitle);
+						break;
+						
+					default:
+						break;
+						
+					}
+					
+					tokenizer.close();
+					return;
+					
+				}
+				
+			}
+
 			JTerm.Parse(options);
-			tokenizer.close();
-			return;
+			break;
 		
 		}
 		

@@ -25,3 +25,6 @@ hs_err_pid*
 gradlew.bat
 build/libs/
 build/tmp/
+
+# test scripts
+test.bat

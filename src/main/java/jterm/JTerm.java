@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class JTerm {
 	
 	  // Global version variable
-	  static String version = "0.3.0";
+	  static String version = "0.3.1";
 	  
 	  // Global directory variable (use "cd" command to change)
 	  // Default value "./" is equal to the default directory set when the program starts
@@ -58,6 +58,11 @@ public class JTerm {
 		  // Attempt to read a line from the input
 		  try {
 			  command = user_input.readLine();
+			  if (command.equals(""))
+			  {
+				  return false;
+				  
+			  }
 			  
 		  }
 		  catch (IOException ioe)
@@ -99,8 +104,10 @@ public class JTerm {
 	  
 	  public static boolean Parse(ArrayList<String> options)
 	  {
+		  String command = "";
+		  if (options != new ArrayList<String>())
+			  command = options.get(0).toLowerCase();
 		  
-		  String command = options.get(0).toLowerCase();
 		  options.remove(0);
 		  
 		  // Switch through command names
@@ -166,7 +173,7 @@ public class JTerm {
 		  		
 		  	default:
 		  		// Fall back when unknown command is entered
-		  		System.out.println("Unknown Command.");
+		  		System.out.println("Unknown Command \"" + command + "\"");
 		  		break;
 			  
 		  }

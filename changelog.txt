@@ -1,3 +1,11 @@
+[6/12/2017-14:44 0.3.0 Sergix]
+	Added some more scripting elements for windows.
+	"pause", "window", and window title and visibility changes are now possible.
+	Windows can be stored as variables and modified later.
+	Found a large issue that needs to be released as a new patch (v0.3.1):
+		- Blank input into the console crashes JTerm
+	Pushed updates to Git.
+
 [6/12/2017-10:09 0.3.0 Sergix]
 	Moved project folders around for possible Maven integration for the CI.
 	Added "-h" option to exec.

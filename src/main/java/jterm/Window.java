@@ -9,6 +9,8 @@ public class Window {
 	
 	private int id;
 	private JFrame window;
+	private String title = null;
+	private boolean visible = false;
 	
 	/*
 	* Window() void
@@ -37,7 +39,6 @@ public class Window {
 	*/
 	Window(ArrayList<String> options) {
 		
-		String title = "";
 		int width = 500, height = 500;
 		boolean resizable = false;
 		
@@ -53,6 +54,7 @@ public class Window {
 			}
 			else if(option.equals("-t"))
 			{
+				title = "";
 				titleNext = true;
 				
 			}
@@ -95,12 +97,25 @@ public class Window {
 		windowCount += 1;
 		id = windowCount;
 		
+		if (title == null)
+			title = "JTerm Window";
+		
 		JFrame window = new JFrame(title);
 		window.setSize(width, height);
-		window.setVisible(true);
 		window.setResizable(resizable);
 		
 		this.window = window;
+		
+	}
+	
+	/*
+	* ToggleVisible() void
+	* 
+	* Toggles the visibility of the window
+	*/
+	public void ToggleVisible()
+	{
+		window.setVisible(visible = !visible);
 		
 	}
 	
@@ -124,6 +139,17 @@ public class Window {
 	public JFrame GetFrame() {
 		
 		return this.window;
+		
+	}
+	
+	/*
+	* GetTitle() String
+	* 
+	* Returns the title of the window
+	*/
+	public String GetTitle() {
+		
+		return title;
 		
 	}
 	
