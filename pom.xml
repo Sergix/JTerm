@@ -4,7 +4,7 @@
 
   <groupId>sergix</groupId>
   <artifactId>jterm</artifactId>
-  <version>1.0</version>
+  <version>0.3.1</version>
   <packaging>jar</packaging>
 
   <name>jterm</name>
