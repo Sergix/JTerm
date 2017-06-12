@@ -1,5 +1,5 @@
 // package = folder :P
-package main.java.com.jterm;
+package main.java.jterm;
 
 import java.util.Scanner;
 import java.io.*;
@@ -123,6 +123,7 @@ public class JTerm {
 		  		Dir.PrintDir(options);
 		  		break;
 			  
+		  	case "chdir":
 		  	case "cd":
 		  		Dir.ChangeDir(options);
 		  		break;

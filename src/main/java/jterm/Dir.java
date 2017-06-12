@@ -1,4 +1,4 @@
-package main.java.com.jterm;
+package main.java.jterm;
 
 import java.io.*;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package main.java.com.jterm;
+package main.java.jterm;
 
 import java.io.BufferedReader;
 import java.io.File;

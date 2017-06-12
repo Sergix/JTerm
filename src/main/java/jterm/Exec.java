@@ -1,7 +1,8 @@
-package main.java.com.jterm;
+package main.java.jterm;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Scanner;
 
@@ -15,9 +16,9 @@ public class Exec {
 		String file = "";
 	
 		for (String option: options) {
-			if (option.equals(""))
+			if (option.equals("-h"))
 			{
-				
+				System.out.println("Command syntax:\n\texec file\n\nExecutes a batch script.");
 				
 			}
 			else
@@ -46,6 +47,7 @@ public class Exec {
 			BufferedReader reader = new BufferedReader(new FileReader(script));
 			try {
 				String directive = reader.readLine();
+				if (directive != null)
 				do {
 					Exec.Parse(directive);
 					
@@ -79,21 +81,35 @@ public class Exec {
 		switch (command)
 		{
 		case "set":
-			String key = options.get(0), value = "";
-			if ( !options.get(1).equals("=") )
+			if (options.size() == 1)
+			{
+				String element = "";
+				for (Enumeration<String> e = vars.keys(); e.hasMoreElements();)
+					
+				       System.out.println((element = e.nextElement()) + "=" + vars.get(element));
+				       
+				break;
+			}
+			
+			String key = options.get(1), value = "";
+			if ( !options.get(2).equals("=") )
 			{
 				tokenizer.close();
 				return;
 				
 			}
 			
-			for (int i = 2; i < options.size(); i++)
+			for (int i = 3; i < options.size(); i++)
 			{
-				value += options.get(i);
+				value += options.get(i) + " ";
 				
 			}
 
 			vars.put(key, value);
+			break;
+			
+		case "cls":
+		case "color":
 			break;
 			
 		default:
