@@ -5,4 +5,6 @@ set testWindow = window -r
 
 set
 
-pause
+testWindow title Hello World!
+testWindow visible
+pause DONT PRESS ANYTHING

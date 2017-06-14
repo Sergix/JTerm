@@ -198,9 +198,9 @@ public class JTerm {
 		  		new Window(options);
 		  		break;
 			  
-		  	/*case "exec":
+		  	case "exec":
 		  		Exec.Run(options);
-		  		break;*/
+		  		break;
 		  		
 		  	default:
 		  		// Fall back when unknown command is entered

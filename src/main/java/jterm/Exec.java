@@ -91,6 +91,7 @@ public class Exec {
 	
 	public static void Parse(String directive)
 	{
+		
 		String command = "";
 		Scanner tokenizer = new Scanner(directive);
 		ArrayList<String> options = new ArrayList<String>();
@@ -150,19 +151,23 @@ public class Exec {
 			
 		case "pause":
 			if (options.size() == 1)
-				System.out.println("Press any key to continue...");
+				System.out.println("Press enter to continue...");
+			
 			else
 			{
 				String message = "";
 				for (int i = 1; i < options.size(); i++)
 				{
 					if (i != options.size() - 1)
-						message = options.get(i) + " ";
+						message += options.get(i) + " ";
+					
 					else
-						message = options.get(i);
+						message += options.get(i);
+					
 				}
 				
 				System.out.print(message);
+				
 			}
 			
 			try {
@@ -220,8 +225,9 @@ public class Exec {
 						
 					case "title":
 						String newTitle = "";
+						System.out.println(options);
 						for (int j = 2; j < options.size(); j++)
-							newTitle = options.get(j) + " ";
+							newTitle += options.get(j) + " ";
 
 						windows.get(options.get(0)).GetFrame().setTitle(newTitle);
 						break;
