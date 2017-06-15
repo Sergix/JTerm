@@ -20,10 +20,18 @@
 package main.java.jterm;
 
 import java.util.Scanner;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.io.*;
 import java.util.ArrayList;
 
-public class JTerm {
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.NativeKeyListener;
+
+public class JTerm implements NativeKeyListener {
 	
 	  // Global version variable
 	  static String version = "0.3.1";
@@ -42,28 +50,51 @@ public class JTerm {
 	  * String[] args - arguments passed from the 
 	  * 				console
 	  */
-	  public static void main(String[] args) {
-		
-		 // Assign a default value of false to the quit variable
-		 boolean quit = false;
+	  public static void main(String[] args) {  
+		  
+		  // Assign a default value of false to the quit variable
+		  boolean quit = false;
+		  
+		  // Get the logger for "org.jnativehook" and set the level to off.
+		  Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+		  logger.setLevel(Level.OFF);
+		  Handler[] handlers = Logger.getLogger("").getHandlers();
+		  for (int i = 0; i < handlers.length; i++) {
+			  handlers[i].setLevel(Level.OFF);
+		  }
+		  
+		  // Attempt to register the key listener
+		  try {
+			  GlobalScreen.registerNativeHook();
+
+		  } catch (NativeHookException e) {
+			  e.printStackTrace();
+			  System.exit(1);
+			  
+		  } 
+		  
+		  // Add the key input handler
+		  GlobalScreen.addNativeKeyListener(new JTerm());
 		 
-		 System.out.println(
-				 "JTerm Copyright (C) 2017 Sergix, NCSGeek\n" +
-		 		"This program comes with ABSOLUTELY NO WARRANTY.\n" +
-		 		"This is free software, and you are welcome to redistribute it\n" +
-		 		"under certain conditions.\n"
-		 );
+		  // Print licensing information
+		  System.out.println(
+			  "JTerm Copyright (C) 2017 Sergix, NCSGeek\n" +
+		 	  "This program comes with ABSOLUTELY NO WARRANTY.\n" +
+		 	  "This is free software, and you are welcome to redistribute it\n" +
+		 	  "under certain conditions.\n"
+		  );
 		 
-		 BufferedReader user_input = new BufferedReader(new InputStreamReader(System.in), 1); // Setup input: String input = user_input.next();
+		  // Setup input: String input = user_input.next();
+		  BufferedReader user_input = new BufferedReader(new InputStreamReader(System.in), 1);
 		 
-		 // Infinite loop for getting input
-		 do {
-			 // Set return value of the input function to "quit"
-			 quit = JTerm.Standby(user_input);
+		  // Infinite loop for getting input
+		  do {
+		      // Set return value of the input function to "quit"
+			  quit = JTerm.Standby(user_input);
 			 
-		 } while (!quit); 
-		 // As long as we are not quitting...
-		 
+		  // As long as we are not quitting...
+		  } while (!quit); 
+
 	  }
 	  
 	  /*
@@ -77,6 +108,7 @@ public class JTerm {
 	  */
 	  public static boolean Standby(BufferedReader user_input) {
 
+		  // Print the current directory as the prompt (e.g. "./")
 		  System.out.print(JTerm.currentDirectory + " ");
 		  String command = "";
 		  
@@ -137,8 +169,10 @@ public class JTerm {
 	  public static boolean Parse(ArrayList<String> options)
 	  {
 		  
+		  // Get the first string in the options array, which is the command
 		  String command = options.get(0).toLowerCase();
 		  
+		  // Get rid of the command for when we pass the rest of the command options
 		  options.remove(0);
 		  
 		  // Switch through command names
@@ -153,7 +187,6 @@ public class JTerm {
 		  		return true;
 			  
 		  	case "write":
-		  		// Get the last option, which is the filename, and send it the option list
 		  		Files.WriteFile(options);
 		  		break;
 			  
@@ -203,14 +236,60 @@ public class JTerm {
 		  		break;
 		  		
 		  	default:
-		  		// Fall back when unknown command is entered
-		  		System.out.println("Unknown Command \"" + command + "\"");
+		  		// Create a new array that contains the command and check if it is an executable
+		  		ArrayList<String> execFile = new ArrayList<String>();
+		  		execFile.add(command);
+		  		if ( Exec.Run(execFile) )
+		  			System.out.println("Unknown Command \"" + command + "\"");
+		  		
+		  		// All else fails
 		  		break;
 			  
 		  }
 		  
+		  // Keep looping
 		  return false;
 		  
 	  }
+	  
+	  /*
+	  * nativeKeyPressed() void
+	  * 
+	  * Overrides the built-in library function
+	  * that detects key input.
+	  *
+	  * NativeKeyEvent e - key event object
+	  */
+	  public void nativeKeyPressed(NativeKeyEvent e) {
+		  
+		  // If the key pressed is the TAB key
+		  if (e.getKeyCode() == NativeKeyEvent.VC_TAB) {
+			  
+			  // TODO
+			  // Auto-completion of commands
+			  
+		  }
+		  
+	  }
+
+	  /*
+	  * nativeKeyReleased() void
+	  * 
+	  * Overrides the built-in library function
+	  * that detects key release.
+	  *
+	  * NativeKeyEvent e - key event object
+	  */
+	  public void nativeKeyReleased(NativeKeyEvent e) { }
+
+	  /*
+	  * nativeKeyTyped() void
+	  * 
+	  * Overrides the built-in library function
+	  * that detects key typing.
+	  *
+	  * NativeKeyEvent e - key event object
+	  */
+	  public void nativeKeyTyped(NativeKeyEvent e) { }
 	  
 }

@@ -28,3 +28,4 @@ build/tmp/
 
 # test scripts
 test.bat
+*.lst

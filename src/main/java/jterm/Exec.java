@@ -31,7 +31,7 @@ public class Exec {
 	// Var name, window object
 	private static Hashtable<String, Window> windows = new Hashtable<>();
 	
-	public static void Run(ArrayList<String> options)
+	public static boolean Run(ArrayList<String> options)
 	{	
 		
 		String file = "";
@@ -40,6 +40,7 @@ public class Exec {
 			if (option.equals("-h"))
 			{
 				System.out.println("Command syntax:\n\texec [-h] file\n\nExecutes a batch script.");
+				return false;
 				
 			}
 			else
@@ -58,7 +59,7 @@ public class Exec {
 			if (!script.exists() || !script.isFile())
 			{
 				System.out.println("ERROR: File \"" + file + "\" either does not exist or is not a file.");
-				return;
+				return true;
 				
 			}
 			
@@ -86,6 +87,8 @@ public class Exec {
 			System.out.println(ioe);
 			
 		}
+		
+		return false;
 		
 	}
 	
@@ -135,6 +138,7 @@ public class Exec {
 					options.remove(0);
 				
 				Window newWindow = new Window(options);
+				vars.put(key, Integer.toString(newWindow.GetId()));
 				windows.put(key, newWindow);
 				break;
 				
@@ -245,7 +249,6 @@ public class Exec {
 			}
 
 			JTerm.Parse(options);
-			break;
 		
 		}
 		
