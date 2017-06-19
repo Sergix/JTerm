@@ -7,4 +7,5 @@ set
 
 testWindow title Hello World!
 testWindow visible
+pause
 pause DONT PRESS ANYTHING

@@ -1,3 +1,23 @@
+[6/18/2017-22:47 0.3.1 Sergix]
+	Fixed two output prompt issue presented in last changelog entry.
+	First issue in issue list in the last changelog entry is now irrelevant, as the "pause" command no longer uses the EventHandler
+	for input.
+	User input reader moved to global static variable (JTerm.userInput) to avoid having multiple readers for System.in open.
+	TODO in Exec(), line 162 (!)
+	Pushed updates to Git.
+
+[6/16/2017-23:15 0.3.1 Sergix]
+	Fixed pause key listener.
+	Known issues:
+		- When pressing a key during pause, that key is read and automatically passed to the BufferedReader in the command loop; it is able to be backspaced, 
+			but doing so and then entering more characters crashes the program.
+		- (Linked with above issue) Hitting enter for a pause command outputs two command input prompts and an extra newline before
+
+[6/15/2017-19:39 0.3.1 Sergix]
+	Moved all event handlers to new EventHandler class.
+	Initialized from EventHandler.init() called in main().
+	Key detection is disabled for now, and focus should move to Exec for the project.
+
 [6/14/2017-22:49 0.3.1 Sergix]
 	Added key detection functions using JNativeHook libs.
 	Current TODO is auto-completion of commands and executable filenames.
@@ -6,7 +26,6 @@
 [6/14/2017-21:08 0.3.1 Sergix]
 	The project now runs Maven for local build testing in Eclipse.
 	The POM has been modified to include these changes.
-	Built classes are published to the 
 
 [6/12/2017-14:52 0.3.0 Sergix]
 	Entering "cd /" only adds a slash ('/') to the current working directory (which is still valid, but not what the user desires

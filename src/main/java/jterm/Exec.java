@@ -28,7 +28,7 @@ public class Exec {
 	
 	private static Hashtable<String, String> vars = new Hashtable<>();
 	
-	// Var name, window object
+	// var name, window object
 	private static Hashtable<String, Window> windows = new Hashtable<>();
 	
 	public static boolean Run(ArrayList<String> options)
@@ -81,7 +81,6 @@ public class Exec {
 				System.out.println(ioe);
 				
 			}
-			
 			
 		} catch (FileNotFoundException ioe) {
 			System.out.println(ioe);
@@ -155,11 +154,15 @@ public class Exec {
 			
 		case "pause":
 			if (options.size() == 1)
-				System.out.println("Press enter to continue...");
+				System.out.print("Press enter to continue...");
 			
 			else
 			{
 				String message = "";
+				/* TODO
+				 * Move the loop into its own function to basically
+				 * be a macro for Exec (getLine() ?)
+				*/
 				for (int i = 1; i < options.size(); i++)
 				{
 					if (i != options.size() - 1)
@@ -173,11 +176,15 @@ public class Exec {
 				System.out.print(message);
 				
 			}
-			
-			try {
-				System.in.read();
+
+			try
+			{
+				JTerm.userInput.read();
+				JTerm.userInput.skip(1);
 				
-			} catch (IOException ioe) {
+			}
+			catch (IOException ioe)
+			{
 				System.out.println(ioe);
 				
 			}

@@ -20,18 +20,10 @@
 package main.java.jterm;
 
 import java.util.Scanner;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.io.*;
 import java.util.ArrayList;
 
-import org.jnativehook.GlobalScreen;
-import org.jnativehook.NativeHookException;
-import org.jnativehook.keyboard.NativeKeyEvent;
-import org.jnativehook.keyboard.NativeKeyListener;
-
-public class JTerm implements NativeKeyListener {
+public class JTerm {
 	
 	  // Global version variable
 	  static String version = "0.3.1";
@@ -39,6 +31,10 @@ public class JTerm implements NativeKeyListener {
 	  // Global directory variable (use "cd" command to change)
 	  // Default value "./" is equal to the default directory set when the program starts
 	  static String currentDirectory = "./";
+	  
+	  static String commandChars = "";
+	  
+	  static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 	  
 	  /*
 	  * main() void
@@ -55,26 +51,8 @@ public class JTerm implements NativeKeyListener {
 		  // Assign a default value of false to the quit variable
 		  boolean quit = false;
 		  
-		  // Get the logger for "org.jnativehook" and set the level to off.
-		  Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
-		  logger.setLevel(Level.OFF);
-		  Handler[] handlers = Logger.getLogger("").getHandlers();
-		  for (int i = 0; i < handlers.length; i++) {
-			  handlers[i].setLevel(Level.OFF);
-		  }
-		  
-		  // Attempt to register the key listener
-		  try {
-			  GlobalScreen.registerNativeHook();
-
-		  } catch (NativeHookException e) {
-			  e.printStackTrace();
-			  System.exit(1);
-			  
-		  } 
-		  
-		  // Add the key input handler
-		  GlobalScreen.addNativeKeyListener(new JTerm());
+		  // Initialize event handlers
+		  EventHandler.init();
 		 
 		  // Print licensing information
 		  System.out.println(
@@ -84,14 +62,11 @@ public class JTerm implements NativeKeyListener {
 		 	  "under certain conditions.\n"
 		  );
 		 
-		  // Setup input: String input = user_input.next();
-		  BufferedReader user_input = new BufferedReader(new InputStreamReader(System.in), 1);
-		 
 		  // Infinite loop for getting input
 		  do {
 		      // Set return value of the input function to "quit"
-			  quit = JTerm.Standby(user_input);
-			 
+			  quit = JTerm.Standby();
+			  
 		  // As long as we are not quitting...
 		  } while (!quit); 
 
@@ -106,7 +81,7 @@ public class JTerm implements NativeKeyListener {
 	  * BufferedReader user_unput - Input stream loaded from the
 	  * 							main() function
 	  */
-	  public static boolean Standby(BufferedReader user_input) {
+	  public static boolean Standby() {
 
 		  // Print the current directory as the prompt (e.g. "./")
 		  System.out.print(JTerm.currentDirectory + " ");
@@ -114,7 +89,9 @@ public class JTerm implements NativeKeyListener {
 		  
 		  // Attempt to read a line from the input
 		  try {
-			  command = user_input.readLine();
+			  command = userInput.readLine();
+			  
+			  // If the command is a blank line, loop to next
 			  if (command.equals(""))
 			  {
 				  return false;
@@ -131,6 +108,9 @@ public class JTerm implements NativeKeyListener {
 			  
 		  }
 		  
+		  // Reset the value of the input prompt char reader
+		  commandChars = "";
+		  
 		  // Get each substring of the command entered
 		  Scanner tokenizer = new Scanner(command);
 		  
@@ -144,14 +124,12 @@ public class JTerm implements NativeKeyListener {
 			  
 		  }
 		  
-		  if (Parse(options))
-		  {
-			  tokenizer.close();
-			  return true;
-		  }
-		  
 		  // Close the string stream
 		  tokenizer.close();
+		  
+		  // Parse the command and quit if necessary
+		  if (Parse(options))
+			  return true;
 		  
 		  // Keep looping; we don't want to quit
 		  return false;
@@ -246,50 +224,10 @@ public class JTerm implements NativeKeyListener {
 		  		break;
 			  
 		  }
-		  
+
 		  // Keep looping
 		  return false;
 		  
 	  }
-	  
-	  /*
-	  * nativeKeyPressed() void
-	  * 
-	  * Overrides the built-in library function
-	  * that detects key input.
-	  *
-	  * NativeKeyEvent e - key event object
-	  */
-	  public void nativeKeyPressed(NativeKeyEvent e) {
-		  
-		  // If the key pressed is the TAB key
-		  if (e.getKeyCode() == NativeKeyEvent.VC_TAB) {
-			  
-			  // TODO
-			  // Auto-completion of commands
-			  
-		  }
-		  
-	  }
 
-	  /*
-	  * nativeKeyReleased() void
-	  * 
-	  * Overrides the built-in library function
-	  * that detects key release.
-	  *
-	  * NativeKeyEvent e - key event object
-	  */
-	  public void nativeKeyReleased(NativeKeyEvent e) { }
-
-	  /*
-	  * nativeKeyTyped() void
-	  * 
-	  * Overrides the built-in library function
-	  * that detects key typing.
-	  *
-	  * NativeKeyEvent e - key event object
-	  */
-	  public void nativeKeyTyped(NativeKeyEvent e) { }
-	  
 }
