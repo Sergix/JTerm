@@ -35,4 +35,4 @@ If a new bug or issue is found, create a new Issue! The issue name must be short
 3. "Files and Code" - If you find where the issue is or believe it to be, put the filenames and/or code in this section.
 
 ## Source Code
-When contributing new source code, edit the files contained in the `/src/main/java/com/jterm` directory. Create new files as shown in the [Source Code Style Guide](https://github.com/Sergix/JTerm/blob/master/docs/DocStyleGuide.md). The editor used can be any of your choosing, but we recommend [Eclipse](http://www.eclipse.org/). Do not create new directories unless required and given permission by @Sergix or @NCSGeek.
+When contributing new source code, edit the files contained in the `/src/main/java/jterm` directory. Create new files as shown in the [Source Code Style Guide](https://github.com/Sergix/JTerm/blob/master/docs/DocStyleGuide.md). The editor used can be any of your choosing, but we recommend [Eclipse](http://www.eclipse.org/). Do not create new directories unless required and given permission by @Sergix or @NCSGeek.
