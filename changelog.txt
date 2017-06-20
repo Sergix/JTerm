@@ -1,4 +1,12 @@
-[6/18/2017-22:47 0.3.1 Sergix]
+(#58)[6/19/2017-20:53 0.3.1 Sergix]
+	Updated README to include Changelog changes.
+	Changelog entry headings now include an entry number that is used in Git commit messages and can be used to reference changelog entries that specify a new issue or a change.
+	All entries have been updated to include this change.
+	Uploaded class file builds into target directory built from Maven and javac.
+	Finished TODO presented in #57.
+	Pushed updates to Git.
+
+(#57)[6/18/2017-22:47 0.3.1 Sergix]
 	Fixed two output prompt issue presented in last changelog entry.
 	First issue in issue list in the last changelog entry is now irrelevant, as the "pause" command no longer uses the EventHandler
 	for input.
@@ -6,28 +14,28 @@
 	TODO in Exec(), line 162 (!)
 	Pushed updates to Git.
 
-[6/16/2017-23:15 0.3.1 Sergix]
+(#56)[6/16/2017-23:15 0.3.1 Sergix]
 	Fixed pause key listener.
 	Known issues:
 		- When pressing a key during pause, that key is read and automatically passed to the BufferedReader in the command loop; it is able to be backspaced, 
 			but doing so and then entering more characters crashes the program.
 		- (Linked with above issue) Hitting enter for a pause command outputs two command input prompts and an extra newline before
 
-[6/15/2017-19:39 0.3.1 Sergix]
+(#55)[6/15/2017-19:39 0.3.1 Sergix]
 	Moved all event handlers to new EventHandler class.
 	Initialized from EventHandler.init() called in main().
 	Key detection is disabled for now, and focus should move to Exec for the project.
 
-[6/14/2017-22:49 0.3.1 Sergix]
+(#54)[6/14/2017-22:49 0.3.1 Sergix]
 	Added key detection functions using JNativeHook libs.
 	Current TODO is auto-completion of commands and executable filenames.
 	Pushed updates to Git.
 
-[6/14/2017-21:08 0.3.1 Sergix]
+(#53)[6/14/2017-21:08 0.3.1 Sergix]
 	The project now runs Maven for local build testing in Eclipse.
 	The POM has been modified to include these changes.
 
-[6/12/2017-14:52 0.3.0 Sergix]
+(#52)[6/12/2017-14:52 0.3.0 Sergix]
 	Entering "cd /" only adds a slash ('/') to the current working directory (which is still valid, but not what the user desires
 	and can potentially cause confusion.)
 	Entering a single slash now changes the directory to the highest-level directory available.
@@ -37,7 +45,7 @@
 	Put License commenting in the source code.
 	Opened a PR and requested for merging into master.
 
-[6/12/2017-14:44 0.3.0 Sergix]
+(#51)[6/12/2017-14:44 0.3.0 Sergix]
 	Added some more scripting elements for windows.
 	"pause", "window", and window title and visibility changes are now possible.
 	Windows can be stored as variables and modified later.
@@ -45,27 +53,27 @@
 		- Blank input into the console crashes JTerm
 	Pushed updates to Git.
 
-[6/12/2017-10:09 0.3.0 Sergix]
+(#50)[6/12/2017-10:09 0.3.0 Sergix]
 	Moved project folders around for possible Maven integration for the CI.
 	Added "-h" option to exec.
 	Pushed updates to Git.
 
-[6/11/2017-17:19 0.3.0 Sergix]
+(#49)[6/11/2017-17:19 0.3.0 Sergix]
 	Added "set" command to Exec.Parse().
 	Known issue: an extra space is added at the end of the variable value
 
-[6/11/2017-15:46 0.3.0 Sergix]
+(#48)[6/11/2017-15:46 0.3.0 Sergix]
 	Moved some code around in the JTerm class.
 	Standby() now calls JTerm.Parse() to parse commands. This makes the code reusable with the Exec.Parse() function.
 	Pushed updates to Git.
 
-[6/4/2017-20:08 0.3.0 Sergix]
+(#47)[6/4/2017-20:08 0.3.0 Sergix]
 	Release 0.3.0 has been pushed with the associated documentation and other data.
 	Documentation now includes a section covering commands that JTerm provides.
 	The Client/Server classes are included in the packaged source, although they are not actually used in the release executable; see associated release documentation for more details.
 	Pushed updates to Git.
 
-[6/3/2017-23:04 0.2.1 Sergix]
+(#46)[6/3/2017-23:04 0.2.1 Sergix]
 	Created "jwindow" command that creates a new OS window.
 	Main class is the "Window" class.
 	Function called by JTerm command is "new Window(options)"
@@ -73,12 +81,12 @@
 	Release v0.3.0 is planned for tomorrow.
 	Pushed updates to Git.
 
-[6/3/2017-18:50 0.2.1 Sergix]
+(#45)[6/3/2017-18:50 0.2.1 Sergix]
 	Ceasing updates on Client/Server model until script interpreter is made.
 	DO NOT run the "connect" or "server" command; they are DEPRECATED.
 	Pushed updates to Git.
 
-[5/31/2017-23:28 0.2.1 Sergix]
+(#44)[5/31/2017-23:28 0.2.1 Sergix]
 	Created a "Server" class that can run a socket server directly from JTerm and accepts multiple client requests.
 	Soon, this will become programmable through scripts.
 	Server.Start() is the used function.
@@ -88,23 +96,23 @@
 		- Server close code is unreachable
 	Pushed updates to Git.
 
-[5/31/2017-20:43 0.2.1 Sergix]
+(#43)[5/31/2017-20:43 0.2.1 Sergix]
 	Created a "Client" class that can connect to open TCP servers using a specified port and IP address.
 	Two-way messaging is also enabled from the console.
 	Client.Connect() is the connect function.
 	The Client class also implements a runnable thread for reading input while writing messages.
 	Pushed updates to Git.
 
-[5/31/2017-17:03 0.2.1 Sergix]
+(#42)[5/31/2017-17:03 0.2.1 Sergix]
 	Made the change directory function not require a full directory list;
 	directory paths relative to the current directory can be entered.
 	Pushed updates to Git.
 
-[5/31/2017-16:31 0.2.1 Sergix]
+(#41)[5/31/2017-16:31 0.2.1 Sergix]
 	Added a directory creation command, "md".
 	Function is in Dir.NewDir().
 
-[5/31/2017-16:04 0.2.1 Sergix]
+(#40)[5/31/2017-16:04 0.2.1 Sergix]
 	Quite a few changes made. Here is a full list:
 		- Removed Write.java file and moved the WriteFile function to the new "Files" class
 		- Added "delete"/"del" command which deletes the specified file
@@ -114,92 +122,92 @@
 	Created "dev" branch that will be used for development.
 	Fixed incorrect date in last changelog entry.
 
-[5/31/2017-15:30 0.2.1 Sergix]
+(#39)[5/31/2017-15:30 0.2.1 Sergix]
 	So according to semantic versioning, patch 0.2.1 should actually be version "0.3.0".
 	However, to is not possible under the Semantic Versioning specifications to change a release or patch version number.
 	Updated the 0.2.1 docs to include this statement in the patch notes section.
 	Pushed updates to Git.
 
-[5/29/2017-21:07 0.2.1 Sergix]
+(#38)[5/29/2017-21:07 0.2.1 Sergix]
 	Pushed v0.2.1 dependencies.
 	Changelog and documentation have been finished writing and other smaller formatting changes.
 	Pusehd updates to Git.
 
-[5/29/2017-20:50 0.2.1 NCSGeek]
+(#37)[5/29/2017-20:50 0.2.1 NCSGeek]
 	Created Echo.java
 	Added Echo command
 
-[5/28/2017-22:12 0.2.0 Sergix]
+(#36)[5/28/2017-22:12 0.2.0 Sergix]
 	Updated README; now contains "Contributing" section.
 	Pushed updates to Git.
 
-[5/28/2017-22:09 0.2.0 Sergix]
+(#35)[5/28/2017-22:09 0.2.0 Sergix]
 	Created a "Source Code" section of the Contributing Guidelines for more information on source code and files.
 	Pushed updates to Git.
 
-[5/28/2017-22:02 0.2.0 Sergix]
+(#34)[5/28/2017-22:02 0.2.0 Sergix]
 	Changed the dates of the last few entries to be "5/28/2017" rather than "5/29/2017".
 	Created a Contributing Guidelines document to be followed by any new contributers.
 	Pushed updates to Git.
 
-[5/28/2017-21:01 0.2.0 Sergix]
+(#33)[5/28/2017-21:01 0.2.0 Sergix]
 	Created a Code of Conduct for new contributers and the W.I.P. Guidelines.
 	Pushed updates to Git.
 
-[5/28/2017-16:08 0.2.0 Sergix]
+(#32)[5/28/2017-16:08 0.2.0 Sergix]
 	Created build files and metadeta at /build/src and /build/changelog directories.
 	Pushed updates to Git.
 
-[5/28/2017-16:00 0.2.0 Sergix]
+(#31)[5/28/2017-16:00 0.2.0 Sergix]
 	Merged a PR from the Dir branch.
 	Published build 0.2.0!
 	Exported new jar to the /build/jar directory.
 	Created documentation in the new /docs/release folder of the project.
 	Pushed updates to Git.
 
-[5/28/2017-15:00 0.1.0 Sergix]
+(#30)[5/28/2017-15:00 0.1.0 Sergix]
 	Added command details to cd, dir, pwd.
 	Moved some code around in the dir function to be more efficient.
 	Created Dir branch for this code to be reviewed and a PR.
 	Pushed updates to Git.
 
-[5/28/2017-14:41 0.1.0 Sergix]
+(#29)[5/28/2017-14:41 0.1.0 Sergix]
 	Fixed a couple issues mentioned in previous entry.
 	The "dir" command now prints from the "currentDirectory" global variable unless otherwise specified.
 
-[5/28/2017-23:22 0.1.0 Sergix]
+(#28)[5/28/2017-23:22 0.1.0 Sergix]
 	Added the "cd" and "pwd" commands.
 	"cd" changes the directory to the specified input.
 	"pwd" prints the working directory of the console.
 	There are known issues and will be resolved ASAP.
 
-[5/27/2017-22:18 0.1.0 Sergix]
+(#27)[5/27/2017-22:18 0.1.0 Sergix]
 	Created a Patch Notes Documentation Style Guide located at /docs/PatchDocStyleGuide.md
 	Updated Documentation Style Guide.
 	Changed README to include new documentation files.
 	Pushed updates to Git.
 
-[5/27/2017-15:51 0.1.0 Sergix]
+(#26)[5/27/2017-15:51 0.1.0 Sergix]
 	Created a Documentation Style Guide located at /docs/DocStyleGuide.md
 	This file includes infomation about writing documentation for new releases.
 	Pushed updates to Git.
 
-[5/26/2017-18:23 0.1.0 Sergix]
+(#25)[5/26/2017-18:23 0.1.0 Sergix]
 	Made a few small updates to the Style Guide.
 	Documentation Comments also describe command-line arguments (e.g. "-f", "-h") that are interpreted by the function.
 	Updated more of the code to adapt to the Style Guide.
 	Pushed updates to Git.
 
-[5/25/2017-23:00 0.1.0 Sergix]
+(#24)[5/25/2017-23:00 0.1.0 Sergix]
 	Changed some of the code syntax to align with the new Source Code Style Guide.
 	Pushed updates to Git.
 
-[5/25/2017-18:29 0.1.0 Sergix]
+(#23)[5/25/2017-18:29 0.1.0 Sergix]
 	Created a Source Style Guide located at /docs/SourceStyleGuide.md
 	Provides extensive information on how source code is to be formatted.
 	Pushed updates to Git.
 
-[5/24/2017-20:23 0.1.0 Sergix]
+(#22)[5/24/2017-20:23 0.1.0 Sergix]
 	Edited README with small changes and a new "Versioning" section.
 	Version numbers now implement the "Semantic Versioning" specification (see README for details.)
 	Changed the name of the pre-release jar to "jterm-v0.1.0.jar" to align with this specification.
@@ -210,58 +218,58 @@
 	Edited the filenames of the pre-release build files. "vPrerelease-changelog.txt" -> "jterm-changelog-v0.1.0.txt"; "vPrerelease-src.zip" -> "jterm-src-v0.1.0.zip".
 	Pushed updates to Git.
 
-[5/23/2017-21:57 pre-alpha Sergix]
+(#21)[5/23/2017-21:57 pre-alpha Sergix]
 	Added arguments for commands.
 	All class functions should take the "options" variable as the only argument.
 	Class functions will loop through the options and take out what it needs as it needs it.
 	A known error is in the Write class, where if you do not specify an filename when calling it, the program crashes.
 	Pushed updates to Git.
 
-[5/23/2017-20:48 pre-alpha Sergix]
+(#20)[5/23/2017-20:48 pre-alpha Sergix]
 	Updated the output of the "dir" command with some fancy output.
 	Output details are listed in a comment block in Dir.java.
 	Pushed updates to Git.
 
-[5/23/2017-17:58 pre-alpha Sergix]
+(#19)[5/23/2017-17:58 pre-alpha Sergix]
 	Recieved approval to merge PR #2.
 	Merged into master with changes:
 		- Dir.java file
 		- "dir [directory]" command added to JTerm.Standby()
 	Pushed updates to Git.
 
-[5/23/2017-16:32 pre-alpha Sergix]
+(#18)[5/23/2017-16:32 pre-alpha Sergix]
 	Add "dir" to runnable commands in JTerm class.
 	Command syntax: dir [directory]
 	When [directory] is not specified, the function defaults to the current directory (".").
 	Running Travis builds at the moment. I have requested for review to merge the PR (#2) if successful.
 	Pushed updates to Git.
 
-[5/23/2017-8:40 pre-alpha Sergix]
+(#17)[5/23/2017-8:40 pre-alpha Sergix]
 	Create Dir.java file.
 	Will contain all static methods related to directory functions.
 	Created PrintDir method and opened a PR on the Dir branch.
 	Travis CI ran some build tests... failed both. Checking imported libs.
 	Pushed updates to Git.
 
-[5/20/2017-13:45 pre-alpha Sergix]
+(#16)[5/20/2017-13:45 pre-alpha Sergix]
 	Made some changes to compile.sh for Travis builds.
 	Changes to the file are no longer necessary as long as all source files stay in the current folder.
 	Pushed updates to Git.
 
-[5/19/2017-20:06 pre-alpha Sergix]
+(#15)[5/19/2017-20:06 pre-alpha Sergix]
 	Input is now read as an entire line (via BufferedReader) and then iterated through as smaller "tokens" or substrings, using spaces as delimiters.
 	Removed class files from the Git folder, but keep them in your local project folder.
 	Changed .gitignore to reject .class files.
 	Pushed updates to Git.
 
-[5/19/2017-19:47 pre-alpha Sergix]
+(#14)[5/19/2017-19:47 pre-alpha Sergix]
 	Actually got Travis CI to work. Made a custom shell script that compiles the classes into the build/classes folder.
 	Added the compile.sh file for CI build scripts.
 	Updated .travis.yml to work with the new parameters.
 	Changed README to include build status image from Travis CI.
 	Pushed updates to Git.
 
-[5/18/2017-17:23 pre-alpha Sergix]
+(#13)[5/18/2017-17:23 pre-alpha Sergix]
 	Attempting a different CI: CircleCI.
 	Already started building the project... hopefully everything sails smoothly.
 	Obviously, however, all issues are coming from Maven/Gradle, and I still cannot understand how to format the Maven POM or the build.gradle.
@@ -270,50 +278,50 @@
 	Removing all CI dependencies now, and closing all running CI environments.
 	Pushed updates to Git.
 
-[5/18/2017-17:02 pre-alpha Sergix]
+(#12)[5/18/2017-17:02 pre-alpha Sergix]
 	Updated Gradle Builds.
 	The Travis CI at least WORKS now... sort of. I don't think it's actually building/deploying anything, as every time gradle runs it just reports "UP-TO-DATE" for everything...
 	Working and past builds can be viewed at https://travis-ci.org/Sergix/JTerm
 	Edited the directories for the java package.
 	Pushed updates to Git.
 	
-[5/18/2017-17:02 pre-alpha Sergix]
+(#11)[5/18/2017-17:02 pre-alpha Sergix]
 	Created gradle dependencies.
 	Pushed updates to Git.
 	
-[5/18/2017-16:46 pre-alpha Sergix]
+(#10)[5/18/2017-16:46 pre-alpha Sergix]
 	Been messing around with getting Travis CI to automate build tests for the project.
 	Attempting to get Gradle to work.... with not much luck yet.
 	Moved some directories around to hopefully work with the integrated builds.
 	Pushed updates to Git.
 
-[5/17/2017-22:03 pre-alpha Sergix]
+(#9)[5/17/2017-22:03 pre-alpha Sergix]
 	Finished the WriteFile class.
 	Uploaded files to the Write-File branch.
 	Opened a PR to merge to master.
 	Pushed to GitHub.
 	
-[5/17/2017-21:38 pre-alpha Sergix]
+(#8)[5/17/2017-21:38 pre-alpha Sergix]
 	Added a logo to the readme, viewable online.
 	Also added a project page at https://sergix.github.io/projects/jterm/index.html
 
-[5/17/2017-21:38 pre-alpha Sergix]
+(#7)[5/17/2017-21:38 pre-alpha Sergix]
 	Added a logo to the readme, viewable online.
 	Also added a project page at https://sergix.github.io/projects/jterm/index.html
 
-[5/16/2017-20:47 pre-alpha Sergix]
+(#6)[5/16/2017-20:47 pre-alpha Sergix]
 	Created Write.java class file.
 	Adds writing to files.
 	Created "write" command in terminal.
 	Pushed to Write-File GitHub branch.
 
-[5/16/2017-19:52 pre-alpha Sergix]
+(#5)[5/16/2017-19:52 pre-alpha Sergix]
 	Uploaded pre-release jar.
 	No big changes in source code since last update.
 	Changed .gitignore to not ignore .jars.
 	Pushed to GitHub along with associated source and changelog.
 
-[5/16/2017-19:09 pre-alpha Sergix]
+(#4)[5/16/2017-19:09 pre-alpha Sergix]
 	Finally reformatted the directory.
 	Created a 'jterm' subfolder under /src that is used as the 'package' directory for eclipse.
 	Class files are generated in the /src/jterm folder (the same folder as the source files).
@@ -323,18 +331,18 @@
 	Updated the README for a change in the "Changelog" section: changelog entries must be indented (as now shown.) This adds for better readability.
 	Pushed updates to GitHub.
 
-[5/16/2017-17:36 pre-alpha Sergix]
+(#3)[5/16/2017-17:36 pre-alpha Sergix]
 	Edited uploaded files by NCSGeek.
 	Eclipse generated some weird files... gonna have to rework the directory.
 
-[5/16/2017-17:05 pre-alpha Sergix]
+(#2)[5/16/2017-17:05 pre-alpha Sergix]
 	Created classpath and source directory.
 	Created .vscode settings folder for VSCode preferences.
 	compile.bat automatically builds classes and runs it in the console.
 	Only issue at the moment is getting JARs to work for a console application, if it is even possible. Typically JARs are only used for GUI applications.
 	Pushed updates to GitHub.
 
-[5/15/2017-8:55 pre-alpha Sergix]
+(#1)[5/15/2017-8:55 pre-alpha Sergix]
 	Uploaded the global changelog file to the project.
 	Changed README.md "Changelog" section to require username in changelog entries.
 	New entires in the changelog must be placed at the top of the file, rather than the bottom.

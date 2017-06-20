@@ -123,7 +123,7 @@ public class Exec {
 				
 			}
 			
-			String key = options.get(1), value = "";
+			String key = options.get(1);
 			if ( !options.get(2).equals("=") )
 			{
 				tokenizer.close();
@@ -143,13 +143,7 @@ public class Exec {
 				
 			}
 			
-			for (int i = 3; i < options.size(); i++)
-			{
-				value += options.get(i) + " ";
-				
-			}
-
-			vars.put(key, value);
+			vars.put(key, GetRest(options, 3));
 			break;
 			
 		case "pause":
@@ -157,25 +151,7 @@ public class Exec {
 				System.out.print("Press enter to continue...");
 			
 			else
-			{
-				String message = "";
-				/* TODO
-				 * Move the loop into its own function to basically
-				 * be a macro for Exec (getLine() ?)
-				*/
-				for (int i = 1; i < options.size(); i++)
-				{
-					if (i != options.size() - 1)
-						message += options.get(i) + " ";
-					
-					else
-						message += options.get(i);
-					
-				}
-				
-				System.out.print(message);
-				
-			}
+				System.out.print(GetRest(options, 1));
 
 			try
 			{
@@ -235,12 +211,7 @@ public class Exec {
 						break;
 						
 					case "title":
-						String newTitle = "";
-						System.out.println(options);
-						for (int j = 2; j < options.size(); j++)
-							newTitle += options.get(j) + " ";
-
-						windows.get(options.get(0)).GetFrame().setTitle(newTitle);
+						windows.get(options.get(0)).GetFrame().setTitle(GetRest(options, 2));
 						break;
 						
 					default:
@@ -260,6 +231,24 @@ public class Exec {
 		}
 		
 		tokenizer.close();
+		
+	}
+	
+	public static String GetRest(ArrayList<String> options, int index)
+	{
+		
+		String output = "";
+		for (int i = index; i < options.size(); i++)
+		{
+			if (i != options.size() - 1)
+				output += options.get(i) + " ";
+			
+			else
+				output += options.get(i);
+			
+		}
+		
+		return output;
 		
 	}
 	
