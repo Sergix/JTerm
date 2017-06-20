@@ -18,7 +18,7 @@ Source code, documentation, and patch note styling can be found here:
 Any of these types of files MUST be formatted as shown in these documents.
 
 ## Changelog
-Any changes, in any branch, MUST be pushed to the changelog file found on the master branch called "changelog.txt". View the "Changelog" section in the [README](/README.md) for more information. Do not push updates to changelog files on other branches; the master one is to be the only one changed and updated.
+Any changes, in any branch, MUST be pushed to the changelog file found on the dev branch called "changelog.txt". View the "Changelog" section in the [README](/README.md) for more information. Do not push updates to changelog files on other branches; the dev one is to be the only one changed and updated.
 
 ## Pull Requests
 Pull Requests, of course, MUST be opened on a new branch. The branch and PR name must be short but descriptive of its topic. A description must be made of the PR's purpose and a short description of the added code. Every PR must request to be reviewed by @Sergix or @NCSGeek. Travis CI is also used in this project (dashboard can be found [here](https://travis-ci.org/Sergix/JTerm)), and PR's are automatically checked by Travis CI to make sure they are ready to be deployed.  
