@@ -60,3 +60,6 @@ Numbering versions on files (such as released builds) should take the format of 
 Documentation is published with every:
 - Major and minor release ([Documentation Style Guide](https://github.com/Sergix/JTerm/blob/master/docs/DocStyleGuide.md))
 - Patch ([Patch Notes Documentation Style Guide](https://github.com/Sergix/JTerm/blob/master/docs/PatchDocStyleGuide.md))
+
+## Slack
+The JTerm project now has a Slack messaging group! Request to join the [Sergix](https://sergix.slack.com/) team to recieve notifications on updates, Travis CI build status, and more on the #jterm channel.
