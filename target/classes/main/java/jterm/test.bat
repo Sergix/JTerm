@@ -1,11 +1,7 @@
-set test = hello world!
-set lol = lul
+set add1 = 1
+set add2 = 4
+set add3 = null
 
-set testWindow = window -r
+add3 = add2 + add1
 
 set
-
-testWindow title Hello World!
-testWindow visible
-pause
-pause DONT PRESS ANYTHING

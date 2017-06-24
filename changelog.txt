@@ -1,3 +1,7 @@
+(#59)[6/19/2017-20:53 0.3.1 Sergix]
+	Added basic arithmetic options that can be assigned to variables.
+	Numeric addition is soon to be implemented.
+
 (#58)[6/19/2017-20:53 0.3.1 Sergix]
 	Updated README to include Changelog changes.
 	Changelog entry headings now include an entry number that is used in Git commit messages and can be used to reference changelog entries that specify a new issue or a change.

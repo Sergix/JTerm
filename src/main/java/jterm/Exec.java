@@ -194,40 +194,72 @@ public class Exec {
 			break;
 			
 		default:
-			for (int i = 0; i < vars.size(); i++)
+			for (;;)
+			if ( vars.containsKey(options.get(0)) )
 			{
-				if ( vars.containsKey(options.get(0)) )
+				int value;
+				//
+				// TODO
+				// Create arithmetic operations that passes the value 
+				// to whatever it is needed for
+				//
+				if ( !options.get(1).equals("=") || !vars.containsKey(options.get(2)) || !vars.containsKey(options.get(4)) )
+					break;
+				
+				switch(options.get(3))
 				{
-					tokenizer.close();
-					return;
+				case "+":
+					value = Integer.parseInt( vars.get(options.get(2)) ) + Integer.parseInt( vars.get(options.get(4)) );
+					break;
 					
-				}
-				if ( windows.containsKey(options.get(0)) )
-				{
-					switch(options.get(1))
-					{
-					case "visible":
-						windows.get(options.get(0)).ToggleVisible();
-						break;
-						
-					case "title":
-						windows.get(options.get(0)).GetFrame().setTitle(GetRest(options, 2));
-						break;
-						
-					default:
-						break;
-						
-					}
+				case "-":
+					value = Integer.parseInt( vars.get(options.get(2)) ) - Integer.parseInt( vars.get(options.get(4)) );
+					break;
 					
+				case "*":
+					value = Integer.parseInt( vars.get(options.get(2)) ) * Integer.parseInt( vars.get(options.get(4)) );
+					break;
+					
+				case "/":
+					value = Integer.parseInt( vars.get(options.get(2)) ) / Integer.parseInt( vars.get(options.get(4)) );
+					break;
+					
+				default:
 					tokenizer.close();
 					return;
 					
 				}
 				
+				vars.replace(options.get(0), String.valueOf(value));
+				
+				tokenizer.close();
+				return;
+				
 			}
-
-			JTerm.Parse(options);
-		
+			else if ( windows.containsKey(options.get(0)) )
+			{
+				switch(options.get(1))
+				{
+				case "visible":
+					windows.get(options.get(0)).ToggleVisible();
+					break;
+					
+				case "title":
+					windows.get(options.get(0)).GetFrame().setTitle(GetRest(options, 2));
+					break;
+					
+				default:
+					break;
+					
+				}
+				
+			}
+			else
+				JTerm.Parse(options);
+			
+			tokenizer.close();
+			return;
+			
 		}
 		
 		tokenizer.close();
