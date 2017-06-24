@@ -49,10 +49,15 @@ Whitespace is used to seperate statements and to provide more readable code whil
 
 ### Functions, Conditionals, Variables
 Whitespace MUST be used in the following ways:
-1. A space MUST be used between the argument list and the bracket; there MUST NOT be space between the function name and the argument list (e.g. `public static void Test() {`)
-2. If/Else/For/While, and any conditional statement MUST use a space between the operation token and the parentheses and a space between the parentheses and the bracket; there MUST NOT be spaces in between the contents of the parentheses (e.g. `if (this) {`)
+1. There MUST NOT be space between the function name and the argument list (e.g. `public static void Test()`)
+2. If/Else/For/While, and any conditional statement MUST use a space between the operation token and the parentheses; there MUST NOT be spaces in between the contents of the parentheses (e.g. `if (this)`)
 3. A space MUST be used between variable names and operators (e.g. `int value = 1 + 1;`)
-4. If using multi-level parenthetical statements, spaces MUST be used to seperate the statements and provide padding (e.g. `if ( (this) && (that) ) {`)
+4. If using multi-level parenthetical statements, spaces MUST be used to seperate the statements and provide padding (e.g. `if ( (this) && (that) )`)
+5. A newline MUST be used before the bracket of the method/conditional:
+```
+if (this)
+{
+```
 
 ### Newlines
 Blank newlines MUST abide by the following criteria:
@@ -66,7 +71,8 @@ System.out.println(second_value);
 ```
 2. They are used after a function name, and after the last line of code inside the function. e.g.:
 ```
-public static void Test() {
+public static void Test()
+{
 
     int value = 1;
     
@@ -79,7 +85,8 @@ int input = 1;
 ```
 4. They MUST NOT be used before sections of code in conditionals and methods other than functions, but a newline MUST be used after the section of code. e.g.:
 ```
-while (this) {
+while (this)
+{
     DoThis();
     
 }
@@ -89,16 +96,21 @@ while (this) {
 Tabs and indents are used to define blocks of code, and code that is contained by a method or conditional. Tabs are interpreted differently by different programs; therefore it is dependent on how many times you hit the "TAB" key when indenting.  
 As an overall rule, a single tab MUST be used to indent code one lever further in every case it is needed. e.g.:
 ```
-class Test {
+class Test
+{
 
-  public static void main() {
+  public static void main()
+  {
     
     int value = 1;
     // Check if the value equals "1"
-    if (value == 1) {
+    if (value == 1)
+    {
       return;
       
-    } else {
+    }
+    else
+    {
       System.out.println("Value is not equal to 1!");
       
     }
