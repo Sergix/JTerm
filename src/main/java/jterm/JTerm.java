@@ -202,6 +202,9 @@ public class JTerm {
 		  		Exec.Run(options);
 		  		break;*/
 		  		
+		  	case "ps":
+		  		Ps.process();
+		  		
 		  	default:
 		  		// Fall back when unknown command is entered
 		  		System.out.println("Unknown Command \"" + command + "\"");
