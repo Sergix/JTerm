@@ -205,7 +205,10 @@ public class JTerm {
 		  	case "ps":
 		  		Ps.process();
 		  		
-		  	default:
+		  	case "ping":
+		  		Ping.prePing();		  		
+		  		
+		  	default: 		
 		  		// Fall back when unknown command is entered
 		  		System.out.println("Unknown Command \"" + command + "\"");
 		  		break;
