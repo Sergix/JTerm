@@ -215,14 +215,12 @@ public class JTerm {
 	
 		  	case "ps":
 		  		Ps.process();
+				break;
 		  		
 		  	case "ping":
 		  		Ping.prePing();		  		
-		  		
-		  	default: 		
-		  		// Fall back when unknown command is entered
-		  		System.out.println("Unknown Command \"" + command + "\"");
-=======
+		  		break;
+				  
 		  	default:
 		  		// Create a new array that contains the command and check if it is an executable
 		  		ArrayList<String> execFile = new ArrayList<String>();
