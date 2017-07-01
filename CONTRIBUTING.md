@@ -18,7 +18,7 @@ Source code, documentation, and patch note styling can be found here:
 Any of these types of files MUST be formatted as shown in these documents.
 
 ## Changelog
-Any changes, in any branch, MUST be pushed to the changelog file found on the master branch called "changelog.txt". View the "Changelog" section in the [README](/README.md) for more information. Do not push updates to changelog files on other branches; the master one is to be the only one changed and updated.
+Any changes, in any branch, MUST be pushed to the changelog file found on the dev branch called "changelog.txt". View the "Changelog" section in the [README](/README.md) for more information. Do not push updates to changelog files on other branches; the dev one is to be the only one changed and updated.
 
 ## Pull Requests
 Pull Requests, of course, MUST be opened on a new branch. The branch and PR name must be short but descriptive of its topic. A description must be made of the PR's purpose and a short description of the added code. Every PR must request to be reviewed by @Sergix or @NCSGeek. Travis CI is also used in this project (dashboard can be found [here](https://travis-ci.org/Sergix/JTerm)), and PR's are automatically checked by Travis CI to make sure they are ready to be deployed.  
@@ -35,4 +35,4 @@ If a new bug or issue is found, create a new Issue! The issue name must be short
 3. "Files and Code" - If you find where the issue is or believe it to be, put the filenames and/or code in this section.
 
 ## Source Code
-When contributing new source code, edit the files contained in the `/src/main/java/com/jterm` directory. Create new files as shown in the [Source Code Style Guide](https://github.com/Sergix/JTerm/blob/master/docs/DocStyleGuide.md). The editor used can be any of your choosing, but we recommend [Eclipse](http://www.eclipse.org/). Do not create new directories unless required and given permission by @Sergix or @NCSGeek.
+When contributing new source code, edit the files contained in the `/src/main/java/jterm` directory. Create new files as shown in the [Source Code Style Guide](https://github.com/Sergix/JTerm/blob/master/docs/DocStyleGuide.md). The editor used can be any of your choosing, but we recommend [Eclipse](http://www.eclipse.org/). Do not create new directories unless required and given permission by @Sergix or @NCSGeek.

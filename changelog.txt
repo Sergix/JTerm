@@ -1,3 +1,15 @@
+(#61)[null-null 0.3.1 chromechris]
+	Added a ping functionality
+	Added a class called 'Ping'
+	Added a 'ping' case statment in the JTerm class
+
+(#60)[null-null 0.3.1 chromechris]
+	Converted to Maven Project.
+	Added a process view functionality for both Windows and Linux, output is based on OS environment check.
+	Functionality called 'ps' added to JTerm Class.
+	New Class called Ps added.
+	Added a new library through Maven.
+
 (#59)[6/19/2017-20:53 0.3.1 Sergix]
 	Added basic arithmetic options that can be assigned to variables.
 	Numeric addition is soon to be implemented.

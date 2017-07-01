@@ -22,8 +22,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-    	<groupId>com.1stleg</groupId>
-    	<artifactId>jnativehook</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.6</version>
+    </dependency>
+    <dependency>
+     	<groupId>com.1stleg</groupId>
+     	<artifactId>jnativehook</artifactId>
     	<version>2.1.0</version>
     </dependency>
   </dependencies>

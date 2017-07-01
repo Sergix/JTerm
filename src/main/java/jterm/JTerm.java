@@ -212,7 +212,15 @@ public class JTerm {
 		  	case "exec":
 		  		Exec.Run(options);
 		  		break;
+	
+		  	case "ps":
+		  		Ps.process();
+				break;
 		  		
+		  	case "ping":
+		  		Ping.prePing();		  		
+		  		break;
+				  
 		  	default:
 		  		// Create a new array that contains the command and check if it is an executable
 		  		ArrayList<String> execFile = new ArrayList<String>();
