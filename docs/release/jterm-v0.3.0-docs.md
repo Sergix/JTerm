@@ -40,8 +40,6 @@ This document provides information on changes included in release version "0.3.0
 - `Write` class has been removed; member function moved to `Files` class
 - The current directory will always end with a single "forward slash" (e.g. `/usr/home/`)
 - Other minor fixes
--Added a PS (process) command to view current processes in system
--Added a ping (ICMP Request) command in order to ping internet hosts
 
 ## New Features
 
@@ -76,8 +74,6 @@ As mentioned before, a new Client/Server interface has been written for JTerm. H
 	- `-w` - specifies window width
 	- `-l` - specifies window height
 	- `-t` - sets the name of the window, displayed in the title bar
-- `ps` - Lists all processes in System
--`ping` - Enables ICMP pinging to internet Hosts. First type ping, hit enter, then type in hostname with port to 		  		   which you wish to ping.
 
 > JTerm 0.3.0  
 > `jterm-v0.3.0.jar`  
