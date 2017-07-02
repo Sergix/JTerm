@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 main\java\jterm\Server.class
 main\java\jterm\Echo.class
 main\java\jterm\Files.class
@@ -9,3 +10,5 @@ main\java\jterm\Server$1.class
 main\java\jterm\Dir.class
 main\java\jterm\JTerm.class
 main\java\jterm\Ping.class
+=======
+>>>>>>> master

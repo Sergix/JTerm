@@ -33,10 +33,6 @@ public class JTerm
 	  // Default value "./" is equal to the default directory set when the program starts
 	  static String currentDirectory = "./";
 	  
-	  static String commandChars = "";
-	  
-	  static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
-	  
 	  /*
 	  * main() void
 	  * 
@@ -47,6 +43,7 @@ public class JTerm
 	  * String[] args - arguments passed from the 
 	  * 				console
 	  */
+<<<<<<< HEAD
 	  public static void main(String[] args)
 	  {  
 		  
@@ -70,6 +67,30 @@ public class JTerm
 		  // As long as we are not quitting...
 		  } while (!quit); 
 
+=======
+	  public static void main(String[] args) {
+		
+		 // Assign a default value of false to the quit variable
+		 boolean quit = false;
+		 
+		 System.out.println(
+				 "JTerm Copyright (C) 2017 Sergix, NCSGeek\n" +
+		 		"This program comes with ABSOLUTELY NO WARRANTY.\n" +
+		 		"This is free software, and you are welcome to redistribute it\n" +
+		 		"under certain conditions.\n"
+		 );
+		 
+		 BufferedReader user_input = new BufferedReader(new InputStreamReader(System.in), 1); // Setup input: String input = user_input.next();
+		 
+		 // Infinite loop for getting input
+		 do {
+			 // Set return value of the input function to "quit"
+			 quit = JTerm.Standby(user_input);
+			 
+		 } while (!quit); 
+		 // As long as we are not quitting...
+		 
+>>>>>>> master
 	  }
 	  
 	  /*
@@ -81,19 +102,27 @@ public class JTerm
 	  * BufferedReader user_unput - Input stream loaded from the
 	  * 							main() function
 	  */
+<<<<<<< HEAD
 	  public static boolean Standby()
 	  {
+=======
+	  public static boolean Standby(BufferedReader user_input) {
+>>>>>>> master
 
-		  // Print the current directory as the prompt (e.g. "./")
 		  System.out.print(JTerm.currentDirectory + " ");
 		  String command = "";
 		  
 		  // Attempt to read a line from the input
+<<<<<<< HEAD
 		  try
 		  {
 			  command = userInput.readLine();
 			  
 			  // If the command is a blank line, loop to next
+=======
+		  try {
+			  command = user_input.readLine();
+>>>>>>> master
 			  if (command.equals(""))
 			  {
 				  return false;
@@ -110,9 +139,6 @@ public class JTerm
 			  
 		  }
 		  
-		  // Reset the value of the input prompt char reader
-		  commandChars = "";
-		  
 		  // Get each substring of the command entered
 		  Scanner tokenizer = new Scanner(command);
 		  
@@ -127,12 +153,14 @@ public class JTerm
 			  
 		  }
 		  
+		  if (Parse(options))
+		  {
+			  tokenizer.close();
+			  return true;
+		  }
+		  
 		  // Close the string stream
 		  tokenizer.close();
-		  
-		  // Parse the command and quit if necessary
-		  if (Parse(options))
-			  return true;
 		  
 		  // Keep looping; we don't want to quit
 		  return false;
@@ -150,10 +178,8 @@ public class JTerm
 	  public static boolean Parse(ArrayList<String> options)
 	  {
 		  
-		  // Get the first string in the options array, which is the command
 		  String command = options.get(0).toLowerCase();
 		  
-		  // Get rid of the command for when we pass the rest of the command options
 		  options.remove(0);
 		  
 		  // Switch through command names
@@ -169,6 +195,7 @@ public class JTerm
 		  		return true;
 			  
 		  	case "write":
+		  		// Get the last option, which is the filename, and send it the option list
 		  		Files.WriteFile(options);
 		  		break;
 			  
@@ -213,8 +240,9 @@ public class JTerm
 		  		new Window(options);
 		  		break;
 			  
-		  	case "exec":
+		  	/*case "exec":
 		  		Exec.Run(options);
+<<<<<<< HEAD
 		  		break;
 	
 		  	case "ps":
@@ -225,21 +253,19 @@ public class JTerm
 		  		Ping.PingHost(options);		  		
 		  		break;
 				  
-		  	default:
-		  		// Create a new array that contains the command and check if it is an executable
-		  		ArrayList<String> execFile = new ArrayList<String>();
-		  		execFile.add(command);
-		  		if ( Exec.Run(execFile) )
-		  			System.out.println("Unknown Command \"" + command + "\"");
+=======
+		  		break;*/
 		  		
-		  		// All else fails
+>>>>>>> master
+		  	default:
+		  		// Fall back when unknown command is entered
+		  		System.out.println("Unknown Command \"" + command + "\"");
 		  		break;
 			  
 		  }
-
-		  // Keep looping
+		  
 		  return false;
 		  
 	  }
-
+	  
 }

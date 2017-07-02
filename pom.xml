@@ -8,7 +8,7 @@
   <packaging>jar</packaging>
 
   <name>jterm</name>
-  <url>http://sergix.github.io/projects/JTerm</url>
+  <url>http://maven.apache.org</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,6 +21,7 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+<<<<<<< HEAD
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit-dep</artifactId>
@@ -32,6 +33,8 @@
       <artifactId>commons-lang3</artifactId>
       <version>3.6</version>
     </dependency>
+=======
+>>>>>>> master
   </dependencies>
   
   <build>
@@ -47,5 +50,4 @@
       </plugin>
     </plugins>
   </build>
-  <description>JTerm is a cross-platform terminal designed for simple use and to run batch files. JTerm is hosted on GitHub by Sergix and NCSGeek.</description>
 </project>
