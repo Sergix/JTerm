@@ -1,0 +1,23 @@
+Changelog entry:
+
+(#62)[7/1/2017-19:12 0.3.1 Sergix]
+	Preparing for v0.4.0 release.
+	Set a longer timeout for the "ping" command. Timeout is now 10 seconds.
+	Edited "Ps" and "Ping" classes for function names and option processing. Original credit goes to @chromechris for writing these methods.
+	Wrote docs for v0.4.0 and compiled binaries and other dependencies.
+	EventHandler() is currently unneeded, so it has been removed.
+	Added @chromechris to list of contributers at startup. Thanks again! :)
+	Pushed updates to Git.
+
+Full changes include:
+	- Created "Ps" class (@chromechris)
+  		- Added a ps (process) command to view current processes in system
+	- Created "Ping" class (@chromechris)
+  		- Added a ping (ICMP Request) command in order to ping internet hosts
+	- Added "-h" option to "exec" command
+	- User input stream variable moved to global static variable "JTerm.userInput"
+	- Project now builds with Maven for testing and Travis CI
+	- Formatted spacing and documentation comments for project
+	- Other minor fixes and technical changes
+
+More information provided in published release documentation.

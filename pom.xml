@@ -4,7 +4,7 @@
 
   <groupId>sergix</groupId>
   <artifactId>jterm</artifactId>
-  <version>0.3.1</version>
+  <version>0.4.0</version>
   <packaging>jar</packaging>
 
   <name>jterm</name>
@@ -22,14 +22,15 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit-dep</artifactId>
+      <version>4.10</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.6</version>
-    </dependency>
-    <dependency>
-     	<groupId>com.1stleg</groupId>
-     	<artifactId>jnativehook</artifactId>
-    	<version>2.1.0</version>
     </dependency>
   </dependencies>
   

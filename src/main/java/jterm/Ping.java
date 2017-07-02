@@ -3,49 +3,66 @@ package main.java.jterm;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.ArrayList;
 
-public class Ping {
-
-	public static void main(String[] args) {
-		//pingHost("google.com",80,1000);
-		System.out.println(pingHost("googdvcsde.com",80,1000));
-	}
+/*
+* Original code credit to @chromechris
+* 
+* (edits for release done by @Sergix)
+*/
+public class Ping
+{
 	
-	public static boolean pingHost(String host, int port, int timeout) {
-	    try (Socket socket = new Socket()) {
-	        socket.connect(new InetSocketAddress(host, port), timeout);
-	        return true;
-	    } catch (IOException e) {
-	        return false; // Either timeout or unreachable or failed DNS lookup.
+	/*
+	* PingHost() void
+	* 
+	* Attempts to connect to the specified host
+	* through the port provided.
+	* 
+	* ArrayList<String> options - command options
+	*/
+	public static void PingHost(ArrayList<String> options)
+	{
+
+  		String host = "google.com", port = "80";
+		boolean portNext = false;
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tping [-h] [-p port] host\n\nAttempts to connect to the specified host. Default port is '80'.");
+				return;
+				
+			}
+			else if (portNext)
+			{
+				port = option;
+				portNext = false;
+				
+			}
+			else if (option.equals("-p"))
+				portNext = true;
+			
+			else
+				host = option;
+			
+		}
+		
+	    try (Socket socket = new Socket())
+	    {
+	    	System.out.println("Pinging " + host + "...");
+	        socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 10000);
+	        System.out.println("Ping Successful");
+	        
 	    }
-	}
-	
-	public static void prePing() {
-		Scanner pingScanner = new Scanner(System.in);
-  		String hostAndPort = pingScanner.nextLine();
-  		String[] host;
-  		String[] port;
-  		int portInt;
-  		String hostStr;
-  		if(hostAndPort.matches(".+ [0-9]{2}")) {
-  			//System.out.println("PINGED");
-  			host = hostAndPort.split(" ");
-  			//System.out.println(host[0]);
-  			port = hostAndPort.split(" ");
-  			//System.out.println(port[1]);
-  			portInt = Integer.parseInt(port[1]);
-  			hostStr = host[0];
-  			
-  			if(pingHost(hostStr, portInt, 1000)) {
-  				System.out.println("Ping Successful");
-  			} else {
-  				System.out.println("Ping Failed");
-  			}
-  			
-  		} else {
-  			System.out.println("Please Include Host & Port");
-  		}
+	    catch (IOException e)
+	    {
+	    	// Either timeout or unreachable or failed DNS lookup
+	    	System.out.println("Ping Failed");
+	        
+	    }
+	    
 	}
 	
 }

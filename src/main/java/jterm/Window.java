@@ -21,7 +21,8 @@ package main.java.jterm;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 
-public class Window {
+public class Window
+{
 
 	public static int windowCount = 0;
 	
@@ -55,7 +56,8 @@ public class Window {
 	*	  be resized  
 	* 	  
 	*/
-	Window(ArrayList<String> options) {
+	Window(ArrayList<String> options)
+	{
 		
 		int width = 500, height = 500;
 		boolean resizable = false;
@@ -71,10 +73,8 @@ public class Window {
 				
 			}
 			else if (option.equals("-v"))
-			{
 				visible = true;
-				
-			}
+
 			else if(option.equals("-t"))
 			{
 				title = "";
@@ -82,15 +82,11 @@ public class Window {
 				
 			}
 			else if(option.equals("-w"))
-			{
 				widthNext = true;
-				
-			}
+
 			else if(option.equals("-l"))
-			{
 				heightNext = true;
-				
-			}
+
 			else if(widthNext)
 			{
 				width = Integer.parseInt(option);
@@ -105,15 +101,10 @@ public class Window {
 				
 			}
 			else if (option.equals("-r"))
-			{
 				resizable = true;
-				
-			}
+
 			else if(titleNext)
-			{
 				title += option + " ";
-				
-			}
 			
 		}
 		
@@ -148,7 +139,8 @@ public class Window {
 	* 
 	* Returns the process ID of the window
 	*/
-	public int GetId() {
+	public int GetId()
+	{
 		
 		return id;
 		
@@ -160,7 +152,8 @@ public class Window {
 	* Returns the JFrame object displaying
 	* the window
 	*/
-	public JFrame GetFrame() {
+	public JFrame GetFrame()
+	{
 		
 		return this.window;
 		
@@ -171,7 +164,8 @@ public class Window {
 	* 
 	* Returns the title of the window
 	*/
-	public String GetTitle() {
+	public String GetTitle()
+	{
 		
 		return title;
 		

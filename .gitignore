@@ -25,3 +25,11 @@ build/tmp/
 
 # test scripts
 test.bat
+target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
+*.class
+
+target/
+*.lst
+*.class
+target/classes/main/java/jterm/test.bat
+.project

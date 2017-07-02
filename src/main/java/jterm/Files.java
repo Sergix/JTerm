@@ -25,7 +25,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class Files {
+public class Files
+{
 
 	/*
 	* WriteFile() void
@@ -37,7 +38,8 @@ public class Files {
 	* -h
 	*     Prints help information
 	*/
-	public static void WriteFile(ArrayList<String> options) {
+	public static void WriteFile(ArrayList<String> options)
+	{
 		
 		String filename = "";
 		
@@ -50,14 +52,12 @@ public class Files {
 				
 			}
 			else
-			{
 				filename = JTerm.currentDirectory + option;
-				
-			}
 			
 		}
 		
-		try {
+		try
+		{
 			System.out.println("Enter file contents:\n");
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in), 1);
 			String output = inputStream.readLine();
@@ -85,7 +85,8 @@ public class Files {
 	* -h
 	*     Prints help information
 	*/
-	public static void Delete(ArrayList<String> options) {
+	public static void Delete(ArrayList<String> options)
+	{
 		
 		String filename = "";
 		
@@ -106,7 +107,8 @@ public class Files {
 		}
 		
 		File dir = new File(filename);
-		if (!dir.exists()) {
+		if (!dir.exists())
+		{
 			System.out.println("ERROR: File/directory \"" + options.get(options.size() - 1) + "\" does not exist.");
 			return;
 			  

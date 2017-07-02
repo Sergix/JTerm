@@ -17,11 +17,11 @@ The format of the archive's filename is as follows: "jterm-v(build version).jar"
 
 ## Source Code
 Keep all updated and current source code in the /src directory, which should be updated with every build.  
-Please review the [Source Code Style Guide](https://github.com/Sergix/JTerm/blob/master/docs/SourceStyleGuide.md) for more information.
+Please review the [Source Code Style Guide](https://github.com/Sergix/JTerm/blob/master/docs/SourceStyleGuide.md) for more information.  
 Subfolders are formatted for packaging and for CI integration.  
-When pushing the source code with a build, DO NOT change the filenames. When creating a new class, place it in a new file with the name of the class as the filename (e.g. "class WriteFile", "WriteFile.java".) Keep the name clear and concise, and the file's contents in line with its name.
-As mentioned in the "Builds" section, package the source code with every build into a ".zip" file that should be placed in the /build/src directory when pushing a build. Subfolders in the /src directory (e.g. /src/main/java/...) should be included in packaged source.
-The format for the file should be as follows: "jterm-src-(build version).zip".
+When pushing the source code with a build, DO NOT change the filenames.
+As mentioned in the "Builds" section, package the source code with every build into a ".zip" file and a Wrapfile that should be placed in the /build/src directory when pushing a build. Subfolders in the /src directory (e.g. /src/main/java/...) should be included in packaged source. Wrapfiles should only include sources in the `main/` source directory.
+The format for the file should be as follows: `jterm-src-v(version).zip`, and `jterm-src-v(version).wrap`.
 
 ## Changelog
 Every time an update is pushed, the changelog will be updated and pushed as well.

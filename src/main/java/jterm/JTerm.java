@@ -23,10 +23,11 @@ import java.util.Scanner;
 import java.io.*;
 import java.util.ArrayList;
 
-public class JTerm {
+public class JTerm
+{
 	
 	  // Global version variable
-	  static String version = "0.3.1";
+	  static String version = "0.4.0";
 	  
 	  // Global directory variable (use "cd" command to change)
 	  // Default value "./" is equal to the default directory set when the program starts
@@ -46,24 +47,23 @@ public class JTerm {
 	  * String[] args - arguments passed from the 
 	  * 				console
 	  */
-	  public static void main(String[] args) {  
+	  public static void main(String[] args)
+	  {  
 		  
 		  // Assign a default value of false to the quit variable
 		  boolean quit = false;
-		  
-		  // Initialize event handlers
-		  EventHandler.init();
 		 
 		  // Print licensing information
 		  System.out.println(
-			  "JTerm Copyright (C) 2017 Sergix, NCSGeek\n" +
+			  "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n" +
 		 	  "This program comes with ABSOLUTELY NO WARRANTY.\n" +
 		 	  "This is free software, and you are welcome to redistribute it\n" +
 		 	  "under certain conditions.\n"
 		  );
 		 
 		  // Infinite loop for getting input
-		  do {
+		  do
+		  {
 		      // Set return value of the input function to "quit"
 			  quit = JTerm.Standby();
 			  
@@ -81,14 +81,16 @@ public class JTerm {
 	  * BufferedReader user_unput - Input stream loaded from the
 	  * 							main() function
 	  */
-	  public static boolean Standby() {
+	  public static boolean Standby()
+	  {
 
 		  // Print the current directory as the prompt (e.g. "./")
 		  System.out.print(JTerm.currentDirectory + " ");
 		  String command = "";
 		  
 		  // Attempt to read a line from the input
-		  try {
+		  try
+		  {
 			  command = userInput.readLine();
 			  
 			  // If the command is a blank line, loop to next
@@ -118,7 +120,8 @@ public class JTerm {
 		  ArrayList<String> options = new ArrayList<String>();
 		  
 		  // Get command arguments
-		  while (tokenizer.hasNext()) {
+		  while (tokenizer.hasNext())
+		  {
 			  String next = tokenizer.next();
 			  options.add(next);
 			  
@@ -154,7 +157,8 @@ public class JTerm {
 		  options.remove(0);
 		  
 		  // Switch through command names
-		  switch (command) {
+		  switch (command)
+		  {
 		  	case "help":
 		  		// Prints "JTerm v1.0" for example
 		  		System.out.println("JTerm v" + version);
@@ -214,11 +218,11 @@ public class JTerm {
 		  		break;
 	
 		  	case "ps":
-		  		Ps.process();
+		  		Ps.View(options);
 				break;
 		  		
 		  	case "ping":
-		  		Ping.prePing();		  		
+		  		Ping.PingHost(options);		  		
 		  		break;
 				  
 		  	default:

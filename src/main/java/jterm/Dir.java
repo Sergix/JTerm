@@ -21,7 +21,8 @@ package main.java.jterm;
 import java.io.*;
 import java.util.ArrayList;
 
-public class Dir {
+public class Dir
+{
 	
   /*
   * PrintDir() void
@@ -46,16 +47,17 @@ public class Dir {
   *     => [Contents of "dir/"]
   *     =>     F RW 	myFile.txt		2 KB
   */
-  public static void PrintDir(ArrayList<String> options) throws NullPointerException {
+  public static void PrintDir(ArrayList<String> options) throws NullPointerException
+  {
 
 	  String path = JTerm.currentDirectory;
 	  boolean printFull = true;
 	  
-	  for (String option: options) {
-		  if (option.equals("-f")) {
+	  for (String option: options)
+	  {
+		  if (option.equals("-f"))
 			  printFull = false;
-			  
-		  }
+
 		  else if (option.equals("-h"))
 		  {
 			  System.out.println("Command syntax:\n\tdir [-f] [-h] [directory]\n\nPrints a detailed table of the current working directory's subfolders and files.");
@@ -63,10 +65,7 @@ public class Dir {
 			  
 		  }
 		  else
-		  {
 			  path = option;
-			  
-		  }
 		  
 	  }
 	  
@@ -91,13 +90,11 @@ public class Dir {
 	  System.out.println("[Contents of \"" + path + "\"]");
 	  for (File file: files)
 	  {
-		  if (printFull) {
+		  if (printFull)
 			  System.out.println("\t" + (file.isFile() ? "F " : "D ") + (file.canRead() ? "R" : "") + (file.canWrite() ? "W" : "") + (file.isHidden() ? "H" : "") + "\t" + file.getName() + (file.getName().length() < 8 ? "\t\t\t" : (file.getName().length() > 15 ? "\t" : "\t\t")) + (file.length() / 1024) + " KB");
-			  
-		  } else {
+
+	  	  else
 			  System.out.println("\t" + file.getName());
-			  
-		  }
 		  
 	  }
 	  
@@ -117,11 +114,13 @@ public class Dir {
    *
    * ArrayList<String> options - command options
    */
-  public static void ChangeDir(ArrayList<String> options) {
+  public static void ChangeDir(ArrayList<String> options)
+  {
 	  
 	  String newDirectory = "";
 	  
-	  for (String option: options) {
+	  for (String option: options)
+	  {
 		  if (option.equals("-h"))
 		  {
 			  System.out.println("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.");
@@ -129,14 +128,12 @@ public class Dir {
 			  
 		  }
 		  else
-		  {
 			  newDirectory = option;
-			  
-		  }
 		  
 	  }
 	  
-	  if (newDirectory.equals("")) {
+	  if (newDirectory.equals(""))
+	  {
 		  System.out.println("Path not specified. Type \"cd -h\" for more information.");
 		  return;
 		  
@@ -146,10 +143,9 @@ public class Dir {
 	  File dir = new File(newDirectory);
 	  File newDir = new File(JTerm.currentDirectory + newDirectory);
 	  
-	  if (newDir.exists() && newDir.isDirectory()) {
+	  if (newDir.exists() && newDir.isDirectory())
 		  newDirectory = JTerm.currentDirectory + newDirectory;
-		  
-	  }
+
 	  else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory()))
 	  {
 		  System.out.println("ERROR: Directory \"" + newDirectory + "\" is either does not exist or is not a valid directory.");
@@ -161,10 +157,7 @@ public class Dir {
 		  newDirectory = "/";
 	  
 	  else if (!newDirectory.endsWith("/"))
-	  {
 		  newDirectory += "/";
-		  
-	  }
 	  
 	  // It does exist, and it is a directory, so just change the global working directory variable to the input
 	  JTerm.currentDirectory = newDirectory;
@@ -181,9 +174,11 @@ public class Dir {
    *
    * ArrayList<String> options - command options
    */
-  public static void PrintWorkingDir(ArrayList<String> options) {
+  public static void PrintWorkingDir(ArrayList<String> options)
+  {
 	  
-	  for (String option: options) {
+	  for (String option: options)
+	  {
 		  if (option.equals("-h"))
 		  {
 			  System.out.println("Command syntax:\n\tpwd\n\nPrints the current Working Directory.");
@@ -208,11 +203,13 @@ public class Dir {
   *
   * ArrayList<String> options - command options
   */
-  public static void NewDir(ArrayList<String> options) {
+  public static void NewDir(ArrayList<String> options)
+  {
 	  
 	  String name = "";
 	  
-	  for (String option: options) {
+	  for (String option: options)
+	  {
 		  if (option.equals("-h"))
 		  {
 			  System.out.println("Command syntax:\n\tmd [-h] name\n\nCreates a new directory.");
@@ -220,9 +217,8 @@ public class Dir {
 			  
 		  }
 		  else
-		  {
 			  name = JTerm.currentDirectory + option;
-		  }
+
 	  }
 	  
 	  File dir = new File(name);

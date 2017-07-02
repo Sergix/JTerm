@@ -24,7 +24,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Scanner;
 
-public class Exec {
+public class Exec
+{
 	
 	private static Hashtable<String, String> vars = new Hashtable<>();
 	
@@ -44,10 +45,7 @@ public class Exec {
 				
 			}
 			else
-			{
 				file = option;
-				
-			}
 			
 		}
 		
@@ -65,24 +63,31 @@ public class Exec {
 			
 		}
 		
-		try {
+		try
+		{
 			BufferedReader reader = new BufferedReader(new FileReader(script));
-			try {
+			try
+			{
 				String directive = reader.readLine();
 				if (directive != null)
-				do {
+				do
+				{
 					Exec.Parse(directive);
 					
 				} while ((directive = reader.readLine()) != null);
 
 				reader.close();
 				
-			} catch (IOException ioe) {
+			}
+			catch (IOException ioe)
+			{
 				System.out.println(ioe);
 				
 			}
 			
-		} catch (FileNotFoundException ioe) {
+		}
+		catch (FileNotFoundException ioe)
+		{
 			System.out.println(ioe);
 			
 		}

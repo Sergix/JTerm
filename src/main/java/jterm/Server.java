@@ -23,30 +23,35 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Server implements Runnable {
+public class Server implements Runnable
+{
 
 	private Socket socket;
 	public static boolean run = true;
 	public static int port = 0;
 	private static String line;
 	
-	Server(Socket newSocket) {
+	Server(Socket newSocket)
+	{
+		
 		socket = newSocket;
 		
 	}
 	
-	public void run() {
+	public void run()
+	{
 		
-		while (run) {
-			try {
+		while (run)
+		{
+			try
+			{
 				InputStream input = socket.getInputStream();
 				BufferedReader bufferedSocketInput 	= new BufferedReader(new InputStreamReader(input));
 				
 				line = bufferedSocketInput.readLine();
-				if (line.isEmpty()) {
+				if (line.isEmpty())
 					break;
 					
-				}
 				System.out.println("\n" + line);
 				
 				bufferedSocketInput.close();
@@ -61,11 +66,10 @@ public class Server implements Runnable {
 			
 		}
 		
-		return;
-		
 	}
 	
-	public static void Start(ArrayList<String> options) {
+	public static void Start(ArrayList<String> options)
+	{
 		
 		String portInput = "80";
 		
@@ -78,10 +82,8 @@ public class Server implements Runnable {
 				
 			}
 			else
-			{
 				portInput = option;
-				
-			}
+			
 		}
 		
 		int i = 0;
@@ -93,18 +95,22 @@ public class Server implements Runnable {
             
         }
 		
-		try {
+		try
+		{
 			ServerSocket server = new ServerSocket(port);
 			
-			new Thread(new Runnable() {
+			new Thread(new Runnable()
+			{
 				
-				public void run() {
+				public void run()
+				{
 					
 					while (true)
 					{
 						System.out.print("> ");
 						BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in), 1);
-						try {
+						try
+						{
 							String input = consoleInput.readLine();
 							switch (input) {
 								case "help":
@@ -117,7 +123,9 @@ public class Server implements Runnable {
 							
 							}
 							
-						} catch (IOException ioe) {
+						}
+						catch (IOException ioe)
+						{
 							System.out.println("Input Stream closed.");
 							break;
 							
@@ -127,9 +135,11 @@ public class Server implements Runnable {
 					
 				}
 				
-			}).start();
+			}
+			).start();
 			
-			while (run) {
+			while (run)
+			{
 				Socket socket = server.accept();
 				Server newRequest = new Server(socket);
 				new Thread(newRequest).start();
