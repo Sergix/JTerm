@@ -22,19 +22,25 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Client implements Runnable {
+public class Client implements Runnable
+{
 
 	private static BufferedReader input;
 	
-	public void run() {
+	public void run()
+	{
 		
-		while (true) {
-			try {
+		while (true)
+		{
+			try
+			{
 				String output = Client.input.readLine();
 				if (output != null)
 					System.out.println(output);
 				
-			} catch (IOException ioe) {
+			}
+			catch (IOException ioe)
+			{
 				return;
 				
 			}
@@ -43,13 +49,15 @@ public class Client implements Runnable {
 		
 	}
 	
-	public static void Connect(ArrayList<String> options) {
+	public static void Connect(ArrayList<String> options)
+	{
 		
 		String address = "0.0.0.0";
 		String portInput = "80";
 		boolean next = false;
 		
-		for (String option: options) {
+		for (String option: options)
+		{
 			if (option.equals("-h"))
 			{
 				System.out.println("Command syntax:\n\tconnect [-h] [-p port] address\n\nConnect to the specified IP address using TCP/IP. Default address is \"0.0.0.0\". Default port is 80.");
@@ -57,10 +65,8 @@ public class Client implements Runnable {
 				
 			}
 			else if (option.equals("-p"))
-			{
 				next = true;
-				
-			}
+
 			else if (next)
 			{
 				portInput = option;
@@ -68,10 +74,7 @@ public class Client implements Runnable {
 				
 			}
 			else
-			{
 				address = option;
-				
-			}
 			
 		}
 		
@@ -85,7 +88,8 @@ public class Client implements Runnable {
             
         }
 
-		try {
+		try
+		{
 			System.out.println("Connecting to " + address + ":" + port);
 			
 			Socket connection 					= new Socket(address, port);
@@ -101,12 +105,14 @@ public class Client implements Runnable {
 			
 			System.out.println("Connected to server. Enter a blank line to quit. Reading for input...");
 			
-			while (true) {
+			while (true)
+			{
 				BufferedReader bufferedSocketOutput = new BufferedReader(new InputStreamReader(System.in), 1);
 				String line = bufferedSocketOutput.readLine();
 				
 				if (line.equals(""))
 					break;
+				
 				output.write(line.getBytes());
 				
 				output.close();

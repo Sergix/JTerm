@@ -1,3 +1,13 @@
+(#62)[7/1/2017-19:12 0.3.1 Sergix]
+	Preparing for v0.4.0 release.
+	Set a longer timeout for the "ping" command. Timeout is now 10 seconds.
+	Edited "Ps" and "Ping" classes for function names and option processing. Original credit goes to @chromechris for writing these methods.
+	Wrote docs for v0.4.0 and compiled binaries and other dependencies.
+	EventHandler() is currently unneeded, so it has been removed.
+	Included a wrapfile in the build/src/ directory for the release. More info in the documentation. 
+	Added @chromechris to list of contributers at startup. Thanks again! :)
+	Pushed updates to Git.
+
 (#61)[null-null 0.3.1 chromechris]
 	Added a ping functionality
 	Added a class called 'Ping'

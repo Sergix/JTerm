@@ -1,0 +1,1602 @@
+###% jterm-v0.4.0.wrap	wrapper-linux-v1.0.2.3
+
+###* Client.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm;
+
+import java.io.*;
+import java.net.Socket;
+import java.util.ArrayList;
+
+public class Client implements Runnable
+{
+
+	private static BufferedReader input;
+	
+	public void run()
+	{
+		
+		while (true)
+		{
+			try
+			{
+				String output = Client.input.readLine();
+				if (output != null)
+					System.out.println(output);
+				
+			}
+			catch (IOException ioe)
+			{
+				return;
+				
+			}
+			
+		}
+		
+	}
+	
+	public static void Connect(ArrayList<String> options)
+	{
+		
+		String address = "0.0.0.0";
+		String portInput = "80";
+		boolean next = false;
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tconnect [-h] [-p port] address\n\nConnect to the specified IP address using TCP/IP. Default address is \"0.0.0.0\". Default port is 80.");
+				return;
+				
+			}
+			else if (option.equals("-p"))
+				next = true;
+
+			else if (next)
+			{
+				portInput = option;
+				next = false;
+				
+			}
+			else
+				address = option;
+			
+		}
+		
+		int i = 0;
+        int port = 0;
+
+        while( i < portInput.length())  
+        {
+            port *= 10;
+            port += portInput.charAt(i++) - '0';
+            
+        }
+
+		try
+		{
+			System.out.println("Connecting to " + address + ":" + port);
+			
+			Socket connection 					= new Socket(address, port);
+			InputStream input 					= connection.getInputStream();
+			OutputStream output 				= connection.getOutputStream();
+			BufferedReader bufferedSocketInput 	= new BufferedReader(new InputStreamReader(input));
+			
+			Client.input 						= bufferedSocketInput;
+			
+			Client client 						= new Client();
+			Thread readThread 					= new Thread(client);
+			readThread.start();
+			
+			System.out.println("Connected to server. Enter a blank line to quit. Reading for input...");
+			
+			while (true)
+			{
+				BufferedReader bufferedSocketOutput = new BufferedReader(new InputStreamReader(System.in), 1);
+				String line = bufferedSocketOutput.readLine();
+				
+				if (line.equals(""))
+					break;
+				
+				output.write(line.getBytes());
+				
+				output.close();
+				bufferedSocketOutput.close();
+				
+			}
+
+			connection.close();
+			
+		}
+		catch (IOException ioe)
+		{
+			System.out.println("Connection severed.");
+			
+		}
+		
+	}
+	
+}
+
+###* Dir.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm;
+
+import java.io.*;
+import java.util.ArrayList;
+
+public class Dir
+{
+	
+  /*
+  * PrintDir() void
+  * 
+  * Prints the contents of a specified directory
+  * to a file.
+  *
+  * ArrayList<String> options - command options
+  * 
+  * -f
+  * 	Changes the output format to only file
+  * 	and directory names
+  * -h
+  * 	Prints help information
+  * directory
+  * 	Prints this directory rather than the
+  * 	current working directory.
+  *
+  * Examples
+  *
+  *   PrintDir(options);
+  *     => [Contents of "dir/"]
+  *     =>     F RW 	myFile.txt		2 KB
+  */
+  public static void PrintDir(ArrayList<String> options) throws NullPointerException
+  {
+
+	  String path = JTerm.currentDirectory;
+	  boolean printFull = true;
+	  
+	  for (String option: options)
+	  {
+		  if (option.equals("-f"))
+			  printFull = false;
+
+		  else if (option.equals("-h"))
+		  {
+			  System.out.println("Command syntax:\n\tdir [-f] [-h] [directory]\n\nPrints a detailed table of the current working directory's subfolders and files.");
+			  return;
+			  
+		  }
+		  else
+			  path = option;
+		  
+	  }
+	  
+	  File dir = new File(path);
+	  File[] files = dir.listFiles();
+	  
+	  /*
+	   * Format of output:
+	   * [FD] [RWHE] [filename] [size in KB]
+	   * 
+	   * Prefix definitions:
+	   * 	F -- File
+	   * 	D -- Directory
+	   * 	R -- Readable
+	   * 	W -- Writable
+	   * 	H -- Hidden
+	   * 
+	   * Example:
+	   * 	F RW	myfile.txt	   5 KB
+	   */
+	  
+	  System.out.println("[Contents of \"" + path + "\"]");
+	  for (File file: files)
+	  {
+		  if (printFull)
+			  System.out.println("\t" + (file.isFile() ? "F " : "D ") + (file.canRead() ? "R" : "") + (file.canWrite() ? "W" : "") + (file.isHidden() ? "H" : "") + "\t" + file.getName() + (file.getName().length() < 8 ? "\t\t\t" : (file.getName().length() > 15 ? "\t" : "\t\t")) + (file.length() / 1024) + " KB");
+
+	  	  else
+			  System.out.println("\t" + file.getName());
+		  
+	  }
+	  
+  }
+  
+  
+  /*
+   * ChangeDir() void
+   * 
+   * Changes the working directory to the specified
+   * input.
+   * 
+   * -h
+   * 	Prints help information
+   * directory
+   * 	Path to change the working directory to.
+   *
+   * ArrayList<String> options - command options
+   */
+  public static void ChangeDir(ArrayList<String> options)
+  {
+	  
+	  String newDirectory = "";
+	  
+	  for (String option: options)
+	  {
+		  if (option.equals("-h"))
+		  {
+			  System.out.println("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.");
+			  return;
+			  
+		  }
+		  else
+			  newDirectory = option;
+		  
+	  }
+	  
+	  if (newDirectory.equals(""))
+	  {
+		  System.out.println("Path not specified. Type \"cd -h\" for more information.");
+		  return;
+		  
+	  }
+	  
+	  // Test if the input exists and if it is a directory
+	  File dir = new File(newDirectory);
+	  File newDir = new File(JTerm.currentDirectory + newDirectory);
+	  
+	  if (newDir.exists() && newDir.isDirectory())
+		  newDirectory = JTerm.currentDirectory + newDirectory;
+
+	  else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory()))
+	  {
+		  System.out.println("ERROR: Directory \"" + newDirectory + "\" is either does not exist or is not a valid directory.");
+		  return;
+		  
+	  }
+	  
+	  if (newDirectory.equals("/"))
+		  newDirectory = "/";
+	  
+	  else if (!newDirectory.endsWith("/"))
+		  newDirectory += "/";
+	  
+	  // It does exist, and it is a directory, so just change the global working directory variable to the input
+	  JTerm.currentDirectory = newDirectory;
+	  
+  }
+  
+  /*
+   * PrintWorkingDir() void
+   * 
+   * Prints the working directory to the console.
+   * 
+   * -h
+   * 	Prints help information
+   *
+   * ArrayList<String> options - command options
+   */
+  public static void PrintWorkingDir(ArrayList<String> options)
+  {
+	  
+	  for (String option: options)
+	  {
+		  if (option.equals("-h"))
+		  {
+			  System.out.println("Command syntax:\n\tpwd\n\nPrints the current Working Directory.");
+			  return;
+			  
+		  }
+		  
+	  }
+	  
+	  // Simply print the currentDirectory variable to the console
+	  System.out.println(JTerm.currentDirectory);
+	  
+  }
+  
+  /*
+  * NewDir() void
+  * 
+  * Creates a new directory.
+  * 
+  * -h
+  * 	Prints help information
+  *
+  * ArrayList<String> options - command options
+  */
+  public static void NewDir(ArrayList<String> options)
+  {
+	  
+	  String name = "";
+	  
+	  for (String option: options)
+	  {
+		  if (option.equals("-h"))
+		  {
+			  System.out.println("Command syntax:\n\tmd [-h] name\n\nCreates a new directory.");
+			  return;
+			  
+		  }
+		  else
+			  name = JTerm.currentDirectory + option;
+
+	  }
+	  
+	  File dir = new File(name);
+	  dir.mkdir();
+  }
+  
+}
+
+###* Echo.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm;
+
+import java.util.ArrayList;
+
+public class Echo
+{
+	
+	/*
+	* EchoInput() void
+	* 
+	* Echoes the input recieved to the console.
+	* 
+	* ArrayList<String> options - command options
+	*
+	* -h
+	*     Prints help information.
+	*/
+	public static void EchoInput(ArrayList<String> options)
+	{
+		
+		String output = "";
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.");
+				return;
+			  
+			}
+			else
+				output += option + " ";
+		 
+		}
+		
+		System.out.println(output);
+		
+	}
+	
+}
+
+###* Exec.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Scanner;
+
+public class Exec
+{
+	
+	private static Hashtable<String, String> vars = new Hashtable<>();
+	
+	// var name, window object
+	private static Hashtable<String, Window> windows = new Hashtable<>();
+	
+	public static boolean Run(ArrayList<String> options)
+	{	
+		
+		String file = "";
+	
+		for (String option: options) {
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\texec [-h] file\n\nExecutes a batch script.");
+				return false;
+				
+			}
+			else
+				file = option;
+			
+		}
+		
+		File script = new File(file);
+		if (!script.exists() || !script.isFile())
+		{
+			file = JTerm.currentDirectory + file;
+			script = new File(file);
+			if (!script.exists() || !script.isFile())
+			{
+				System.out.println("ERROR: File \"" + file + "\" either does not exist or is not a file.");
+				return true;
+				
+			}
+			
+		}
+		
+		try
+		{
+			BufferedReader reader = new BufferedReader(new FileReader(script));
+			try
+			{
+				String directive = reader.readLine();
+				if (directive != null)
+				do
+				{
+					Exec.Parse(directive);
+					
+				} while ((directive = reader.readLine()) != null);
+
+				reader.close();
+				
+			}
+			catch (IOException ioe)
+			{
+				System.out.println(ioe);
+				
+			}
+			
+		}
+		catch (FileNotFoundException ioe)
+		{
+			System.out.println(ioe);
+			
+		}
+		
+		return false;
+		
+	}
+	
+	public static void Parse(String directive)
+	{
+		
+		String command = "";
+		Scanner tokenizer = new Scanner(directive);
+		ArrayList<String> options = new ArrayList<String>();
+		while (tokenizer.hasNext())
+			options.add(tokenizer.next());
+		
+		if (options.size() != 0)
+			command = options.get(0).toLowerCase();
+		
+		else
+		{
+			tokenizer.close();
+			return;
+			
+		}
+			
+		switch (command)
+		{
+		case "set":
+			if (options.size() == 1)
+			{
+				String element = "";
+				for (Enumeration<String> e = vars.keys(); e.hasMoreElements();)
+				       System.out.println((element = e.nextElement()) + "=" + vars.get(element));
+				       
+				break;
+				
+			}
+			
+			String key = options.get(1);
+			if ( !options.get(2).equals("=") )
+			{
+				tokenizer.close();
+				return;
+				
+			}
+			
+			if (options.get(3).equals("window"))
+			{
+				for (int i = 0; i < 4; i++)
+					options.remove(0);
+				
+				Window newWindow = new Window(options);
+				vars.put(key, Integer.toString(newWindow.GetId()));
+				windows.put(key, newWindow);
+				break;
+				
+			}
+			
+			vars.put(key, GetRest(options, 3));
+			break;
+			
+		case "pause":
+			if (options.size() == 1)
+				System.out.print("Press enter to continue...");
+			
+			else
+				System.out.print(GetRest(options, 1));
+
+			try
+			{
+				JTerm.userInput.read();
+				JTerm.userInput.skip(1);
+				
+			}
+			catch (IOException ioe)
+			{
+				System.out.println(ioe);
+				
+			}
+			
+			tokenizer.close();
+			return;
+			
+		// These commands are system-level/OS-dependent and are not possible to integrate into JTerm.
+		// Just skip over them.
+		case "bcdedit":
+		case "chkdsk":
+		case "chkntfs":
+		case "cls":
+		case "cmd":
+		case "color":
+		case "convert":
+		case "diskpart":
+		case "driverquery":
+		case "format":
+		case "fsutil":
+		case "gpresult":
+		case "mode":
+		case "sc":
+		case "shutdown":
+		case "start":
+		case "tasklist":
+		case "taskkill":
+		case "ver":
+		case "vol":
+		case "wmic":
+			break;
+			
+		default:
+			for (;;)
+			if ( vars.containsKey(options.get(0)) )
+			{
+				int value;
+				//
+				// TODO
+				// Create arithmetic operations that passes the value 
+				// to whatever it is needed for
+				//
+				if ( !options.get(1).equals("=") || !vars.containsKey(options.get(2)) || !vars.containsKey(options.get(4)) )
+					break;
+				
+				switch(options.get(3))
+				{
+				case "+":
+					value = Integer.parseInt( vars.get(options.get(2)) ) + Integer.parseInt( vars.get(options.get(4)) );
+					break;
+					
+				case "-":
+					value = Integer.parseInt( vars.get(options.get(2)) ) - Integer.parseInt( vars.get(options.get(4)) );
+					break;
+					
+				case "*":
+					value = Integer.parseInt( vars.get(options.get(2)) ) * Integer.parseInt( vars.get(options.get(4)) );
+					break;
+					
+				case "/":
+					value = Integer.parseInt( vars.get(options.get(2)) ) / Integer.parseInt( vars.get(options.get(4)) );
+					break;
+					
+				default:
+					tokenizer.close();
+					return;
+					
+				}
+				
+				vars.replace(options.get(0), String.valueOf(value));
+				
+				tokenizer.close();
+				return;
+				
+			}
+			else if ( windows.containsKey(options.get(0)) )
+			{
+				switch(options.get(1))
+				{
+				case "visible":
+					windows.get(options.get(0)).ToggleVisible();
+					break;
+					
+				case "title":
+					windows.get(options.get(0)).GetFrame().setTitle(GetRest(options, 2));
+					break;
+					
+				default:
+					break;
+					
+				}
+				
+			}
+			else
+				JTerm.Parse(options);
+			
+			tokenizer.close();
+			return;
+			
+		}
+		
+		tokenizer.close();
+		
+	}
+	
+	public static String GetRest(ArrayList<String> options, int index)
+	{
+		
+		String output = "";
+		for (int i = index; i < options.size(); i++)
+		{
+			if (i != options.size() - 1)
+				output += options.get(i) + " ";
+			
+			else
+				output += options.get(i);
+			
+		}
+		
+		return output;
+		
+	}
+	
+}
+
+###* Files.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+public class Files
+{
+
+	/*
+	* WriteFile() void
+	* 
+	* Get input and write it to a file.
+	* 
+	* ArrayList<String> options - command options
+	* 
+	* -h
+	*     Prints help information
+	*/
+	public static void WriteFile(ArrayList<String> options)
+	{
+		
+		String filename = "";
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\twrite [-h] filename\n\nOpens an input prompt in which to write text to a new file.");
+				return;
+				
+			}
+			else
+				filename = JTerm.currentDirectory + option;
+			
+		}
+		
+		try
+		{
+			System.out.println("Enter file contents:\n");
+			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in), 1);
+			String output = inputStream.readLine();
+			
+			FileWriter fileWriter = new FileWriter(filename);
+			fileWriter.write(output);
+			fileWriter.close();
+			
+		}
+		catch (IOException ioe)
+		{
+			System.out.println(ioe);
+			
+		}
+		
+	}
+	
+	/*
+	* Delete() void
+	* 
+	* Delete the specified file or directory.
+	* 
+	* ArrayList<String> options - command options
+	* 
+	* -h
+	*     Prints help information
+	*/
+	public static void Delete(ArrayList<String> options)
+	{
+		
+		String filename = "";
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tdel [-h] file/directory\n\nDeletes the specified file or directory.");
+				return;
+				
+			}
+			else
+			{
+				filename = JTerm.currentDirectory + option;
+				
+			}
+			
+		}
+		
+		File dir = new File(filename);
+		if (!dir.exists())
+		{
+			System.out.println("ERROR: File/directory \"" + options.get(options.size() - 1) + "\" does not exist.");
+			return;
+			  
+		}
+		
+		dir.delete();
+		
+	}
+	
+}
+
+###* JTerm.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+// package = folder :P
+package main.java.jterm;
+
+import java.util.Scanner;
+import java.io.*;
+import java.util.ArrayList;
+
+public class JTerm
+{
+	
+	  // Global version variable
+	  static String version = "0.4.0";
+	  
+	  // Global directory variable (use "cd" command to change)
+	  // Default value "./" is equal to the default directory set when the program starts
+	  static String currentDirectory = "./";
+	  
+	  static String commandChars = "";
+	  
+	  static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+	  
+	  /*
+	  * main() void
+	  * 
+	  * Function called when the program loads. Sets
+	  * up basic input streams and runs the command
+	  * loop.
+	  * 
+	  * String[] args - arguments passed from the 
+	  * 				console
+	  */
+	  public static void main(String[] args)
+	  {  
+		  
+		  // Assign a default value of false to the quit variable
+		  boolean quit = false;
+		 
+		  // Print licensing information
+		  System.out.println(
+			  "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n" +
+		 	  "This program comes with ABSOLUTELY NO WARRANTY.\n" +
+		 	  "This is free software, and you are welcome to redistribute it\n" +
+		 	  "under certain conditions.\n"
+		  );
+		 
+		  // Infinite loop for getting input
+		  do
+		  {
+		      // Set return value of the input function to "quit"
+			  quit = JTerm.Standby();
+			  
+		  // As long as we are not quitting...
+		  } while (!quit); 
+
+	  }
+	  
+	  /*
+	  * Standby() boolean
+	  * 
+	  * Awaits user command and then calls Parse() with the
+	  * input.
+	  *
+	  * BufferedReader user_unput - Input stream loaded from the
+	  * 							main() function
+	  */
+	  public static boolean Standby()
+	  {
+
+		  // Print the current directory as the prompt (e.g. "./")
+		  System.out.print(JTerm.currentDirectory + " ");
+		  String command = "";
+		  
+		  // Attempt to read a line from the input
+		  try
+		  {
+			  command = userInput.readLine();
+			  
+			  // If the command is a blank line, loop to next
+			  if (command.equals(""))
+			  {
+				  return false;
+				  
+			  }
+			  
+		  }
+		  catch (IOException ioe)
+		  {
+			  System.out.println(ioe);
+			  
+			  // Quit because of error
+			  return true;
+			  
+		  }
+		  
+		  // Reset the value of the input prompt char reader
+		  commandChars = "";
+		  
+		  // Get each substring of the command entered
+		  Scanner tokenizer = new Scanner(command);
+		  
+		  // options String array will be passed to command functions
+		  ArrayList<String> options = new ArrayList<String>();
+		  
+		  // Get command arguments
+		  while (tokenizer.hasNext())
+		  {
+			  String next = tokenizer.next();
+			  options.add(next);
+			  
+		  }
+		  
+		  // Close the string stream
+		  tokenizer.close();
+		  
+		  // Parse the command and quit if necessary
+		  if (Parse(options))
+			  return true;
+		  
+		  // Keep looping; we don't want to quit
+		  return false;
+		  
+	  }
+	  
+	  /*
+	  * Parse() boolean
+	  * 
+	  * Checks input and passes command options to the function
+	  * that runs the requested command.
+	  *
+	  * ArrayList<String> options - command options
+	  */
+	  public static boolean Parse(ArrayList<String> options)
+	  {
+		  
+		  // Get the first string in the options array, which is the command
+		  String command = options.get(0).toLowerCase();
+		  
+		  // Get rid of the command for when we pass the rest of the command options
+		  options.remove(0);
+		  
+		  // Switch through command names
+		  switch (command)
+		  {
+		  	case "help":
+		  		// Prints "JTerm v1.0" for example
+		  		System.out.println("JTerm v" + version);
+			  	break;
+			  
+		  	case "quit":
+		  		// Quit the program
+		  		return true;
+			  
+		  	case "write":
+		  		Files.WriteFile(options);
+		  		break;
+			  
+		  	case "dir":
+		  		Dir.PrintDir(options);
+		  		break;
+			  
+		  	case "chdir":
+		  	case "cd":
+		  		Dir.ChangeDir(options);
+		  		break;
+		  		
+		  	case "pwd":
+		  		Dir.PrintWorkingDir(options);
+		  		break;
+		  		
+		  	case "echo":
+		  		Echo.EchoInput(options);
+		  		break;
+		  		
+		  	case "delete":
+		  	case "del":
+		  		Files.Delete(options);
+		  		break;
+		  		
+		  	case "md":
+		  		Dir.NewDir(options);
+		  		break;
+		  		
+		  	case "read":
+		  		break;
+		  		
+		  	/*case "connect":
+		  		Client.Connect(options);
+		  		break;
+		  		
+		  	case "server":
+		  		Server.Start(options);
+		  		break;*/
+		  		
+		  	case "window":
+		  		new Window(options);
+		  		break;
+			  
+		  	case "exec":
+		  		Exec.Run(options);
+		  		break;
+	
+		  	case "ps":
+		  		Ps.View(options);
+				break;
+		  		
+		  	case "ping":
+		  		Ping.PingHost(options);		  		
+		  		break;
+				  
+		  	default:
+		  		// Create a new array that contains the command and check if it is an executable
+		  		ArrayList<String> execFile = new ArrayList<String>();
+		  		execFile.add(command);
+		  		if ( Exec.Run(execFile) )
+		  			System.out.println("Unknown Command \"" + command + "\"");
+		  		
+		  		// All else fails
+		  		break;
+			  
+		  }
+
+		  // Keep looping
+		  return false;
+		  
+	  }
+
+}
+
+###* Ping.java
+
+package main.java.jterm;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.ArrayList;
+
+/*
+* Original code credit to @chromechris
+* 
+* (edits for release done by @Sergix)
+*/
+public class Ping
+{
+	
+	/*
+	* PingHost() void
+	* 
+	* Attempts to connect to the specified host
+	* through the port provided.
+	* 
+	* ArrayList<String> options - command options
+	*/
+	public static void PingHost(ArrayList<String> options)
+	{
+
+  		String host = "google.com", port = "80";
+		boolean portNext = false;
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tping [-h] [-p port] host\n\nAttempts to connect to the specified host. Default port is '80'.");
+				return;
+				
+			}
+			else if (portNext)
+			{
+				port = option;
+				portNext = false;
+				
+			}
+			else if (option.equals("-p"))
+				portNext = true;
+			
+			else
+				host = option;
+			
+		}
+		
+	    try (Socket socket = new Socket())
+	    {
+	    	System.out.println("Pinging " + host + "...");
+	        socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 10000);
+	        System.out.println("Ping Successful");
+	        
+	    }
+	    catch (IOException e)
+	    {
+	    	// Either timeout or unreachable or failed DNS lookup
+	    	System.out.println("Ping Failed");
+	        
+	    }
+	    
+	}
+	
+}
+
+###* Ps.java
+
+package main.java.jterm;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+import org.apache.commons.lang3.SystemUtils;
+
+/*
+* Original code credit to @chromechris
+* 
+* (edits for release done by @Sergix)
+*/
+public class Ps 
+{
+
+	/*
+	* View() void
+	* 
+	* Views all processes running on the host
+	* system.
+	* 
+	* String[] args - arguments passed from the 
+	* 				console
+	*/
+	public static void View(ArrayList<String> options)
+	{
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tps [-h]\n\nDisplays all current processes running on the host system.");
+				return;
+				
+			}
+			
+		}
+
+		if (SystemUtils.IS_OS_LINUX)
+		{
+			try
+			{
+				String line;
+				Process p = Runtime.getRuntime().exec("ps -e");
+				BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				while ((line = input.readLine()) != null)
+				{
+					// Parse data here.
+					System.out.println(line);
+					
+				}
+				input.close();
+				
+			}
+			catch (Exception err)
+			{
+				err.printStackTrace();
+				
+			}
+
+		}
+		else if (SystemUtils.IS_OS_WINDOWS)
+		{
+			try
+			{
+				String line;
+				Process p = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");
+				BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				while ((line = input.readLine()) != null)
+				{
+					// Parse data here.
+					System.out.println(line);
+					
+				}
+				
+				input.close();
+				
+			}
+			catch (Exception err)
+			{
+				err.printStackTrace();
+				
+			}
+			
+		}
+
+	}
+
+}
+
+###* Server.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+
+public class Server implements Runnable
+{
+
+	private Socket socket;
+	public static boolean run = true;
+	public static int port = 0;
+	private static String line;
+	
+	Server(Socket newSocket)
+	{
+		
+		socket = newSocket;
+		
+	}
+	
+	public void run()
+	{
+		
+		while (run)
+		{
+			try
+			{
+				InputStream input = socket.getInputStream();
+				BufferedReader bufferedSocketInput 	= new BufferedReader(new InputStreamReader(input));
+				
+				line = bufferedSocketInput.readLine();
+				if (line.isEmpty())
+					break;
+					
+				System.out.println("\n" + line);
+				
+				bufferedSocketInput.close();
+				
+			}
+			catch (IOException ioe)
+			{
+				System.out.println(ioe);
+				break;
+				
+			}
+			
+		}
+		
+	}
+	
+	public static void Start(ArrayList<String> options)
+	{
+		
+		String portInput = "80";
+		
+		for (String option: options)
+		{
+			if(option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tserver [-h] port\n\nStarts a TCP server socket that accepts ");
+				return;
+				
+			}
+			else
+				portInput = option;
+			
+		}
+		
+		int i = 0;
+
+        while( i < portInput.length())  
+        {
+            port *= 10;
+            port += portInput.charAt(i++) - '0';
+            
+        }
+		
+		try
+		{
+			ServerSocket server = new ServerSocket(port);
+			
+			new Thread(new Runnable()
+			{
+				
+				public void run()
+				{
+					
+					while (true)
+					{
+						System.out.print("> ");
+						BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in), 1);
+						try
+						{
+							String input = consoleInput.readLine();
+							switch (input) {
+								case "help":
+									System.out.println("Server currently opened on port " + port);
+									break;
+								
+								case "quit":
+									run = false;
+									return;
+							
+							}
+							
+						}
+						catch (IOException ioe)
+						{
+							System.out.println("Input Stream closed.");
+							break;
+							
+						}
+						
+					}
+					
+				}
+				
+			}
+			).start();
+			
+			while (run)
+			{
+				Socket socket = server.accept();
+				Server newRequest = new Server(socket);
+				new Thread(newRequest).start();
+				
+			}
+			
+			server.close();
+			
+		}
+		catch (IOException ioe)
+		{
+			System.out.println("ERROR: Server closed");
+			
+		}
+		
+	}
+	
+}
+
+###* Window.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm;
+
+import java.util.ArrayList;
+import javax.swing.JFrame;
+
+public class Window
+{
+
+	public static int windowCount = 0;
+	
+	private int id;
+	private JFrame window;
+	private String title = null;
+	private boolean visible = false;
+	
+	/*
+	* Window() void
+	* 
+	* Create a new JFrame window.
+	* 
+	* ArrayList<String> options - command options
+	* 
+	* -h
+	*     Prints help information
+	*     
+	* -t title
+	* 	  Sets the window title in 
+	* 	  the header
+	* 
+	* -w width
+	* 	  Sets the width of the window
+	* 
+	* -l height
+	* 	  Sets the height of the window
+	* 
+	* -r
+	* 	  Sets the window to be able to
+	*	  be resized  
+	* 	  
+	*/
+	Window(ArrayList<String> options)
+	{
+		
+		int width = 500, height = 500;
+		boolean resizable = false;
+		
+		boolean titleNext = false, heightNext = false, widthNext = false;
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\t\nwindow [-h] [-r] [-v] [-w width] [-l height] [-t title]\n\nCreates a new programmable GUI window.\nDefault title is \"JTerm Window\", and the default width and height of the window is 500 x 500.");
+				return;
+				
+			}
+			else if (option.equals("-v"))
+				visible = true;
+
+			else if(option.equals("-t"))
+			{
+				title = "";
+				titleNext = true;
+				
+			}
+			else if(option.equals("-w"))
+				widthNext = true;
+
+			else if(option.equals("-l"))
+				heightNext = true;
+
+			else if(widthNext)
+			{
+				width = Integer.parseInt(option);
+				widthNext = false;
+				
+			}
+			
+			else if(heightNext)
+			{
+				height = Integer.parseInt(option);
+				heightNext = false;
+				
+			}
+			else if (option.equals("-r"))
+				resizable = true;
+
+			else if(titleNext)
+				title += option + " ";
+			
+		}
+		
+		windowCount += 1;
+		id = windowCount;
+		
+		if (title == null)
+			title = "JTerm Window";
+		
+		JFrame window = new JFrame(title);
+		window.setSize(width, height);
+		window.setResizable(resizable);
+		window.setVisible(visible);
+		
+		this.window = window;
+		
+	}
+	
+	/*
+	* ToggleVisible() void
+	* 
+	* Toggles the visibility of the window
+	*/
+	public void ToggleVisible()
+	{
+		window.setVisible(visible = !visible);
+		
+	}
+	
+	/*
+	* GetId() int
+	* 
+	* Returns the process ID of the window
+	*/
+	public int GetId()
+	{
+		
+		return id;
+		
+	}
+	
+	/*
+	* GetId() JFrame
+	* 
+	* Returns the JFrame object displaying
+	* the window
+	*/
+	public JFrame GetFrame()
+	{
+		
+		return this.window;
+		
+	}
+	
+	/*
+	* GetTitle() String
+	* 
+	* Returns the title of the window
+	*/
+	public String GetTitle()
+	{
+		
+		return title;
+		
+	}
+	
+}
+

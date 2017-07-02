@@ -20,7 +20,8 @@ package main.java.jterm;
 
 import java.util.ArrayList;
 
-public class Echo {
+public class Echo
+{
 	
 	/*
 	* EchoInput() void
@@ -32,11 +33,13 @@ public class Echo {
 	* -h
 	*     Prints help information.
 	*/
-	public static void EchoInput(ArrayList<String> options) {
+	public static void EchoInput(ArrayList<String> options)
+	{
 		
 		String output = "";
 		
-		for (String option: options) {
+		for (String option: options)
+		{
 			if (option.equals("-h"))
 			{
 				System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.");
@@ -44,10 +47,7 @@ public class Echo {
 			  
 			}
 			else
-			{
 				output += option + " ";
-			  
-			}
 		 
 		}
 		
