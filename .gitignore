@@ -36,3 +36,4 @@ target/
 *.class
 target/classes/main/java/jterm/test.bat
 .project
+*.class

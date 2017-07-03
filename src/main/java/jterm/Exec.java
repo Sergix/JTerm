@@ -6,12 +6,10 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -29,10 +27,10 @@ public class Exec
 	
 	private static Hashtable<String, String> vars = new Hashtable<>();
 	
-	// Var name, window object
+	// var name, window object
 	private static Hashtable<String, Window> windows = new Hashtable<>();
 	
-	public static void Run(ArrayList<String> options)
+	public static boolean Run(ArrayList<String> options)
 	{	
 		
 		String file = "";
@@ -41,6 +39,7 @@ public class Exec
 			if (option.equals("-h"))
 			{
 				System.out.println("Command syntax:\n\texec [-h] file\n\nExecutes a batch script.");
+				return false;
 				
 			}
 			else
@@ -56,7 +55,7 @@ public class Exec
 			if (!script.exists() || !script.isFile())
 			{
 				System.out.println("ERROR: File \"" + file + "\" either does not exist or is not a file.");
-				return;
+				return true;
 				
 			}
 			
@@ -84,22 +83,20 @@ public class Exec
 				
 			}
 			
-<<<<<<< HEAD
 		}
 		catch (FileNotFoundException ioe)
 		{
-=======
-			
-		} catch (FileNotFoundException ioe) {
->>>>>>> master
 			System.out.println(ioe);
 			
 		}
+		
+		return false;
 		
 	}
 	
 	public static void Parse(String directive)
 	{
+		
 		String command = "";
 		Scanner tokenizer = new Scanner(directive);
 		ArrayList<String> options = new ArrayList<String>();
@@ -129,7 +126,7 @@ public class Exec
 				
 			}
 			
-			String key = options.get(1), value = "";
+			String key = options.get(1);
 			if ( !options.get(2).equals("=") )
 			{
 				tokenizer.close();
@@ -143,41 +140,30 @@ public class Exec
 					options.remove(0);
 				
 				Window newWindow = new Window(options);
+				vars.put(key, Integer.toString(newWindow.GetId()));
 				windows.put(key, newWindow);
 				break;
 				
 			}
 			
-			for (int i = 3; i < options.size(); i++)
-			{
-				value += options.get(i) + " ";
-				
-			}
-
-			vars.put(key, value);
+			vars.put(key, GetRest(options, 3));
 			break;
 			
 		case "pause":
 			if (options.size() == 1)
-				System.out.println("Press any key to continue...");
-			else
-			{
-				String message = "";
-				for (int i = 1; i < options.size(); i++)
-				{
-					if (i != options.size() - 1)
-						message = options.get(i) + " ";
-					else
-						message = options.get(i);
-				}
-				
-				System.out.print(message);
-			}
+				System.out.print("Press enter to continue...");
 			
-			try {
-				System.in.read();
+			else
+				System.out.print(GetRest(options, 1));
+
+			try
+			{
+				JTerm.userInput.read();
+				JTerm.userInput.skip(1);
 				
-			} catch (IOException ioe) {
+			}
+			catch (IOException ioe)
+			{
 				System.out.println(ioe);
 				
 			}
@@ -211,48 +197,93 @@ public class Exec
 			break;
 			
 		default:
-			for (int i = 0; i < vars.size(); i++)
+			for (;;)
+			if ( vars.containsKey(options.get(0)) )
 			{
-				if ( vars.containsKey(options.get(0)) )
+				int value;
+				//
+				// TODO
+				// Create arithmetic operations that passes the value 
+				// to whatever it is needed for
+				//
+				if ( !options.get(1).equals("=") || !vars.containsKey(options.get(2)) || !vars.containsKey(options.get(4)) )
+					break;
+				
+				switch(options.get(3))
 				{
-					tokenizer.close();
-					return;
+				case "+":
+					value = Integer.parseInt( vars.get(options.get(2)) ) + Integer.parseInt( vars.get(options.get(4)) );
+					break;
 					
-				}
-				if ( windows.containsKey(options.get(0)) )
-				{
-					switch(options.get(1))
-					{
-					case "visible":
-						windows.get(options.get(0)).ToggleVisible();
-						break;
-						
-					case "title":
-						String newTitle = "";
-						for (int j = 2; j < options.size(); j++)
-							newTitle = options.get(j) + " ";
-
-						windows.get(options.get(0)).GetFrame().setTitle(newTitle);
-						break;
-						
-					default:
-						break;
-						
-					}
+				case "-":
+					value = Integer.parseInt( vars.get(options.get(2)) ) - Integer.parseInt( vars.get(options.get(4)) );
+					break;
 					
+				case "*":
+					value = Integer.parseInt( vars.get(options.get(2)) ) * Integer.parseInt( vars.get(options.get(4)) );
+					break;
+					
+				case "/":
+					value = Integer.parseInt( vars.get(options.get(2)) ) / Integer.parseInt( vars.get(options.get(4)) );
+					break;
+					
+				default:
 					tokenizer.close();
 					return;
 					
 				}
 				
+				vars.replace(options.get(0), String.valueOf(value));
+				
+				tokenizer.close();
+				return;
+				
 			}
-
-			JTerm.Parse(options);
-			break;
-		
+			else if ( windows.containsKey(options.get(0)) )
+			{
+				switch(options.get(1))
+				{
+				case "visible":
+					windows.get(options.get(0)).ToggleVisible();
+					break;
+					
+				case "title":
+					windows.get(options.get(0)).GetFrame().setTitle(GetRest(options, 2));
+					break;
+					
+				default:
+					break;
+					
+				}
+				
+			}
+			else
+				JTerm.Parse(options);
+			
+			tokenizer.close();
+			return;
+			
 		}
 		
 		tokenizer.close();
+		
+	}
+	
+	public static String GetRest(ArrayList<String> options, int index)
+	{
+		
+		String output = "";
+		for (int i = index; i < options.size(); i++)
+		{
+			if (i != options.size() - 1)
+				output += options.get(i) + " ";
+			
+			else
+				output += options.get(i);
+			
+		}
+		
+		return output;
 		
 	}
 	
