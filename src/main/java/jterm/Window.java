@@ -25,6 +25,7 @@ public class Window
 {
 
 	public static int windowCount = 0;
+	public static ArrayList<Window> windows = new ArrayList<Window>();
 	
 	private int id;
 	private JFrame window;
@@ -118,8 +119,9 @@ public class Window
 		window.setSize(width, height);
 		window.setResizable(resizable);
 		window.setVisible(visible);
-		
+
 		this.window = window;
+		windows.add(this);
 		
 	}
 	
@@ -168,6 +170,19 @@ public class Window
 	{
 		
 		return title;
+		
+	}
+	
+	public static void CloseAll()
+	{
+		
+		for (Window window: windows)
+		{
+			
+			window.GetFrame().setVisible(false); //you can't see me!
+			window.GetFrame().dispose(); //Destroy the JFrame object
+			
+		}
 		
 	}
 	

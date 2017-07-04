@@ -66,7 +66,10 @@ public class JTerm
 			  quit = JTerm.Standby();
 			  
 		  // As long as we are not quitting...
-		  } while (!quit); 
+		  } while (!quit);
+		  
+		  // Close all open window instances
+		  Window.CloseAll();
 
 	  }
 	  
