@@ -16,11 +16,9 @@
 
 package main.java.jterm;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class Files
@@ -30,6 +28,7 @@ public class Files
 	* WriteFile() void
 	* 
 	* Get input and write it to a file.
+	* Changelog (#65)
 	* 
 	* ArrayList<String> options - command options
 	* 
@@ -54,11 +53,31 @@ public class Files
 			
 		}
 		
+		if (filename.equals(""))
+		{
+			System.out.println("Error: missing filename; type \"write -h\" for more information.");
+			return;
+			
+		}
+		
 		try
 		{
-			System.out.println("Enter file contents:\n");
-			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in), 1);
-			String output = inputStream.readLine();
+			System.out.println("Enter file contents (press enter after a blank line to quit):");
+			String line = JTerm.userInput.readLine();
+			String output = line;
+			
+			for(;;)
+			{
+				line = JTerm.userInput.readLine();
+				if (line.equals(""))
+					break;
+				
+				else if (line.equals(" "))
+					output += "\n";
+				
+				output += "\n" + line;
+				
+			}
 			
 			FileWriter fileWriter = new FileWriter(filename);
 			fileWriter.write(output);
