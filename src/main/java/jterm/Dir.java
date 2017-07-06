@@ -128,7 +128,16 @@ public class Dir
 			  
 		  }
 		  else
-			  newDirectory += option;
+			  newDirectory += option + " ";
+		  
+	  }
+	  
+	  newDirectory = newDirectory.trim();
+	  
+	  if (newDirectory.startsWith("\"") && newDirectory.endsWith("\""))
+	  {
+		  newDirectory = newDirectory.substring(1, newDirectory.length());
+		  newDirectory = newDirectory.substring(0, newDirectory.length() - 1);
 		  
 	  }
 	  
@@ -221,7 +230,7 @@ public class Dir
 
 	  }
 	  
-	  name.trim();
+	  name = name.trim();
 	  name = JTerm.currentDirectory + name;
 	  
 	  File dir = new File(name);

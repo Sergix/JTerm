@@ -53,7 +53,7 @@ public class Files
 			
 		}
 		
-		filename.trim();
+		filename = filename.trim();
 		filename = JTerm.currentDirectory + filename;
 		
 		if (filename.equals(""))
