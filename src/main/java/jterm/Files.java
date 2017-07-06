@@ -49,9 +49,12 @@ public class Files
 				
 			}
 			else
-				filename = JTerm.currentDirectory + option;
+				filename += option;
 			
 		}
+		
+		filename.trim();
+		filename = JTerm.currentDirectory + filename;
 		
 		if (filename.equals(""))
 		{
@@ -116,12 +119,12 @@ public class Files
 				
 			}
 			else
-			{
-				filename = JTerm.currentDirectory + option;
-				
-			}
+				filename += option;
 			
 		}
+		
+		filename.trim();
+		filename = JTerm.currentDirectory + filename;
 		
 		File dir = new File(filename);
 		if (!dir.exists())
