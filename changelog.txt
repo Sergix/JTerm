@@ -1,3 +1,10 @@
+(#68)[7/10/2017-18:03 0.4.0 Sergix]
+	Merged PR #17 which included the ReadFile() function in Files.java written by @d4nntheman.
+		- Closes issue #16
+	Slight changes to Files.ReadFile() code spacing.
+	Added BufferedReader to imports of Files.java (fixes Travis CI build fail).
+	Pushed updates to Git.
+
 (#67)[7/6/2017-11:25 0.4.0 Sergix]
 	Fixed issue #15 (2). (https://github.com/Sergix/JTerm/issues/15)
 	ChangeDir() accepts directory paths enclosed in quotes.

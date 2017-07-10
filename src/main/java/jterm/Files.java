@@ -16,6 +16,7 @@
 
 package main.java.jterm;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.FileReader;
@@ -141,43 +142,57 @@ public class Files
 
 	/*
 	* ReadFile() void
+	* Changelog (#68)
 	* 
-    * Reads the specified files
+	* Reads the specified files and outputs the contents
+	* to the console.
 	* 
 	* ArrayList<String> options - command options
 	* 
 	* -h
 	*     Prints help information
+	*     
+	* Credit to @d4nntheman
 	*/
-    public static void ReadFile(ArrayList<String> options)
-    {
-        String filename = "";
-        for (String option: options)
-        {
-            if (option.equals("-h"))
-            {
-                System.out.println("Command syntax:\n\t read [-h] [FILE]...");
-                return;
-            }
-
+	public static void ReadFile(ArrayList<String> options)
+	{
+		
+		String filename = "";
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.");
+				return;
+				
+			}
+	
 			filename = JTerm.currentDirectory + option;
-            File file = new File(filename);
-		    if (!file.exists())
-		    {
+			File file = new File(filename);
+			if (!file.exists())
+			{
 			    System.out.println("ERROR: File/directory \"" + option + "\" does not exist.");
-                break;
-		    }
-
-			try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath())))
-            {
-                String line = null;
-                while((line = reader.readLine()) != null)
-                    System.out.println(line);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-        }
-    }
+			    break;
+			    
+			}
+		
+			try ( BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath())) )
+	        {
+				System.out.println("\n[JTerm - Contents of " + option + "]\n");
+	            String line = null;
+	            while( (line = reader.readLine()) != null )
+	                System.out.println(line);
+	            
+	        }
+			catch (IOException e)
+			{
+	            e.printStackTrace();
+	            return;
+	            
+	        }
+			
+	    }
+		
+	}
 	
 }

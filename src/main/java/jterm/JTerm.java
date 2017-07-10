@@ -200,6 +200,7 @@ public class JTerm
 		  		break;
 		  		
 		  	case "read":
+		  		Files.ReadFile(options);
 		  		break;
 		  		
 		  	/*case "connect":
