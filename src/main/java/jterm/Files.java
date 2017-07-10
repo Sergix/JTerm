@@ -21,6 +21,7 @@ package main.java.jterm;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -117,5 +118,46 @@ public class Files
 		dir.delete();
 		
 	}
+
+	/*
+	* ReadFile() void
+	* 
+    * Reads the specified files
+	* 
+	* ArrayList<String> options - command options
+	* 
+	* -h
+	*     Prints help information
+	*/
+    public static void ReadFile(ArrayList<String> options)
+    {
+        String filename = "";
+        for (String option: options)
+        {
+            if (option.equals("-h"))
+            {
+                System.out.println("Command syntax:\n\t read [-h] [FILE]...");
+                return;
+            }
+
+			filename = JTerm.currentDirectory + option;
+            File file = new File(filename);
+		    if (!file.exists())
+		    {
+			    System.out.println("ERROR: File/directory \"" + option + "\" does not exist.");
+                break;
+		    }
+
+			try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath())))
+            {
+                String line = null;
+                while((line = reader.readLine()) != null)
+                    System.out.println(line);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+    }
 	
 }
