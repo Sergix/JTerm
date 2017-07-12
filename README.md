@@ -3,7 +3,7 @@
 ![Build Status](https://travis-ci.org/Sergix/JTerm.svg?branch=master)
 
 ## Definition
-A terminal written for cross-platform usge.
+A terminal written for cross-platform usage.
 
 ## Implementation
 This project is written in Java using [Eclipse IDE for Java EE](http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/neon3).
