@@ -20,18 +20,21 @@ package main.java.jterm;
 import java.util.Scanner;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class JTerm
 {
 	
 	  // Global version variable
-	  static String version = "0.4.0";
+	  static String version = "0.5.0";
 	  
 	  // Global directory variable (use "cd" command to change)
 	  // Default value "./" is equal to the default directory set when the program starts
 	  static String currentDirectory = "./";
 	  
 	  static String commandChars = "";
+	  
+	  static Hashtable<String, Exec> commands = new Hashtable<String, Exec>();
 	  
 	  static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 	  

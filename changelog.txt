@@ -1,3 +1,10 @@
+(#69)[9/4/2017-22:01 0.4.0 Sergix]
+	Time to start this project up again! It's been dormant for a while as I've been busy with other things.
+	I myself have moved out of the Eclipse IDE for this project, so I have made a very small "init", "build", and "run" batchfile to help me out. :P
+	Also, I am currently working on setting up a Vagrantfile for helping out new users who want to contribute (more info at https://www.vagrantup.com/intro/index.html).
+	Known Issue:
+		- SystemUtils lib not importing in Ps.java (POM issue?)
+
 (#68)[7/10/2017-18:03 0.4.0 Sergix]
 	Merged PR #17 which included the ReadFile() function in Files.java written by @d4nntheman.
 		- Closes issue #16

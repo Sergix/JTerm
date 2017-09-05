@@ -132,6 +132,7 @@ public class Window
 	*/
 	public void ToggleVisible()
 	{
+		
 		window.setVisible(visible = !visible);
 		
 	}
@@ -178,7 +179,6 @@ public class Window
 		
 		for (Window window: windows)
 		{
-			
 			window.GetFrame().setVisible(false); //you can't see me!
 			window.GetFrame().dispose(); //Destroy the JFrame object
 			
