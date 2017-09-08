@@ -57,8 +57,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.apache.commons</groupId>
-      <artifactId>lang3</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
       <version>3.6</version>
     </dependency>
   </dependencies>
