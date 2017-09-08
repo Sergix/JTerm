@@ -1,3 +1,9 @@
+(#71)[9/7/2017-21:52 0.4.0 Sergix]
+	Deleted the Dir and readfile branches.
+	Updated some stuff in the Slack group! :D
+	Slight changes to the POM in trying to resolve Issue #20.
+	Pushed updates to Git.
+
 (#70)[9/5/2017-21:52 0.4.0 Sergix]
 	Issue presented in entry #69 still present. Opening an issue on GitHub to get multiple people's input.
 	Updated the README and CONTRIBUTING docs (mostly just moved some stuff around.)
