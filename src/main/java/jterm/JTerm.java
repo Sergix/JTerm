@@ -21,6 +21,7 @@ import java.util.Scanner;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
+
 public class JTerm
 {
 	
@@ -227,7 +228,11 @@ public class JTerm
 		  		
 		  	case "ping":
 		  		Ping.PingHost(options);		  		
-		  		break;
+				break;
+				  
+			case "set":
+				Set.NewVar(options);
+				break;
 				  
 		  	default:
 		  		// Create a new array that contains the command and check if it is an executable

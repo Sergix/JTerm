@@ -23,8 +23,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import main.java.jterm.JTerm;
-
 public class Files
 {
 

@@ -1,3 +1,13 @@
+(#74)[9/8/2017-16:46 0.4.0 Sergix]
+	Moved all the "set" command code into its own class, Set.
+		- vars: global program hashtable containing all variables
+		- NewVar(options): creates a new variable
+		- PrintVars(): prints all variables currently stored
+	Slight improvements in efficiency in the Set command.
+	Set can also now be called from the regular prompt, and not just from exec files.
+	The next update to JTerm will probably result in a patch (v0.4.1) unless something significant is added.
+	Pushed updates to Git.
+
 (#73)[9/8/2017-13:00 0.4.0 Sergix]
 	Fixed an issue with the importing of the commons library in the POM.
 	Pushed updates to Git.

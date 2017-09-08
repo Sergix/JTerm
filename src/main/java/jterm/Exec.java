@@ -18,17 +18,11 @@ package main.java.jterm;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Scanner;
 
 public class Exec
 {
-	
-	private static Hashtable<String, String> vars = new Hashtable<>();
-	
-	// var name, window object
-	private static Hashtable<String, Window> windows = new Hashtable<>();
 	
 	public static boolean Run(ArrayList<String> options)
 	{	
@@ -114,41 +108,7 @@ public class Exec
 		}
 			
 		switch (command)
-		{
-		case "set":
-			if (options.size() == 1)
-			{
-				String element = "";
-				for (Enumeration<String> e = vars.keys(); e.hasMoreElements();)
-				       System.out.println((element = e.nextElement()) + "=" + vars.get(element));
-				       
-				break;
-				
-			}
-			
-			String key = options.get(1);
-			if ( !options.get(2).equals("=") )
-			{
-				tokenizer.close();
-				return;
-				
-			}
-			
-			if (options.get(3).equals("window"))
-			{
-				for (int i = 0; i < 4; i++)
-					options.remove(0);
-				
-				Window newWindow = new Window(options);
-				vars.put(key, Integer.toString(newWindow.GetId()));
-				windows.put(key, newWindow);
-				break;
-				
-			}
-			
-			vars.put(key, GetRest(options, 3));
-			break;
-			
+		{	
 		case "pause":
 			if (options.size() == 1)
 				System.out.print("Press enter to continue...");
@@ -197,67 +157,67 @@ public class Exec
 			break;
 			
 		default:
-			for (;;)
-			if ( vars.containsKey(options.get(0)) )
-			{
-				int value;
-				//
-				// TODO
-				// Create arithmetic operations that passes the value 
-				// to whatever it is needed for
-				//
-				if ( !options.get(1).equals("=") || !vars.containsKey(options.get(2)) || !vars.containsKey(options.get(4)) )
-					break;
+			// for (;;)
+			// if ( vars.containsKey(options.get(0)) )
+			// {
+			// 	int value;
+			// 	//
+			// 	// TODO
+			// 	// Create arithmetic operations that passes the value 
+			// 	// to whatever it is needed for
+			// 	//
+			// 	if ( !options.get(1).equals("=") || !vars.containsKey(options.get(2)) || !vars.containsKey(options.get(4)) )
+			// 		break;
 				
-				switch(options.get(3))
-				{
-				case "+":
-					value = Integer.parseInt( vars.get(options.get(2)) ) + Integer.parseInt( vars.get(options.get(4)) );
-					break;
+			// 	switch(options.get(3))
+			// 	{
+			// 	case "+":
+			// 		value = Integer.parseInt( vars.get(options.get(2)) ) + Integer.parseInt( vars.get(options.get(4)) );
+			// 		break;
 					
-				case "-":
-					value = Integer.parseInt( vars.get(options.get(2)) ) - Integer.parseInt( vars.get(options.get(4)) );
-					break;
+			// 	case "-":
+			// 		value = Integer.parseInt( vars.get(options.get(2)) ) - Integer.parseInt( vars.get(options.get(4)) );
+			// 		break;
 					
-				case "*":
-					value = Integer.parseInt( vars.get(options.get(2)) ) * Integer.parseInt( vars.get(options.get(4)) );
-					break;
+			// 	case "*":
+			// 		value = Integer.parseInt( vars.get(options.get(2)) ) * Integer.parseInt( vars.get(options.get(4)) );
+			// 		break;
 					
-				case "/":
-					value = Integer.parseInt( vars.get(options.get(2)) ) / Integer.parseInt( vars.get(options.get(4)) );
-					break;
+			// 	case "/":
+			// 		value = Integer.parseInt( vars.get(options.get(2)) ) / Integer.parseInt( vars.get(options.get(4)) );
+			// 		break;
 					
-				default:
-					tokenizer.close();
-					return;
+			// 	default:
+			// 		tokenizer.close();
+			// 		return;
 					
-				}
+			// 	}
 				
-				vars.replace(options.get(0), String.valueOf(value));
+			// 	//vars.replace(options.get(0), String.valueOf(value));
 				
-				tokenizer.close();
-				return;
+			// 	tokenizer.close();
+			// 	return;
 				
-			}
-			else if ( windows.containsKey(options.get(0)) )
-			{
-				switch(options.get(1))
-				{
-				case "visible":
-					windows.get(options.get(0)).ToggleVisible();
-					break;
+			// }
+			// else if ( windows.containsKey(options.get(0)) )
+			// {
+			// 	switch(options.get(1))
+			// 	{
+			// 	case "visible":
+			// 		windows.get(options.get(0)).ToggleVisible();
+			// 		break;
 					
-				case "title":
-					windows.get(options.get(0)).GetFrame().setTitle(GetRest(options, 2));
-					break;
+			// 	case "title":
+			// 		windows.get(options.get(0)).GetFrame().setTitle(GetRest(options, 2));
+			// 		break;
 					
-				default:
-					break;
+			// 	default:
+			// 		break;
 					
-				}
+			// 	}
 				
-			}
-			else
+			// }
+			// else
 				JTerm.Parse(options);
 			
 			tokenizer.close();
