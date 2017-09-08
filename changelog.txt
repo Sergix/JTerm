@@ -1,3 +1,17 @@
+(#72)[9/8/2017-12:47 0.4.0 Sergix]
+	Fixed Issue #20.
+		- Maven was not loading the dependencies into the output JAR.
+		- Added the maven-assembly-plugin to the POM.
+	Slight modifications to the batch build and run scripts.
+	The Maven package process now builds two JAR's: one w/o dependencies and one with.
+		- If you perform the "run" batch script right after a build, it will rename the files to their respective names.
+		- Packaged JAR, no dependencies (before name change w/ "run"): jterm-0.5.0.jar
+		- Packaged JAR, with dependencies (before name change w/ "run"): jterm-0.5.0-jar-with-dependencies.jar
+		- Packaged JAR, no dependencies (after name change w/ "run"): jterm-0.5.0-no-deps.jar
+		- Packaged JAR, with dependencies (after name change w/ "run"): jterm-v0.5.0.jar
+	Closed Issue #20.
+	Pushed updates to Git.
+
 (#71)[9/7/2017-21:52 0.4.0 Sergix]
 	Deleted the Dir and readfile branches.
 	Updated some stuff in the Slack group! :D
