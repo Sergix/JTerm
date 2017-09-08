@@ -128,7 +128,16 @@ public class Dir
 			  
 		  }
 		  else
-			  newDirectory = option;
+			  newDirectory += option + " ";
+		  
+	  }
+	  
+	  newDirectory = newDirectory.trim();
+	  
+	  if (newDirectory.startsWith("\"") && newDirectory.endsWith("\""))
+	  {
+		  newDirectory = newDirectory.substring(1, newDirectory.length());
+		  newDirectory = newDirectory.substring(0, newDirectory.length() - 1);
 		  
 	  }
 	  
@@ -143,7 +152,10 @@ public class Dir
 	  File dir = new File(newDirectory);
 	  File newDir = new File(JTerm.currentDirectory + newDirectory);
 	  
-	  if (newDir.exists() && newDir.isDirectory())
+	  if (newDirectory.equals("/"))
+		  newDirectory = "/";
+	  
+	  else if (newDir.exists() && newDir.isDirectory())
 		  newDirectory = JTerm.currentDirectory + newDirectory;
 
 	  else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory()))
@@ -153,10 +165,7 @@ public class Dir
 		  
 	  }
 	  
-	  if (newDirectory.equals("/"))
-		  newDirectory = "/";
-	  
-	  else if (!newDirectory.endsWith("/"))
+	  if (!newDirectory.endsWith("/"))
 		  newDirectory += "/";
 	  
 	  // It does exist, and it is a directory, so just change the global working directory variable to the input
@@ -217,9 +226,12 @@ public class Dir
 			  
 		  }
 		  else
-			  name = JTerm.currentDirectory + option;
+			  name += option + " ";
 
 	  }
+	  
+	  name = name.trim();
+	  name = JTerm.currentDirectory + name;
 	  
 	  File dir = new File(name);
 	  dir.mkdir();

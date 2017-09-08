@@ -51,6 +51,7 @@ public class Echo
 		 
 		}
 		
+		output = output.substring(0, output.length() - 1);
 		System.out.println(output);
 		
 	}

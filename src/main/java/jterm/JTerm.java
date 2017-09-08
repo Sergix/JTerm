@@ -6,12 +6,10 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -22,18 +20,21 @@ package main.java.jterm;
 import java.util.Scanner;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class JTerm
 {
 	
 	  // Global version variable
-	  static String version = "0.4.0";
+	  static String version = "0.4.1";
 	  
 	  // Global directory variable (use "cd" command to change)
 	  // Default value "./" is equal to the default directory set when the program starts
 	  static String currentDirectory = "./";
 	  
 	  static String commandChars = "";
+	  
+	  static Hashtable<String, Exec> commands = new Hashtable<String, Exec>();
 	  
 	  static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 	  
@@ -68,7 +69,10 @@ public class JTerm
 			  quit = JTerm.Standby();
 			  
 		  // As long as we are not quitting...
-		  } while (!quit); 
+		  } while (!quit);
+		  
+		  // Close all open window instances
+		  Window.CloseAll();
 
 	  }
 	  
@@ -199,6 +203,7 @@ public class JTerm
 		  		break;
 		  		
 		  	case "read":
+		  		Files.ReadFile(options);
 		  		break;
 		  		
 		  	/*case "connect":
@@ -223,7 +228,39 @@ public class JTerm
 		  		
 		  	case "ping":
 		  		Ping.PingHost(options);		  		
-		  		break;
+				break;
+				  
+			case "set":
+				Set.NewVar(options);
+				break;
+
+			case "pause":
+				Pause.EnterPause(options);
+				break;
+
+			// Commands to skip in batch files
+			case "bcdedit":
+			case "chkdsk":
+			case "chkntfs":
+			case "cls":
+			case "cmd":
+			case "color":
+			case "convert":
+			case "diskpart":
+			case "driverquery":
+			case "format":
+			case "fsutil":
+			case "gpresult":
+			case "mode":
+			case "sc":
+			case "shutdown":
+			case "start":
+			case "tasklist":
+			case "taskkill":
+			case "ver":
+			case "vol":
+			case "wmic":
+				break;
 				  
 		  	default:
 		  		// Create a new array that contains the command and check if it is an executable

@@ -1,3 +1,106 @@
+(#76)[9/8/2017-19:30 0.4.1 Sergix]
+	Updated CONTRIBUTING.md with branch information.
+	Changed POM project version to 0.4.1.
+	Built binaries for version 0.4.1.
+	Wrote patch notes and compiled the full changelog.
+	Pushed updates to Git.
+
+(#75)[9/8/2017-17:56 0.4.0 Sergix]
+	Removed unecessary imports in multiple files.
+	Changed Exec error message.
+	Moved options tokenizer from Exec.Parse() into the Exec.Run() line processing loop, and it now calls JTerm.Parse() rather than Exec.Parse() for command processing.
+	Created Pause class.
+		- Pause.java
+		- EnterPause(options): pauses the interpreter until the Enter key is hit.
+	Moved all non-JTerm-compatible switch cases from Exec.Parse() into JTerm.Parse().
+	Added documentation comments for multiple functions.
+	Pushed updates to Git.
+
+(#74)[9/8/2017-16:46 0.4.0 Sergix]
+	Moved all the "set" command code into its own class, Set.
+		- vars: global program hashtable containing all variables
+		- NewVar(options): creates a new variable
+		- PrintVars(): prints all variables currently stored
+	Slight improvements in efficiency in the Set command.
+	Set can also now be called from the regular prompt, and not just from exec files.
+	The next update to JTerm will probably result in a patch (v0.4.1) unless something significant is added.
+	Pushed updates to Git.
+
+(#73)[9/8/2017-13:00 0.4.0 Sergix]
+	Fixed an issue with the importing of the commons library in the POM.
+	Pushed updates to Git.
+
+(#72)[9/8/2017-12:47 0.4.0 Sergix]
+	Fixed Issue #20.
+		- Maven was not loading the dependencies into the output JAR.
+		- Added the maven-assembly-plugin to the POM.
+	Slight modifications to the batch build and run scripts.
+	The Maven package process now builds two JAR's: one w/o dependencies and one with.
+		- If you perform the "run" batch script right after a build, it will rename the files to their respective names.
+		- Packaged JAR, no dependencies (before name change w/ "run"): jterm-0.5.0.jar
+		- Packaged JAR, with dependencies (before name change w/ "run"): jterm-0.5.0-jar-with-dependencies.jar
+		- Packaged JAR, no dependencies (after name change w/ "run"): jterm-0.5.0-no-deps.jar
+		- Packaged JAR, with dependencies (after name change w/ "run"): jterm-v0.5.0.jar
+	Closed Issue #20.
+	Pushed updates to Git.
+
+(#71)[9/7/2017-21:52 0.4.0 Sergix]
+	Deleted the Dir and readfile branches.
+	Updated some stuff in the Slack group! :D
+	Slight changes to the POM in trying to resolve Issue #20.
+	Pushed updates to Git.
+
+(#70)[9/5/2017-21:52 0.4.0 Sergix]
+	Issue presented in entry #69 still present. Opening an issue on GitHub to get multiple people's input.
+	Updated the README and CONTRIBUTING docs (mostly just moved some stuff around.)
+	Added the Apache Commons Lang library to /lib, trying to figure out how to package it with Maven....
+	Added "Pushed updates to Git." line in previous entry.
+	Pushed updates to Git.
+
+(#69)[9/4/2017-22:01 0.4.0 Sergix]
+	Time to start this project up again! It's been dormant for a while as I've been busy with other things.
+	I myself have moved out of the Eclipse IDE for this project, so I have made a very small "init", "build", and "run" batchfile to help me out. :P
+	Also, I am currently working on setting up a Vagrantfile for helping out new users who want to contribute (more info at https://www.vagrantup.com/intro/index.html).
+	Known Issue:
+		- SystemUtils lib not importing in Ps.java (POM issue?)
+	Pushed updates to Git.
+
+(#68)[7/10/2017-18:03 0.4.0 Sergix]
+	Merged PR #17 which included the ReadFile() function in Files.java written by @d4nntheman.
+		- Closes issue #16
+	Slight changes to Files.ReadFile() code spacing.
+	Added BufferedReader to imports of Files.java (fixes Travis CI build fail).
+	Pushed updates to Git.
+
+(#67)[7/6/2017-11:25 0.4.0 Sergix]
+	Fixed issue #15 (2). (https://github.com/Sergix/JTerm/issues/15)
+	ChangeDir() accepts directory paths enclosed in quotes.
+	Pushed updates to Git. 
+
+(#66)[7/6/2017-11:25 0.4.0 Sergix]
+	Fixed issue #15. (https://github.com/Sergix/JTerm/issues/15)
+	Fixed other issues:
+		- NewDir() was not taking arguments with multiple spaces
+		- WriteFile() was not taking arguments with multiple spaces
+		- Delete() was not taking arguments with multiple spaces
+		- Echo() was outputting an extra space
+	Pushed updates to Git. 
+
+(#65)[7/4/2017-13:48 0.4.0 Sergix]
+	Updated WriteFile(); input stream is closed when a blank line is entered.
+	A single space on a line can be used to output a blank line into a file.
+	Pushed updates to Git. 
+
+(#64)[7/4/2017-11:41 0.4.0 Sergix]
+	Fixed #14 (https://github.com/Sergix/JTerm/issues/14).
+	Added Window.CloseAll() function and the Window.windows array.
+	JTerm automatically calls CloseAll() right before exiting the application.
+	Pushed updates to Git.
+
+(#63)[7/3/2017-14:36 0.4.0 Sergix]
+	Resolved file conflicts from last push to dev branch.
+	Removed unecessary files and reformatted eclipse project.
+
 (#62)[7/1/2017-19:12 0.3.1 Sergix]
 	Preparing for v0.4.0 release.
 	Set a longer timeout for the "ping" command. Timeout is now 10 seconds.

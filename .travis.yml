@@ -8,5 +8,3 @@ jdk:
   - oraclejdk8
 notifications:
   slack: sergix:qb9AYlJo8QqPybBY1FQ5V6my
-
-# before_script: chmod +x compile.sh
