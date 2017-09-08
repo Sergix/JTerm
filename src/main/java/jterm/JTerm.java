@@ -26,7 +26,7 @@ public class JTerm
 {
 	
 	  // Global version variable
-	  static String version = "0.5.0";
+	  static String version = "0.4.1";
 	  
 	  // Global directory variable (use "cd" command to change)
 	  // Default value "./" is equal to the default directory set when the program starts

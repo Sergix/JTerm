@@ -1,3 +1,10 @@
+(#76)[9/8/2017-19:30 0.4.1 Sergix]
+	Updated CONTRIBUTING.md with branch information.
+	Changed POM project version to 0.4.1.
+	Built binaries for version 0.4.1.
+	Wrote patch notes and compiled the full changelog.
+	Pushed updates to Git.
+
 (#75)[9/8/2017-17:56 0.4.0 Sergix]
 	Removed unecessary imports in multiple files.
 	Changed Exec error message.

@@ -12,6 +12,9 @@ This project is written in Java using [Eclipse IDE for Java EE](http://www.eclip
 ## Code of Conduct
 The Code of Conduct for any contributions and posting information can be found [here](/CODE_OF_CONDUCT.md).
 
+## GitHub Branch
+The development branch of the JTerm project is the `dev` branch. _**Make sure to work off of this branch, not the master!**_ All commits on the dev branch are tracked in the 'Dev' PR. This is the PR that is merged into master.
+
 ## Builds
 Once you build a file from the source code to an archive (.jar), push it to the /build/jar folder, along with the associated changelog (see Changelog section), source code (see Source Code section), and documentation (see Documentation section.)
 
