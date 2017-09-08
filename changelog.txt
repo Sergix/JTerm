@@ -1,3 +1,14 @@
+(#75)[9/8/2017-17:56 0.4.0 Sergix]
+	Removed unecessary imports in multiple files.
+	Changed Exec error message.
+	Moved options tokenizer from Exec.Parse() into the Exec.Run() line processing loop, and it now calls JTerm.Parse() rather than Exec.Parse() for command processing.
+	Created Pause class.
+		- Pause.java
+		- EnterPause(options): pauses the interpreter until the Enter key is hit.
+	Moved all non-JTerm-compatible switch cases from Exec.Parse() into JTerm.Parse().
+	Added documentation comments for multiple functions.
+	Pushed updates to Git.
+
 (#74)[9/8/2017-16:46 0.4.0 Sergix]
 	Moved all the "set" command code into its own class, Set.
 		- vars: global program hashtable containing all variables

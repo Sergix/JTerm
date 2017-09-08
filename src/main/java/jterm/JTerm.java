@@ -233,6 +233,34 @@ public class JTerm
 			case "set":
 				Set.NewVar(options);
 				break;
+
+			case "pause":
+				Pause.EnterPause(options);
+				break;
+
+			// Commands to skip in batch files
+			case "bcdedit":
+			case "chkdsk":
+			case "chkntfs":
+			case "cls":
+			case "cmd":
+			case "color":
+			case "convert":
+			case "diskpart":
+			case "driverquery":
+			case "format":
+			case "fsutil":
+			case "gpresult":
+			case "mode":
+			case "sc":
+			case "shutdown":
+			case "start":
+			case "tasklist":
+			case "taskkill":
+			case "ver":
+			case "vol":
+			case "wmic":
+				break;
 				  
 		  	default:
 		  		// Create a new array that contains the command and check if it is an executable

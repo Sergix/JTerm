@@ -18,12 +18,18 @@ package main.java.jterm;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Scanner;
 
 public class Exec
 {
 	
+	/*
+	* Run() boolean
+	* 
+	* Runs the executable file.
+	* 
+	* ArrayList<String> options - command options
+	*/
 	public static boolean Run(ArrayList<String> options)
 	{	
 		
@@ -48,7 +54,7 @@ public class Exec
 			script = new File(file);
 			if (!script.exists() || !script.isFile())
 			{
-				System.out.println("ERROR: File \"" + file + "\" either does not exist or is not a file.");
+				System.out.println("ERROR: File \"" + file + "\" either does not exist or is not an executable file.");
 				return true;
 				
 			}
@@ -64,7 +70,16 @@ public class Exec
 				if (directive != null)
 				do
 				{
-					Exec.Parse(directive);
+					// Store the command as an ArrayList
+					Scanner tokenizer = new Scanner(directive);
+					ArrayList<String> commandOptions = new ArrayList<String>();
+					while (tokenizer.hasNext())
+						options.add(tokenizer.next());
+
+					tokenizer.close();
+
+					// Where the magic happens!
+					JTerm.Parse(commandOptions);
 					
 				} while ((directive = reader.readLine()) != null);
 
@@ -87,147 +102,82 @@ public class Exec
 		return false;
 		
 	}
-	
-	public static void Parse(String directive)
-	{
-		
-		String command = "";
-		Scanner tokenizer = new Scanner(directive);
-		ArrayList<String> options = new ArrayList<String>();
-		while (tokenizer.hasNext())
-			options.add(tokenizer.next());
-		
-		if (options.size() != 0)
-			command = options.get(0).toLowerCase();
-		
-		else
-		{
-			tokenizer.close();
-			return;
-			
-		}
-			
-		switch (command)
-		{	
-		case "pause":
-			if (options.size() == 1)
-				System.out.print("Press enter to continue...");
-			
-			else
-				System.out.print(GetRest(options, 1));
 
-			try
-			{
-				JTerm.userInput.read();
-				JTerm.userInput.skip(1);
-				
-			}
-			catch (IOException ioe)
-			{
-				System.out.println(ioe);
-				
-			}
-			
-			tokenizer.close();
-			return;
-			
-		// These commands are system-level/OS-dependent and are not possible to integrate into JTerm.
-		// Just skip over them.
-		case "bcdedit":
-		case "chkdsk":
-		case "chkntfs":
-		case "cls":
-		case "cmd":
-		case "color":
-		case "convert":
-		case "diskpart":
-		case "driverquery":
-		case "format":
-		case "fsutil":
-		case "gpresult":
-		case "mode":
-		case "sc":
-		case "shutdown":
-		case "start":
-		case "tasklist":
-		case "taskkill":
-		case "ver":
-		case "vol":
-		case "wmic":
-			break;
-			
-		default:
-			// for (;;)
-			// if ( vars.containsKey(options.get(0)) )
-			// {
-			// 	int value;
-			// 	//
-			// 	// TODO
-			// 	// Create arithmetic operations that passes the value 
-			// 	// to whatever it is needed for
-			// 	//
-			// 	if ( !options.get(1).equals("=") || !vars.containsKey(options.get(2)) || !vars.containsKey(options.get(4)) )
-			// 		break;
-				
-			// 	switch(options.get(3))
-			// 	{
-			// 	case "+":
-			// 		value = Integer.parseInt( vars.get(options.get(2)) ) + Integer.parseInt( vars.get(options.get(4)) );
-			// 		break;
-					
-			// 	case "-":
-			// 		value = Integer.parseInt( vars.get(options.get(2)) ) - Integer.parseInt( vars.get(options.get(4)) );
-			// 		break;
-					
-			// 	case "*":
-			// 		value = Integer.parseInt( vars.get(options.get(2)) ) * Integer.parseInt( vars.get(options.get(4)) );
-			// 		break;
-					
-			// 	case "/":
-			// 		value = Integer.parseInt( vars.get(options.get(2)) ) / Integer.parseInt( vars.get(options.get(4)) );
-			// 		break;
-					
-			// 	default:
-			// 		tokenizer.close();
-			// 		return;
-					
-			// 	}
-				
-			// 	//vars.replace(options.get(0), String.valueOf(value));
-				
-			// 	tokenizer.close();
-			// 	return;
-				
-			// }
-			// else if ( windows.containsKey(options.get(0)) )
-			// {
-			// 	switch(options.get(1))
-			// 	{
-			// 	case "visible":
-			// 		windows.get(options.get(0)).ToggleVisible();
-			// 		break;
-					
-			// 	case "title":
-			// 		windows.get(options.get(0)).GetFrame().setTitle(GetRest(options, 2));
-			// 		break;
-					
-			// 	default:
-			// 		break;
-					
-			// 	}
-				
-			// }
-			// else
-				JTerm.Parse(options);
-			
-			tokenizer.close();
-			return;
-			
-		}
+	// public static void Parse(String directive)
+	// {
 		
-		tokenizer.close();
+	// 	switch (command)
+	// 	{	
+	// 	case "pause":
+
+	// 		return;
+			
+	// 	default:
+	// 		// for (;;)
+	// 		// if ( vars.containsKey(options.get(0)) )
+	// 		// {
+	// 		// 	int value;
+	// 		// 	//
+	// 		// 	// TODO
+	// 		// 	// Create arithmetic operations that passes the value 
+	// 		// 	// to whatever it is needed for
+	// 		// 	//
+	// 		// 	if ( !options.get(1).equals("=") || !vars.containsKey(options.get(2)) || !vars.containsKey(options.get(4)) )
+	// 		// 		break;
+				
+	// 		// 	switch(options.get(3))
+	// 		// 	{
+	// 		// 	case "+":
+	// 		// 		value = Integer.parseInt( vars.get(options.get(2)) ) + Integer.parseInt( vars.get(options.get(4)) );
+	// 		// 		break;
+					
+	// 		// 	case "-":
+	// 		// 		value = Integer.parseInt( vars.get(options.get(2)) ) - Integer.parseInt( vars.get(options.get(4)) );
+	// 		// 		break;
+					
+	// 		// 	case "*":
+	// 		// 		value = Integer.parseInt( vars.get(options.get(2)) ) * Integer.parseInt( vars.get(options.get(4)) );
+	// 		// 		break;
+					
+	// 		// 	case "/":
+	// 		// 		value = Integer.parseInt( vars.get(options.get(2)) ) / Integer.parseInt( vars.get(options.get(4)) );
+	// 		// 		break;
+					
+	// 		// 	default:
+	// 		// 		return;
+					
+	// 		// 	}
+				
+	// 		// 	//vars.replace(options.get(0), String.valueOf(value));
+
+	// 		// 	return;
+				
+	// 		// }
+	// 		// else if ( windows.containsKey(options.get(0)) )
+	// 		// {
+	// 		// 	switch(options.get(1))
+	// 		// 	{
+	// 		// 	case "visible":
+	// 		// 		windows.get(options.get(0)).ToggleVisible();
+	// 		// 		break;
+					
+	// 		// 	case "title":
+	// 		// 		windows.get(options.get(0)).GetFrame().setTitle(GetRest(options, 2));
+	// 		// 		break;
+					
+	// 		// 	default:
+	// 		// 		break;
+					
+	// 		// 	}
+				
+	// 		// }
+	// 		// else
+
+	// 		return;
+			
+	// 	}
 		
-	}
+	// }
 	
 	public static String GetRest(ArrayList<String> options, int index)
 	{
