@@ -176,7 +176,7 @@ public class JTerm
 		  		Files.WriteFile(options);
 		  		break;
 			  
-			case "ls": // @elephunk6898
+			case "ls": // @pmorgan3
 		  	case "dir":
 		  		Dir.PrintDir(options);
 		  		break;
@@ -196,7 +196,7 @@ public class JTerm
 		  		
 		  	case "delete":
 			case "del":
-			case "rm": // @elephunk6898
+			case "rm": // @pmorgan3
 		  		Files.Delete(options);
 		  		break;
 		  		

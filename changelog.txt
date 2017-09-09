@@ -1,7 +1,11 @@
-(#79)[9/8/2017-17:32 0.4.1 elephunk6898]
+(#80)[9/8/2017-21:39 0.4.1 Sergix]
+	Changed the username of the last two entries and in the JTerm.java doc comments. ;P
+	Pushed updates to Git.
+
+(#79)[9/8/2017-17:32 0.4.1 pmorgan3]
     Added break to line 202 in JTerm.java
 
-(#78)[9/8/2017-17:11 0.4.1 elephunk6898]
+(#78)[9/8/2017-17:11 0.4.1 pmorgan3]
     Added UNIX equivalents of dir and del (ls and rm respectively)
 
 (#77)[9/8/2017-19:38 0.4.1 Sergix]
