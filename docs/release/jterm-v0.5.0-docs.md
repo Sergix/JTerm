@@ -22,10 +22,10 @@ This document provides information on changes included in release version "0.5.0
 0.2.0        jterm-v0.2.0.jar    OK
 0.2.1	     jterm-v0.2.1.jar	 OK
 0.3.0	     jterm-v0.3.0.jar	 DEPRECATED
-0.3.1		 jterm-v0.3.1.jar	 OK
-0.4.0		 jterm-v0.4.0.jar	 OK
-0.4.1		 jterm-v0.4.1.jar    OK
-0.5.0		 jterm-v0.5.0.jar    OK
+0.3.1        jterm-v0.3.1.jar	 OK
+0.4.0        jterm-v0.4.0.jar	 OK
+0.4.1        jterm-v0.4.1.jar    OK
+0.5.0	     jterm-v0.5.0.jar    OK
 ```
 
 ## Changelog
