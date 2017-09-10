@@ -1,6 +1,6 @@
 @echo off
 cls
 
-set JTERM_VERSION=0.4.2
+set JTERM_VERSION=0.5.0
 
 prompt dev~JTerm/ 

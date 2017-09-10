@@ -1,3 +1,13 @@
+(#82)[9/9/2017-21:56 0.5.0 Sergix]
+	Added Doc comments to new JTerm.GetAsArray() and JTerm.GetAsString() functions.
+	Fixed issue where "dir" and "files" were crashing when being passed no options.
+	"quit" command is now "exit".
+	Changed POM project version to 0.5.0.
+	Changed JTERM_VERSION to 0.5.0.
+	Built binaries for version 0.5.0.
+	Wrote patch notes and compiled the full release changelog.
+	Pushed updates to Git.
+
 (#81)[9/9/2017-21:14 0.4.1 Sergix]
 	Created a new command parsing algorithm.
 		- Commands are now the exact name of the class

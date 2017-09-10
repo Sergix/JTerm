@@ -43,6 +43,9 @@ public class Files
 	public static void Process (String options)
 	{
 		ArrayList<String> optionsArray = JTerm.GetAsArray(options);
+		if (optionsArray.toArray().length == 0)
+			optionsArray.add(0, "help");
+			
 		String command = optionsArray.get(0);
 		optionsArray.remove(0);
 

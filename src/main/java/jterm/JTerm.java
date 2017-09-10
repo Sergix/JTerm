@@ -216,6 +216,14 @@ public class JTerm
 		
 	}
 
+	/*
+	* GetAsArray() ArrayList<String>
+	* 
+	* Returns a String as an ArrayList of
+	* Strings (spaces as delimiters)
+	*
+	* String options - String to be split
+	*/
 	public static ArrayList<String> GetAsArray(String options)
 	{
 		
@@ -240,6 +248,14 @@ public class JTerm
 
 	}
 
+	/*
+	* GetAsString() String
+	* 
+	* Returns an ArrayList of Strings 
+	* as a String (spaced with spaces)
+	*
+	* ArrayList<String> options - array to be split
+	*/
 	public static String GetAsString(ArrayList<String> options)
 	{
 		
