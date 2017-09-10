@@ -28,20 +28,20 @@ public class Exec
 	* 
 	* Constructor for calling Process() function.
 	*/
-	public Exec() { }
+	public Exec(ArrayList<String> options) { }
 	
 	/*
 	* Process() void
 	* 
 	* Process the input.
 	* 
-	* String options - command options
+	* ArrayList<String> options - command options
 	*/
-	public static void Process(String options)
+	public static void Process(ArrayList<String> options)
 	{
-
-		ArrayList<String> optionsArray = JTerm.GetAsArray(options);
-		Run(optionsArray);
+		
+		// Default to Run(); nothing to process
+		Run(options);
 
 	}
 	

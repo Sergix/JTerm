@@ -28,35 +28,9 @@ public class Echo
 	* 
 	* Constructor for calling Process() function.
 	*/
-	public Echo() { }
-	
-	/*
-	* Process() void
-	* 
-	* Process the input.
-	* 
-	* String options - command options
-	*/
-	public static void Process (String options)
+	public Echo(ArrayList<String> options)
 	{
 
-		EchoInput(JTerm.GetAsArray(options));
-
-	}
-
-	/*
-	* EchoInput() void
-	* 
-	* Echoes the input recieved to the console.
-	* 
-	* ArrayList<String> options - command options
-	*
-	* -h
-	*     Prints help information.
-	*/
-	public static void EchoInput(ArrayList<String> options)
-	{
-		
 		String output = "";
 		
 		for (String option: options)
@@ -72,9 +46,9 @@ public class Echo
 		 
 		}
 		
-		output = output.substring(0, output.length() - 1);
+		output = output.trim();
 		System.out.println(output);
-		
+
 	}
 	
 }

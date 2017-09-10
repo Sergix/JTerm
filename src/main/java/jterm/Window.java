@@ -33,23 +33,17 @@ public class Window
 	private boolean visible = false;
 	
 	/*
-	* Window() void
-	* 
-	* Constructor for calling Process() function.
-	*/
-	public Window() { }
-	
-	/*
 	* Process() void
 	* 
 	* Process the input.
 	* 
-	* String options - command options
+	* ArrayList<String> options - command options
 	*/
-	public static void Process(String options)
+	public static void Process(ArrayList<String> options)
 	{
 
-		new Window(JTerm.GetAsArray(options));
+		// Default to Window(); nothing to process
+		new Window(options);
 
 	}
 	
@@ -78,7 +72,7 @@ public class Window
 	*	  be resized  
 	* 	  
 	*/
-	Window(ArrayList<String> options)
+	public Window(ArrayList<String> options)
 	{
 		
 		int width = 500, height = 500;
