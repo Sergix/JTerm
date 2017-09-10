@@ -24,6 +24,28 @@ public class Exec
 {
 	
 	/*
+	* Exec() void
+	* 
+	* Constructor for calling Process() function.
+	*/
+	public Exec() { }
+	
+	/*
+	* Process() void
+	* 
+	* Process the input.
+	* 
+	* String options - command options
+	*/
+	public static void Process(String options)
+	{
+
+		ArrayList<String> optionsArray = JTerm.GetAsArray(options);
+		Run(optionsArray);
+
+	}
+	
+	/*
 	* Run() boolean
 	* 
 	* Runs the executable file.
@@ -79,7 +101,7 @@ public class Exec
 					tokenizer.close();
 
 					// Where the magic happens!
-					JTerm.Parse(commandOptions);
+					JTerm.Parse(JTerm.GetAsString(commandOptions));
 					
 				} while ((directive = reader.readLine()) != null);
 

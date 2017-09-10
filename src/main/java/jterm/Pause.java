@@ -7,6 +7,28 @@ public class Pause
 {
 
 	/*
+	* Pause() void
+	* 
+	* Constructor for calling Process() function.
+	*/
+	public Pause() { }
+	
+	/*
+	* Process() void
+	* 
+	* Process the input.
+	* 
+	* String options - command options
+	*/
+	public static void Process (String options)
+	{
+
+		ArrayList<String> optionsArray = JTerm.GetAsArray(options);
+		EnterPause(optionsArray);
+
+	}
+
+	/*
 	* EnterPause() void
 	* 
 	* Pauses the interpreter until the Enter

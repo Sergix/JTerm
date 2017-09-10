@@ -5,7 +5,7 @@
 
   <groupId>sergix</groupId>
   <artifactId>jterm</artifactId>
-  <version>0.4.1</version>
+  <version>0.4.2</version>
   <packaging>jar</packaging>
   <description>JTerm is a cross-platform terminal designed for simple use and to run batch files. JTerm is hosted on GitHub by Sergix and NCSGeek.</description>
 
@@ -41,11 +41,15 @@
               <descriptorRefs>
                 <descriptorRef>jar-with-dependencies</descriptorRef>
               </descriptorRefs>
+              <archive>
+                <manifest>
+                  <mainClass>main.java.jterm.JTerm</mainClass>
+                </manifest>
+              </archive>
             </configuration>
           </execution>
         </executions>
       </plugin>
-      
     </plugins>
   </build>
 

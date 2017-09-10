@@ -1,6 +1,7 @@
 [![JTerm](https://sergix.github.io/img/jterm.png)](https://sergix.github.io/projects/jterm/index.html)
 
 ![Build Status](https://travis-ci.org/Sergix/JTerm.svg?branch=master)
+[![Code Triagers Badge](https://www.codetriage.com/sergix/jterm/badges/users.svg)](https://www.codetriage.com/sergix/jterm)
 
 ## What is it?
 A terminal written for cross-platform usage.

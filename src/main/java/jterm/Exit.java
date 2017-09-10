@@ -20,15 +20,15 @@ package main.java.jterm;
 
 import java.util.ArrayList;
 
-public class Echo
+public class Exit
 {
 	
 	/*
-	* Echo() void
+	* Exit() void
 	* 
 	* Constructor for calling Process() function.
 	*/
-	public Echo() { }
+	public Exit() { }
 	
 	/*
 	* Process() void
@@ -37,43 +37,24 @@ public class Echo
 	* 
 	* String options - command options
 	*/
-	public static void Process (String options)
+	public static void Process(String options)
 	{
 
-		EchoInput(JTerm.GetAsArray(options));
+		ExitApp(JTerm.GetAsArray(options));
 
 	}
 
 	/*
-	* EchoInput() void
+	* ExitApp() void
 	* 
-	* Echoes the input recieved to the console.
+	* Exits the application through a system call.
 	* 
 	* ArrayList<String> options - command options
-	*
-	* -h
-	*     Prints help information.
 	*/
-	public static void EchoInput(ArrayList<String> options)
+	public static void ExitApp(ArrayList<String> options)
 	{
 		
-		String output = "";
-		
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.");
-				return;
-			  
-			}
-			else
-				output += option + " ";
-		 
-		}
-		
-		output = output.substring(0, output.length() - 1);
-		System.out.println(output);
+		System.exit(0);
 		
 	}
 	
