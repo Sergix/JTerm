@@ -1,3 +1,42 @@
+(#82)[9/9/2017-21:56 0.5.0 Sergix]
+	Added Doc comments to new JTerm.GetAsArray() and JTerm.GetAsString() functions.
+	Fixed issue where "dir" and "files" were crashing when being passed no options.
+	"quit" command is now "exit".
+	Changed POM project version to 0.5.0.
+	Changed JTERM_VERSION to 0.5.0.
+	Built binaries for version 0.5.0.
+	Wrote patch notes and compiled the full release changelog.
+	Pushed updates to Git.
+
+(#81)[9/9/2017-21:14 0.4.1 Sergix]
+	Created a new command parsing algorithm.
+		- Commands are now the exact name of the class
+		- Each class now has a Process() function that runs the function associated with the command
+		- Commands are now formatted as "[class] [command]" (i.e. "dir ls", list directory contents)
+	The "init" batch now defines an environment variable, JTERM_VERSION, that contains the version to build the JAR as.
+	Added a CodeTriage badge to the README!
+	Fixed Issue #23.
+		- The POM now builds the MANIFEST with the main class included to be able to run with -jar.
+	Created multiple classes.
+		- Exit.java (exit)
+		- Help.java (help)
+	Pushed updates to Git.
+
+(#80)[9/8/2017-21:39 0.4.1 Sergix]
+	Changed the username of the last two entries and in the JTerm.java doc comments. ;P
+	Pushed updates to Git.
+
+(#79)[9/8/2017-17:32 0.4.1 pmorgan3]
+    Added break to line 202 in JTerm.java
+
+(#78)[9/8/2017-17:11 0.4.1 pmorgan3]
+    Added UNIX equivalents of dir and del (ls and rm respectively)
+
+(#77)[9/8/2017-19:38 0.4.1 Sergix]
+	Updated README and CONTRIBUTING footer version.
+	Opened Dev PR.
+	Pushed updates to Git.
+
 (#76)[9/8/2017-19:30 0.4.1 Sergix]
 	Updated CONTRIBUTING.md with branch information.
 	Changed POM project version to 0.4.1.

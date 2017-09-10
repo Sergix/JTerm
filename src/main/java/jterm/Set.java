@@ -27,6 +27,28 @@ public class Set
 	public static Hashtable<String, String> vars = new Hashtable<String, String>();
 
 	/*
+	* Set() void
+	* 
+	* Constructor for calling Process() function.
+	*/
+	public Set() { }
+	
+	/*
+	* Process() void
+	* 
+	* Process the input.
+	* 
+	* String options - command options
+	*/
+	public static void Process(String options)
+	{
+
+		ArrayList<String> optionsArray = JTerm.GetAsArray(options);
+		NewVar(optionsArray);
+
+	}
+	
+	/*
 	* NewVar() void
 	* 
 	* Creates a new variable that is stored in

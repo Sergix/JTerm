@@ -12,7 +12,29 @@ import java.util.ArrayList;
 */
 public class Ping
 {
+
+	/*
+	* Ping() void
+	* 
+	* Constructor for calling Process() function.
+	*/
+	public Ping() { }
 	
+	/*
+	* Process() void
+	* 
+	* Process the input.
+	* 
+	* String options - command options
+	*/
+	public static void Process (String options)
+	{
+
+		ArrayList<String> optionsArray = JTerm.GetAsArray(options);
+		PingHost(optionsArray);
+
+	}
+
 	/*
 	* PingHost() void
 	* 

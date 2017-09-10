@@ -1,6 +1,7 @@
 [![JTerm](https://sergix.github.io/img/jterm.png)](https://sergix.github.io/projects/jterm/index.html)
 
 ![Build Status](https://travis-ci.org/Sergix/JTerm.svg?branch=master)
+[![Code Triagers Badge](https://www.codetriage.com/sergix/jterm/badges/users.svg)](https://www.codetriage.com/sergix/jterm)
 
 ## What is it?
 A terminal written for cross-platform usage.
@@ -21,7 +22,7 @@ View the [Contributing Guidelines](https://github.com/Sergix/JTerm/blob/master/C
 ## Slack
 The JTerm project now has a Slack messaging group! Request to join the [Sergix](https://sergix.slack.com/) team to recieve notifications on updates, Travis CI build status, and more!
 
-> JTerm 0.4.0  
-> `jterm-v0.4.0.jar`  
+> JTerm 0.4.1  
+> `jterm-v0.4.1.jar`  
 > This project and its source are held under the GNU General Public License, located in the LICENSE file in the project's directory.  
 > (c) 2017

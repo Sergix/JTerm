@@ -27,6 +27,54 @@ public class Files
 {
 
 	/*
+	* Files() void
+	* 
+	* Constructor for calling Process() function.
+	*/
+	public Files() { }
+	
+	/*
+	* Process() void
+	* 
+	* Process the input.
+	* 
+	* String options - command options
+	*/
+	public static void Process (String options)
+	{
+		ArrayList<String> optionsArray = JTerm.GetAsArray(options);
+		if (optionsArray.toArray().length == 0)
+			optionsArray.add(0, "help");
+			
+		String command = optionsArray.get(0);
+		optionsArray.remove(0);
+
+		switch (command)
+		{
+			case "write":
+				WriteFile(optionsArray);
+				break;
+
+			case "delete":
+			case "del":
+			case "rm": // @pmorgan3
+				Delete(optionsArray);
+				break;
+
+			case "read":
+				ReadFile(optionsArray);
+				break;
+
+			case "help":
+			default:
+				System.out.println("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp");
+				return;
+
+		}
+
+	}
+
+	/*
 	* WriteFile() void
 	* 
 	* Get input and write it to a file.

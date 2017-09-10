@@ -35,6 +35,27 @@ public class Window
 	/*
 	* Window() void
 	* 
+	* Constructor for calling Process() function.
+	*/
+	public Window() { }
+	
+	/*
+	* Process() void
+	* 
+	* Process the input.
+	* 
+	* String options - command options
+	*/
+	public static void Process(String options)
+	{
+
+		new Window(JTerm.GetAsArray(options));
+
+	}
+	
+	/*
+	* Window() void
+	* 
 	* Create a new JFrame window.
 	* 
 	* ArrayList<String> options - command options
