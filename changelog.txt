@@ -1,26 +1,3 @@
-(#83)[9/10/2017-18:17 0.5.0 Sergix]
-	Command processing is now even more efficient! The name of the function is now the second part of the command, or if it is a single-word command it defaults to Process().
-	Arguments for Process() functions are now ArrayList<>'s, and the method caller in JTerm.Parse() now passes an ArrayList<> rather than a String.
-	Changed multple function names.
-		- Dir
-			- PrintDir() -> Ls()
-			- ChangeDir() -> Cd(), Chdir()
-			- PrintWorkingDir() -> Pwd()
-			- NewDir() -> Md()
-		- Files
-			- WriteFile() -> Write()
-			- ReadFile() -> Read()
-	Created Del() and Rm() function that are identical to Delete().
-	Moved function contents to class constructors.
-		- Echo.EchoInput()
-		- Exit.ExitApp()
-		- Help.PrintHelp()
-		- Pause.EnterPause()
-		- Ping.PingHost()
-		- Ps.View()
-		- Set.NewVar(), Set.PrintVar()
-	Pushed updates to Git.
-
 (#82)[9/9/2017-21:56 0.5.0 Sergix]
 	Added Doc comments to new JTerm.GetAsArray() and JTerm.GetAsString() functions.
 	Fixed issue where "dir" and "files" were crashing when being passed no options.

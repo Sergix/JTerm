@@ -28,9 +28,32 @@ public class Help
 	* 
 	* Constructor for calling Process() function.
 	*/
-	public Help(ArrayList<String> options)
+	public Help() { }
+	
+	/*
+	* Process() void
+	* 
+	* Process the input.
+	* 
+	* String options - command options
+	*/
+	public static void Process(String options)
 	{
 
+		PrintHelp(JTerm.GetAsArray(options));
+
+	}
+
+	/*
+	* PrintHelp() void
+	* 
+	* Prints help information about JTerm.
+	* 
+	* ArrayList<String> options - command options
+	*/
+	public static void PrintHelp(ArrayList<String> options)
+	{
+		
 		System.out.println("JTerm v" + JTerm.version);
 		
 	}
