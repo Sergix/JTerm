@@ -31,40 +31,55 @@ public class Set
 	* 
 	* Constructor for calling Process() function.
 	*/
-	public Set(ArrayList<String> options)
+	public Set() { }
+	
+	/*
+	* Process() void
+	* 
+	* Process the input.
+	* 
+	* String options - command options
+	*/
+	public static void Process(String options)
+	{
+
+		ArrayList<String> optionsArray = JTerm.GetAsArray(options);
+		NewVar(optionsArray);
+
+	}
+	
+	/*
+	* NewVar() void
+	* 
+	* Creates a new variable that is stored in
+	* the global vars hashtable.
+	* 
+	* ArrayList<String> options - command options
+	*/
+	public static void NewVar(ArrayList<String> options)
 	{
 
 		// Print the value of all current variables
-		if (options.size() == 0)
+		if (options.size() == 1)
 		{
-			String element = "";
-	
-			// For each key...
-			for (Enumeration<String> e = vars.keys(); e.hasMoreElements();)
-
-				// ...print in the format of "key=value"
-				System.out.println((element = e.nextElement()) + "=" + vars.get(element));
-
+			PrintVars();
 			return;
 
 		}
 		
 		// Get the variable name
-		String key = options.get(0);
+		String key = options.get(1);
 
 		// The name can't include spaces
-		if (options.toArray().length > 2)
-		{
-			if ( !options.get(1).equals("=") )
-				return;
-			
-		}
-		else
+		if ( !options.get(2).equals("=") )
 			return;
 		
 		// If the type is a window, create a new one
-		if (options.get(2).equals("window"))
-		{	
+		if (options.get(3).equals("window"))
+		{
+			// Remove the 'set' word from the options list
+			options.remove(0);
+			
 			// Pass the rest of the options to create a new Window
 			Window newWindow = new Window(options);
 
@@ -80,8 +95,26 @@ public class Set
 		}
 		
 		// Put the variable contents into the global hashtable
-		vars.put(key, Exec.GetRest(options, 2));
+		vars.put(key, Exec.GetRest(options, 3));
 
+	}
+
+	/*
+	* PrintVars() void
+	* 
+	* Prints the values of all variables
+	* currently stored.
+	*/
+	public static void PrintVars()
+	{
+
+		String element = "";
+
+		// For each key...
+		for (Enumeration<String> e = vars.keys(); e.hasMoreElements();)
+			// ...print in the format of "key=value"
+			System.out.println((element = e.nextElement()) + "=" + vars.get(element));
+		
 	}
 
 }
