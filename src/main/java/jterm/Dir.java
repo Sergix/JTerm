@@ -27,57 +27,27 @@ public class Dir
 	/*
 	* Dir() void
 	* 
-	* Constructor for calling Process() function.
+	* Constructor for calling methods.
 	*/
-	public Dir() { }
+	public Dir(ArrayList<String> options) { }
 
 	/*
 	* Process() void
 	* 
 	* Process the input.
 	* 
-	* String options - command options
+	* ArrayList<String> options - command options
 	*/
-	public static void Process(String options)
+	public static void Process(ArrayList<String> options)
 	{
 
-		ArrayList<String> optionsArray = JTerm.GetAsArray(options);
-		if (optionsArray.toArray().length == 0)
-			optionsArray.add(0, "help");
-
-		String command = optionsArray.get(0);
-		optionsArray.remove(0);
-
-		switch (command)
-		{ 
-			case "ls": // @pmorgan3
-				PrintDir(optionsArray);
-				break;
-
-			case "cd":
-			case "chdir":
-				ChangeDir(optionsArray);
-				break;
-
-			case "pwd":
-				PrintWorkingDir(optionsArray);
-				break;
-
-			case "md":
-				NewDir(optionsArray);
-				break;
-
-			case "help":
-			default:
-				System.out.println("Directory Commands\n\nls\tcd\nchdir\tpwd\nmd\thelp");
-				return;
-				
-		}
+		// Display help information
+		System.out.println("Directory Commands\n\nls\tcd\nchdir\tpwd\nmd");
 
 	}
 
 	/*
-	* PrintDir() void
+	* Ls() void (@pmorgan3)
 	* 
 	* Prints the contents of a specified directory
 	* to a file.
@@ -95,12 +65,14 @@ public class Dir
 	*
 	* Examples
 	*
-	*   PrintDir(options);
+	*   Ls(options);
 	*     => [Contents of "dir/"]
 	*     =>     F RW 	myFile.txt		2 KB
 	*/
-	public static void PrintDir(ArrayList<String> options) throws NullPointerException
+	public static void Ls(ArrayList<String> options) throws NullPointerException
 	{
+
+		System.out.println(options);
 
 		String path = JTerm.currentDirectory;
 		boolean printFull = true;
@@ -154,7 +126,7 @@ public class Dir
 	
 	
 	/*
-	* ChangeDir() void
+	* Cd() void
 	* 
 	* Changes the working directory to the specified
 	* input.
@@ -166,7 +138,7 @@ public class Dir
 	*
 	* ArrayList<String> options - command options
 	*/
-	public static void ChangeDir(ArrayList<String> options)
+	public static void Cd(ArrayList<String> options)
 	{
 		
 		String newDirectory = "";
@@ -223,10 +195,25 @@ public class Dir
 		// It does exist, and it is a directory, so just change the global working directory variable to the input
 		JTerm.currentDirectory = newDirectory;
 		
+	
+	}
+
+	/*
+	* Chdir() void
+	* 
+	* Identical to 'cd'; calls Cd().
+	*
+	* ArrayList<String> options - command options
+	*/
+	public static void Chdir(ArrayList<String> options)
+	{
+
+		Cd(options);
+
 	}
 	
 	/*
-	* PrintWorkingDir() void
+	* Pwd() void
 	* 
 	* Prints the working directory to the console.
 	* 
@@ -235,7 +222,7 @@ public class Dir
 	*
 	* ArrayList<String> options - command options
 	*/
-	public static void PrintWorkingDir(ArrayList<String> options)
+	public static void Pwd(ArrayList<String> options)
 	{
 		
 		for (String option: options)
@@ -255,7 +242,7 @@ public class Dir
 	}
 	
 	/*
-	* NewDir() void
+	* Md() void
 	* 
 	* Creates a new directory.
 	* 
@@ -264,7 +251,7 @@ public class Dir
 	*
 	* ArrayList<String> options - command options
 	*/
-	public static void NewDir(ArrayList<String> options)
+	public static void Md(ArrayList<String> options)
 	{
 		
 		String name = "";
@@ -287,6 +274,7 @@ public class Dir
 		
 		File dir = new File(name);
 		dir.mkdir();
+
 	}
   
 }

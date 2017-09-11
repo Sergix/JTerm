@@ -18,35 +18,10 @@ public class Ping
 	* 
 	* Constructor for calling Process() function.
 	*/
-	public Ping() { }
-	
-	/*
-	* Process() void
-	* 
-	* Process the input.
-	* 
-	* String options - command options
-	*/
-	public static void Process (String options)
+	public Ping(ArrayList<String> options) 
 	{
 
-		ArrayList<String> optionsArray = JTerm.GetAsArray(options);
-		PingHost(optionsArray);
-
-	}
-
-	/*
-	* PingHost() void
-	* 
-	* Attempts to connect to the specified host
-	* through the port provided.
-	* 
-	* ArrayList<String> options - command options
-	*/
-	public static void PingHost(ArrayList<String> options)
-	{
-
-  		String host = "google.com", port = "80";
+		String host = "google.com", port = "80";
 		boolean portNext = false;
 		
 		for (String option: options)
@@ -83,8 +58,8 @@ public class Ping
 	    	// Either timeout or unreachable or failed DNS lookup
 	    	System.out.println("Ping Failed");
 	        
-	    }
-	    
+		}
+		
 	}
 	
 }

@@ -28,32 +28,8 @@ public class Exit
 	* 
 	* Constructor for calling Process() function.
 	*/
-	public Exit() { }
-	
-	/*
-	* Process() void
-	* 
-	* Process the input.
-	* 
-	* String options - command options
-	*/
-	public static void Process(String options)
-	{
+	public Exit(ArrayList<String> options) {
 
-		ExitApp(JTerm.GetAsArray(options));
-
-	}
-
-	/*
-	* ExitApp() void
-	* 
-	* Exits the application through a system call.
-	* 
-	* ArrayList<String> options - command options
-	*/
-	public static void ExitApp(ArrayList<String> options)
-	{
-		
 		System.exit(0);
 		
 	}
