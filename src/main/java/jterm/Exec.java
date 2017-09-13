@@ -6,12 +6,10 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -20,18 +18,40 @@ package main.java.jterm;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Scanner;
 
 public class Exec
 {
 	
-	private static Hashtable<String, String> vars = new Hashtable<>();
+	/*
+	* Exec() void
+	* 
+	* Constructor for calling Process() function.
+	*/
+	public Exec(ArrayList<String> options) { }
 	
-	// var name, window object
-	private static Hashtable<String, Window> windows = new Hashtable<>();
+	/*
+	* Process() void
+	* 
+	* Process the input.
+	* 
+	* ArrayList<String> options - command options
+	*/
+	public static void Process(ArrayList<String> options)
+	{
+		
+		// Default to Run(); nothing to process
+		Run(options);
+
+	}
 	
+	/*
+	* Run() boolean
+	* 
+	* Runs the executable file.
+	* 
+	* ArrayList<String> options - command options
+	*/
 	public static boolean Run(ArrayList<String> options)
 	{	
 		
@@ -56,7 +76,7 @@ public class Exec
 			script = new File(file);
 			if (!script.exists() || !script.isFile())
 			{
-				System.out.println("ERROR: File \"" + file + "\" either does not exist or is not a file.");
+				System.out.println("ERROR: File \"" + file + "\" either does not exist or is not an executable file.");
 				return true;
 				
 			}
@@ -72,7 +92,16 @@ public class Exec
 				if (directive != null)
 				do
 				{
-					Exec.Parse(directive);
+					// Store the command as an ArrayList
+					Scanner tokenizer = new Scanner(directive);
+					ArrayList<String> commandOptions = new ArrayList<String>();
+					while (tokenizer.hasNext())
+						options.add(tokenizer.next());
+
+					tokenizer.close();
+
+					// Where the magic happens!
+					JTerm.Parse(JTerm.GetAsString(commandOptions));
 					
 				} while ((directive = reader.readLine()) != null);
 
@@ -95,181 +124,82 @@ public class Exec
 		return false;
 		
 	}
-	
-	public static void Parse(String directive)
-	{
-		
-		String command = "";
-		Scanner tokenizer = new Scanner(directive);
-		ArrayList<String> options = new ArrayList<String>();
-		while (tokenizer.hasNext())
-			options.add(tokenizer.next());
-		
-		if (options.size() != 0)
-			command = options.get(0).toLowerCase();
-		
-		else
-		{
-			tokenizer.close();
-			return;
-			
-		}
-			
-		switch (command)
-		{
-		case "set":
-			if (options.size() == 1)
-			{
-				String element = "";
-				for (Enumeration<String> e = vars.keys(); e.hasMoreElements();)
-				       System.out.println((element = e.nextElement()) + "=" + vars.get(element));
-				       
-				break;
-				
-			}
-			
-			String key = options.get(1);
-			if ( !options.get(2).equals("=") )
-			{
-				tokenizer.close();
-				return;
-				
-			}
-			
-			if (options.get(3).equals("window"))
-			{
-				for (int i = 0; i < 4; i++)
-					options.remove(0);
-				
-				Window newWindow = new Window(options);
-				vars.put(key, Integer.toString(newWindow.GetId()));
-				windows.put(key, newWindow);
-				break;
-				
-			}
-			
-			vars.put(key, GetRest(options, 3));
-			break;
-			
-		case "pause":
-			if (options.size() == 1)
-				System.out.print("Press enter to continue...");
-			
-			else
-				System.out.print(GetRest(options, 1));
 
-			try
-			{
-				JTerm.userInput.read();
-				JTerm.userInput.skip(1);
-				
-			}
-			catch (IOException ioe)
-			{
-				System.out.println(ioe);
-				
-			}
-			
-			tokenizer.close();
-			return;
-			
-		// These commands are system-level/OS-dependent and are not possible to integrate into JTerm.
-		// Just skip over them.
-		case "bcdedit":
-		case "chkdsk":
-		case "chkntfs":
-		case "cls":
-		case "cmd":
-		case "color":
-		case "convert":
-		case "diskpart":
-		case "driverquery":
-		case "format":
-		case "fsutil":
-		case "gpresult":
-		case "mode":
-		case "sc":
-		case "shutdown":
-		case "start":
-		case "tasklist":
-		case "taskkill":
-		case "ver":
-		case "vol":
-		case "wmic":
-			break;
-			
-		default:
-			for (;;)
-			if ( vars.containsKey(options.get(0)) )
-			{
-				int value;
-				//
-				// TODO
-				// Create arithmetic operations that passes the value 
-				// to whatever it is needed for
-				//
-				if ( !options.get(1).equals("=") || !vars.containsKey(options.get(2)) || !vars.containsKey(options.get(4)) )
-					break;
-				
-				switch(options.get(3))
-				{
-				case "+":
-					value = Integer.parseInt( vars.get(options.get(2)) ) + Integer.parseInt( vars.get(options.get(4)) );
-					break;
-					
-				case "-":
-					value = Integer.parseInt( vars.get(options.get(2)) ) - Integer.parseInt( vars.get(options.get(4)) );
-					break;
-					
-				case "*":
-					value = Integer.parseInt( vars.get(options.get(2)) ) * Integer.parseInt( vars.get(options.get(4)) );
-					break;
-					
-				case "/":
-					value = Integer.parseInt( vars.get(options.get(2)) ) / Integer.parseInt( vars.get(options.get(4)) );
-					break;
-					
-				default:
-					tokenizer.close();
-					return;
-					
-				}
-				
-				vars.replace(options.get(0), String.valueOf(value));
-				
-				tokenizer.close();
-				return;
-				
-			}
-			else if ( windows.containsKey(options.get(0)) )
-			{
-				switch(options.get(1))
-				{
-				case "visible":
-					windows.get(options.get(0)).ToggleVisible();
-					break;
-					
-				case "title":
-					windows.get(options.get(0)).GetFrame().setTitle(GetRest(options, 2));
-					break;
-					
-				default:
-					break;
-					
-				}
-				
-			}
-			else
-				JTerm.Parse(options);
-			
-			tokenizer.close();
-			return;
-			
-		}
+	// public static void Parse(String directive)
+	// {
 		
-		tokenizer.close();
+	// 	switch (command)
+	// 	{	
+	// 	case "pause":
+
+	// 		return;
+			
+	// 	default:
+	// 		// for (;;)
+	// 		// if ( vars.containsKey(options.get(0)) )
+	// 		// {
+	// 		// 	int value;
+	// 		// 	//
+	// 		// 	// TODO
+	// 		// 	// Create arithmetic operations that passes the value 
+	// 		// 	// to whatever it is needed for
+	// 		// 	//
+	// 		// 	if ( !options.get(1).equals("=") || !vars.containsKey(options.get(2)) || !vars.containsKey(options.get(4)) )
+	// 		// 		break;
+				
+	// 		// 	switch(options.get(3))
+	// 		// 	{
+	// 		// 	case "+":
+	// 		// 		value = Integer.parseInt( vars.get(options.get(2)) ) + Integer.parseInt( vars.get(options.get(4)) );
+	// 		// 		break;
+					
+	// 		// 	case "-":
+	// 		// 		value = Integer.parseInt( vars.get(options.get(2)) ) - Integer.parseInt( vars.get(options.get(4)) );
+	// 		// 		break;
+					
+	// 		// 	case "*":
+	// 		// 		value = Integer.parseInt( vars.get(options.get(2)) ) * Integer.parseInt( vars.get(options.get(4)) );
+	// 		// 		break;
+					
+	// 		// 	case "/":
+	// 		// 		value = Integer.parseInt( vars.get(options.get(2)) ) / Integer.parseInt( vars.get(options.get(4)) );
+	// 		// 		break;
+					
+	// 		// 	default:
+	// 		// 		return;
+					
+	// 		// 	}
+				
+	// 		// 	//vars.replace(options.get(0), String.valueOf(value));
+
+	// 		// 	return;
+				
+	// 		// }
+	// 		// else if ( windows.containsKey(options.get(0)) )
+	// 		// {
+	// 		// 	switch(options.get(1))
+	// 		// 	{
+	// 		// 	case "visible":
+	// 		// 		windows.get(options.get(0)).ToggleVisible();
+	// 		// 		break;
+					
+	// 		// 	case "title":
+	// 		// 		windows.get(options.get(0)).GetFrame().setTitle(GetRest(options, 2));
+	// 		// 		break;
+					
+	// 		// 	default:
+	// 		// 		break;
+					
+	// 		// 	}
+				
+	// 		// }
+	// 		// else
+
+	// 		return;
+			
+	// 	}
 		
-	}
+	// }
 	
 	public static String GetRest(ArrayList<String> options, int index)
 	{

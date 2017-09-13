@@ -1,0 +1,36 @@
+Changelog entry:
+
+(#84)[9/12/2017-21:26 0.5.1 Sergix]
+	Wrote patch notes and changelog for version "0.5.1".
+	Compiled binaries and source code, as well as the wrapfile (which may be deprecated).
+	Changed POM project version to 0.5.1.
+	Changed JTERM_VERSION to 0.5.1.
+	Changed README and CONTRIBUTING.md version to 0.5.1.
+	Pushed updates to Git.
+
+Full changes include:
+	- The second part of a command is now the function name (i.e. `dir ls`) (except for single word commands, i.e. `echo` and `help`)
+	- Removed switch statement blocks in `Process()` functions
+	- Arguments for `Process()` functions are now `ArrayList<>`'s
+	- The method caller in `JTerm.Parse()` now passes an `ArrayList<>` rather than a string
+	- Changed multple function names.
+		- `Dir`
+			- `PrintDir()` -> `Ls()`
+			- `ChangeDir()` -> `Cd()`, `Chdir()`
+			- `PrintWorkingDir()` -> `Pwd()`
+			- `NewDir()` -> `Md()`
+		- `Files`
+			- `WriteFile()` -> `Write()`
+			- `ReadFile()` -> `Read()`
+	- Created `Files.Del()` and `Files.Rm()` function that are identical to `Files.Delete()`
+	- Removed the following functions, and moved their contents to their respective class constructors
+			- `Echo.EchoInput()`
+			- `Exit.ExitApp()`
+			- `Help.PrintHelp()`
+			- `Pause.EnterPause()`
+			- `Ping.PingHost()`
+			- `Ps.View()`
+			- `Set.NewVar()`, `Set.PrintVar()`
+	- Minor fixes
+
+More information provided in published patch notes documentation.

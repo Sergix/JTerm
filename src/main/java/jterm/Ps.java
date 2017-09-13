@@ -15,17 +15,13 @@ public class Ps
 {
 
 	/*
-	* View() void
+	* Ps() void
 	* 
-	* Views all processes running on the host
-	* system.
-	* 
-	* String[] args - arguments passed from the 
-	* 				console
+	* Constructor for calling Process() function.
 	*/
-	public static void View(ArrayList<String> options)
+	public Ps(ArrayList<String> options)
 	{
-		
+
 		for (String option: options)
 		{
 			if (option.equals("-h"))

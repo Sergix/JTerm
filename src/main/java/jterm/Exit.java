@@ -20,35 +20,18 @@ package main.java.jterm;
 
 import java.util.ArrayList;
 
-public class Echo
+public class Exit
 {
 	
 	/*
-	* Echo() void
+	* Exit() void
 	* 
 	* Constructor for calling Process() function.
 	*/
-	public Echo(ArrayList<String> options)
-	{
+	public Exit(ArrayList<String> options) {
 
-		String output = "";
+		System.exit(0);
 		
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.");
-				return;
-			  
-			}
-			else
-				output += option + " ";
-		 
-		}
-		
-		output = output.trim();
-		System.out.println(output);
-
 	}
 	
 }

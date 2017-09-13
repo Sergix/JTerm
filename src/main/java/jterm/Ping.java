@@ -12,19 +12,16 @@ import java.util.ArrayList;
 */
 public class Ping
 {
-	
+
 	/*
-	* PingHost() void
+	* Ping() void
 	* 
-	* Attempts to connect to the specified host
-	* through the port provided.
-	* 
-	* ArrayList<String> options - command options
+	* Constructor for calling Process() function.
 	*/
-	public static void PingHost(ArrayList<String> options)
+	public Ping(ArrayList<String> options) 
 	{
 
-  		String host = "google.com", port = "80";
+		String host = "google.com", port = "80";
 		boolean portNext = false;
 		
 		for (String option: options)
@@ -61,8 +58,8 @@ public class Ping
 	    	// Either timeout or unreachable or failed DNS lookup
 	    	System.out.println("Ping Failed");
 	        
-	    }
-	    
+		}
+		
 	}
 	
 }

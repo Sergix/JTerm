@@ -1,0 +1,26 @@
+Changelog entry:
+
+(#82)[9/9/2017-21:56 0.5.0 Sergix]
+	Added Doc comments to new JTerm.GetAsArray() and JTerm.GetAsString() functions.
+	Fixed issue where "dir" and "files" were crashing when being passed no options.
+	"quit" command is now "exit".
+	Changed POM project version to 0.5.0.
+	Changed JTERM_VERSION to 0.5.0.
+	Built binaries for version 0.5.0.
+	Wrote patch notes and compiled the full release changelog.
+	Pushed updates to Git.
+
+Full changes include:
+	- Command formatting has been changed (see Commands section for details)
+	- Added `exit` command
+	- Added (dir) `ls` command (@pmorgan3)
+	- Added (dir) `rm` command (@pmorgan3)
+	- Added CodeTriage badge to README
+	- `quit` command is now `exit`
+	- Fixed [Issue #23](https://github.com/Sergix/JTerm/issues/23)
+	- Opened [Feature Requests](https://github.com/Sergix/JTerm/issues/22)
+	- Created multiple classes
+		- Exit.java (`exit`)
+		- Help.java (`help`)
+
+More information provided in published release notes documentation.

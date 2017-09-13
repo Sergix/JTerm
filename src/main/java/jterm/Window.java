@@ -25,11 +25,27 @@ public class Window
 {
 
 	public static int windowCount = 0;
+	public static ArrayList<Window> windows = new ArrayList<Window>();
 	
 	private int id;
 	private JFrame window;
 	private String title = null;
 	private boolean visible = false;
+	
+	/*
+	* Process() void
+	* 
+	* Process the input.
+	* 
+	* ArrayList<String> options - command options
+	*/
+	public static void Process(ArrayList<String> options)
+	{
+
+		// Default to Window(); nothing to process
+		new Window(options);
+
+	}
 	
 	/*
 	* Window() void
@@ -56,7 +72,7 @@ public class Window
 	*	  be resized  
 	* 	  
 	*/
-	Window(ArrayList<String> options)
+	public Window(ArrayList<String> options)
 	{
 		
 		int width = 500, height = 500;
@@ -118,8 +134,9 @@ public class Window
 		window.setSize(width, height);
 		window.setResizable(resizable);
 		window.setVisible(visible);
-		
+
 		this.window = window;
+		windows.add(this);
 		
 	}
 	
@@ -130,6 +147,7 @@ public class Window
 	*/
 	public void ToggleVisible()
 	{
+		
 		window.setVisible(visible = !visible);
 		
 	}
@@ -168,6 +186,18 @@ public class Window
 	{
 		
 		return title;
+		
+	}
+	
+	public static void CloseAll()
+	{
+		
+		for (Window window: windows)
+		{
+			window.GetFrame().setVisible(false); //you can't see me!
+			window.GetFrame().dispose(); //Destroy the JFrame object
+			
+		}
 		
 	}
 	
