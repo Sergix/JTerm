@@ -90,7 +90,7 @@ If a new bug or issue is found, create a new Issue! The issue name must be short
   - Version of JTerm
 3. "Files and Code" - If you find where the issue is or believe it to be, put the filenames and/or code in this section.
 
-> JTerm 0.4.1  
-> `jterm-v0.4.1.jar`  
+> JTerm 0.5.1  
+> `jterm-v0.5.1.jar`  
 > This project and its source are held under the GNU General Public License, located in the LICENSE file in the project's directory.  
 > (c) 2017

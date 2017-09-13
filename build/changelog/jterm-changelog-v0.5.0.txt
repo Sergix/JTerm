@@ -23,4 +23,4 @@ Full changes include:
 		- Exit.java (`exit`)
 		- Help.java (`help`)
 
-More information provided in published patch notes documentation.
+More information provided in published release notes documentation.
