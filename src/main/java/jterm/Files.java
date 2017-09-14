@@ -31,7 +31,7 @@ public class Files
 	* 
 	* Constructor for calling Process() function.
 	*/
-	public Files(ArrayList<String> options) { }
+	public Files() { }
 	
 	/*
 	* Process() void
@@ -40,15 +40,42 @@ public class Files
 	* 
 	* String options - command options
 	*/
-	public static void Process(String options)
+	public static void Process (String options)
 	{
+		ArrayList<String> optionsArray = JTerm.GetAsArray(options);
+		if (optionsArray.toArray().length == 0)
+			optionsArray.add(0, "help");
+			
+		String command = optionsArray.get(0);
+		optionsArray.remove(0);
 
-		System.out.println("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp");
+		switch (command)
+		{
+			case "write":
+				WriteFile(optionsArray);
+				break;
+
+			case "delete":
+			case "del":
+			case "rm": // @pmorgan3
+				Delete(optionsArray);
+				break;
+
+			case "read":
+				ReadFile(optionsArray);
+				break;
+
+			case "help":
+			default:
+				System.out.println("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp");
+				return;
+
+		}
 
 	}
 
 	/*
-	* Write() void
+	* WriteFile() void
 	* 
 	* Get input and write it to a file.
 	* Changelog (#65)
@@ -58,7 +85,7 @@ public class Files
 	* -h
 	*     Prints help information
 	*/
-	public static void Write(ArrayList<String> options)
+	public static void WriteFile(ArrayList<String> options)
 	{
 		
 		String filename = "";
@@ -162,35 +189,7 @@ public class Files
 	}
 
 	/*
-	* Rm() void (@pmorgan3)
-	* 
-	* Identical to 'delete'; calls Delete().
-	*
-	* ArrayList<String> options - command options
-	*/
-	public static void Rm(ArrayList<String> options)
-	{
-		
-		Delete(options);
-
-	}
-
-	/*
-	* Del() void (@pmorgan3)
-	* 
-	* Identical to 'delete'; calls Delete().
-	*
-	* ArrayList<String> options - command options
-	*/
-	public static void Del(ArrayList<String> options)
-	{
-		
-		Delete(options);
-
-	}
-
-	/*
-	* Read() void
+	* ReadFile() void
 	* Changelog (#68)
 	* 
 	* Reads the specified files and outputs the contents
@@ -203,7 +202,7 @@ public class Files
 	*     
 	* Credit to @d4nntheman
 	*/
-	public static void Read(ArrayList<String> options)
+	public static void ReadFile(ArrayList<String> options)
 	{
 		
 		String filename = "";

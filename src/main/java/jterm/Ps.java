@@ -19,9 +19,35 @@ public class Ps
 	* 
 	* Constructor for calling Process() function.
 	*/
-	public Ps(ArrayList<String> options)
+	public Ps() { }
+	
+	/*
+	* Process() void
+	* 
+	* Process the input.
+	* 
+	* String options - command options
+	*/
+	public static void Process(String options)
 	{
 
+		ArrayList<String> optionsArray = JTerm.GetAsArray(options);
+		View(optionsArray);
+
+	}
+
+	/*
+	* View() void
+	* 
+	* Views all processes running on the host
+	* system.
+	* 
+	* String[] args - arguments passed from the 
+	* 				console
+	*/
+	public static void View(ArrayList<String> options)
+	{
+		
 		for (String option: options)
 		{
 			if (option.equals("-h"))
