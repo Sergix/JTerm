@@ -29,7 +29,9 @@ public class Files
 	/*
 	* Files() void
 	* 
-	* Constructor for calling Process() function.
+	* Constructor for calling methods.
+	*
+	* ArrayList<String> options - command options
 	*/
 	public Files(ArrayList<String> options) { }
 	
@@ -56,7 +58,9 @@ public class Files
 	* ArrayList<String> options - command options
 	* 
 	* -h
-	*     Prints help information
+	*   Prints help information
+	* filename [...]
+	*	File to write to
 	*/
 	public static void Write(ArrayList<String> options)
 	{
@@ -126,7 +130,9 @@ public class Files
 	* ArrayList<String> options - command options
 	* 
 	* -h
-	*     Prints help information
+	*   Prints help information
+	* file [...]
+	* 	File to delete
 	*/
 	public static void Delete(ArrayList<String> options)
 	{
@@ -199,7 +205,9 @@ public class Files
 	* ArrayList<String> options - command options
 	* 
 	* -h
-	*     Prints help information
+	*   Prints help information
+	* filename [...]
+	*	Prints the contents of the specified files
 	*     
 	* Credit to @d4nntheman
 	*/

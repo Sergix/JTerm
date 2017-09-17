@@ -17,7 +17,13 @@ public class Ps
 	/*
 	* Ps() void
 	* 
-	* Constructor for calling Process() function.
+	* Prints a list of process running on
+	* the system.
+	*
+	* ArrayList<String> options - command options
+	*
+	* -h
+	* 	Prints help information
 	*/
 	public Ps(ArrayList<String> options)
 	{

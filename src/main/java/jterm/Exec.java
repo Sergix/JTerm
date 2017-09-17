@@ -26,21 +26,12 @@ public class Exec
 	/*
 	* Exec() void
 	* 
-	* Constructor for calling Process() function.
+	* Constructor for calling Run() function.
 	*/
-	public Exec(ArrayList<String> options) { }
-	
-	/*
-	* Process() void
-	* 
-	* Process the input.
-	* 
-	* ArrayList<String> options - command options
-	*/
-	public static void Process(ArrayList<String> options)
+	public Exec(ArrayList<String> options)
 	{
-		
-		// Default to Run(); nothing to process
+
+		// Default to Run()
 		Run(options);
 
 	}
@@ -51,6 +42,11 @@ public class Exec
 	* Runs the executable file.
 	* 
 	* ArrayList<String> options - command options
+	*
+	* -h
+	* 	Prints help information
+	* file
+	* 	File to execute
 	*/
 	public static boolean Run(ArrayList<String> options)
 	{	

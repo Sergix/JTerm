@@ -26,7 +26,9 @@ public class Exit
 	/*
 	* Exit() void
 	* 
-	* Constructor for calling Process() function.
+	* Exits the application.
+	*
+	* ArrayList<String> options - command options
 	*/
 	public Exit(ArrayList<String> options) {
 

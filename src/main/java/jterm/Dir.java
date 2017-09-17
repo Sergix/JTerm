@@ -28,13 +28,15 @@ public class Dir
 	* Dir() void
 	* 
 	* Constructor for calling methods.
+	*
+	* ArrayList<String> options - command options
 	*/
 	public Dir(ArrayList<String> options) { }
 
 	/*
 	* Process() void
 	* 
-	* Process the input.
+	* Display help information.
 	* 
 	* ArrayList<String> options - command options
 	*/
@@ -59,7 +61,7 @@ public class Dir
 	* 	and directory names
 	* -h
 	* 	Prints help information
-	* directory
+	* directory [...]
 	* 	Prints this directory rather than the
 	* 	current working directory.
 	*
@@ -110,7 +112,6 @@ public class Dir
 		* Example:
 		* 	F RW	myfile.txt	   5 KB
 		*/
-		
 		System.out.println("[Contents of \"" + path + "\"]");
 		for (File file: files)
 		{
@@ -130,13 +131,13 @@ public class Dir
 	* 
 	* Changes the working directory to the specified
 	* input.
-	* 
-	* -h
-	* 	Prints help information
-	* directory
-	* 	Path to change the working directory to.
 	*
 	* ArrayList<String> options - command options
+	*
+	* -h
+	* 	Prints help information
+	* directory [...]
+	* 	Path to change the working directory to.
 	*/
 	public static void Cd(ArrayList<String> options)
 	{
@@ -216,11 +217,11 @@ public class Dir
 	* Pwd() void
 	* 
 	* Prints the working directory to the console.
-	* 
-	* -h
-	* 	Prints help information
 	*
 	* ArrayList<String> options - command options
+	*
+	* -h
+	* 	Prints help information
 	*/
 	public static void Pwd(ArrayList<String> options)
 	{
@@ -245,11 +246,13 @@ public class Dir
 	* Md() void
 	* 
 	* Creates a new directory.
-	* 
-	* -h
-	* 	Prints help information
 	*
 	* ArrayList<String> options - command options
+	*
+	* -h
+	* 	Prints help information
+	* name [...]
+	*	Name of the new directory 
 	*/
 	public static void Md(ArrayList<String> options)
 	{

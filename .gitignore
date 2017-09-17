@@ -31,3 +31,4 @@ target/
 *.lst
 
 *.class
+target/classes/main/java/jterm/Client.class

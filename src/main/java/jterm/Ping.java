@@ -16,7 +16,16 @@ public class Ping
 	/*
 	* Ping() void
 	* 
-	* Constructor for calling Process() function.
+	* Pings the specified host.
+	*
+	* ArrayList<String> options - command options
+
+	* -h
+	* 	Prints help information
+	* host
+	* 	Host to ping
+	* -p port
+	*	Port to ping the host on
 	*/
 	public Ping(ArrayList<String> options) 
 	{

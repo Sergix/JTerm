@@ -26,7 +26,7 @@ public class Help
 	/*
 	* Help() void
 	* 
-	* Constructor for calling Process() function.
+	* Prints help information.
 	*/
 	public Help(ArrayList<String> options)
 	{

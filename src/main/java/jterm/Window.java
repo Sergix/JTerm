@@ -33,21 +33,6 @@ public class Window
 	private boolean visible = false;
 	
 	/*
-	* Process() void
-	* 
-	* Process the input.
-	* 
-	* ArrayList<String> options - command options
-	*/
-	public static void Process(ArrayList<String> options)
-	{
-
-		// Default to Window(); nothing to process
-		new Window(options);
-
-	}
-	
-	/*
 	* Window() void
 	* 
 	* Create a new JFrame window.

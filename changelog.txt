@@ -1,3 +1,8 @@
+(#85)[9/17/2017-18:07 0.5.1 Sergix]
+	Updated documentation comments in the source code.
+	Removed the Process() function from Window and Exec.
+	Pushed updates to Git.
+
 (#84)[9/12/2017-21:26 0.5.1 Sergix]
 	Wrote patch notes and changelog for version "0.5.1".
 	Compiled binaries and source code, as well as the wrapfile (which may be deprecated).

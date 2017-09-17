@@ -26,7 +26,14 @@ public class Echo
 	/*
 	* Echo() void
 	* 
-	* Constructor for calling Process() function.
+	* Echo the input to the terminal.
+	*
+	* ArrayList<String> options - command options
+	*
+	* -h
+	* 	Prints help information
+	* input
+	* 	Text to output
 	*/
 	public Echo(ArrayList<String> options)
 	{
