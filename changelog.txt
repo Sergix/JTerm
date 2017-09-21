@@ -1,3 +1,7 @@
+(#87)[9/20/2017-22:17 0.5.1 Sergix]
+	Added Waffle.io throughput graph to the README.
+	Pushed updates to Git.
+
 (#86)[9/20/2017-22:08 0.5.1 Sergix]
 	Fixed issue where if "dir" or "files" was entered it crashed the application due to an out of bounds exception.
 	TODO: update help information for Dir and Files commands.

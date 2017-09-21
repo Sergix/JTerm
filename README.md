@@ -3,7 +3,8 @@
 ![Build Status](https://travis-ci.org/Sergix/JTerm.svg?branch=master)
 [![Code Triagers Badge](https://www.codetriage.com/sergix/jterm/badges/users.svg)](https://www.codetriage.com/sergix/jterm)  
 
-[![Stories in Ready](https://badge.waffle.io/Sergix/JTerm.svg?label=ready&title=Ready)](http://waffle.io/Sergix/JTerm)
+[![Stories in Ready](https://badge.waffle.io/Sergix/JTerm.svg?label=ready&title=Ready)](http://waffle.io/Sergix/JTerm)  
+[![Throughput Graph](https://graphs.waffle.io/Sergix/JTerm/throughput.svg)](https://waffle.io/Sergix/JTerm/metrics/throughput)  
 
 ## What is it?
 A terminal written for cross-platform usage.
