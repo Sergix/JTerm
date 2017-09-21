@@ -152,6 +152,9 @@ public class JTerm
 		if (optionsArray.toArray().length >= 1)
 			method = optionsArray.get(0);
 
+		else
+			optionsArray.add(method);
+
 		classChar = method.substring(0, 1);
 		classChar = classChar.toUpperCase();
 		method = method.substring(1);

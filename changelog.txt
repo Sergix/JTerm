@@ -1,3 +1,8 @@
+(#86)[9/20/2017-22:08 0.5.1 Sergix]
+	Fixed issue where if "dir" or "files" was entered it crashed the application due to an out of bounds exception.
+	TODO: update help information for Dir and Files commands.
+	Pushed updates to Git.
+
 (#85)[9/17/2017-18:07 0.5.1 Sergix]
 	Updated documentation comments in the source code.
 	Removed the Process() function from Window and Exec.
