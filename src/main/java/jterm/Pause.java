@@ -17,39 +17,13 @@ public class Pause
 	* message
 	* 	Pause message to be printed
 	*/
-	public Pause() { }
-	
-	/*
-	* Process() void
-	* 
-	* Process the input.
-	* 
-	* String options - command options
-	*/
-	public static void Process (String options)
-	{
+	public Pause(ArrayList<String> options) { 
 
-		ArrayList<String> optionsArray = JTerm.GetAsArray(options);
-		EnterPause(optionsArray);
-
-	}
-
-	/*
-	* EnterPause() void
-	* 
-	* Pauses the interpreter until the Enter
-	* key is hit.
-	* 
-	* ArrayList<String> options - command options
-	*/
-	public static void EnterPause(ArrayList<String> options)
-	{
-
-		if (options.size() == 1)
+		if (options.size() == 0)
 			System.out.print("Press enter to continue...");
 		
 		else
-			System.out.print(Exec.GetRest(options, 1));
+			System.out.print(Exec.GetRest(options, 0));
 
 		try
 		{
