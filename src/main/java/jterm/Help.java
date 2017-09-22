@@ -28,32 +28,9 @@ public class Help
 	* 
 	* Prints help information.
 	*/
-	public Help() { }
-	
-	/*
-	* Process() void
-	* 
-	* Process the input.
-	* 
-	* String options - command options
-	*/
-	public static void Process(String options)
+	public Help(ArrayList<String> options)
 	{
 
-		PrintHelp(JTerm.GetAsArray(options));
-
-	}
-
-	/*
-	* PrintHelp() void
-	* 
-	* Prints help information about JTerm.
-	* 
-	* ArrayList<String> options - command options
-	*/
-	public static void PrintHelp(ArrayList<String> options)
-	{
-		
 		System.out.println("JTerm v" + JTerm.version);
 		
 	}
