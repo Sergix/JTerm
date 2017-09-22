@@ -29,7 +29,10 @@ public class Set
 	/*
 	* Set() void
 	* 
-	* Constructor for calling Process() function.
+	* Creates a new variable or prints all
+	* stored variables.
+	*
+	* ArrayList<String> options - command options
 	*/
 	public Set() { }
 	

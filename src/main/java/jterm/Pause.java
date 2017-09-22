@@ -9,7 +9,13 @@ public class Pause
 	/*
 	* Pause() void
 	* 
-	* Constructor for calling Process() function.
+	* Pauses the interpreter until the user
+	* hits the "Enter" key.
+	*
+	* ArrayList<String> options - command options
+	*
+	* message
+	* 	Pause message to be printed
 	*/
 	public Pause() { }
 	
