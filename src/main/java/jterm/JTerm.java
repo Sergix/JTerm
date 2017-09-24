@@ -19,6 +19,7 @@ package main.java.jterm;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.io.*;
@@ -173,6 +174,9 @@ public class JTerm
 
 		ArrayList<String> optionsArray = GetAsArray(options);
 
+		// Default to process/help command if function is not found
+		String method = "Process";
+
 		// Get the first string in the options array, which is the command,
 		// and capitalize the first letter of the command
 		String original = optionsArray.get(0).toLowerCase(), command = original;
@@ -180,19 +184,37 @@ public class JTerm
 		classChar = classChar.toUpperCase();
 		command = command.substring(1);
 		command = "main.java.jterm." + classChar + command;
-
-		// When we pass the options, we don't want the command name included
 		optionsArray.remove(0);
+
+		// Get the method name
+		if (optionsArray.toArray().length >= 1)
+			method = optionsArray.get(0);
+
+		else
+			optionsArray.add(method);
+
+		classChar = method.substring(0, 1);
+		classChar = classChar.toUpperCase();
+		method = method.substring(1);
+		method = classChar + method;
 
 		try
 		{
 			// Get the class of the command
-			Class code = Class.forName(command);
-			Object o = code.newInstance();
+			Class<?> clazz = Class.forName(command);
+			Constructor<?> constructor = clazz.getConstructor(ArrayList.class);
+			Object obj = constructor.newInstance(optionsArray);
 
-			// Invoke the "Process" method of the class to run
-			Method m = o.getClass().getMethod("Process", String.class);
-			m.invoke(options.getClass(), new Object[] {GetAsString(optionsArray)});
+			ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(obj.getClass().getDeclaredMethods()));
+
+			// Invoke the correct method of the class to run, but only if it contains that method
+			Method m = obj.getClass().getMethod(method, ArrayList.class);
+			if(methods.contains(m))
+			{
+				optionsArray.remove(0);
+				m.invoke(options.getClass(), new Object[] {optionsArray});
+
+			}
 
 		}
 
@@ -217,7 +239,7 @@ public class JTerm
 		}
 		catch (NoSuchMethodException nsme)
 		{
-			System.out.println(nsme);
+			//System.out.println(nsme);
 
 		}
 		catch (InvocationTargetException ite)
