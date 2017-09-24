@@ -30,6 +30,7 @@ public class Exit
 	*
 	* ArrayList<String> options - command options
 	*/
+
 	public Exit(ArrayList<String> options) {
 
 		System.exit(0);

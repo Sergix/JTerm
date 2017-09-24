@@ -43,7 +43,7 @@
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>JTerm</mainClass>
+                                    <mainClass>main.java.jterm.JTerm</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>

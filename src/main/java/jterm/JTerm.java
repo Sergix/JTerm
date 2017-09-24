@@ -1,6 +1,6 @@
 /*
 * JTerm - a cross-platform terminal
-* Copyright (C) 2017 Sergix, NCSGeek
+* Copyright (code) 2017 Sergix, NCSGeek
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -17,115 +17,152 @@
 // package = folder :P
 package main.java.jterm;
 
-import java.util.Scanner;
-import java.io.*;
-import java.util.ArrayList;
-import java.lang.reflect.InvocationTargetException;
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
-import java.util.Arrays;
+import java.util.*;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class JTerm
 {
-	
+
 	// Global version variable
 	static String version = "0.5.1";
-	
+
 	// Global directory variable (use "cd" command to change)
 	// Default value "./" is equal to the default directory set when the program starts
 	static String currentDirectory = "./";
-	
+
 	// User input variable used among all parts of the application
 	static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
-	
+
+	// Boolean to determine if caps lock is on, since input system does not distinguish between character cases
+	// Command string which the input system will aggregate characters to
+	private static boolean capsOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
+	static String command = "";
+
 	/*
 	* main() void
-	* 
+	*
 	* Function called when the program loads. Sets
-	* up basic input streams and runs the command
-	* loop.
-	* 
-	* String[] args - arguments passed from the 
+	* up basic input streams.
+	*
+	*
+	* String[] args - arguments passed from the
 	* 				console
 	*/
 	public static void main(String[] args)
-	{  
-		
-		// Assign a default value of false to the quit variable
-		boolean quit = false;
-		
-		// Print licensing information
-		System.out.println(
-			"JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n" +
-			"This program comes with ABSOLUTELY NO WARRANTY.\n" +
-			"This is free software, and you are welcome to redistribute it\n" +
-			"under certain conditions.\n"
-		);
-		
-		// Infinite loop for getting input
-		do
-		{
-			// Set return value of the input function to "quit"
-			quit = JTerm.Standby();
-			
-		// As long as we are not quitting...
-		} while (!quit);
-		
-		// Close all open window instances
-		Window.CloseAll();
-
-	}
-	
-	/*
-	* Standby() boolean
-	* 
-	* Awaits user command and then calls Parse() with the
-	* input.
-	*
-	* BufferedReader user_unput - Input stream loaded from the
-	* 							main() function
-	*/
-	public static boolean Standby()
 	{
 
-		// Print the current directory as the prompt (e.g. "./")
-		System.out.print(JTerm.currentDirectory + " ");
-		String command = "";
-		
-		// Attempt to read a line from the input
-		try
-		{
-			command = userInput.readLine();
-			
-			// If the command is a blank line, loop to next
-			if (command.equals(""))
-			{
-				return false;
-				
+		// Print licensing information
+		System.out.println(
+				"JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n" +
+						"This program comes with ABSOLUTELY NO WARRANTY.\n" +
+						"This is free software, and you are welcome to redistribute it\n" +
+						"under certain conditions.\n"
+		);
+
+		/*
+		 * Wait until "exit" is typed in to exit
+		 * Sends last char received from Input class to Process function
+		 */
+		while (true) {
+			try {
+				Process((char)Input.read(true));
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			
 		}
-		catch (IOException ioe)
-		{
-			System.out.println(ioe);
-			
-			// Quit because of error
-			return true;
-			
-		}
-		
-		// Parse the command and quit if necessary
-		if (Parse(command))
-			return true;
-		
-		// Keep looping; we don't want to quit
-		return false;
-		
+
 	}
-	
+
+	/**
+	 * Process()
+	 *
+	 * Processes input provided by Input class, and operates based on the input it receives
+	 *
+	 * @param input last character input by user
+	 */
+	private static void Process(char input) {
+		if (input != 20 && input != 127 && input != 9) // do not output tabs, caps lock and backspace chars
+			System.out.print(input);
+		if (input == 20) { // caps lock
+			capsOn = !capsOn;
+		} else if (input == 127) { // back space
+			if (command.length() > 0) {
+				command = command.substring(0, command.length() - 1);
+				System.out.print("\b \b"); // delete char, add white space and move back again
+			}
+		} else if (",./\\-_+=~".contains(String.valueOf(input))) { // special chars, more can be added
+			command += input;
+		} else if (input == '\t' && command.length() > 0) { // tab
+			String[] commandArr = command.split(" "); // split into sections
+			String currText = commandArr[commandArr.length - 1]; // get last element
+			if (commandArr.length > 1) // if more than one element, autocomplete file
+				FileAutocomplete(currText);
+			else if (commandArr.length == 1) // if one element, autocomplete command (to be implemented)
+				CommandAutocomplete(currText);
+
+		} else if (input == '\n') { // enter, or new line
+			if (command.length() > 0)
+				Parse(command);
+			command = "";
+		} else if (Character.isLetter(input)) { // its a letter
+			if (!capsOn)
+				command += input;
+			else
+				command += Character.toUpperCase(input);
+		} else if (Character.isDefined(input)) { // just print it if it is defined
+			command += input;
+		}
+	}
+
+	/**
+	 * FileAutocomplete()
+	 *
+	 * Using a string of text representing what has been typed presently, displays all files that match the current input
+	 * Currently does not complete any input due to incapability to move input cursor, would require own UI... WIP
+	 *
+	 * @param currText file that is to be completed
+	 */
+	private static void FileAutocomplete(String currText) {
+		File currFolder = new File(currentDirectory);
+		File[] files = currFolder.listFiles();
+		LinkedList<String> fileNames = new LinkedList<>();
+
+		// get all file names for comparison
+		for (File f : files)
+			if (f.getName().startsWith(currText))
+				fileNames.add(f.getName());
+		// print all file names that match
+		if (fileNames.size() != 1) {
+			for (String s : fileNames)
+				System.out.print(s + "\t");
+			// if no input, just output all files and folders
+			if (fileNames.size() == 0)
+				for (File f : files)
+					System.out.print(f.getName() + " \t");
+			System.out.println();
+		} else {
+			String fileName = fileNames.getFirst();
+			command += fileName.substring(currText.length(), fileName.length()) + " ";
+			System.out.print(fileName.substring(currText.length(), fileName.length()) + " ");
+		}
+	}
+
+	/**
+	 * CommandAutocomplete()
+	 *
+	 * @param currText command that is to be completed
+	 */
+	private static void CommandAutocomplete(String currText) {
+		// will autocomplete commands
+	}
+
 	/*
 	* Parse() boolean
-	* 
+	*
 	* Checks input and passes command options to the function
 	* that runs the requested command.
 	*
@@ -136,9 +173,6 @@ public class JTerm
 
 		ArrayList<String> optionsArray = GetAsArray(options);
 
-		// Default to process/help command if function is not found
-		String method = "Process";
-
 		// Get the first string in the options array, which is the command,
 		// and capitalize the first letter of the command
 		String original = optionsArray.get(0).toLowerCase(), command = original;
@@ -146,37 +180,19 @@ public class JTerm
 		classChar = classChar.toUpperCase();
 		command = command.substring(1);
 		command = "main.java.jterm." + classChar + command;
+
+		// When we pass the options, we don't want the command name included
 		optionsArray.remove(0);
-
-		// Get the method name
-		if (optionsArray.toArray().length >= 1)
-			method = optionsArray.get(0);
-
-		else
-			optionsArray.add(method);
-
-		classChar = method.substring(0, 1);
-		classChar = classChar.toUpperCase();
-		method = method.substring(1);
-		method = classChar + method;
 
 		try
 		{
 			// Get the class of the command
-			Class<?> clazz = Class.forName(command);
-			Constructor<?> constructor = clazz.getConstructor(ArrayList.class);
-			Object obj = constructor.newInstance(optionsArray);
+			Class code = Class.forName(command);
+			Object o = code.newInstance();
 
-			ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(obj.getClass().getDeclaredMethods()));
-
-			// Invoke the correct method of the class to run, but only if it contains that method
-			Method m = obj.getClass().getMethod(method, ArrayList.class);
-			if(methods.contains(m))
-			{
-				optionsArray.remove(0);
-				m.invoke(options.getClass(), new Object[] {optionsArray});
-
-			}
+			// Invoke the "Process" method of the class to run
+			Method m = o.getClass().getMethod("Process", String.class);
+			m.invoke(options.getClass(), new Object[] {GetAsString(optionsArray)});
 
 		}
 
@@ -187,7 +203,7 @@ public class JTerm
 			execFile.add(original);
 			if ( Exec.Run(execFile) )
 				System.out.println("Unknown Command \"" + original + "\"");
-				
+
 		}
 		catch (InstantiationException ie)
 		{
@@ -201,7 +217,7 @@ public class JTerm
 		}
 		catch (NoSuchMethodException nsme)
 		{
-			//System.out.println(nsme);
+			System.out.println(nsme);
 
 		}
 		catch (InvocationTargetException ite)
@@ -235,7 +251,7 @@ public class JTerm
 		// 	case "vol":
 		// 	case "wmic":
 		// 		break;
-		
+
 	}
 
 	/*
@@ -248,21 +264,21 @@ public class JTerm
 	*/
 	public static ArrayList<String> GetAsArray(String options)
 	{
-		
+
 		// Get each substring of the command entered
 		Scanner tokenizer = new Scanner(options);
-		
+
 		// options String array will be passed to command functions
 		ArrayList<String> array = new ArrayList<String>();
-		
+
 		// Get command arguments
 		while (tokenizer.hasNext())
 		{
 			String next = tokenizer.next();
 			array.add(next);
-			
+
 		}
-		
+
 		// Close the string stream
 		tokenizer.close();
 
@@ -280,7 +296,7 @@ public class JTerm
 	*/
 	public static String GetAsString(ArrayList<String> options)
 	{
-		
+
 		// Get each substring of the command entered
 		String string = "";
 
