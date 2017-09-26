@@ -53,7 +53,6 @@ public class InputHandler {
 				FileAutocomplete(currText);
 			else if (commandArr.length == 1) // if one element, autocomplete command (to be implemented)
 				CommandAutocomplete(currText);
-
 		} else if (input == '\n') { // enter, or new line
 			if (JTerm.command.length() > 0)
 				JTerm.Parse(JTerm.command);
@@ -94,10 +93,10 @@ public class InputHandler {
 			else if (commandArr.length == 1) // if one element, autocomplete command (to be implemented)
 				CommandAutocomplete(currText);
 		} else if (input == 13) { // new line
+			System.out.println("\r\n");
 			if (JTerm.command.length() > 0)
 				JTerm.Parse(JTerm.command);
 			JTerm.command = "";
-			System.out.println();
 		} else if (Character.isLetter(input)) { // its a letter
 			if (!JTerm.capsOn)
 				JTerm.command += input;
