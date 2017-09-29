@@ -29,14 +29,14 @@ public class JTerm
 {
 
 	// Global version variable
-	static String version = "0.5.1";
+	static String version = "0.5.2";
 
 	// Global directory variable (use "cd" command to change)
 	// Default value "./" is equal to the default directory set when the program starts
 	static String currentDirectory = "./";
-	static String OS = System.getProperty("os.name").toLowerCase();
-	static boolean isWin = OS.contains("windows");
-	static boolean isUnix = OS.equals("linux");
+	static String os = System.getProperty("os.name").toLowerCase();
+	static boolean isWin = os.contains("windows");
+	static boolean isUnix = os.equals("linux");
 
 	// User input variable used among all parts of the application
 	static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
@@ -61,23 +61,18 @@ public class JTerm
 
 		// Print licensing information
 		System.out.println(
-				"JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n" +
-						"This program comes with ABSOLUTELY NO WARRANTY.\n" +
-						"This is free software, and you are welcome to redistribute it\n" +
-						"under certain conditions.\n"
+			"JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n" +
+			"This program comes with ABSOLUTELY NO WARRANTY.\n" +
+			"This is free software, and you are welcome to redistribute it\n" +
+			"under certain conditions.\n"
 		);
 
-		//System.out.println("Win: " + isWin);
-		//System.out.println("Nix: " + isUnix);
-		//System.out.println("OS: " + OS);
-
 		/*
-		 * Wait until "exit" is typed in to exit
-		 * Sends last char received from Input class to Process function
-		 */
-		while (true) {
+		* Wait until "exit" is typed in to exit
+		* Sends last char received from Input class to Process function
+		*/
+		while (true)
 			InputHandler.Process();
-		}
 
 	}
 

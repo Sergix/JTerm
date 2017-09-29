@@ -1,3 +1,29 @@
+(#88)[9/29/2017-17:28 0.5.1 Sergix]
+	Tab autocompletion has been implemented! Thanks to @nanoandrew4. Changes:
+		- Input.java: http://www.source-code.biz/snippets/java/RawConsoleInput
+		- InputHander.java
+			- fileNames: list of files for tab rotation and printing options
+			- command: stores JTerm.command while rotating through above list
+			- startComplete: length of original input to be completed
+			- ProcessUnix(): processes input provided by Input class (UNIX)
+			- ProcessWin(): processes input provided by Input class (Windows)
+			- FileAutocomplete(): displays all files that match the current input
+			- ClearLine(): clears a line in the console of size line.length()
+			- CommandAutocomplete() (WIP)
+		- Works with "exec"; completes filenames
+		- If there are multiple possible results, it prints out a list of possible completions, then the user can cycle through options by repeatedly hitting TAB.
+		- Applied formatting changes to Input.java and JTerm.java (@Sergix)
+	JTerm.java changes and additions for tab completion:
+		- os: gets the OS name
+		- isWin: boolean for if OS is Windows-based
+		- isUnix: boolean for if OS is UNIX-based
+		- capsOn: used for determining whether Caps Lock is pressed
+		- command: command string currently stored
+		- Removed Standby(); characters are read individually
+	Closed #31 (https://github.com/Sergix/JTerm/issues/31).
+	Command completion is soon to be implemented.
+	Pushed updates to Git.
+
 (#87)[9/20/2017-22:17 0.5.1 Sergix]
 	Added Waffle.io throughput graph to the README.
 	Pushed updates to Git.
