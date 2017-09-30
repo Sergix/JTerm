@@ -36,9 +36,8 @@ public class JTerm
 	// Global directory variable (use "cd" command to change)
 	// Default value "./" is equal to the default directory set when the program starts
 	static String currentDirectory = "./";
-	static String os = System.getProperty("os.name").toLowerCase();
 	static boolean isWin = SystemUtils.IS_OS_WINDOWS;
-	static boolean isUnix = SystemUtils.IS_OS_UNIX;
+	static boolean isUnix = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
 
 	// User input variable used among all parts of the application
 	static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
