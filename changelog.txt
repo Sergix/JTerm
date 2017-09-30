@@ -1,3 +1,11 @@
+(#89)[9/30/2017-13:30 0.5.1 Sergix]
+	Added Issue template to repo (borrowed from "angular-translate").
+	Created ROADMAP.md file, which contains information about the needs to reach "v1.0.0" of JTerm.
+	Created a GitHub milestone to track the ROADMAP.
+	Closed #35, 36, 37.
+		- Fixed issues with running on Mac and other UNIX distros.
+	Pushed updates to Git.
+
 (#88)[9/29/2017-17:28 0.5.1 Sergix]
 	Tab autocompletion has been implemented! Thanks to @nanoandrew4. Changes:
 		- Input.java: http://www.source-code.biz/snippets/java/RawConsoleInput
