@@ -25,8 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class InputHandler
-{
+public class InputHandler {
 
 	// List of files for tab rotation and printing options
 	private static LinkedList<String> fileNames = new LinkedList<>();
@@ -37,26 +36,25 @@ public class InputHandler
 	// Length of original input to be completed
 	private static int startComplete = 0;
 
-	/*
+	// Stops autocomplete from reprinting the text it completed if tab is pressed consecutively at the end of a complete file name
+	private static boolean lockTab = false;
+
+	/**
 	* Process() void
-	*
+	* <p></p>
 	* Calls appropriate method for handling
 	* input read from the Input class, using
 	* booleans in JTerm class to determine
 	* what OS the program is running on.
 	*/
-	static void Process()
-	{
+	static void Process() {
 
 		char input = 0;
 
-		try
-		{
-			input = (char)Input.read(true);
+		try {
+			input = (char) Input.read(true);
 
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 
 		}
@@ -69,9 +67,9 @@ public class InputHandler
 
 	}
 
-	/*
+	/**
 	* ProcessUnix() void
-	*
+	* <p></p>
 	* Processes input provided by Input class,
 	* and operates based on the input it receives,
 	* using the characters values used in Unix 
@@ -79,24 +77,20 @@ public class InputHandler
 	*
 	* char input - last character input by user
 	*/
-	private static void ProcessUnix(char input)
-	{
+	private static void ProcessUnix(char input) {
 
 		boolean clearFilesList = true;
 
 		// Do not output tabs, caps lock and backspace chars
-		if (input != 20 && input != 127 && input != 9) 
+		if (input != 127 && input != 9)
 			System.out.print(input);
-		
-		// Caps Lock
-		if (input == 20)
-			JTerm.capsOn = !JTerm.capsOn;
 
-		// Back Space
-		else if (input == 127)
-		{ 
-			if (JTerm.command.length() > 0)
-			{
+		if (input != 9)
+			lockTab = false;
+
+			// Back Space
+		if (input == 127) {
+			if (JTerm.command.length() > 0) {
 				JTerm.command = JTerm.command.substring(0, JTerm.command.length() - 1);
 
 				// Delete char, add white space and move back again
@@ -110,9 +104,8 @@ public class InputHandler
 		else if (",./\\-_+=~".contains(String.valueOf(input)))
 			JTerm.command += input;
 
-		// Tab
-		else if (input == '\t' && JTerm.command.length() > 0)
-		{
+			// Tab
+		else if (input == '\t' && JTerm.command.length() > 0) {
 			clearFilesList = false;
 
 			// Split into sections
@@ -125,30 +118,28 @@ public class InputHandler
 			if (commandArr.length > 1 && !JTerm.command.endsWith(" "))
 				FileAutocomplete(currText);
 
-			// If one element, autocomplete command (to be implemented)
-			else if (commandArr.length == 1 && !JTerm.command.endsWith(" ")) 
+				// If one element, autocomplete command (to be implemented)
+			else if (commandArr.length == 1 && !JTerm.command.endsWith(" "))
 				CommandAutocomplete(currText);
-			
-			// If last input was space, print all options
+
+				// If last input was space, print all options
 			else if (JTerm.command.endsWith(" "))
 				FileAutocomplete(" ");
 
 		}
 
 		// Enter, or new line
-		else if (input == '\n')
-		{ 
+		else if (input == '\n') {
 			if (JTerm.command.length() > 0)
 				JTerm.Parse(JTerm.command);
-			
+
 			JTerm.command = "";
 			System.out.println();
 
 		}
 
 		// It's a letter
-		else if (Character.isLetter(input))
-		{
+		else if (Character.isLetter(input)) {
 			if (!JTerm.capsOn)
 				JTerm.command += input;
 
@@ -166,32 +157,28 @@ public class InputHandler
 
 	}
 
-	/*
+	/**
 	* ProcessWin() void
-	*
+	* <p></p>
 	* Processes input provided by Input class,
 	* and operates based on the input it receives,
 	* using the characters values used in Windows systems.
 	*
 	* char input - last character input by user
 	*/
-	private static void ProcessWin(char input)
-	{
+	private static void ProcessWin(char input) {
 
 		boolean clearFilesList = true;
 
-		if (input != 20 && input != 8 && input != 9)
+		if (input != 8 && input != 9)
 			System.out.print(input);
 
-		// Caps Lock
-		if (input == 20)
-			JTerm.capsOn = !JTerm.capsOn;
+		if (input != 9)
+			lockTab = false;
 
-		// Backspace
-		else if (input == 8)
-		{
-			if (JTerm.command.length() > 0)
-			{
+			// Backspace
+		if (input == 8) {
+			if (JTerm.command.length() > 0) {
 				JTerm.command = JTerm.command.substring(0, JTerm.command.length() - 1);
 
 				// Delete char, add white space and move back again
@@ -201,33 +188,31 @@ public class InputHandler
 		}
 
 		// Tab
-		else if (input == 9 && JTerm.command.length() > 0)
-		{
+		else if (input == 9 && JTerm.command.length() > 0) {
 			clearFilesList = false;
 
 			// Split into sections
 			String[] commandArr = JTerm.command.split(" ");
 
 			// Get last element
-			String currText = commandArr[commandArr.length - 1]; 
+			String currText = commandArr[commandArr.length - 1];
 
 			// If more than one element, autocomplete file
-			if (commandArr.length > 1 && !JTerm.command.endsWith(" ")) 
+			if (commandArr.length > 1 && !JTerm.command.endsWith(" "))
 				FileAutocomplete(currText);
 
-			// If one element, autocomplete command (to be implemented)
-			else if (commandArr.length == 1 && !JTerm.command.endsWith(" ")) 
+				// If one element, autocomplete command (to be implemented)
+			else if (commandArr.length == 1 && !JTerm.command.endsWith(" "))
 				CommandAutocomplete(currText);
 
-			// If last input was space, print all options
+				// If last input was space, print all options
 			else if (JTerm.command.endsWith(" "))
 				FileAutocomplete(" ");
 
 		}
 
 		// New line
-		else if (input == 13)
-		{
+		else if (input == 13) {
 			System.out.println("\r\n");
 			if (JTerm.command.length() > 0)
 				JTerm.Parse(JTerm.command);
@@ -238,8 +223,7 @@ public class InputHandler
 		}
 
 		// It's a letter
-		else if (Character.isLetter(input))
-		{
+		else if (Character.isLetter(input)) {
 			if (!JTerm.capsOn)
 				JTerm.command += input;
 			else
@@ -256,24 +240,22 @@ public class InputHandler
 
 	}
 
-	/*
+	/**
 	* FileAutocomplete()
-	*
+	* <p></p>
 	* Using a string of text representing what has been typed presently,
 	* displays all files that match the current input.
 	*
-	* String currText - file that is to be completed
+	* @param currText file that is to be completed
 	*/
-	private static void FileAutocomplete(String currText)
-	{
+	private static void FileAutocomplete(String currText) {
 
 		boolean newList = false;
 		File currFolder = new File(JTerm.currentDirectory);
 		File[] files = currFolder.listFiles();
 
 		// get all file names for comparison
-		if (fileNames.size() == 0)
-		{
+		if (fileNames.size() == 0) {
 			// For tab rotation, true means no tab rotation, false means rotate through list
 			newList = true;
 
@@ -289,8 +271,7 @@ public class InputHandler
 
 		}
 
-		if (fileNames.size() != 1)
-		{
+		if (fileNames.size() != 1) {
 			// Clear line
 			if (fileNames.size() > 0 || currText.equals(" "))
 				ClearLine(JTerm.command);
@@ -300,8 +281,7 @@ public class InputHandler
 				for (String s : fileNames)
 					System.out.print(s + "\t");
 
-			else
-			{
+			else if (!lockTab){
 				ClearLine(JTerm.command);
 
 				// Get first file or dir name
@@ -318,8 +298,7 @@ public class InputHandler
 
 			}
 
-			if (fileNames.size() > 0 && newList)
-			{
+			if (fileNames.size() > 0 && newList) {
 				System.out.println();
 
 				// Re-output command after clearing lines
@@ -328,12 +307,9 @@ public class InputHandler
 			}
 
 			// If no input, just output all files and folders
-			if (currText.equals(" "))
-			{
-				if (newList)
-				{
-					for (File f : files)
-					{
+			if (currText.equals(" ")) {
+				if (newList) {
+					for (File f : files) {
 						System.out.print(f.getName() + " \t");
 						fileNames.add(f.getName());
 
@@ -345,9 +321,7 @@ public class InputHandler
 					// Re-output command after clearing lines
 					System.out.print(JTerm.command);
 
-				}
-				else
-				{
+				} else if (!lockTab){
 					ClearLine(JTerm.command);
 
 					// Get first file or dir name
@@ -366,9 +340,7 @@ public class InputHandler
 
 			}
 
-		}
-		else
-		{
+		} else if (!lockTab){
 
 			String fileName = fileNames.getFirst();
 			JTerm.command += fileName.substring(currText.length(), fileName.length()) + " ";
@@ -376,17 +348,20 @@ public class InputHandler
 
 			// Improve readability
 			System.out.println();
-			
+
+			// Lock tab
+			lockTab = true;
+
 		}
 
 	}
 
-	/*
+	/**
 	* ClearLine() void
-	*
+	* <p></p>
 	* Clears a line in the console of size line.length().
 	*
-	* String line - line to be cleared
+	* @param line line to be cleared
 	*/
 	private static void ClearLine(String line) {
 
@@ -401,14 +376,12 @@ public class InputHandler
 
 	}
 
-	/*
+	/**
 	* CommandAutocomplete()
-	*
-	* String currText - command that is to be completed
+	* <p></p>
+	* @param currText command that is to be completed
 	*/
-	private static void CommandAutocomplete(String currText)
-	{
-		
+	private static void CommandAutocomplete(String currText) {
 
 
 	}
