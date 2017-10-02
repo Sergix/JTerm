@@ -1,7 +1,9 @@
-package main.java.jterm;
+package main.java.jterm.command;
 
 import java.util.ArrayList;
 import java.io.IOException;
+
+import main.java.jterm.JTerm;
 
 public class Pause
 {

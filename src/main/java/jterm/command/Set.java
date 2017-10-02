@@ -14,7 +14,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm;
+package main.java.jterm.command;
 
 import java.util.Hashtable;
 import java.util.Enumeration;

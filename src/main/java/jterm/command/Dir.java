@@ -16,10 +16,12 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm;
+package main.java.jterm.command;
 
 import java.io.*;
 import java.util.ArrayList;
+
+import main.java.jterm.JTerm;
 
 public class Dir
 {

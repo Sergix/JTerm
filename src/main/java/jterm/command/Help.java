@@ -16,46 +16,25 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm;
+package main.java.jterm.command;
 
 import java.util.ArrayList;
 
-public class Echo
+import main.java.jterm.JTerm;
+
+public class Help
 {
 	
 	/*
-	* Echo() void
+	* Help() void
 	* 
-	* Echo the input to the terminal.
-	*
-	* ArrayList<String> options - command options
-	*
-	* -h
-	* 	Prints help information
-	* input
-	* 	Text to output
+	* Prints help information.
 	*/
-	public Echo(ArrayList<String> options)
+	public Help(ArrayList<String> options)
 	{
 
-		String output = "";
+		System.out.println("JTerm v" + JTerm.version);
 		
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.");
-				return;
-			  
-			}
-			else
-				output += option + " ";
-		 
-		}
-		
-		output = output.trim();
-		System.out.println(output);
-
 	}
 	
 }

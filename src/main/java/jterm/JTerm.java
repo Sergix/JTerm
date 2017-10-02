@@ -27,25 +27,27 @@ import java.util.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 
+import main.java.jterm.command.Exec;
+
 public class JTerm
 {
 
 	// Global version variable
-	static String version = "0.5.2";
+	public static String version = "0.5.2";
 
 	// Global directory variable (use "cd" command to change)
 	// Default value "./" is equal to the default directory set when the program starts
-	static String currentDirectory = "./";
-	static boolean isWin = SystemUtils.IS_OS_WINDOWS;
-	static boolean isUnix = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
+	public static String currentDirectory = "./";
+	public static boolean isWin = SystemUtils.IS_OS_WINDOWS;
+	public static boolean isUnix = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
 
 	// User input variable used among all parts of the application
-	static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+	public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
 	// Boolean to determine if caps lock is on, since input system does not distinguish between character cases
 	// Command string which the input system will aggregate characters to
-	static boolean capsOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
-	static String command = "";
+	public static boolean capsOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
+	public static String command = "";
 
 	/*
 	* main() void
@@ -99,7 +101,7 @@ public class JTerm
 		String classChar = command.substring(0, 1);
 		classChar = classChar.toUpperCase();
 		command = command.substring(1);
-		command = "main.java.jterm." + classChar + command;
+		command = "main.java.jterm.command." + classChar + command;
 		optionsArray.remove(0);
 
 		// Get the method name

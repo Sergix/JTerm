@@ -1,3 +1,9 @@
+(#90)[10/1/2017-17:05 0.5.1 Sergix]
+	Moved command classes into their own package (main.java.jterm.command).
+	Created imports for "main.java.jterm.JTerm" in multiple classes.
+	Made the JTerm class variables public.
+	Pushed updates to Git.
+
 (#89)[9/30/2017-13:30 0.5.1 Sergix]
 	Added Issue template to repo (borrowed from "angular-translate").
 	Created ROADMAP.md file, which contains information about the needs to reach "v1.0.0" of JTerm.
