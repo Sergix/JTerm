@@ -59,7 +59,7 @@ This section provides a list of "foundational" elements that MUST be finished be
 - [ ] Internet file downloader
 
 ## Tracking
-To track this list, this list will be placed into a GitHub milestone, and will help keep track of all the necessities until "v1.0.0". A reference link will be provided here. All Issues and Pull Requests that are designated to complete a task on the milestone tracker should be marked as so.
+To track this list, it is placed in the [v1.0.0 Roadmap](https://github.com/Sergix/JTerm/milestone/1) milestone. All Issues and Pull Requests that are designated to complete a task on the milestone tracker should be marked as so.
 
 > JTerm 0.5.1  
 > `jterm-v0.5.1.jar`  
