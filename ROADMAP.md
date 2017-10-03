@@ -28,7 +28,7 @@ Due to the ever-growing list of ideas of what to implement, this document MAY sl
 ## Fundamentals
 This section provides a list of "foundational" elements that MUST be finished before anything else.
 
-- [ ] Create own package for command classes (main.java.jterm.commands)
+- [x] Create own package for command classes (CL #90)
 - [x] Exit/quit (PR #21) (CL #81)
 - [x] Echo (PR #4) (CL #37)
 - [x] Pause (PR #21) (CL #75)
