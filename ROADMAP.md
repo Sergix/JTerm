@@ -46,7 +46,7 @@ This section provides a list of "foundational" elements that MUST be finished be
 	- [ ] Deleting
 	- [x] Creating (PR #5) (CL #41)
 	- [ ] Renaming
-- [ ] Clear screen (I #33)
+- [x] Clear screen (I #33) (PR #44)
 - [ ] Full help information (I #40)
 	- [ ] Command help (`-h`/`help`)
 - [ ] Run external executable programs (I #32)
