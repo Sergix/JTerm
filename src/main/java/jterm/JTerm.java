@@ -141,7 +141,7 @@ public class JTerm
 		{
 			ArrayList<String> execFile = new ArrayList<String>();
 			execFile.add(original);
-			if ( Exec.Run(execFile) )
+			if (!Exec.Run(execFile))
 				System.out.println("Unknown Command \"" + original + "\"");
 
 		}

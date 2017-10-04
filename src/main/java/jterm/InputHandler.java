@@ -23,6 +23,8 @@ package main.java.jterm;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 
 public class InputHandler {
@@ -250,9 +252,19 @@ public class InputHandler {
 	*/
 	private static void FileAutocomplete(String currText) {
 
+		//System.out.println(currText);
+
 		boolean newList = false;
-		File currFolder = new File(JTerm.currentDirectory);
+		String[] splitPath = currText.split("/");
+		String path = "";
+		for (int i = 0; i < splitPath.length - 1; i++)
+			path += "/" + splitPath[i];
+		path += "/";
+
+		File currFolder = new File(JTerm.currentDirectory + path);
 		File[] files = currFolder.listFiles();
+
+		currText = splitPath[splitPath.length - 1];
 
 		// get all file names for comparison
 		if (fileNames.size() == 0) {
@@ -312,7 +324,6 @@ public class InputHandler {
 					for (File f : files) {
 						System.out.print(f.getName() + " \t");
 						fileNames.add(f.getName());
-
 					}
 
 					// Improve readability
@@ -335,19 +346,25 @@ public class InputHandler {
 
 					// Add file or dir name at end of list
 					fileNames.add(currFile);
-
 				}
-
 			}
 
-		} else if (!lockTab){
+		} else if (!lockTab) {
 
 			String fileName = fileNames.getFirst();
-			JTerm.command += fileName.substring(currText.length(), fileName.length()) + " ";
-			System.out.print(fileName.substring(currText.length(), fileName.length()) + " ");
+			String end = "";
+
+			if (Files.isDirectory(Paths.get(JTerm.currentDirectory + path + fileName)))
+				end = "/";
+			else if (Files.isRegularFile(Paths.get(JTerm.currentDirectory + path + fileName)))
+				end = " ";
+
+			//System.out.println("\n" + JTerm.currentDirectory + path + fileName);
+			JTerm.command += fileName.substring(currText.length(), fileName.length()) + end;
+			System.out.print(fileName.substring(currText.length(), fileName.length()) + end);
 
 			// Improve readability
-			System.out.println();
+			//System.out.println();
 
 			// Lock tab
 			lockTab = true;
