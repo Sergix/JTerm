@@ -26,10 +26,11 @@ import main.java.jterm.JTerm;
 public class Exec
 {
 	
-	/*
+	/**
 	* Exec() void
-	* 
-	* Constructor for calling Run() function.
+	* <p></p>
+    * Calls Run() method
+	* @param options List of files to run
 	*/
 	public Exec(ArrayList<String> options)
 	{
@@ -37,8 +38,14 @@ public class Exec
 		// Default to Run()
 		Run(options);
 	}
-	
 
+	/**
+	 * Run(ArrayList<String> options)
+	 * <p></p>
+	 * Runs a program and outputs program output to JTerm command line
+	 * @param options program(s) to execute
+	 * @return successful run or error during runtime
+	 */
 	public static boolean Run(ArrayList<String> options) {
 		try {
 			for (String s : options) {
@@ -58,7 +65,8 @@ public class Exec
 			}
 			return true; // ran programs successfully
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Program was not found or failed during runtime");
+			//e.printStackTrace();
 			return false; // error occurred
 		}
 	}
