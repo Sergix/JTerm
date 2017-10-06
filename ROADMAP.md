@@ -46,18 +46,17 @@ This section provides a list of "foundational" elements that MUST be finished be
 	- [ ] Deleting
 	- [x] Creating (PR #5) (CL #41)
 	- [ ] Renaming
-- [x] Clear screen (I #33) (PR #44) (CL #91)
+- [x] Clear screen (I #33) (PR #44)
 - [ ] Full help information (I #40)
 	- [ ] Command help (`-h`/`help`)
-- [x] Run external executable programs (I #32) (PR #46) (CL #91)
+- [ ] Run external executable programs (I #32)
 - [x] Tab completion (I #31) (PR #34) (CL #88)
 - [x] System process listing (PR #9) (CL #60)
 - [ ] Edit prompt text
-- [ ] Date/time printing (I #)
-- [ ] Environment Variables (I #7) (CL #74)
+- [ ] Date/time printing
+- [ ] Environment Variables (I #) (CL #74)
 - [ ] Create new terminal window instance
-- [ ] Internet file downloader (I #45)
-- [ ] Text editor
+- [ ] Internet file downloader
 
 ## Tracking
 To track this list, it is placed in the [v1.0.0 Roadmap](https://github.com/Sergix/JTerm/milestone/1) milestone. All Issues and Pull Requests that are designated to complete a task on the milestone tracker should be marked as so.
