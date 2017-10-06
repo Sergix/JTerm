@@ -7,21 +7,21 @@ These guidelines should be reviewed before contributing to the JTerm project.
 JTerm is a cross-platform terminal. The project is written in Java so that it can be run on virtually any computer. This document provides information such as project resources, guidelines, and other information needed to start programming for JTerm.
 
 ## Implementation
-This project is written in Java using [Eclipse IDE for Java EE](http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/neon3).
+This project can be developed through the IDE of your choosing. It has been tested and works in Eclipse, IntelliJ, and Visual Studio Code, and has batch files to run the build steps if all else fails.
 
 ## Code of Conduct
 The Code of Conduct for any contributions and posting information can be found [here](/CODE_OF_CONDUCT.md).
 
-## GitHub Branch
-The development branch of the JTerm project is the `dev` branch. _**Make sure to work off of this branch, not the master!**_ All commits on the dev branch are tracked in the 'Dev' PR. This is the PR that is merged into master.
+## Development Branch
+The development branch of the JTerm project is the `dev` branch. _**Make sure to work off of this branch, not the master!**_
 
 ## Builds
-Once you build a file from the source code to an archive (.jar), push it to the /build/jar folder, along with the associated changelog (see Changelog section), source code (see Source Code section), and documentation (see Documentation section.)
+Once you build a file from the source code to an archive (`.jar`), push it to the `/build/jar` folder, along with the associated changelog (see Changelog section), source code (see Source Code section), and documentation (see Documentation section.)
 
-The format of the archive's filename is as follows: "jterm-v(build version).jar"
+The format of the archive's filename is as follows: `jterm-v(build version).jar`
 
 ## Source Code
-Keep all updated and current source code in the /src directory, which should be updated with every build. Please review the [Source Code Style Guide](https://github.com/Sergix/JTerm/blob/master/docs/SourceStyleGuide.md) for more information.
+Keep all updated and current source code in the `/src` directory, which should be updated with every build. Please review the [Source Code Style Guide](https://github.com/Sergix/JTerm/blob/master/docs/SourceStyleGuide.md) for more information.
 
 Subfolders are formatted for packaging and for CI integration.
 
@@ -77,18 +77,12 @@ Of course, a real changelog would be more descriptive in its entries.
 Timestamps should be in 24-hour (aka military) time.
 
 ## Pull Requests
-Pull Requests, of course, MUST be opened on a new branch. The branch and PR name must be short but descriptive of its topic. A description must be made of the PR's purpose and a short description of the added code. Every PR must request to be reviewed by @Sergix or @NCSGeek. Travis CI is also used in this project (dashboard can be found [here](https://travis-ci.org/Sergix/JTerm)), and PR's are automatically checked by Travis CI to make sure they are ready to be deployed.  
+The PR name must be short but descriptive of its topic. A description must be made of the PR's purpose and a short description of the added code. Every PR must request to be reviewed by @Sergix or @NCSGeek. Travis CI is also used in this project (dashboard can be found [here](https://travis-ci.org/Sergix/JTerm)), and PR's are automatically checked by Travis CI to make sure they are ready to be deployed.  
 
 If the PR looks ready to go, it will be merged into the master branch. Documentation will then need to be written for the released code, whether it is a major, minor, or patch (view the "Styling" section above for more information.) This documentation will either be published to the `/docs/release` folder or the `/docs/patch` folder. It is requested that you write the documentation yourself (abiding by the guidelines above.)
 
 ## Issues
-If a new bug or issue is found, create a new Issue! The issue name must be short but descriptive, and must contain the following sections:
-1. "Description of Problem" - describe using words and/or pictures in full detail the problem you are experiencing.
-2. "System Information" - include the following:
-  - Version of Java you are running
-  - Operating System version
-  - Version of JTerm
-3. "Files and Code" - If you find where the issue is or believe it to be, put the filenames and/or code in this section.
+Follow the [Issue Template](/ISSUE_TEMPLATE.md) when submitting issues.
 
 > JTerm 0.5.1  
 > `jterm-v0.5.1.jar`  

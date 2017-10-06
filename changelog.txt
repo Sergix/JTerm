@@ -1,3 +1,16 @@
+(#91)[10/5/2017-21:05 0.5.1 Sergix]
+	Closed #32.
+		- Runs executables and JAR files
+		- Exec
+	Closed #33.
+		- Clear.java
+	Merged #44.
+		- #33
+	Updated ROADMAP.md.
+		- Added "Text editor"
+	Updated CONTRIBUTING.md.
+	Pushed updates to Git.
+
 (#90)[10/1/2017-17:05 0.5.1 Sergix]
 	Moved command classes into their own package (main.java.jterm.command).
 	Created imports for "main.java.jterm.JTerm" in multiple classes.
