@@ -1,18 +1,13 @@
 package main.java.jterm.command;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class Date {
 	
-	private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); // DateFormat sdf
     
 	public Date(ArrayList<String> options)
 	{
-
 		
 		for (String option: options)
 		{
@@ -25,8 +20,8 @@ public class Date {
 		 
 		}
 		
-		Calendar cal = Calendar.getInstance(); // Display the date
-        System.out.println("The current date is: " + sdf.format(cal.getTime()));
+		LocalDate today = LocalDate.now();
+		System.out.println("The Current Date is " + today + " (yyyy-mm-dd)");
 		
 	}
 	
