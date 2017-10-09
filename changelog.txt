@@ -1,3 +1,10 @@
+(#92)[10/9/2017-14:41 0.5.1 Sergix]
+	Closed #40.
+		- Manually merged changes due to conflicts.
+		- Adds command list.
+		- Thanks to @negste!
+	Pushed updates to Git.
+
 (#91)[10/5/2017-21:05 0.5.1 Sergix]
 	Closed #32.
 		- Runs executables and JAR files
