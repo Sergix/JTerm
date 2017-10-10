@@ -1,3 +1,26 @@
+<<<<<<< HEAD
+=======
+(#92)[10/9/2017-14:41 0.5.1 Sergix]
+	Closed #40.
+		- Manually merged changes due to conflicts.
+		- Adds command list.
+		- Thanks to @negste!
+	Pushed updates to Git.
+
+(#91)[10/5/2017-21:05 0.5.1 Sergix]
+	Closed #32.
+		- Runs executables and JAR files
+		- Exec
+	Closed #33.
+		- Clear.java
+	Merged #44.
+		- #33
+	Updated ROADMAP.md.
+		- Added "Text editor"
+	Updated CONTRIBUTING.md.
+	Pushed updates to Git.
+
+>>>>>>> a23ef97d7500b2f9321b9a1b5272a35616880c46
 (#90)[10/1/2017-17:05 0.5.1 Sergix]
 	Moved command classes into their own package (main.java.jterm.command).
 	Created imports for "main.java.jterm.JTerm" in multiple classes.

@@ -32,3 +32,6 @@ target/
 
 *.class
 target/classes/main/java/jterm/Client.class
+combined-batch.bat
+changelog.txt
+src/main/java/jterm/command/Help.java
