@@ -35,6 +35,9 @@ public class JTerm
 	// Global version variable
 	public static String version = "0.5.2";
 
+	// Prompt to show user where input is currently at
+	public static String prompt = "   \b\b\b>> ";
+
 	// Global directory variable (use "cd" command to change)
 	// Default value "./" is equal to the default directory set when the program starts
 	public static String currentDirectory = "./";
@@ -74,6 +77,8 @@ public class JTerm
 		* Wait until "exit" is typed in to exit
 		* Sends last char received from Input class to Process function
 		*/
+
+		System.out.print(prompt);
 		while (true)
 			InputHandler.Process();
 
@@ -141,7 +146,7 @@ public class JTerm
 		{
 			ArrayList<String> execFile = new ArrayList<String>();
 			execFile.add(original);
-			if ( Exec.Run(execFile) )
+			if (!Exec.Run(execFile))
 				System.out.println("Unknown Command \"" + original + "\"");
 
 		}
@@ -162,8 +167,7 @@ public class JTerm
 		}
 		catch (InvocationTargetException ite)
 		{
-			System.out.println(ite);
-
+			//System.out.println(ite);
 		}
 
 		return false;
