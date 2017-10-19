@@ -56,7 +56,7 @@ This section provides a list of "foundational" elements that MUST be finished be
 - [ ] Date/time printing
 - [ ] Environment Variables (I #) (CL #74)
 - [ ] Create new terminal window instance
-- [ ] Internet file downloader
+- [ ] Internet file downloader (I #45)
 
 ## Tracking
 To track this list, it is placed in the [v1.0.0 Roadmap](https://github.com/Sergix/JTerm/milestone/1) milestone. All Issues and Pull Requests that are designated to complete a task on the milestone tracker should be marked as so.
