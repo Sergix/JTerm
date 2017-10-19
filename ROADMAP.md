@@ -49,7 +49,7 @@ This section provides a list of "foundational" elements that MUST be finished be
 - [x] Clear screen (I #33) (PR #44)
 - [ ] Full help information (I #40)
 	- [ ] Command help (`-h`/`help`)
-- [ ] Run external executable programs (I #32)
+- [x] Run external executable programs (I #32) (PR #46) (CL #93)
 - [x] Tab completion (I #31) (PR #34) (CL #88)
 - [x] System process listing (PR #9) (CL #60)
 - [ ] Edit prompt text
