@@ -1,5 +1,10 @@
-<<<<<<< HEAD
-=======
+(#93)[10/19/2017-13:58 0.5.1 Sergix]
+	Merged #46.
+		- Closes #32.
+		- Adds the ability to run JAR's and native system executables.
+		- Thanks to @nanoandrew4!
+	Pushed updates to Git.
+
 (#92)[10/9/2017-14:41 0.5.1 Sergix]
 	Closed #40.
 		- Manually merged changes due to conflicts.
@@ -19,8 +24,7 @@
 		- Added "Text editor"
 	Updated CONTRIBUTING.md.
 	Pushed updates to Git.
-
->>>>>>> a23ef97d7500b2f9321b9a1b5272a35616880c46
+	
 (#90)[10/1/2017-17:05 0.5.1 Sergix]
 	Moved command classes into their own package (main.java.jterm.command).
 	Created imports for "main.java.jterm.JTerm" in multiple classes.
