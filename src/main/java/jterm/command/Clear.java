@@ -1,6 +1,6 @@
-package main.java.jterm.command;
+package jterm.command;
 
-import main.java.jterm.JTerm;
+import jterm.JTerm;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -15,7 +15,7 @@
 */
 
 // package = folder :P
-package main.java.jterm;
+package jterm;
 
 import org.apache.commons.lang3.SystemUtils;
 
@@ -27,7 +27,7 @@ import java.util.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 
-import main.java.jterm.command.Exec;
+import jterm.command.Exec;
 
 public class JTerm
 {

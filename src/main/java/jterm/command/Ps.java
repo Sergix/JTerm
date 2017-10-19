@@ -1,4 +1,4 @@
-package main.java.jterm.command;
+package jterm.command;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

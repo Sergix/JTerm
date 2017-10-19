@@ -16,7 +16,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm;
+package jterm;
 
 import java.io.*;
 import java.net.Socket;

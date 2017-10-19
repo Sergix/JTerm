@@ -19,7 +19,7 @@
 * https://github.com/Sergix/JTerm/issues/31
 */
 
-package main.java.jterm;
+package jterm;
 
 import java.io.File;
 import java.io.IOException;
