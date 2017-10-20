@@ -16,205 +16,90 @@
 
 package jterm.command;
 
-import java.io.*;
+import jterm.JTerm;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import jterm.JTerm;
+public class Exec {
+    /*
+    * Exec() void
+    *
+    * Constructor for calling run() function.
+    */
+    public Exec(ArrayList<String> options) {
+        run(options);
+    }
 
-public class Exec
-{
-	
-	/*
-	* Exec() void
-	* 
-	* Constructor for calling Run() function.
-	*/
-	public Exec(ArrayList<String> options)
-	{
+    /*
+    * run() boolean
+    *
+    * Runs the executable file.
+    *
+    * ArrayList<String> options - command options
+    *
+    * -h
+    * 	Prints help information
+    * file
+    * 	File to execute
+    */
+    public static boolean run(ArrayList<String> options) {
+        String file = "";
+        for (String option : options) {
+            if (option.equals("-h")) {
+                System.out.println("Command syntax:\n\texec [-h] file\n\nExecutes a batch script.");
+                return false;
+            } else {
+                file = option;
+            }
+        }
 
-		// Default to Run()
-		Run(options);
+        File script = new File(file);
+        if (!script.exists() || !script.isFile()) {
+            file = JTerm.currentDirectory + file;
+            script = new File(file);
+            if (!script.exists() || !script.isFile()) {
+                System.out.println("ERROR: File \"" + file + "\" either does not exist or is not an executable file.");
+                return true;
+            }
+        }
 
-	}
-	
-	/*
-	* Run() boolean
-	* 
-	* Runs the executable file.
-	* 
-	* ArrayList<String> options - command options
-	*
-	* -h
-	* 	Prints help information
-	* file
-	* 	File to execute
-	*/
-	public static boolean Run(ArrayList<String> options)
-	{	
-		
-		String file = "";
-	
-		for (String option: options) {
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\texec [-h] file\n\nExecutes a batch script.");
-				return false;
-				
-			}
-			else
-				file = option;
-			
-		}
-		
-		File script = new File(file);
-		if (!script.exists() || !script.isFile())
-		{
-			file = JTerm.currentDirectory + file;
-			script = new File(file);
-			if (!script.exists() || !script.isFile())
-			{
-				System.out.println("ERROR: File \"" + file + "\" either does not exist or is not an executable file.");
-				return true;
-				
-			}
-			
-		}
-		
-		try
-		{
-			BufferedReader reader = new BufferedReader(new FileReader(script));
-			try
-			{
-				String directive = reader.readLine();
-				if (directive != null)
-				do
-				{
-					// Store the command as an ArrayList
-					Scanner tokenizer = new Scanner(directive);
-					ArrayList<String> commandOptions = new ArrayList<String>();
-					while (tokenizer.hasNext())
-						options.add(tokenizer.next());
+        try (BufferedReader reader = new BufferedReader(new FileReader(script))) {
+            String directive = reader.readLine();
+            if (directive != null) {
+                do {
+                    // Store the command as an ArrayList
+                    ArrayList<String> commandOptions = new ArrayList<>();
+                    try (Scanner tokenizer = new Scanner(directive)) {
+                        while (tokenizer.hasNext()) {
+                            options.add(tokenizer.next());
+                        }
+                    }
+                    // Where the magic happens!
+                    JTerm.parse(JTerm.getAsString(commandOptions));
+                } while ((directive = reader.readLine()) != null);
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
 
-					tokenizer.close();
-
-					// Where the magic happens!
-					JTerm.Parse(JTerm.GetAsString(commandOptions));
-					
-				} while ((directive = reader.readLine()) != null);
-
-				reader.close();
-				
-			}
-			catch (IOException ioe)
-			{
-				System.out.println(ioe);
-				
-			}
-			
-		}
-		catch (FileNotFoundException ioe)
-		{
-			System.out.println(ioe);
-			
-		}
-		
-		return false;
-		
-	}
-
-	// public static void Parse(String directive)
-	// {
-		
-	// 	switch (command)
-	// 	{	
-	// 	case "pause":
-
-	// 		return;
-			
-	// 	default:
-	// 		// for (;;)
-	// 		// if ( vars.containsKey(options.get(0)) )
-	// 		// {
-	// 		// 	int value;
-	// 		// 	//
-	// 		// 	// TODO
-	// 		// 	// Create arithmetic operations that passes the value 
-	// 		// 	// to whatever it is needed for
-	// 		// 	//
-	// 		// 	if ( !options.get(1).equals("=") || !vars.containsKey(options.get(2)) || !vars.containsKey(options.get(4)) )
-	// 		// 		break;
-				
-	// 		// 	switch(options.get(3))
-	// 		// 	{
-	// 		// 	case "+":
-	// 		// 		value = Integer.parseInt( vars.get(options.get(2)) ) + Integer.parseInt( vars.get(options.get(4)) );
-	// 		// 		break;
-					
-	// 		// 	case "-":
-	// 		// 		value = Integer.parseInt( vars.get(options.get(2)) ) - Integer.parseInt( vars.get(options.get(4)) );
-	// 		// 		break;
-					
-	// 		// 	case "*":
-	// 		// 		value = Integer.parseInt( vars.get(options.get(2)) ) * Integer.parseInt( vars.get(options.get(4)) );
-	// 		// 		break;
-					
-	// 		// 	case "/":
-	// 		// 		value = Integer.parseInt( vars.get(options.get(2)) ) / Integer.parseInt( vars.get(options.get(4)) );
-	// 		// 		break;
-					
-	// 		// 	default:
-	// 		// 		return;
-					
-	// 		// 	}
-				
-	// 		// 	//vars.replace(options.get(0), String.valueOf(value));
-
-	// 		// 	return;
-				
-	// 		// }
-	// 		// else if ( windows.containsKey(options.get(0)) )
-	// 		// {
-	// 		// 	switch(options.get(1))
-	// 		// 	{
-	// 		// 	case "visible":
-	// 		// 		windows.get(options.get(0)).ToggleVisible();
-	// 		// 		break;
-					
-	// 		// 	case "title":
-	// 		// 		windows.get(options.get(0)).GetFrame().setTitle(GetRest(options, 2));
-	// 		// 		break;
-					
-	// 		// 	default:
-	// 		// 		break;
-					
-	// 		// 	}
-				
-	// 		// }
-	// 		// else
-
-	// 		return;
-			
-	// 	}
-		
-	// }
-	
-	public static String GetRest(ArrayList<String> options, int index)
-	{
-		
-		String output = "";
-		for (int i = index; i < options.size(); i++)
-		{
-			if (i != options.size() - 1)
-				output += options.get(i) + " ";
-			
-			else
-				output += options.get(i);
-			
-		}
-		
-		return output;
-		
-	}
-	
+    public static String getRest(ArrayList<String> options, int index) {
+        StringBuilder outputBuilder = new StringBuilder();
+        for (int i = index; i < options.size(); i++) {
+            if (i != options.size() - 1) {
+                outputBuilder
+                        .append(options.get(i))
+                        .append(" ");
+            } else {
+                outputBuilder.append(options.get(i));
+            }
+        }
+        return outputBuilder.toString();
+    }
 }
