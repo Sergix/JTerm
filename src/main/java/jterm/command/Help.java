@@ -15,34 +15,27 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jterm;
+package jterm.command;
+
+import jterm.JTerm;
 
 import java.util.ArrayList;
 
 public class Help {
-
-    /*
-	* Help() void
-	* 
-	* Prints help information.
-     */
     public Help(ArrayList<String> options) {
-
-        System.out.println("JTerm v" + JTerm.version);
-        System.out.println("Available commands:");
-        System.out.println("  client");
-        System.out.println("  dir");
-        System.out.println("  echo");
-        System.out.println("  exec");
-        System.out.println("  exit");
-        System.out.println("  files");
-        System.out.println("  pause");
-        System.out.println("  ping");
-        System.out.println("  ps");
-        System.out.println("  server");
-        System.out.println("  set");
-        System.out.println("  window");
-
+        System.out.println("JTerm v" + JTerm.VERSION + "\n"
+                + "Available commands:\n"
+                + "  client\n"
+                + "  dir\n"
+                + "  echo\n"
+                + "  exec\n"
+                + "  exit\n"
+                + "  files\n"
+                + "  pause\n"
+                + "  ping\n"
+                + "  ps\n"
+                + "  server\n"
+                + "  set\n"
+                + "  window\n");
     }
-
 }
