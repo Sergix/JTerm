@@ -15,9 +15,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package main.java.jterm;
+package main.java.jterm.command;
 
 import java.util.ArrayList;
+import main.java.jterm.JTerm;
 
 public class Help {
 
@@ -27,6 +28,17 @@ public class Help {
 	* Prints help information.
      */
     public Help(ArrayList<String> options) {
+
+        for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\thelp [-h]\n\nPrints help information.");
+				return;
+
+            }
+            
+        }
 
         System.out.println("JTerm v" + JTerm.version);
         System.out.println("Available commands:");

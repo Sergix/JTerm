@@ -33,6 +33,17 @@ public class Exit
 
 	public Exit(ArrayList<String> options) {
 
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\texit [-h]\n\nExits the program.");
+				return;
+
+			}
+
+		}
+
 		System.exit(0);
 		
 	}

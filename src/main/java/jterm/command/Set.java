@@ -37,6 +37,17 @@ public class Set
 	public Set(ArrayList<String> options)
 	{
 
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tset [-h] name = value\n\nSets an environment variable.");
+				return;
+
+			}
+
+		}
+
 		// Print the value of all current variables
 		if (options.size() == 0)
 		{

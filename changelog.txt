@@ -1,3 +1,10 @@
+(#94)[10/19/2017-21:10 0.6.0 Sergix]
+	Added licensing information headers to multiple files.
+	Added help information to Date, Clear, Exit, Help, Pause, Set, and Time.
+	Created dependency files for 0.6.0.
+	Created documentation.
+	Pushed updates to Git.
+
 (#93)[10/19/2017-13:58 0.5.1 Sergix]
 	Merged #46.
 		- Closes #32.
@@ -7,6 +14,7 @@
 
 (#92)[10/9/2017-14:41 0.5.1 Sergix]
 	Closed #40.
+		- Closed #50.
 		- Manually merged changes due to conflicts.
 		- Adds command list.
 		- Thanks to @negste!
@@ -32,10 +40,11 @@
 	Pushed updates to Git.
 
 (#89)[9/30/2017-13:30 0.5.1 Sergix]
-	Added Issue template to repo (borrowed from "angular-translate").
+	Added Issue template to repo (borrowed from "angular-translate"). (#43)
 	Created ROADMAP.md file, which contains information about the needs to reach "v1.0.0" of JTerm.
 	Created a GitHub milestone to track the ROADMAP.
 	Closed #35, 36, 37.
+		- Merged #38, #39.
 		- Fixed issues with running on Mac and other UNIX distros.
 	Pushed updates to Git.
 
@@ -62,6 +71,7 @@
 		- command: command string currently stored
 		- Removed Standby(); characters are read individually
 	Closed #31 (https://github.com/Sergix/JTerm/issues/31).
+		- Merged #34.
 	Command completion is soon to be implemented.
 	Pushed updates to Git.
 
