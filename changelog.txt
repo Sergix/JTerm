@@ -1,3 +1,80 @@
+(#94)[10/19/2017-21:10 0.6.0 Sergix]
+	Added licensing information headers to multiple files.
+	Added help information to Date, Clear, Exit, Help, Pause, Set, and Time.
+	Created dependency files for 0.6.0.
+	Created documentation.
+	Pushed updates to Git.
+
+(#93)[10/19/2017-13:58 0.5.1 Sergix]
+	Merged #46.
+		- Closes #32.
+		- Adds the ability to run JAR's and native system executables.
+		- Thanks to @nanoandrew4!
+	Pushed updates to Git.
+
+(#92)[10/9/2017-14:41 0.5.1 Sergix]
+	Closed #40.
+		- Closed #50.
+		- Manually merged changes due to conflicts.
+		- Adds command list.
+		- Thanks to @negste!
+	Pushed updates to Git.
+
+(#91)[10/5/2017-21:05 0.5.1 Sergix]
+	Closed #32.
+		- Runs executables and JAR files
+		- Exec
+	Closed #33.
+		- Clear.java
+	Merged #44.
+		- #33
+	Updated ROADMAP.md.
+		- Added "Text editor"
+	Updated CONTRIBUTING.md.
+	Pushed updates to Git.
+	
+(#90)[10/1/2017-17:05 0.5.1 Sergix]
+	Moved command classes into their own package (main.java.jterm.command).
+	Created imports for "main.java.jterm.JTerm" in multiple classes.
+	Made the JTerm class variables public.
+	Pushed updates to Git.
+
+(#89)[9/30/2017-13:30 0.5.1 Sergix]
+	Added Issue template to repo (borrowed from "angular-translate"). (#43)
+	Created ROADMAP.md file, which contains information about the needs to reach "v1.0.0" of JTerm.
+	Created a GitHub milestone to track the ROADMAP.
+	Closed #35, 36, 37.
+		- Merged #38, #39.
+		- Fixed issues with running on Mac and other UNIX distros.
+	Pushed updates to Git.
+
+(#88)[9/29/2017-17:28 0.5.1 Sergix]
+	Tab autocompletion has been implemented! Thanks to @nanoandrew4. Changes:
+		- Input.java: http://www.source-code.biz/snippets/java/RawConsoleInput
+		- InputHander.java
+			- fileNames: list of files for tab rotation and printing options
+			- command: stores JTerm.command while rotating through above list
+			- startComplete: length of original input to be completed
+			- ProcessUnix(): processes input provided by Input class (UNIX)
+			- ProcessWin(): processes input provided by Input class (Windows)
+			- FileAutocomplete(): displays all files that match the current input
+			- ClearLine(): clears a line in the console of size line.length()
+			- CommandAutocomplete() (WIP)
+		- Works with "exec"; completes filenames
+		- If there are multiple possible results, it prints out a list of possible completions, then the user can cycle through options by repeatedly hitting TAB.
+		- Applied formatting changes to Input.java and JTerm.java (@Sergix)
+	JTerm.java changes and additions for tab completion:
+		- os: gets the OS name
+		- isWin: boolean for if OS is Windows-based
+		- isUnix: boolean for if OS is UNIX-based
+		- capsOn: used for determining whether Caps Lock is pressed
+		- command: command string currently stored
+		- Removed Standby(); characters are read individually
+	Closed #31 (https://github.com/Sergix/JTerm/issues/31).
+		- Merged #34.
+	Command completion is soon to be implemented.
+	Pushed updates to Git.
+
 (#87)[9/20/2017-22:17 0.5.1 Sergix]
 	Added Waffle.io throughput graph to the README.
 	Pushed updates to Git.

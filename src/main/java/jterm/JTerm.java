@@ -1,6 +1,6 @@
 /*
 * JTerm - a cross-platform terminal
-* Copyright (C) 2017 Sergix, NCSGeek
+* Copyright (code) 2017 Sergix, NCSGeek
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -17,43 +17,54 @@
 // package = folder :P
 package main.java.jterm;
 
-import java.util.Scanner;
-import java.io.*;
-import java.util.ArrayList;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import org.apache.commons.lang3.SystemUtils;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+
+import main.java.jterm.command.Exec;
 
 public class JTerm
 {
-	
+
 	// Global version variable
-	static String version = "0.5.1";
-	
+	public static String version = "0.5.2";
+
+	// Prompt to show user where input is currently at
+	public static String prompt = "   \b\b\b>> ";
+
 	// Global directory variable (use "cd" command to change)
 	// Default value "./" is equal to the default directory set when the program starts
-	static String currentDirectory = "./";
-	
+	public static String currentDirectory = "./";
+	public static boolean isWin = SystemUtils.IS_OS_WINDOWS;
+	public static boolean isUnix = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
+
 	// User input variable used among all parts of the application
-	static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
-	
+	public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+
+	// Boolean to determine if caps lock is on, since input system does not distinguish between character cases
+	// Command string which the input system will aggregate characters to
+	public static boolean capsOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
+	public static String command = "";
+
 	/*
 	* main() void
-	* 
+	*
 	* Function called when the program loads. Sets
-	* up basic input streams and runs the command
-	* loop.
-	* 
-	* String[] args - arguments passed from the 
+	* up basic input streams.
+	*
+	*
+	* String[] args - arguments passed from the
 	* 				console
 	*/
 	public static void main(String[] args)
-	{  
-		
-		// Assign a default value of false to the quit variable
-		boolean quit = false;
-		
+	{
+
 		// Print licensing information
 		System.out.println(
 			"JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n" +
@@ -61,71 +72,21 @@ public class JTerm
 			"This is free software, and you are welcome to redistribute it\n" +
 			"under certain conditions.\n"
 		);
-		
-		// Infinite loop for getting input
-		do
-		{
-			// Set return value of the input function to "quit"
-			quit = JTerm.Standby();
-			
-		// As long as we are not quitting...
-		} while (!quit);
-		
-		// Close all open window instances
-		Window.CloseAll();
+
+		/*
+		* Wait until "exit" is typed in to exit
+		* Sends last char received from Input class to Process function
+		*/
+
+		System.out.print(prompt);
+		while (true)
+			InputHandler.Process();
 
 	}
-	
-	/*
-	* Standby() boolean
-	* 
-	* Awaits user command and then calls Parse() with the
-	* input.
-	*
-	* BufferedReader user_unput - Input stream loaded from the
-	* 							main() function
-	*/
-	public static boolean Standby()
-	{
 
-		// Print the current directory as the prompt (e.g. "./")
-		System.out.print(JTerm.currentDirectory + " ");
-		String command = "";
-		
-		// Attempt to read a line from the input
-		try
-		{
-			command = userInput.readLine();
-			
-			// If the command is a blank line, loop to next
-			if (command.equals(""))
-			{
-				return false;
-				
-			}
-			
-		}
-		catch (IOException ioe)
-		{
-			System.out.println(ioe);
-			
-			// Quit because of error
-			return true;
-			
-		}
-		
-		// Parse the command and quit if necessary
-		if (Parse(command))
-			return true;
-		
-		// Keep looping; we don't want to quit
-		return false;
-		
-	}
-	
 	/*
 	* Parse() boolean
-	* 
+	*
 	* Checks input and passes command options to the function
 	* that runs the requested command.
 	*
@@ -145,7 +106,7 @@ public class JTerm
 		String classChar = command.substring(0, 1);
 		classChar = classChar.toUpperCase();
 		command = command.substring(1);
-		command = "main.java.jterm." + classChar + command;
+		command = "main.java.jterm.command." + classChar + command;
 		optionsArray.remove(0);
 
 		// Get the method name
@@ -185,9 +146,9 @@ public class JTerm
 		{
 			ArrayList<String> execFile = new ArrayList<String>();
 			execFile.add(original);
-			if ( Exec.Run(execFile) )
+			if (!Exec.Run(execFile))
 				System.out.println("Unknown Command \"" + original + "\"");
-				
+
 		}
 		catch (InstantiationException ie)
 		{
@@ -206,8 +167,7 @@ public class JTerm
 		}
 		catch (InvocationTargetException ite)
 		{
-			System.out.println(ite);
-
+			//System.out.println(ite);
 		}
 
 		return false;
@@ -235,7 +195,7 @@ public class JTerm
 		// 	case "vol":
 		// 	case "wmic":
 		// 		break;
-		
+
 	}
 
 	/*
@@ -248,21 +208,21 @@ public class JTerm
 	*/
 	public static ArrayList<String> GetAsArray(String options)
 	{
-		
+
 		// Get each substring of the command entered
 		Scanner tokenizer = new Scanner(options);
-		
+
 		// options String array will be passed to command functions
 		ArrayList<String> array = new ArrayList<String>();
-		
+
 		// Get command arguments
 		while (tokenizer.hasNext())
 		{
 			String next = tokenizer.next();
 			array.add(next);
-			
+
 		}
-		
+
 		// Close the string stream
 		tokenizer.close();
 
@@ -280,7 +240,7 @@ public class JTerm
 	*/
 	public static String GetAsString(ArrayList<String> options)
 	{
-		
+
 		// Get each substring of the command entered
 		String string = "";
 
