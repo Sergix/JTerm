@@ -46,6 +46,6 @@ public class Echo {
                         .append(" ");
             }
         }
-        System.out.println(outputBuilder.subSequence(0, outputBuilder.length() - 1));
+        System.out.println(outputBuilder.substring(0, outputBuilder.length() - 1));
     }
 }
