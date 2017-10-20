@@ -20,21 +20,8 @@ package jterm.command;
 
 import java.util.ArrayList;
 
-public class Exit
-{
-	
-	/*
-	* Exit() void
-	* 
-	* Exits the application.
-	*
-	* ArrayList<String> options - command options
-	*/
-
-	public Exit(ArrayList<String> options) {
-
-		System.exit(0);
-		
-	}
-	
+public class Exit {
+    public Exit(ArrayList<String> options) {
+        System.exit(0);
+    }
 }
