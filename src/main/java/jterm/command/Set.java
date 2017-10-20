@@ -16,7 +16,6 @@
 
 package jterm.command;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.*;
 
 public class Set {
@@ -58,7 +57,7 @@ public class Set {
 
             // Put the window ID into the vars hashtable
             // associated with its key
-            vars.put(key, Integer.toString(newWindow.GetId()));
+            vars.put(key, Integer.toString(newWindow.getId()));
 
             // Add the window to the global list
             Window.windows.add(newWindow);
