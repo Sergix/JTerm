@@ -46,7 +46,7 @@ public class Ping {
             }
         }
 
-        // FIXME: if no options set, host = "Process" !!!
+        // FIXME: if no options set, host = "process" !!!
         try (Socket socket = new Socket()) {
             System.out.println("Pinging " + host + "...");
             socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 10000);
