@@ -24,24 +24,22 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class JTerm {
-    // Global version variable
-    // TODO: maybe better to get the version from some property file?
-    // like: version = Utils.getProperty("project.version");
-    public static final String version = "0.5.2";
+    // Global VERSION variable
+    // TODO: maybe better to get the VERSION from some property file?
+    // like: VERSION = Utils.getProperty("project.VERSION");
+    public static final String VERSION = "0.5.2";
 
     // Global directory variable (use "cd" command to change)
     // Default value "./" is equal to the default directory set when the program starts
     public static String currentDirectory = "./";
-    public static final boolean isWin = SystemUtils.IS_OS_WINDOWS;
-    public static final boolean isUnix = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
+    public static final boolean IS_WIN = SystemUtils.IS_OS_WINDOWS;
+    public static final boolean IS_UNIX = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
 
     // User input variable used among all parts of the application
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
@@ -52,17 +50,12 @@ public class JTerm {
     public static String command = "";
 
     public static void main(String[] args) {
-        // Print licensing information
         System.out.println(
                 "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
                         + "This program comes with ABSOLUTELY NO WARRANTY.\n"
                         + "This is free software, and you are welcome to redistribute it\n"
                         + "under certain conditions.\n");
 
-		/*
-        * Wait until "exit" is typed in to exit
-		* Sends last char received from Input class to Process function
-		*/
         while (true) {
             InputHandler.Process();
         }
@@ -80,43 +73,32 @@ public class JTerm {
         ArrayList<String> optionsArray = getAsArray(options);
 
         // Default to process/help command if function is not found
-        String method = "Process";
+        String methodName = "process";
 
         // Get the first string in the options array, which is the command,
         // and capitalize the first letter of the command
-        String original = optionsArray.get(0).toLowerCase(), command = original;
-        String classChar = command.substring(0, 1);
-        classChar = classChar.toUpperCase();
+        String original = optionsArray.get(0).toLowerCase();
+        String command = original;
+        String classChar = command.substring(0, 1).toUpperCase();
         command = command.substring(1);
         command = "jterm.command." + classChar + command;
         optionsArray.remove(0);
 
         // Get the method name
         if (optionsArray.toArray().length >= 1) {
-            method = optionsArray.get(0);
+            methodName = optionsArray.get(0);
         } else {
-            optionsArray.add(method);
+            optionsArray.add(methodName);
         }
 
-        classChar = method.substring(0, 1);
-        classChar = classChar.toUpperCase();
-        method = method.substring(1);
-        method = classChar + method;
-
+        optionsArray.remove(0);
         try {
-            // Get the class of the command
-            Class<?> clazz = Class.forName(command);
-            Constructor<?> constructor = clazz.getConstructor(ArrayList.class);
-            Object obj = constructor.newInstance(optionsArray);
-
-            ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(obj.getClass().getDeclaredMethods()));
-
-            // Invoke the correct method of the class to run, but only if it contains that method
-            Method m = obj.getClass().getMethod(method, ArrayList.class);
-            if (methods.contains(m)) {
-                optionsArray.remove(0);
-                m.invoke(options.getClass(), optionsArray);
-            }
+            Object instance = Class.forName(command)
+                    .getConstructor(ArrayList.class)
+                    .newInstance(optionsArray);
+            Method method = instance.getClass()
+                    .getMethod(methodName, ArrayList.class);
+            method.invoke(options.getClass(), optionsArray);
         } catch (ClassNotFoundException e) {
             ArrayList<String> execFile = new ArrayList<>();
             execFile.add(original);
