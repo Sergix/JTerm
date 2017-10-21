@@ -33,7 +33,7 @@ public class JTerm
 {
 
 	// Global version variable
-	public static String version = "0.5.2";
+	public static String version = "0.6.1";
 
 	// Prompt to show user where input is currently at
 	public static String prompt = "   \b\b\b>> ";

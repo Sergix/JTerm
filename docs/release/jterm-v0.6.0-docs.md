@@ -13,7 +13,7 @@ VI. Active Command List
 ```
 
 ## Overview
-This document provides information on changes included in release version "0.5.0". The JTerm project is still far from its official release, but the project has had enough changes to include it as a new pre-release version. The Changelog section records changes made from the previous patch (0.5.1). This document was written by @Sergix and reviewed by @NCSGeek.
+This document provides information on changes included in release version "0.6.0". The JTerm project is still far from its official release, but the project has had enough changes to include it as a new pre-release version. The Changelog section records changes made from the previous patch (0.5.1). This document was written by @Sergix and reviewed by @NCSGeek.
 
 ## Build Targets
 ```
