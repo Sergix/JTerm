@@ -31,6 +31,11 @@ public class Set {
     * ArrayList<String> options - command options
     */
     public Set(ArrayList<String> options) {
+        if (options.contains("-h")) {
+            System.out.println("Command syntax:\n\tset [-h] name = value\n\nSets an environment variable.");
+            return;
+        }
+
         if (options.size() == 0) {
             for (Map.Entry<String, String> entry : vars.entrySet()) {
                 System.out.println(entry.getKey() + "=" + entry.getValue());
@@ -61,7 +66,6 @@ public class Set {
 
             // Add the window to the global list
             Window.windows.add(newWindow);
-
             return;
         }
 

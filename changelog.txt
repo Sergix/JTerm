@@ -1,7 +1,30 @@
-<<<<<<< HEAD
-=======
+(#95)[10/20/2017-21:28 0.6.1 Sergix]
+	Closed #56.
+		- Accidentally merged the non-updated Exec class.
+	Fixed typo in jterm-v0.6.0-docs.md.
+	Fixed "JTerm.version".
+	Created missing source build for version 0.6.0.
+	Created dependency files for 0.6.1.
+	Created documentation.
+	Pushed updates to Git.
+
+(#94)[10/19/2017-21:10 0.6.0 Sergix]
+	Added licensing information headers to multiple files.
+	Added help information to Date, Clear, Exit, Help, Pause, Set, and Time.
+	Created dependency files for 0.6.0.
+	Created documentation.
+	Pushed updates to Git.
+
+(#93)[10/19/2017-13:58 0.5.1 Sergix]
+	Merged #46.
+		- Closes #32.
+		- Adds the ability to run JAR's and native system executables.
+		- Thanks to @nanoandrew4!
+	Pushed updates to Git.
+
 (#92)[10/9/2017-14:41 0.5.1 Sergix]
 	Closed #40.
+		- Closed #50.
 		- Manually merged changes due to conflicts.
 		- Adds command list.
 		- Thanks to @negste!
@@ -19,8 +42,7 @@
 		- Added "Text editor"
 	Updated CONTRIBUTING.md.
 	Pushed updates to Git.
-
->>>>>>> a23ef97d7500b2f9321b9a1b5272a35616880c46
+	
 (#90)[10/1/2017-17:05 0.5.1 Sergix]
 	Moved command classes into their own package (main.java.jterm.command).
 	Created imports for "main.java.jterm.JTerm" in multiple classes.
@@ -28,10 +50,11 @@
 	Pushed updates to Git.
 
 (#89)[9/30/2017-13:30 0.5.1 Sergix]
-	Added Issue template to repo (borrowed from "angular-translate").
+	Added Issue template to repo (borrowed from "angular-translate"). (#43)
 	Created ROADMAP.md file, which contains information about the needs to reach "v1.0.0" of JTerm.
 	Created a GitHub milestone to track the ROADMAP.
 	Closed #35, 36, 37.
+		- Merged #38, #39.
 		- Fixed issues with running on Mac and other UNIX distros.
 	Pushed updates to Git.
 
@@ -58,6 +81,7 @@
 		- command: command string currently stored
 		- Removed Standby(); characters are read individually
 	Closed #31 (https://github.com/Sergix/JTerm/issues/31).
+		- Merged #34.
 	Command completion is soon to be implemented.
 	Pushed updates to Git.
 

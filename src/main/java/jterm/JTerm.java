@@ -32,7 +32,8 @@ public class JTerm {
     // Global VERSION variable
     // TODO: maybe better to get the VERSION from some property file?
     // like: VERSION = Utils.getProperty("project.VERSION");
-    public static final String VERSION = "0.5.2";
+    public static final String VERSION = "0.6.1";
+	public static String prompt = "   \b\b\b>> ";
 
     // Global directory variable (use "cd" command to change)
     // Default value "./" is equal to the default directory set when the program starts
@@ -55,8 +56,10 @@ public class JTerm {
                         + "This is free software, and you are welcome to redistribute it\n"
                         + "under certain conditions.\n");
 
-        while (true) {
-            InputHandler.Process();
+
+		System.out.println(prompt);
+		while (true) {
+            InputHandler.process();
         }
     }
 

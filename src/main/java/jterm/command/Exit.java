@@ -22,6 +22,10 @@ import java.util.ArrayList;
 
 public class Exit {
     public Exit(ArrayList<String> options) {
+    	if (options.contains("-h")) {
+			System.out.println("Command syntax:\n\texit [-h]\n\nExits the program.");
+			return;
+		}
         System.exit(0);
     }
 }

@@ -1,0 +1,53 @@
+Changelog entry:
+
+(#94)[10/19/2017-21:10 0.6.0 Sergix]
+	Added licensing information headers to multiple files.
+	Added help information to Date, Clear, Exit, Help, Pause, Set, and Time.
+	Created dependency files for 0.6.0.
+	Created documentation.
+	Pushed updates to Git.
+
+Full changes include:
+	- Removed the Process() function from Window and Exec
+	- Fixed issue where if "dir" or "files" was entered it crashed the application due to an out of bounds exception
+	- Added Waffle.io throughput graph to the README
+	- JTerm.java changes and additions for tab completion:
+		- `os`: gets the OS name
+		- `isWin`: boolean for if OS is Windows-based
+		- `isUnix`: boolean for if OS is UNIX-based
+		- `capsOn`: used for determining whether Caps Lock is pressed
+		- `command`: command string currently stored
+		- Removed `Standby()`; characters are read individually
+	- [Input.java](http://www.source-code.biz/snippets/java/RawConsoleInput)
+	- InputHander.java
+		- `fileNames`: list of files for tab rotation and printing options
+		- `command`: stores JTerm.command while rotating through above list
+		- `startComplete`: length of original input to be completed
+		- `ProcessUnix()`: processes input provided by Input class (UNIX)
+		- `ProcessWin()`: processes input provided by Input class (Windows)
+		- `FileAutocomplete()`: displays all files that match the current input
+		- `ClearLine()`: clears a line in the console of size line.length()
+		- Works with `exec`; completes filenames
+		- If there are multiple possible results, it prints out a list of possible completions, then the user can cycle through options by repeatedly hitting TAB.
+	- Added Issue template to repo (borrowed from "angular-translate")
+	- Created ROADMAP.md file, which contains information about the needs to reach "v1.0.0" of JTerm
+	- Created a GitHub milestone to track the ROADMAP ([v1.0.0 Roadmap](https://github.com/Sergix/JTerm/issues?q=is%3Aopen+is%3Aissue+milestone%3A%22v1.0.0+Roadmap%22))
+	- Fixed issues with running on Mac and other UNIX distros
+	- Moved command classes into their own package (main.java.jterm.command)
+	- Made the JTerm class variables public
+	- Added help information to Date, Clear, Exit, Help, Pause, Set, and Time
+	- Closed [#31](https://github.com/Sergix/JTerm/issues/31)
+	- Closed [#32](https://github.com/Sergix/JTerm/issues/32)
+	- Closed [#33](https://github.com/Sergix/JTerm/issues/33)
+	- Closed [#35](https://github.com/Sergix/JTerm/issues/35)
+	- Closed [#36](https://github.com/Sergix/JTerm/issues/36)
+	- Closed [#37](https://github.com/Sergix/JTerm/issues/37)
+	- Closed [#40](https://github.com/Sergix/JTerm/issues/40)
+	- Merged [#34](https://github.com/Sergix/JTerm/pull/34)
+	- Merged [#38](https://github.com/Sergix/JTerm/pull/38)
+	- Merged [#39](https://github.com/Sergix/JTerm/pull/39)
+	- Merged [#43](https://github.com/Sergix/JTerm/pull/43)
+	- Merged [#44](https://github.com/Sergix/JTerm/pull/44)
+	- Merged [#46](https://github.com/Sergix/JTerm/pull/46)
+	- Closed [#50](https://github.com/Sergix/JTerm/pull/50)
+	- Minor bug fixes

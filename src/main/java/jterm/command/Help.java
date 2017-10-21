@@ -23,6 +23,10 @@ import java.util.ArrayList;
 
 public class Help {
     public Help(ArrayList<String> options) {
+        if (options.contains("-h")) {
+            System.out.println("Command syntax:\n\thelp [-h]\n\nPrints help information.");
+            return;
+        }
         System.out.println("JTerm v" + JTerm.VERSION + "\n"
                 + "Available commands:\n"
                 + "  client\n"

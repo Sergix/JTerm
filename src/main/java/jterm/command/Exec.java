@@ -16,77 +16,55 @@
 
 package jterm.command;
 
-import jterm.JTerm;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Exec {
-    /*
-    * Exec() void
-    *
-    * Constructor for calling run() function.
-    */
+    /**
+     * Exec() void
+     * <p></p>
+     * Calls run() method
+     *
+     * @param options List of files to run
+     */
     public Exec(ArrayList<String> options) {
         run(options);
     }
 
-    /*
-    * run() boolean
-    *
-    * Runs the executable file.
-    *
-    * ArrayList<String> options - command options
-    *
-    * -h
-    * 	Prints help information
-    * file
-    * 	File to execute
-    */
+    /**
+     * run(ArrayList<String> options)
+     * <p></p>
+     * Runs a program and outputs program output to JTerm command line
+     *
+     * @param options program(s) to execute
+     * @return successful run or error during runtime
+     */
     public static boolean run(ArrayList<String> options) {
-        String file = "";
-        for (String option : options) {
-            if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\texec [-h] file\n\nExecutes a batch script.");
-                return false;
-            } else {
-                file = option;
-            }
-        }
-
-        File script = new File(file);
-        if (!script.exists() || !script.isFile()) {
-            file = JTerm.currentDirectory + file;
-            script = new File(file);
-            if (!script.exists() || !script.isFile()) {
-                System.out.println("ERROR: File \"" + file + "\" either does not exist or is not an executable file.");
-                return true;
-            }
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(script))) {
-            String directive = reader.readLine();
-            if (directive != null) {
-                do {
-                    // Store the command as an ArrayList
-                    ArrayList<String> commandOptions = new ArrayList<>();
-                    try (Scanner tokenizer = new Scanner(directive)) {
-                        while (tokenizer.hasNext()) {
-                            options.add(tokenizer.next());
-                        }
+        try {
+            for (String s : options) {
+                if (s.endsWith("jar")) { // runs jar files, takes no options
+                    Process p = Runtime.getRuntime().exec("java -jar " + s);
+                    Scanner in = new Scanner(p.getInputStream());
+                    String nextLine;
+                    while (p.isAlive() && (nextLine = in.nextLine()) != null) {
+                        System.out.println(nextLine);
                     }
-                    // Where the magic happens!
-                    JTerm.parse(JTerm.getAsString(commandOptions));
-                } while ((directive = reader.readLine()) != null);
+                } else { // pass program name to system, it will open it (for executables)
+                    Process p = Runtime.getRuntime().exec(s);
+                    Scanner in = new Scanner(p.getInputStream());
+                    String nextLine;
+                    while (p.isAlive() && (nextLine = in.nextLine()) != null) // print program output
+                    {
+                        System.out.println(nextLine);
+                    }
+                }
             }
+            return true;
         } catch (IOException e) {
-            System.out.println(e);
+            System.out.println("Program was not found or failed during runtime");
+            return false;
         }
-        return false;
     }
 
     public static String getRest(ArrayList<String> options, int index) {
