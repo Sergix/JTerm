@@ -1,3 +1,13 @@
+(#95)[10/20/2017-21:28 0.6.1 Sergix]
+	Closed #56.
+		- Accidentally merged the non-updated Exec class.
+	Fixed typo in jterm-v0.6.0-docs.md.
+	Fixed "JTerm.version".
+	Created missing source build for version 0.6.0.
+	Created dependency files for 0.6.1.
+	Created documentation.
+	Pushed updates to Git.
+
 (#94)[10/19/2017-21:10 0.6.0 Sergix]
 	Added licensing information headers to multiple files.
 	Added help information to Date, Clear, Exit, Help, Pause, Set, and Time.
