@@ -25,7 +25,6 @@ import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -91,18 +90,18 @@ public class JTerm {
             optionsArray.add(methodName);
         }
 
-        optionsArray.remove(0);
         try {
             Object instance = Class.forName(command)
                     .getConstructor(ArrayList.class)
                     .newInstance(optionsArray);
-            Method method = instance.getClass()
-                    .getMethod(methodName, ArrayList.class);
-            method.invoke(options.getClass(), optionsArray);
+            optionsArray.remove(0);
+            instance.getClass()
+                    .getMethod(methodName, ArrayList.class)
+                    .invoke(options.getClass(), optionsArray);
         } catch (ClassNotFoundException e) {
             ArrayList<String> execFile = new ArrayList<>();
             execFile.add(original);
-            if (Exec.Run(execFile)) {
+            if (Exec.run(execFile)) {
                 System.out.println("Unknown Command \"" + original + "\"");
             }
         } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
