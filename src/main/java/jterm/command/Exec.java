@@ -54,8 +54,7 @@ public class Exec {
                     Process p = Runtime.getRuntime().exec(s);
                     Scanner in = new Scanner(p.getInputStream());
                     String nextLine;
-                    while (p.isAlive() && (nextLine = in.nextLine()) != null) // print program output
-                    {
+                    while (p.isAlive() && (nextLine = in.nextLine()) != null) {
                         System.out.println(nextLine);
                     }
                 }
