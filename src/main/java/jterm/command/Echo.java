@@ -16,46 +16,36 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm.command;
+package jterm.command;
 
 import java.util.ArrayList;
 
-public class Echo
-{
-	
-	/*
-	* Echo() void
-	* 
-	* Echo the input to the terminal.
-	*
-	* ArrayList<String> options - command options
-	*
-	* -h
-	* 	Prints help information
-	* input
-	* 	Text to output
-	*/
-	public Echo(ArrayList<String> options)
-	{
-
-		String output = "";
-		
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.");
-				return;
-			  
-			}
-			else
-				output += option + " ";
-		 
-		}
-		
-		output = output.trim();
-		System.out.println(output);
-
-	}
-	
+public class Echo {
+    /*
+    * Echo() void
+    *
+    * Echo the input to the terminal.
+    *
+    * ArrayList<String> options - command options
+    *
+    * -h
+    * 	Prints help information
+    * input
+    * 	Text to output
+    */
+    // FIXME: echo is not working correctly, for example: > echo $JAVA_HOME
+    public Echo(ArrayList<String> options) {
+        StringBuilder outputBuilder = new StringBuilder();
+        for (String option : options) {
+            if (option.equals("-h")) {
+                System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.");
+                return;
+            } else {
+                outputBuilder
+                        .append(option)
+                        .append(" ");
+            }
+        }
+        System.out.println(outputBuilder.substring(0, outputBuilder.length() - 1));
+    }
 }

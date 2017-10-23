@@ -1,0 +1,19 @@
+Changelog entry:
+
+(#95)[10/20/2017-21:28 0.6.1 Sergix]
+	Closed #56.
+		- Accidentally merged the non-updated Exec class.
+	Fixed typo in jterm-v0.6.0-docs.md.
+	Created missing source build for version 0.6.0.
+	Created dependency files for 0.6.1.
+	Created documentation.
+	Pushed updates to Git.
+
+Full changes include:
+	- Fixed incorrect merged version of "Exec.java" in "v0.6.0"
+		- "v0.6.0" is now DEPRECATED
+	- Fixed typo in "docs/release/jterm-v0.6.0-docs.md"
+	- Fixed "JTerm.version", was displaying "0.5.2"
+	- Created missing source build for version "0.6.0", "build/src/jterm-src-v0.6.0.zip"
+	- Closed #56
+	- Minor fixes

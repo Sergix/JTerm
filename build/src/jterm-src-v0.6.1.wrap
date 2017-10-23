@@ -1,0 +1,2898 @@
+###% jterm-src-v0.6.1.wrap	wrapper-linux-v1.1
+
+###* Clear.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (code) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm.command;
+
+import main.java.jterm.JTerm;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+/**
+ * Class for the "Clear" command
+ *
+ * Clears the terminal display by removing all lines
+ */
+public class Clear
+{
+
+    final private String ANSI_CLS = "\u001b[2J";
+    final private String ANSI_HOME = "\u001b[H";
+
+    public Clear(ArrayList<String> options)
+    {
+
+        for (String option : options)
+        {
+          if (option.equals("-h"))
+          {
+              System.out.println("Command syntax:\n\tclear [-h]\n\nClears all lines in the terminal display.");
+            
+          }
+
+        }
+
+        // If '-h' was not used - Clear the Screen
+        if (!options.contains("-h"))
+        {
+            if (JTerm.isUnix)
+            {
+                // Use escape sequences to clear the screen for Unix OS
+                System.out.print(ANSI_CLS + ANSI_HOME);
+                System.out.flush();
+            }
+            else if (JTerm.isWin)
+            {
+                // Invoke the command line interpreter's own 'clear' command for Windows OS
+                try
+                {
+                  new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                }
+                catch (IOException | InterruptedException e)
+                {
+                  System.out.println(e);
+                }
+            }
+        }
+    }
+}
+
+###* Client.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm;
+
+import java.io.*;
+import java.net.Socket;
+import java.util.ArrayList;
+
+public class Client implements Runnable
+{
+
+	private static BufferedReader input;
+	
+	public void run()
+	{
+		
+		while (true)
+		{
+			try
+			{
+				String output = Client.input.readLine();
+				if (output != null)
+					System.out.println(output);
+				
+			}
+			catch (IOException ioe)
+			{
+				return;
+				
+			}
+			
+		}
+		
+	}
+	
+	public static void Connect(ArrayList<String> options)
+	{
+		
+		String address = "0.0.0.0";
+		String portInput = "80";
+		boolean next = false;
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tconnect [-h] [-p port] address\n\nConnect to the specified IP address using TCP/IP. Default address is \"0.0.0.0\". Default port is 80.");
+				return;
+				
+			}
+			else if (option.equals("-p"))
+				next = true;
+
+			else if (next)
+			{
+				portInput = option;
+				next = false;
+				
+			}
+			else
+				address = option;
+			
+		}
+		
+		int i = 0;
+        int port = 0;
+
+        while( i < portInput.length())  
+        {
+            port *= 10;
+            port += portInput.charAt(i++) - '0';
+            
+        }
+
+		try
+		{
+			System.out.println("Connecting to " + address + ":" + port);
+			
+			Socket connection 					= new Socket(address, port);
+			InputStream input 					= connection.getInputStream();
+			OutputStream output 				= connection.getOutputStream();
+			BufferedReader bufferedSocketInput 	= new BufferedReader(new InputStreamReader(input));
+			
+			Client.input 						= bufferedSocketInput;
+			
+			Client client 						= new Client();
+			Thread readThread 					= new Thread(client);
+			readThread.start();
+			
+			System.out.println("Connected to server. Enter a blank line to quit. Reading for input...");
+			
+			while (true)
+			{
+				BufferedReader bufferedSocketOutput = new BufferedReader(new InputStreamReader(System.in), 1);
+				String line = bufferedSocketOutput.readLine();
+				
+				if (line.equals(""))
+					break;
+				
+				output.write(line.getBytes());
+				
+				output.close();
+				bufferedSocketOutput.close();
+				
+			}
+
+			connection.close();
+			
+		}
+		catch (IOException ioe)
+		{
+			System.out.println("Connection severed.");
+			
+		}
+		
+	}
+	
+}
+
+###* command
+
+
+###* Date.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (code) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm.command;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+public class Date {
+	
+	private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); // DateFormat sdf
+    
+	public Date(ArrayList<String> options)
+	{
+
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tdate [-h]\n\nPrints the system date."); // Options
+				return;
+			  
+			}
+		 
+		}
+		
+		Calendar cal = Calendar.getInstance(); // Display the date
+        System.out.println("The current date is: " + sdf.format(cal.getTime()));
+		
+	}
+	
+}
+
+###* Dir.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm.command;
+
+import java.io.*;
+import java.util.ArrayList;
+
+import main.java.jterm.JTerm;
+
+public class Dir
+{
+
+	/*
+	* Dir() void
+	* 
+	* Constructor for calling methods.
+	*
+	* ArrayList<String> options - command options
+	*/
+	public Dir(ArrayList<String> options) { }
+
+	/*
+	* Process() void
+	* 
+	* Display help information.
+	* 
+	* ArrayList<String> options - command options
+	*/
+	public static void Process(ArrayList<String> options)
+	{
+
+		// Display help information
+		System.out.println("Directory Commands\n\nls\tcd\nchdir\tpwd\nmd");
+
+	}
+
+	/*
+	* Ls() void (@pmorgan3)
+	* 
+	* Prints the contents of a specified directory
+	* to a file.
+	*
+	* ArrayList<String> options - command options
+	* 
+	* -f
+	* 	Changes the output format to only file
+	* 	and directory names
+	* -h
+	* 	Prints help information
+	* directory [...]
+	* 	Prints this directory rather than the
+	* 	current working directory.
+	*
+	* Examples
+	*
+	*   Ls(options);
+	*     => [Contents of "dir/"]
+	*     =>     F RW 	myFile.txt		2 KB
+	*/
+	public static void Ls(ArrayList<String> options) throws NullPointerException
+	{
+
+		System.out.println(options);
+
+		String path = JTerm.currentDirectory;
+		boolean printFull = true;
+		
+		for (String option: options)
+		{
+			if (option.equals("-f"))
+				printFull = false;
+
+			else if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tdir [-f] [-h] [directory]\n\nPrints a detailed table of the current working directory's subfolders and files.");
+				return;
+				
+			}
+			else
+				path = option;
+			
+		}
+		
+		File dir = new File(path);
+		File[] files = dir.listFiles();
+		
+		/*
+		* Format of output:
+		* [FD] [RWHE] [filename] [size in KB]
+		* 
+		* Prefix definitions:
+		* 	F -- File
+		* 	D -- Directory
+		* 	R -- Readable
+		* 	W -- Writable
+		* 	H -- Hidden
+		* 
+		* Example:
+		* 	F RW	myfile.txt	   5 KB
+		*/
+		System.out.println("[Contents of \"" + path + "\"]");
+		for (File file: files)
+		{
+			if (printFull)
+				System.out.println("\t" + (file.isFile() ? "F " : "D ") + (file.canRead() ? "R" : "") + (file.canWrite() ? "W" : "") + (file.isHidden() ? "H" : "") + "\t" + file.getName() + (file.getName().length() < 8 ? "\t\t\t" : (file.getName().length() > 15 ? "\t" : "\t\t")) + (file.length() / 1024) + " KB");
+
+			else
+				System.out.println("\t" + file.getName());
+			
+		}
+		
+	}
+	
+	
+	/*
+	* Cd() void
+	* 
+	* Changes the working directory to the specified
+	* input.
+	*
+	* ArrayList<String> options - command options
+	*
+	* -h
+	* 	Prints help information
+	* directory [...]
+	* 	Path to change the working directory to.
+	*/
+	public static void Cd(ArrayList<String> options)
+	{
+		
+		String newDirectory = "";
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.");
+				return;
+				
+			}
+			else
+				newDirectory += option + " ";
+			
+		}
+		
+		newDirectory = newDirectory.trim();
+		
+		if (newDirectory.startsWith("\"") && newDirectory.endsWith("\""))
+		{
+			newDirectory = newDirectory.substring(1, newDirectory.length());
+			newDirectory = newDirectory.substring(0, newDirectory.length() - 1);
+			
+		}
+		
+		if (newDirectory.equals(""))
+		{
+			System.out.println("Path not specified. Type \"cd -h\" for more information.");
+			return;
+			
+		}
+		
+		// Test if the input exists and if it is a directory
+		File dir = new File(newDirectory);
+		File newDir = new File(JTerm.currentDirectory + newDirectory);
+		
+		if (newDirectory.equals("/"))
+			newDirectory = "/";
+		
+		else if (newDir.exists() && newDir.isDirectory())
+			newDirectory = JTerm.currentDirectory + newDirectory;
+
+		else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory()))
+		{
+			System.out.println("ERROR: Directory \"" + newDirectory + "\" is either does not exist or is not a valid directory.");
+			return;
+			
+		}
+		
+		if (!newDirectory.endsWith("/"))
+			newDirectory += "/";
+		
+		// It does exist, and it is a directory, so just change the global working directory variable to the input
+		JTerm.currentDirectory = newDirectory;
+		
+	
+	}
+
+	/*
+	* Chdir() void
+	* 
+	* Identical to 'cd'; calls Cd().
+	*
+	* ArrayList<String> options - command options
+	*/
+	public static void Chdir(ArrayList<String> options)
+	{
+
+		Cd(options);
+
+	}
+	
+	/*
+	* Pwd() void
+	* 
+	* Prints the working directory to the console.
+	*
+	* ArrayList<String> options - command options
+	*
+	* -h
+	* 	Prints help information
+	*/
+	public static void Pwd(ArrayList<String> options)
+	{
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tpwd\n\nPrints the current Working Directory.");
+				return;
+				
+			}
+			
+		}
+		
+		// Simply print the currentDirectory variable to the console
+		System.out.println(JTerm.currentDirectory);
+		
+	}
+	
+	/*
+	* Md() void
+	* 
+	* Creates a new directory.
+	*
+	* ArrayList<String> options - command options
+	*
+	* -h
+	* 	Prints help information
+	* name [...]
+	*	Name of the new directory 
+	*/
+	public static void Md(ArrayList<String> options)
+	{
+		
+		String name = "";
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tmd [-h] name\n\nCreates a new directory.");
+				return;
+				
+			}
+			else
+				name += option + " ";
+
+		}
+		
+		name = name.trim();
+		name = JTerm.currentDirectory + name;
+		
+		File dir = new File(name);
+		dir.mkdir();
+
+	}
+  
+}
+
+###* Echo.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm.command;
+
+import java.util.ArrayList;
+
+public class Echo
+{
+	
+	/*
+	* Echo() void
+	* 
+	* Echo the input to the terminal.
+	*
+	* ArrayList<String> options - command options
+	*
+	* -h
+	* 	Prints help information
+	* input
+	* 	Text to output
+	*/
+	public Echo(ArrayList<String> options)
+	{
+
+		String output = "";
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.");
+				return;
+			  
+			}
+			else
+				output += option + " ";
+		 
+		}
+		
+		output = output.trim();
+		System.out.println(output);
+
+	}
+	
+}
+
+###* Exec.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm.command;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import com.sun.jna.platform.win32.WinBase;
+import main.java.jterm.JTerm;
+
+public class Exec
+{
+	
+	/**
+	* Exec() void
+	* <p></p>
+    * Calls Run() method
+	* @param options List of files to run
+	*/
+	public Exec(ArrayList<String> options)
+	{
+
+		// Default to Run()
+		Run(options);
+	}
+
+	/**
+	 * Run(ArrayList<String> options)
+	 * <p></p>
+	 * Runs a program and outputs program output to JTerm command line
+	 * @param options program(s) to execute
+	 * @return successful run or error during runtime
+	 */
+	public static boolean Run(ArrayList<String> options) {
+		try {
+			for (String s : options) {
+				if (s.endsWith("jar")) { // runs jar files, takes no options
+					Process p = Runtime.getRuntime().exec("java -jar " + s);
+					Scanner in = new Scanner(p.getInputStream());
+					String nextLine;
+					while (p.isAlive() && (nextLine = in.nextLine()) != null) // print program output
+						System.out.println(nextLine);
+				} else { // pass program name to system, it will open it (for executables)
+					Process p = Runtime.getRuntime().exec(s);
+					Scanner in = new Scanner(p.getInputStream());
+					String nextLine;
+					while (p.isAlive() && (nextLine = in.nextLine()) != null) // print program output
+						System.out.println(nextLine);
+				}
+			}
+			return true; // ran programs successfully
+		} catch (IOException e) {
+			System.out.println("Program was not found or failed during runtime");
+			//e.printStackTrace();
+			return false; // error occurred
+		}
+	}
+	
+	public static String GetRest(ArrayList<String> options, int index)
+	{
+		
+		String output = "";
+		for (int i = index; i < options.size(); i++)
+		{
+			if (i != options.size() - 1)
+				output += options.get(i) + " ";
+			
+			else
+				output += options.get(i);
+			
+		}
+		
+		return output;
+		
+	}
+	
+}
+
+###* Exit.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm.command;
+
+import java.util.ArrayList;
+
+public class Exit
+{
+	
+	/*
+	* Exit() void
+	* 
+	* Exits the application.
+	*
+	* ArrayList<String> options - command options
+	*/
+
+	public Exit(ArrayList<String> options) {
+
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\texit [-h]\n\nExits the program.");
+				return;
+
+			}
+
+		}
+
+		System.exit(0);
+		
+	}
+	
+}
+
+###* Files.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm.command;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import main.java.jterm.JTerm;
+
+public class Files
+{
+
+	/*
+	* Files() void
+	* 
+	* Constructor for calling methods.
+	*
+	* ArrayList<String> options - command options
+	*/
+	public Files(ArrayList<String> options) { }
+	
+	/*
+	* Process() void
+	* 
+	* Process the input.
+	* 
+	* String options - command options
+	*/
+	public static void Process(String options)
+	{
+
+		System.out.println("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp");
+
+	}
+
+	/*
+	* Write() void
+	* 
+	* Get input and write it to a file.
+	* Changelog (#65)
+	* 
+	* ArrayList<String> options - command options
+	* 
+	* -h
+	*   Prints help information
+	* filename [...]
+	*	File to write to
+	*/
+	public static void Write(ArrayList<String> options)
+	{
+		
+		String filename = "";
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\twrite [-h] filename\n\nOpens an input prompt in which to write text to a new file.");
+				return;
+				
+			}
+			else
+				filename += option;
+			
+		}
+		
+		filename = filename.trim();
+		filename = JTerm.currentDirectory + filename;
+		
+		if (filename.equals(""))
+		{
+			System.out.println("Error: missing filename; type \"write -h\" for more information.");
+			return;
+			
+		}
+		
+		try
+		{
+			System.out.println("Enter file contents (press enter after a blank line to quit):");
+			String line = JTerm.userInput.readLine();
+			String output = line;
+			
+			for(;;)
+			{
+				line = JTerm.userInput.readLine();
+				if (line.equals(""))
+					break;
+				
+				else if (line.equals(" "))
+					output += "\n";
+				
+				output += "\n" + line;
+				
+			}
+			
+			FileWriter fileWriter = new FileWriter(filename);
+			fileWriter.write(output);
+			fileWriter.close();
+			
+		}
+		catch (IOException ioe)
+		{
+			System.out.println(ioe);
+			
+		}
+		
+	}
+	
+	/*
+	* Delete() void
+	* 
+	* Delete the specified file or directory.
+	* 
+	* ArrayList<String> options - command options
+	* 
+	* -h
+	*   Prints help information
+	* file [...]
+	* 	File to delete
+	*/
+	public static void Delete(ArrayList<String> options)
+	{
+		
+		String filename = "";
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tdel [-h] file/directory\n\nDeletes the specified file or directory.");
+				return;
+				
+			}
+			else
+				filename += option;
+			
+		}
+		
+		filename.trim();
+		filename = JTerm.currentDirectory + filename;
+		
+		File dir = new File(filename);
+		if (!dir.exists())
+		{
+			System.out.println("ERROR: File/directory \"" + options.get(options.size() - 1) + "\" does not exist.");
+			return;
+			  
+		}
+		
+		dir.delete();
+		
+	}
+
+	/*
+	* Rm() void (@pmorgan3)
+	* 
+	* Identical to 'delete'; calls Delete().
+	*
+	* ArrayList<String> options - command options
+	*/
+	public static void Rm(ArrayList<String> options)
+	{
+		
+		Delete(options);
+
+	}
+
+	/*
+	* Del() void (@pmorgan3)
+	* 
+	* Identical to 'delete'; calls Delete().
+	*
+	* ArrayList<String> options - command options
+	*/
+	public static void Del(ArrayList<String> options)
+	{
+		
+		Delete(options);
+
+	}
+
+	/*
+	* Read() void
+	* Changelog (#68)
+	* 
+	* Reads the specified files and outputs the contents
+	* to the console.
+	* 
+	* ArrayList<String> options - command options
+	* 
+	* -h
+	*   Prints help information
+	* filename [...]
+	*	Prints the contents of the specified files
+	*     
+	* Credit to @d4nntheman
+	*/
+	public static void Read(ArrayList<String> options)
+	{
+		
+		String filename = "";
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.");
+				return;
+				
+			}
+	
+			filename = JTerm.currentDirectory + option;
+			File file = new File(filename);
+			if (!file.exists())
+			{
+			    System.out.println("ERROR: File/directory \"" + option + "\" does not exist.");
+			    break;
+			    
+			}
+		
+			try ( BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath())) )
+	        {
+				System.out.println("\n[JTerm - Contents of " + option + "]\n");
+	            String line = null;
+	            while( (line = reader.readLine()) != null )
+	                System.out.println(line);
+	            
+	        }
+			catch (IOException e)
+			{
+	            e.printStackTrace();
+	            return;
+	            
+	        }
+			
+	    }
+		
+	}
+	
+}
+
+###* Help.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package main.java.jterm.command;
+
+import java.util.ArrayList;
+import main.java.jterm.JTerm;
+
+public class Help {
+
+    /*
+	* Help() void
+	* 
+	* Prints help information.
+     */
+    public Help(ArrayList<String> options) {
+
+        for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\thelp [-h]\n\nPrints help information.");
+				return;
+
+            }
+            
+        }
+
+        System.out.println("JTerm v" + JTerm.version);
+        System.out.println("Available commands:");
+        System.out.println("  client");
+        System.out.println("  dir");
+        System.out.println("  echo");
+        System.out.println("  exec");
+        System.out.println("  exit");
+        System.out.println("  files");
+        System.out.println("  pause");
+        System.out.println("  ping");
+        System.out.println("  ps");
+        System.out.println("  server");
+        System.out.println("  set");
+        System.out.println("  window");
+
+    }
+
+}
+
+###* Input.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm;
+
+// Copyright 2015 Christian d'Heureuse, Inventec Informatik AG, Zurich, Switzerland
+// www.source-code.biz, www.inventec.ch/chdh
+//
+// This module is multi-licensed and may be used under the terms of any of the following licenses:
+//
+//  LGPL, GNU Lesser General Public License, V2.1 or later, http://www.gnu.org/licenses/lgpl.html
+//  EPL, Eclipse Public License, V1.0 or later, http://www.eclipse.org/legal
+//
+// Please contact the author if you need another license.
+// This module is provided "as is", without warranties of any kind.
+//
+// Home page: http://www.source-code.biz/snippets/java/RawConsoleInput
+
+import java.io.InputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CodingErrorAction;
+import java.util.Arrays;
+import java.util.List;
+import com.sun.jna.LastErrorException;
+import com.sun.jna.Library;
+import com.sun.jna.Native;
+import com.sun.jna.Structure;
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.IntByReference;
+
+/**
+ * A JNA based driver for reading single characters from the console.
+ *
+ * <p>This class is used for console mode programs.
+ * It supports non-blocking reads of single key strokes without echo.
+ */
+
+public class Input {
+
+	private static final boolean           isWindows     = System.getProperty("os.name").startsWith("Windows");
+	private static final int               invalidKey    = 0xFFFE;
+	private static final String            invalidKeyStr = String.valueOf((char)invalidKey);
+
+	private static boolean                 initDone;
+	private static boolean                 stdinIsConsole;
+	private static boolean                 consoleModeAltered;
+
+	/**
+	 * Reads a character from the console without echo.
+	 *
+	 * @param wait
+	 *   <code>true</code> to wait until an input character is available,
+	 *   <code>false</code> to return immediately if no character is available.
+	 * @return
+	 *   -2 if <code>wait</code> is <code>false</code> and no character is available.
+	 *   -1 on EOF.
+	 *   Otherwise an Unicode character code within the range 0 to 0xFFFF.
+	 */
+	public static int read (boolean wait) throws IOException {
+		if (isWindows) {
+			return readWindows(wait); }
+		else {
+			return readUnix(wait); }}
+
+	/**
+	 * Resets console mode to normal line mode with echo.
+	 *
+	 * <p>On Windows this method re-enables Ctrl-C processing.
+	 *
+	 * <p>On Unix this method switches the console back to echo mode.
+	 * read() leaves the console in non-echo mode.
+	 */
+	public static void resetConsoleMode() throws IOException {
+		if (isWindows) {
+			resetConsoleModeWindows(); }
+		else {
+			resetConsoleModeUnix(); }}
+
+	private static void registerShutdownHook() {
+		Runtime.getRuntime().addShutdownHook( new Thread() {
+			public void run() {
+				shutdownHook(); }}); }
+
+	private static void shutdownHook() {
+		try {
+			resetConsoleMode(); }
+		catch (Exception e) {}}
+
+//--- Windows ------------------------------------------------------------------
+
+// The Windows version uses _kbhit() and _getwch() from msvcrt.dll.
+
+	private static Msvcrt        msvcrt;
+	private static Kernel32      kernel32;
+	private static Pointer       consoleHandle;
+	private static int           originalConsoleMode;
+
+	private static int readWindows (boolean wait) throws IOException {
+		initWindows();
+		if (!stdinIsConsole) {
+			int c = msvcrt.getwchar();
+			if (c == 0xFFFF) {
+				c = -1; }
+			return c; }
+		consoleModeAltered = true;
+		setConsoleMode(consoleHandle, originalConsoleMode & ~Kernel32Defs.ENABLE_PROCESSED_INPUT);
+		// ENABLE_PROCESSED_INPUT must remain off to prevent Ctrl-C from beeing processed by the system
+		// while the program is not within getwch().
+		if (!wait && msvcrt._kbhit() == 0) {
+			return -2; }                                         // no key available
+		return getwch(); }
+
+	private static int getwch() {
+		int c = msvcrt._getwch();
+		if (c == 0 || c == 0xE0) {                              // Function key or arrow key
+			c = msvcrt._getwch();
+			if (c >= 0 && c <= 0x18FF) {
+				return 0xE000 + c; }                              // construct key code in private Unicode range
+			return invalidKey; }
+		if (c < 0 || c > 0xFFFF) {
+			return invalidKey; }
+		return c; }                                             // normal key
+
+	private static synchronized void initWindows() throws IOException {
+		if (initDone) {
+			return; }
+		msvcrt = (Msvcrt)Native.loadLibrary("msvcrt", Msvcrt.class);
+		kernel32 = (Kernel32)Native.loadLibrary("kernel32", Kernel32.class);
+		try {
+			consoleHandle = getStdInputHandle();
+			originalConsoleMode = getConsoleMode(consoleHandle);
+			stdinIsConsole = true; }
+		catch (IOException e) {
+			stdinIsConsole = false; }
+		if (stdinIsConsole) {
+			registerShutdownHook(); }
+		initDone = true; }
+
+	private static Pointer getStdInputHandle() throws IOException {
+		Pointer handle = kernel32.GetStdHandle(Kernel32Defs.STD_INPUT_HANDLE);
+		if (Pointer.nativeValue(handle) == 0 || Pointer.nativeValue(handle) == Kernel32Defs.INVALID_HANDLE_VALUE) {
+			throw new IOException("GetStdHandle(STD_INPUT_HANDLE) failed."); }
+		return handle; }
+
+	private static int getConsoleMode (Pointer handle) throws IOException {
+		IntByReference mode = new IntByReference();
+		int rc = kernel32.GetConsoleMode(handle, mode);
+		if (rc == 0) {
+			throw new IOException("GetConsoleMode() failed."); }
+		return mode.getValue(); }
+
+	private static void setConsoleMode (Pointer handle, int mode) throws IOException {
+		int rc = kernel32.SetConsoleMode(handle, mode);
+		if (rc == 0) {
+			throw new IOException("SetConsoleMode() failed."); }}
+
+	private static void resetConsoleModeWindows() throws IOException {
+		if (!initDone || !stdinIsConsole || !consoleModeAltered) {
+			return; }
+		setConsoleMode(consoleHandle, originalConsoleMode);
+		consoleModeAltered = false; }
+
+	private static interface Msvcrt extends Library {
+		int _kbhit();
+		int _getwch();
+		int getwchar(); }
+
+	private static class Kernel32Defs {
+		static final int  STD_INPUT_HANDLE       = -10;
+		static final long INVALID_HANDLE_VALUE   = (Pointer.SIZE == 8) ? -1 : 0xFFFFFFFFL;
+		static final int  ENABLE_PROCESSED_INPUT = 0x0001;
+		static final int  ENABLE_LINE_INPUT      = 0x0002;
+		static final int  ENABLE_ECHO_INPUT      = 0x0004;
+		static final int  ENABLE_WINDOW_INPUT    = 0x0008; }
+
+	private static interface Kernel32 extends Library {
+		int GetConsoleMode (Pointer hConsoleHandle, IntByReference lpMode);
+		int SetConsoleMode (Pointer hConsoleHandle, int dwMode);
+		Pointer GetStdHandle (int nStdHandle); }
+
+//--- Unix ---------------------------------------------------------------------
+
+// The Unix version uses tcsetattr() to switch the console to non-canonical mode,
+// System.in.available() to check whether data is available and System.in.read()
+// to read bytes from the console.
+// A CharsetDecoder is used to convert bytes to characters.
+
+	private static final int               stdinFd = 0;
+	private static Libc                    libc;
+	private static CharsetDecoder          charsetDecoder;
+	private static Termios                 originalTermios;
+	private static Termios                 rawTermios;
+	private static Termios                 intermediateTermios;
+
+	private static int readUnix (boolean wait) throws IOException {
+		initUnix();
+		if (!stdinIsConsole) {                                  // STDIN is not a console
+			return readSingleCharFromByteStream(System.in); }
+		consoleModeAltered = true;
+		setTerminalAttrs(stdinFd, rawTermios);                  // switch off canonical mode, echo and signals
+		try {
+			if (!wait && System.in.available() == 0) {
+				return -2; }                                      // no input available
+			return readSingleCharFromByteStream(System.in); }
+		finally {
+			setTerminalAttrs(stdinFd, intermediateTermios); }}   // reset some console attributes
+
+	private static Termios getTerminalAttrs (int fd) throws IOException {
+		Termios termios = new Termios();
+		try {
+			int rc = libc.tcgetattr(fd, termios);
+			if (rc != 0) {
+				throw new RuntimeException("tcgetattr() failed."); }}
+		catch (LastErrorException e) {
+			throw new IOException("tcgetattr() failed.", e); }
+		return termios; }
+
+	private static void setTerminalAttrs (int fd, Termios termios) throws IOException {
+		try {
+			int rc = libc.tcsetattr(fd, LibcDefs.TCSANOW, termios);
+			if (rc != 0) {
+				throw new RuntimeException("tcsetattr() failed."); }}
+		catch (LastErrorException e) {
+			throw new IOException("tcsetattr() failed.", e); }}
+
+	private static int readSingleCharFromByteStream (InputStream inputStream) throws IOException {
+		byte[] inBuf = new byte[4];
+		int    inLen = 0;
+		while (true) {
+			if (inLen >= inBuf.length) {                         // input buffer overflow
+				return invalidKey; }
+			int b = inputStream.read();                          // read next byte
+			if (b == -1) {                                       // EOF
+				return -1; }
+			inBuf[inLen++] = (byte)b;
+			int c = decodeCharFromBytes(inBuf, inLen);
+			if (c != -1) {
+				return c; }}}
+
+	// (This method is synchronized because the charsetDecoder must only be used by a single thread at once.)
+	private static synchronized int decodeCharFromBytes (byte[] inBytes, int inLen) {
+		charsetDecoder.reset();
+		charsetDecoder.onMalformedInput(CodingErrorAction.REPLACE);
+		charsetDecoder.replaceWith(invalidKeyStr);
+		ByteBuffer in = ByteBuffer.wrap(inBytes, 0, inLen);
+		CharBuffer out = CharBuffer.allocate(1);
+		charsetDecoder.decode(in, out, false);
+		if (out.position() == 0) {
+			return -1; }
+		return out.get(0); }
+
+	private static synchronized void initUnix() throws IOException {
+		if (initDone) {
+			return; }
+		libc = (Libc)Native.loadLibrary("c", Libc.class);
+		stdinIsConsole = libc.isatty(stdinFd) == 1;
+		charsetDecoder = Charset.defaultCharset().newDecoder();
+		if (stdinIsConsole) {
+			originalTermios = getTerminalAttrs(stdinFd);
+			rawTermios = new Termios(originalTermios);
+			rawTermios.c_lflag &= ~(LibcDefs.ICANON | LibcDefs.ECHO | LibcDefs.ECHONL | LibcDefs.ISIG);
+			intermediateTermios = new Termios(rawTermios);
+			intermediateTermios.c_lflag |= LibcDefs.ICANON;
+			// Canonical mode can be switched off between the read() calls, but echo must remain disabled.
+			registerShutdownHook(); }
+		initDone = true; }
+
+	private static void resetConsoleModeUnix() throws IOException {
+		if (!initDone || !stdinIsConsole || !consoleModeAltered) {
+			return; }
+		setTerminalAttrs(stdinFd, originalTermios);
+		consoleModeAltered = false; }
+
+	protected static class Termios extends Structure {         // termios.h
+		public int      c_iflag;
+		public int      c_oflag;
+		public int      c_cflag;
+		public int      c_lflag;
+		public byte     c_line;
+		public byte[]   filler = new byte[64];                  // actual length is platform dependent
+		@Override protected List<String> getFieldOrder() {
+			return Arrays.asList("c_iflag", "c_oflag", "c_cflag", "c_lflag", "c_line", "filler"); }
+		Termios() {}
+		Termios (Termios t) {
+			c_iflag = t.c_iflag;
+			c_oflag = t.c_oflag;
+			c_cflag = t.c_cflag;
+			c_lflag = t.c_lflag;
+			c_line  = t.c_line;
+			filler = t.filler.clone(); }}
+
+	private static class LibcDefs {
+		// termios.h
+		static final int ISIG    = 0000001;
+		static final int ICANON  = 0000002;
+		static final int ECHO    = 0000010;
+		static final int ECHONL  = 0000100;
+		static final int TCSANOW = 0; }
+
+	private static interface Libc extends Library {
+		// termios.h
+		int tcgetattr (int fd, Termios termios) throws LastErrorException;
+		int tcsetattr (int fd, int opt, Termios termios) throws LastErrorException;
+		// unistd.h
+		int isatty (int fd); }
+
+}
+
+###* InputHandler.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/*
+* Special thanks to @nanoandrew4 for this feature!
+* https://github.com/Sergix/JTerm/issues/31
+*/
+
+package main.java.jterm;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.LinkedList;
+
+public class InputHandler {
+
+	// List of files for tab rotation and printing options
+	private static LinkedList<String> fileNames = new LinkedList<>();
+
+	// Stores JTerm.command while rotating through above list
+	private static String command = "";
+
+	// Length of original input to be completed
+	private static int startComplete = 0;
+
+	// Stops autocomplete from reprinting the text it completed if tab is pressed consecutively at the end of a complete file name
+	private static boolean lockTab = false;
+
+	// Stops autocomplete from constantly erasing fileNames list when searching sub-directories
+	private static boolean blockClear = false;
+
+	/**
+	* Process() void
+	* <p></p>
+	* Calls appropriate method for handling
+	* input read from the Input class, using
+	* booleans in JTerm class to determine
+	* what OS the program is running on.
+	*/
+	static void Process() {
+
+		char input = 0;
+
+		try {
+			input = (char) Input.read(true);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+
+		}
+
+		if (JTerm.isWin)
+			ProcessWin(input);
+
+		else if (JTerm.isUnix)
+			ProcessUnix(input);
+
+	}
+
+	/**
+	* ProcessUnix() void
+	* <p></p>
+	* Processes input provided by Input class,
+	* and operates based on the input it receives,
+	* using the characters values used in Unix 
+	* systems.
+	*
+	* char input - last character input by user
+	*/
+	private static void ProcessUnix(char input) {
+
+		boolean clearFilesList = true;
+
+		// Do not output tabs, caps lock and backspace chars
+		if (input != 127 && input != 9)
+			System.out.print(input);
+
+		// reset if input is not tab
+		if (input != 9) {
+			lockTab = false;
+			blockClear = false;
+		}
+
+		// Back Space
+		if (input == 127) {
+			if (JTerm.command.length() > 0) {
+				JTerm.command = JTerm.command.substring(0, JTerm.command.length() - 1);
+
+				// Delete char, add white space and move back again
+				System.out.print("\b \b");
+
+			}
+
+		}
+
+		// Special chars, more can be added
+		else if (",./\\-_+=~".contains(String.valueOf(input)))
+			JTerm.command += input;
+
+		// Tab
+		else if (input == '\t' && JTerm.command.length() > 0) {
+			clearFilesList = false;
+
+			// Split into sections
+			String[] commandArr = JTerm.command.split(" ");
+
+			// Get last element
+			String currText = commandArr[commandArr.length - 1] + (JTerm.command.endsWith(" ") ? " " : "");
+
+			// If more than one element, autocomplete file
+			if (commandArr.length > 1 || JTerm.command.endsWith(" "))
+				FileAutocomplete(currText);
+
+			// If one element, autocomplete command (to be implemented)
+			else if (commandArr.length == 1 && !JTerm.command.endsWith(" "))
+				CommandAutocomplete(currText);
+		}
+
+		// Enter, or new line
+		else if (input == '\n') {
+			if (JTerm.command.length() > 0)
+				JTerm.Parse(JTerm.command);
+
+			JTerm.command = "";
+			System.out.print("\n" + JTerm.prompt);
+
+		}
+
+		// It's a letter
+		else if (Character.isLetter(input)) {
+			if (!JTerm.capsOn)
+				JTerm.command += input;
+
+			else
+				JTerm.command += Character.toUpperCase(input);
+
+		}
+
+		// Just print it if it is defined
+		else
+			JTerm.command += input;
+
+		// clear fileNames list and reset command string
+		if (fileNames.size() > 0 && clearFilesList) {
+			fileNames.clear();
+			command = "";
+		}
+
+	}
+
+	/**
+	* ProcessWin() void
+	* <p></p>
+	* Processes input provided by Input class,
+	* and operates based on the input it receives,
+	* using the characters values used in Windows systems.
+	*
+	* char input - last character input by user
+	*/
+	private static void ProcessWin(char input) {
+
+		boolean clearFilesList = true;
+
+		if (input != 8 && input != 9)
+			System.out.print(input);
+
+		// reset if input is not tab
+		if (input != 9) {
+			lockTab = false;
+			blockClear = false;
+		}
+
+		// Backspace
+		if (input == 8) {
+			if (JTerm.command.length() > 0) {
+				JTerm.command = JTerm.command.substring(0, JTerm.command.length() - 1);
+
+				// Delete char, add white space and move back again
+				System.out.print("\b \b");
+			}
+
+		}
+
+		// Tab
+		else if (input == 9 && JTerm.command.length() > 0) {
+			clearFilesList = false;
+
+			// Split into sections
+			String[] commandArr = JTerm.command.split(" ");
+
+			// Get last element
+			String currText = commandArr[commandArr.length - 1] + (JTerm.command.endsWith(" ") ? " " : "");
+
+			// If more than one element, autocomplete file
+			if (commandArr.length > 1)
+				FileAutocomplete(currText);
+
+			// If one element, autocomplete command (to be implemented)
+			else if (commandArr.length == 1 && !JTerm.command.endsWith(" "))
+				CommandAutocomplete(currText);
+
+		}
+
+		// New line
+		else if (input == 13) {
+			System.out.println("\r\n");
+			if (JTerm.command.length() > 0)
+				JTerm.Parse(JTerm.command);
+
+			JTerm.command = "";
+			System.out.println("\r\n" + JTerm.prompt);
+
+		}
+
+		// It's a letter
+		else if (Character.isLetter(input)) {
+			if (!JTerm.capsOn)
+				JTerm.command += input;
+			else
+				JTerm.command += Character.toUpperCase(input);
+
+		}
+
+		// just print it if it is defined
+		else if (Character.isDefined(input))
+			JTerm.command += input;
+
+		// clear fileNames list and reset command string
+		if (fileNames.size() > 0 && clearFilesList) {
+			fileNames.clear();
+			command = "";
+		}
+
+	}
+
+	/**
+	* FileAutocomplete()
+	* <p></p>
+	* Using a string of text representing what has been typed presently,
+	* displays all files that match the current input.
+	*
+	* @param currText file that is to be completed
+	*/
+	private static void FileAutocomplete(String currText) {
+
+		boolean newList = false;
+		// whether command ends with slash or not
+		boolean endsWithSlash = command.endsWith("/") ? command.endsWith("/") : JTerm.command.endsWith("/");
+
+		// split text at slashes to get path, so that relevant files can be autocompleted or displayed
+		String[] splitPath = currText.split("/");
+		String path = "";
+		if (splitPath.length > 0) {
+			// re-create path to look in
+			for (int i = 0; (i < (splitPath.length - 1) && !endsWithSlash) || (i < splitPath.length && endsWithSlash); i++)
+				path += "/" + splitPath[i];
+			path += "/";
+		}
+
+		// get folder at path
+		File currFolder = new File(JTerm.currentDirectory + path);
+		File[] files = currFolder.listFiles();
+
+		// if not empty parameter or not directory
+		if (!endsWithSlash && !JTerm.command.endsWith(" "))
+			currText = splitPath[splitPath.length - 1];
+
+		// if ends with slash directory and list not yet cleared from previous tab, clear, block clear so tab rotation works and set
+		// currText to empty string, so that all files in the directory are output
+		else if (endsWithSlash && !blockClear) {
+			fileNames.clear();
+			blockClear = true;
+			currText = " ";
+		}
+
+		// if command ends with empty space, output all files in path
+		else if (JTerm.command.endsWith(" "))
+			currText = " ";
+
+		// get all file names for comparison
+		if (fileNames.size() == 0) {
+			// For tab rotation, true means no tab rotation, false means rotate through list
+			newList = true;
+
+			// Stores original command so that JTerm.command does not keep adding to itself
+			command = JTerm.command;
+
+			// For autocomplete in tab rotation
+			startComplete = (endsWithSlash || currText.endsWith(" ")) ? 0 : currText.length();
+
+			// add all files with matching names to list
+			for (File f : files)
+				if (f.getName().startsWith(currText))
+					fileNames.add(f.getName());
+
+		}
+
+		if (fileNames.size() != 1) {
+			// Clear line
+			if (fileNames.size() > 0 || currText.equals(" "))
+				ClearLine(JTerm.command);
+
+			// Print matching file names
+			if (newList)
+				for (String s : fileNames)
+					System.out.print(s + "\t");
+
+			else if (!lockTab || endsWithSlash){
+				ClearLine(JTerm.command);
+
+				// Get first file or dir name
+				String currFile = fileNames.pollFirst();
+
+				// Autocomplete with first file or dir name
+				JTerm.command = command + currFile.substring(startComplete, currFile.length());
+
+				// Print to screen
+				System.out.print(JTerm.prompt + JTerm.command);
+
+				// Add file or dir name at end of list
+				fileNames.add(currFile);
+
+			}
+
+			if (fileNames.size() > 0 && newList) {
+				System.out.println();
+
+				// Re-output command after clearing lines
+				System.out.print(JTerm.prompt + JTerm.command);
+
+			}
+
+			// If no input, just output all files and folders
+			if (currText.equals(" ")) {
+				if (newList) {
+					for (File f : files) {
+						System.out.print(f.getName() + " \t");
+						fileNames.add(f.getName());
+					}
+
+					// Improve readability
+					System.out.println("\n");
+
+					// Re-output command after clearing lines
+					System.out.print(JTerm.prompt + JTerm.command);
+
+				} else if (!lockTab){
+					ClearLine(JTerm.command);
+
+					// Get first file or dir name
+					String currFile = fileNames.pollFirst();
+
+					// Autocomplete with first file or dir name
+					JTerm.command = command + currFile.substring(startComplete, currFile.length());
+
+					// Print to screen
+					System.out.print(JTerm.prompt + JTerm.command);
+
+					// Add file or dir name at end of list
+					fileNames.add(currFile);
+				}
+			}
+
+		} else if (!lockTab) {
+
+			String fileName = fileNames.getFirst();
+			String end = "";
+
+			// if auto-completing directory, add slash at end
+			if (Files.isDirectory(Paths.get(JTerm.currentDirectory + path + fileName)))
+				end = "/";
+
+			// if auto-completing a file, add space at end
+			else if (Files.isRegularFile(Paths.get(JTerm.currentDirectory + path + fileName)))
+				end = " ";
+
+			//System.out.println("\n" + JTerm.currentDirectory + path + fileName);
+			JTerm.command += fileName.substring(currText.length(), fileName.length()) + end;
+			System.out.print(fileName.substring(currText.length(), fileName.length()) + end);
+
+			// Lock tab
+			lockTab = true;
+		}
+	}
+
+	/**
+	* ClearLine() void
+	* <p></p>
+	* Clears a line in the console of size line.length().
+	*
+	* @param line line to be cleared
+	*/
+	private static void ClearLine(String line) {
+
+		for (int i = 0; i < line.length() + JTerm.prompt.length() / 3; i++)
+			System.out.print("\b");
+
+		for (int i = 0; i < line.length() + JTerm.prompt.length() / 3; i++)
+			System.out.print(" ");
+
+		for (int i = 0; i < line.length() + JTerm.prompt.length() / 3; i++)
+			System.out.print("\b");
+
+	}
+
+	/**
+	* CommandAutocomplete()
+	* <p></p>
+	* @param currText command that is to be completed
+	*/
+	private static void CommandAutocomplete(String currText) {
+
+	}
+}
+
+###* JTerm.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (code) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+// package = folder :P
+package main.java.jterm;
+
+import org.apache.commons.lang3.SystemUtils;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+
+import main.java.jterm.command.Exec;
+
+public class JTerm
+{
+
+	// Global version variable
+	public static String version = "0.6.1";
+
+	// Prompt to show user where input is currently at
+	public static String prompt = "   \b\b\b>> ";
+
+	// Global directory variable (use "cd" command to change)
+	// Default value "./" is equal to the default directory set when the program starts
+	public static String currentDirectory = "./";
+	public static boolean isWin = SystemUtils.IS_OS_WINDOWS;
+	public static boolean isUnix = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
+
+	// User input variable used among all parts of the application
+	public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+
+	// Boolean to determine if caps lock is on, since input system does not distinguish between character cases
+	// Command string which the input system will aggregate characters to
+	public static boolean capsOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
+	public static String command = "";
+
+	/*
+	* main() void
+	*
+	* Function called when the program loads. Sets
+	* up basic input streams.
+	*
+	*
+	* String[] args - arguments passed from the
+	* 				console
+	*/
+	public static void main(String[] args)
+	{
+
+		// Print licensing information
+		System.out.println(
+			"JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n" +
+			"This program comes with ABSOLUTELY NO WARRANTY.\n" +
+			"This is free software, and you are welcome to redistribute it\n" +
+			"under certain conditions.\n"
+		);
+
+		/*
+		* Wait until "exit" is typed in to exit
+		* Sends last char received from Input class to Process function
+		*/
+
+		System.out.print(prompt);
+		while (true)
+			InputHandler.Process();
+
+	}
+
+	/*
+	* Parse() boolean
+	*
+	* Checks input and passes command options to the function
+	* that runs the requested command.
+	*
+	* ArrayList<String> options - command options
+	*/
+	public static boolean Parse(String options)
+	{
+
+		ArrayList<String> optionsArray = GetAsArray(options);
+
+		// Default to process/help command if function is not found
+		String method = "Process";
+
+		// Get the first string in the options array, which is the command,
+		// and capitalize the first letter of the command
+		String original = optionsArray.get(0).toLowerCase(), command = original;
+		String classChar = command.substring(0, 1);
+		classChar = classChar.toUpperCase();
+		command = command.substring(1);
+		command = "main.java.jterm.command." + classChar + command;
+		optionsArray.remove(0);
+
+		// Get the method name
+		if (optionsArray.toArray().length >= 1)
+			method = optionsArray.get(0);
+
+		else
+			optionsArray.add(method);
+
+		classChar = method.substring(0, 1);
+		classChar = classChar.toUpperCase();
+		method = method.substring(1);
+		method = classChar + method;
+
+		try
+		{
+			// Get the class of the command
+			Class<?> clazz = Class.forName(command);
+			Constructor<?> constructor = clazz.getConstructor(ArrayList.class);
+			Object obj = constructor.newInstance(optionsArray);
+
+			ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(obj.getClass().getDeclaredMethods()));
+
+			// Invoke the correct method of the class to run, but only if it contains that method
+			Method m = obj.getClass().getMethod(method, ArrayList.class);
+			if(methods.contains(m))
+			{
+				optionsArray.remove(0);
+				m.invoke(options.getClass(), new Object[] {optionsArray});
+
+			}
+
+		}
+
+		// Exceptions
+		catch (ClassNotFoundException cnfe)
+		{
+			ArrayList<String> execFile = new ArrayList<String>();
+			execFile.add(original);
+			if (!Exec.Run(execFile))
+				System.out.println("Unknown Command \"" + original + "\"");
+
+		}
+		catch (InstantiationException ie)
+		{
+			System.out.println(ie);
+
+		}
+		catch (IllegalAccessException iae)
+		{
+			System.out.println(iae);
+
+		}
+		catch (NoSuchMethodException nsme)
+		{
+			//System.out.println(nsme);
+
+		}
+		catch (InvocationTargetException ite)
+		{
+			//System.out.println(ite);
+		}
+
+		return false;
+
+		// 	// Commands to skip in batch files
+		// 	case "bcdedit":
+		// 	case "chkdsk":
+		// 	case "chkntfs":
+		// 	case "cls":
+		// 	case "cmd":
+		// 	case "color":
+		// 	case "convert":
+		// 	case "diskpart":
+		// 	case "driverquery":
+		// 	case "format":
+		// 	case "fsutil":
+		// 	case "gpresult":
+		// 	case "mode":
+		// 	case "sc":
+		// 	case "shutdown":
+		// 	case "start":
+		// 	case "tasklist":
+		// 	case "taskkill":
+		// 	case "ver":
+		// 	case "vol":
+		// 	case "wmic":
+		// 		break;
+
+	}
+
+	/*
+	* GetAsArray() ArrayList<String>
+	* 
+	* Returns a String as an ArrayList of
+	* Strings (spaces as delimiters)
+	*
+	* String options - String to be split
+	*/
+	public static ArrayList<String> GetAsArray(String options)
+	{
+
+		// Get each substring of the command entered
+		Scanner tokenizer = new Scanner(options);
+
+		// options String array will be passed to command functions
+		ArrayList<String> array = new ArrayList<String>();
+
+		// Get command arguments
+		while (tokenizer.hasNext())
+		{
+			String next = tokenizer.next();
+			array.add(next);
+
+		}
+
+		// Close the string stream
+		tokenizer.close();
+
+		return array;
+
+	}
+
+	/*
+	* GetAsString() String
+	* 
+	* Returns an ArrayList of Strings 
+	* as a String (spaced with spaces)
+	*
+	* ArrayList<String> options - array to be split
+	*/
+	public static String GetAsString(ArrayList<String> options)
+	{
+
+		// Get each substring of the command entered
+		String string = "";
+
+		// Get command arguments
+		for (String option: options)
+			string += option + " ";
+
+		string.trim();
+
+		return string;
+
+	}
+
+}
+
+###* Pause.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (code) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm.command;
+
+import java.util.ArrayList;
+import java.io.IOException;
+
+import main.java.jterm.JTerm;
+
+public class Pause
+{
+
+	/*
+	* Pause() void
+	* 
+	* Pauses the interpreter until the user
+	* hits the "Enter" key.
+	*
+	* ArrayList<String> options - command options
+	*
+	* message
+	* 	Pause message to be printed
+	*/
+	public Pause(ArrayList<String> options) { 
+
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tpause [-h] [input]\n\nPauses the terminal and awaits a keypress.");
+				return;
+
+			}
+			else
+				System.out.print(Exec.GetRest(options, 0));
+
+		}
+
+		if (options.size() == 0)
+			System.out.print("Press enter to continue...");
+
+		try
+		{
+			JTerm.userInput.read();
+			JTerm.userInput.skip(1);
+
+		}
+		catch (IOException ioe)
+		{
+			System.out.println(ioe);
+
+		}
+
+	}
+
+}
+
+###* Ping.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (code) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm.command;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.ArrayList;
+
+/*
+* Original code credit to @chromechris
+* 
+* (edits for release done by @Sergix)
+*/
+public class Ping
+{
+
+	/*
+	* Ping() void
+	* 
+	* Pings the specified host.
+	*
+	* ArrayList<String> options - command options
+
+	* -h
+	* 	Prints help information
+	* host
+	* 	Host to ping
+	* -p port
+	*	Port to ping the host on
+	*/
+	public Ping(ArrayList<String> options) 
+	{
+
+		String host = "google.com", port = "80";
+		boolean portNext = false;
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tping [-h] [-p port] host\n\nAttempts to connect to the specified host. Default port is '80'.");
+				return;
+				
+			}
+			else if (portNext)
+			{
+				port = option;
+				portNext = false;
+				
+			}
+			else if (option.equals("-p"))
+				portNext = true;
+			
+			else
+				host = option;
+			
+		}
+		
+	    try (Socket socket = new Socket())
+	    {
+	    	System.out.println("Pinging " + host + "...");
+	        socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 10000);
+	        System.out.println("Ping Successful");
+	        
+	    }
+	    catch (IOException e)
+	    {
+	    	// Either timeout or unreachable or failed DNS lookup
+	    	System.out.println("Ping Failed");
+	        
+		}
+		
+	}
+	
+}
+
+###* Ps.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (code) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm.command;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+import org.apache.commons.lang3.SystemUtils;
+
+/*
+* Original code credit to @chromechris
+* 
+* (edits for release done by @Sergix)
+*/
+public class Ps 
+{
+
+	/*
+	* Ps() void
+	* 
+	* Prints a list of process running on
+	* the system.
+	*
+	* ArrayList<String> options - command options
+	*
+	* -h
+	* 	Prints help information
+	*/
+	public Ps(ArrayList<String> options)
+	{
+
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tps [-h]\n\nDisplays all current processes running on the host system.");
+				return;
+				
+			}
+			
+		}
+
+		if (SystemUtils.IS_OS_LINUX)
+		{
+			try
+			{
+				String line;
+				Process p = Runtime.getRuntime().exec("ps -e");
+				BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				while ((line = input.readLine()) != null)
+				{
+					// Parse data here.
+					System.out.println(line);
+					
+				}
+				input.close();
+				
+			}
+			catch (Exception err)
+			{
+				err.printStackTrace();
+				
+			}
+
+		}
+		else if (SystemUtils.IS_OS_WINDOWS)
+		{
+			try
+			{
+				String line;
+				Process p = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");
+				BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				while ((line = input.readLine()) != null)
+				{
+					// Parse data here.
+					System.out.println(line);
+					
+				}
+				
+				input.close();
+				
+			}
+			catch (Exception err)
+			{
+				err.printStackTrace();
+				
+			}
+			
+		}
+
+	}
+
+}
+
+###* Server.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+
+public class Server implements Runnable
+{
+
+	private Socket socket;
+	public static boolean run = true;
+	public static int port = 0;
+	private static String line;
+	
+	Server(Socket newSocket)
+	{
+		
+		socket = newSocket;
+		
+	}
+	
+	public void run()
+	{
+		
+		while (run)
+		{
+			try
+			{
+				InputStream input = socket.getInputStream();
+				BufferedReader bufferedSocketInput 	= new BufferedReader(new InputStreamReader(input));
+				
+				line = bufferedSocketInput.readLine();
+				if (line.isEmpty())
+					break;
+					
+				System.out.println("\n" + line);
+				
+				bufferedSocketInput.close();
+				
+			}
+			catch (IOException ioe)
+			{
+				System.out.println(ioe);
+				break;
+				
+			}
+			
+		}
+		
+	}
+	
+	public static void Start(ArrayList<String> options)
+	{
+		
+		String portInput = "80";
+		
+		for (String option: options)
+		{
+			if(option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tserver [-h] port\n\nStarts a TCP server socket that accepts ");
+				return;
+				
+			}
+			else
+				portInput = option;
+			
+		}
+		
+		int i = 0;
+
+        while( i < portInput.length())  
+        {
+            port *= 10;
+            port += portInput.charAt(i++) - '0';
+            
+        }
+		
+		try
+		{
+			ServerSocket server = new ServerSocket(port);
+			
+			new Thread(new Runnable()
+			{
+				
+				public void run()
+				{
+					
+					while (true)
+					{
+						System.out.print("> ");
+						BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in), 1);
+						try
+						{
+							String input = consoleInput.readLine();
+							switch (input) {
+								case "help":
+									System.out.println("Server currently opened on port " + port);
+									break;
+								
+								case "quit":
+									run = false;
+									return;
+							
+							}
+							
+						}
+						catch (IOException ioe)
+						{
+							System.out.println("Input Stream closed.");
+							break;
+							
+						}
+						
+					}
+					
+				}
+				
+			}
+			).start();
+			
+			while (run)
+			{
+				Socket socket = server.accept();
+				Server newRequest = new Server(socket);
+				new Thread(newRequest).start();
+				
+			}
+			
+			server.close();
+			
+		}
+		catch (IOException ioe)
+		{
+			System.out.println("ERROR: Server closed");
+			
+		}
+		
+	}
+	
+}
+
+###* Set.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm.command;
+
+import java.util.Hashtable;
+import java.util.Enumeration;
+import java.util.ArrayList;
+
+public class Set
+{
+
+	// Global variable hashtable
+	public static Hashtable<String, String> vars = new Hashtable<String, String>();
+
+	/*
+	* Set() void
+	* 
+	* Creates a new variable or prints all
+	* stored variables.
+	*
+	* ArrayList<String> options - command options
+	*/
+	public Set(ArrayList<String> options)
+	{
+
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\tset [-h] name = value\n\nSets an environment variable.");
+				return;
+
+			}
+
+		}
+
+		// Print the value of all current variables
+		if (options.size() == 0)
+		{
+			String element = "";
+	
+			// For each key...
+			for (Enumeration<String> e = vars.keys(); e.hasMoreElements();)
+
+				// ...print in the format of "key=value"
+				System.out.println((element = e.nextElement()) + "=" + vars.get(element));
+
+			return;
+
+		}
+		
+		// Get the variable name
+		String key = options.get(0);
+
+		// The name can't include spaces
+		if (options.toArray().length > 2)
+		{
+			if ( !options.get(1).equals("=") )
+				return;
+			
+		}
+		else
+			return;
+		
+		// If the type is a window, create a new one
+		if (options.get(2).equals("window"))
+		{	
+			// Pass the rest of the options to create a new Window
+			Window newWindow = new Window(options);
+
+			// Put the window ID into the vars hashtable
+			// associated with its key
+			vars.put(key, Integer.toString(newWindow.GetId()));
+
+			// Add the window to the global list
+			Window.windows.add(newWindow);
+
+			return;
+			
+		}
+		
+		// Put the variable contents into the global hashtable
+		vars.put(key, Exec.GetRest(options, 2));
+
+	}
+
+}
+
+###* Time.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (code) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm.command;
+
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+public class Time {
+	
+    
+	public Time(ArrayList<String> options)
+	{
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\n\ttime [-h] input\n\nPrints the system time to the console."); // Options
+				return;
+			  
+			}
+		 
+		}
+		
+		DateFormat df = new SimpleDateFormat("HH:mm:ss , z");
+	    Date dateobj = new Date();
+	    System.out.println("The Current Time is: " + df.format(dateobj));
+		
+	}
+	
+}
+
+###* Window.java
+
+/*
+* JTerm - a cross-platform terminal
+* Copyright (C) 2017 Sergix, NCSGeek
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package main.java.jterm.command;
+
+import java.util.ArrayList;
+import javax.swing.JFrame;
+
+public class Window
+{
+
+	public static int windowCount = 0;
+	public static ArrayList<Window> windows = new ArrayList<Window>();
+	
+	private int id;
+	private JFrame window;
+	private String title = null;
+	private boolean visible = false;
+	
+	/*
+	* Window() void
+	* 
+	* Create a new JFrame window.
+	* 
+	* ArrayList<String> options - command options
+	* 
+	* -h
+	*     Prints help information
+	*     
+	* -t title
+	* 	  Sets the window title in 
+	* 	  the header
+	* 
+	* -w width
+	* 	  Sets the width of the window
+	* 
+	* -l height
+	* 	  Sets the height of the window
+	* 
+	* -r
+	* 	  Sets the window to be able to
+	*	  be resized  
+	* 	  
+	*/
+	public Window(ArrayList<String> options)
+	{
+		
+		int width = 500, height = 500;
+		boolean resizable = false;
+		
+		boolean titleNext = false, heightNext = false, widthNext = false;
+		
+		for (String option: options)
+		{
+			if (option.equals("-h"))
+			{
+				System.out.println("Command syntax:\t\nwindow [-h] [-r] [-v] [-w width] [-l height] [-t title]\n\nCreates a new programmable GUI window.\nDefault title is \"JTerm Window\", and the default width and height of the window is 500 x 500.");
+				return;
+				
+			}
+			else if (option.equals("-v"))
+				visible = true;
+
+			else if(option.equals("-t"))
+			{
+				title = "";
+				titleNext = true;
+				
+			}
+			else if(option.equals("-w"))
+				widthNext = true;
+
+			else if(option.equals("-l"))
+				heightNext = true;
+
+			else if(widthNext)
+			{
+				width = Integer.parseInt(option);
+				widthNext = false;
+				
+			}
+			
+			else if(heightNext)
+			{
+				height = Integer.parseInt(option);
+				heightNext = false;
+				
+			}
+			else if (option.equals("-r"))
+				resizable = true;
+
+			else if(titleNext)
+				title += option + " ";
+			
+		}
+		
+		windowCount += 1;
+		id = windowCount;
+		
+		if (title == null)
+			title = "JTerm Window";
+		
+		JFrame window = new JFrame(title);
+		window.setSize(width, height);
+		window.setResizable(resizable);
+		window.setVisible(visible);
+
+		this.window = window;
+		windows.add(this);
+		
+	}
+	
+	/*
+	* ToggleVisible() void
+	* 
+	* Toggles the visibility of the window
+	*/
+	public void ToggleVisible()
+	{
+		
+		window.setVisible(visible = !visible);
+		
+	}
+	
+	/*
+	* GetId() int
+	* 
+	* Returns the process ID of the window
+	*/
+	public int GetId()
+	{
+		
+		return id;
+		
+	}
+	
+	/*
+	* GetId() JFrame
+	* 
+	* Returns the JFrame object displaying
+	* the window
+	*/
+	public JFrame GetFrame()
+	{
+		
+		return this.window;
+		
+	}
+	
+	/*
+	* GetTitle() String
+	* 
+	* Returns the title of the window
+	*/
+	public String GetTitle()
+	{
+		
+		return title;
+		
+	}
+	
+	public static void CloseAll()
+	{
+		
+		for (Window window: windows)
+		{
+			window.GetFrame().setVisible(false); //you can't see me!
+			window.GetFrame().dispose(); //Destroy the JFrame object
+			
+		}
+		
+	}
+	
+}
+

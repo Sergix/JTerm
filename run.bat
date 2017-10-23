@@ -7,4 +7,4 @@ if EXIST "jterm-%JTERM_VERSION%-jar-with-dependencies.jar" (
 )
 cd ..
 
-java -cp target/jterm-v%JTERM_VERSION%.jar main.java.jterm.JTerm
+java -cp target/jterm-v%JTERM_VERSION%.jar jterm.JTerm
