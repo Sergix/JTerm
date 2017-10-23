@@ -14,244 +14,187 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm.command;
+package jterm.command;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.IOException;
+import jterm.JTerm;
+
+import java.io.*;
 import java.util.ArrayList;
 
-import main.java.jterm.JTerm;
+public class Files {
 
-public class Files
-{
+    /*
+    * Files() void
+    *
+    * Constructor for calling methods.
+    *
+    * ArrayList<String> options - command options
+    */
+    public Files(ArrayList<String> options) {
+    }
 
-	/*
-	* Files() void
-	* 
-	* Constructor for calling methods.
-	*
-	* ArrayList<String> options - command options
-	*/
-	public Files(ArrayList<String> options) { }
-	
-	/*
-	* Process() void
-	* 
-	* Process the input.
-	* 
-	* String options - command options
-	*/
-	public static void Process(String options)
-	{
+    /*
+    * process() void
+    *
+    * process the input.
+    *
+    * String options - command options
+    */
+    public static void process(String options) {
+        System.out.println("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp");
+    }
 
-		System.out.println("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp");
+    /*
+    * write() void
+    *
+    * Get input and write it to a file.
+    * Changelog (#65)
+    *
+    * ArrayList<String> options - command options
+    *
+    * -h
+    *   Prints help information
+    * filename [...]
+    *	File to write to
+    */
+    public static void write(ArrayList<String> options) {
+        String filename = "";
+        for (String option : options) {
+            if (option.equals("-h")) {
+                System.out.println("Command syntax:\n\twrite [-h] filename\n\nOpens an input prompt in which to write text to a new file.");
+                return;
+            } else {
+                filename += option;
+            }
+        }
 
-	}
+        filename = filename.trim();
+        filename = JTerm.currentDirectory + filename;
 
-	/*
-	* Write() void
-	* 
-	* Get input and write it to a file.
-	* Changelog (#65)
-	* 
-	* ArrayList<String> options - command options
-	* 
-	* -h
-	*   Prints help information
-	* filename [...]
-	*	File to write to
-	*/
-	public static void Write(ArrayList<String> options)
-	{
-		
-		String filename = "";
-		
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\twrite [-h] filename\n\nOpens an input prompt in which to write text to a new file.");
-				return;
-				
-			}
-			else
-				filename += option;
-			
-		}
-		
-		filename = filename.trim();
-		filename = JTerm.currentDirectory + filename;
-		
-		if (filename.equals(""))
-		{
-			System.out.println("Error: missing filename; type \"write -h\" for more information.");
-			return;
-			
-		}
-		
-		try
-		{
-			System.out.println("Enter file contents (press enter after a blank line to quit):");
-			String line = JTerm.userInput.readLine();
-			String output = line;
-			
-			for(;;)
-			{
-				line = JTerm.userInput.readLine();
-				if (line.equals(""))
-					break;
-				
-				else if (line.equals(" "))
-					output += "\n";
-				
-				output += "\n" + line;
-				
-			}
-			
-			FileWriter fileWriter = new FileWriter(filename);
-			fileWriter.write(output);
-			fileWriter.close();
-			
-		}
-		catch (IOException ioe)
-		{
-			System.out.println(ioe);
-			
-		}
-		
-	}
-	
-	/*
-	* Delete() void
-	* 
-	* Delete the specified file or directory.
-	* 
-	* ArrayList<String> options - command options
-	* 
-	* -h
-	*   Prints help information
-	* file [...]
-	* 	File to delete
-	*/
-	public static void Delete(ArrayList<String> options)
-	{
-		
-		String filename = "";
-		
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\tdel [-h] file/directory\n\nDeletes the specified file or directory.");
-				return;
-				
-			}
-			else
-				filename += option;
-			
-		}
-		
-		filename.trim();
-		filename = JTerm.currentDirectory + filename;
-		
-		File dir = new File(filename);
-		if (!dir.exists())
-		{
-			System.out.println("ERROR: File/directory \"" + options.get(options.size() - 1) + "\" does not exist.");
-			return;
-			  
-		}
-		
-		dir.delete();
-		
-	}
+        if (filename.equals("")) {
+            System.out.println("Error: missing filename; type \"write -h\" for more information.");
+            return;
+        }
 
-	/*
-	* Rm() void (@pmorgan3)
-	* 
-	* Identical to 'delete'; calls Delete().
-	*
-	* ArrayList<String> options - command options
-	*/
-	public static void Rm(ArrayList<String> options)
-	{
-		
-		Delete(options);
+        try {
+            System.out.println("Enter file contents (press enter after a blank line to quit):");
+            String line = JTerm.userInput.readLine();
+            String output = line;
 
-	}
+            while (true) {
+                line = JTerm.userInput.readLine();
+                if (line.equals("")) {
+                    break;
+                } else if (line.equals(" ")) {
+                    output += "\n";
+                }
+                output += "\n" + line;
+            }
 
-	/*
-	* Del() void (@pmorgan3)
-	* 
-	* Identical to 'delete'; calls Delete().
-	*
-	* ArrayList<String> options - command options
-	*/
-	public static void Del(ArrayList<String> options)
-	{
-		
-		Delete(options);
+            FileWriter fileWriter = new FileWriter(filename);
+            fileWriter.write(output);
+            fileWriter.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
 
-	}
+    /*
+    * delete() void
+    *
+    * delete the specified file or directory.
+    *
+    * ArrayList<String> options - command options
+    *
+    * -h
+    *   Prints help information
+    * file [...]
+    * 	File to delete
+    */
+    public static void delete(ArrayList<String> options) {
+        String filename = "";
+        for (String option : options) {
+            if (option.equals("-h")) {
+                System.out.println("Command syntax:\n\tdel [-h] file/directory\n\nDeletes the specified file or directory.");
+                return;
+            } else {
+                filename += option;
+            }
+        }
 
-	/*
-	* Read() void
-	* Changelog (#68)
-	* 
-	* Reads the specified files and outputs the contents
-	* to the console.
-	* 
-	* ArrayList<String> options - command options
-	* 
-	* -h
-	*   Prints help information
-	* filename [...]
-	*	Prints the contents of the specified files
-	*     
-	* Credit to @d4nntheman
-	*/
-	public static void Read(ArrayList<String> options)
-	{
-		
-		String filename = "";
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.");
-				return;
-				
-			}
-	
-			filename = JTerm.currentDirectory + option;
-			File file = new File(filename);
-			if (!file.exists())
-			{
-			    System.out.println("ERROR: File/directory \"" + option + "\" does not exist.");
-			    break;
-			    
-			}
-		
-			try ( BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath())) )
-	        {
-				System.out.println("\n[JTerm - Contents of " + option + "]\n");
-	            String line = null;
-	            while( (line = reader.readLine()) != null )
-	                System.out.println(line);
-	            
-	        }
-			catch (IOException e)
-			{
-	            e.printStackTrace();
-	            return;
-	            
-	        }
-			
-	    }
-		
-	}
-	
+        filename = filename.trim();
+        filename = JTerm.currentDirectory + filename;
+
+        File dir = new File(filename);
+        if (!dir.exists()) {
+            System.out.println("ERROR: File/directory \"" + options.get(options.size() - 1) + "\" does not exist.");
+            return;
+        }
+        dir.delete();
+    }
+
+    /*
+    * rm() void (@pmorgan3)
+    *
+    * Identical to 'delete'; calls delete().
+    *
+    * ArrayList<String> options - command options
+    */
+    public static void rm(ArrayList<String> options) {
+        delete(options);
+    }
+
+    /*
+    * del() void (@pmorgan3)
+    *
+    * Identical to 'delete'; calls delete().
+    *
+    * ArrayList<String> options - command options
+    */
+    public static void del(ArrayList<String> options) {
+        delete(options);
+    }
+
+    /*
+    * read() void
+    * Changelog (#68)
+    *
+    * Reads the specified files and outputs the contents
+    * to the console.
+    *
+    * ArrayList<String> options - command options
+    *
+    * -h
+    *   Prints help information
+    * filename [...]
+    *	Prints the contents of the specified files
+    *
+    * Credit to @d4nntheman
+    */
+    public static void read(ArrayList<String> options) {
+        for (String option : options) {
+            if (option.equals("-h")) {
+                System.out.println("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.");
+                return;
+            }
+
+            String filename = JTerm.currentDirectory + option;
+            File file = new File(filename);
+            if (!file.exists()) {
+                System.out.println("ERROR: File/directory \"" + option + "\" does not exist.");
+                break;
+            }
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
+                System.out.println("\n[JTerm - Contents of " + option + "]\n");
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+    }
 }
