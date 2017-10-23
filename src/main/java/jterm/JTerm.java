@@ -18,6 +18,7 @@
 package jterm;
 
 import jterm.command.Exec;
+import jterm.io.InputHandler;
 import org.apache.commons.lang3.SystemUtils;
 
 import java.awt.*;
@@ -33,7 +34,7 @@ public class JTerm {
     // TODO: maybe better to get the VERSION from some property file?
     // like: VERSION = Utils.getProperty("project.VERSION");
     public static final String VERSION = "0.6.1";
-	public static String prompt = "   \b\b\b>> ";
+    public static String prompt = "   \b\b\b>> ";
 
     // Global directory variable (use "cd" command to change)
     // Default value "./" is equal to the default directory set when the program starts
@@ -57,8 +58,8 @@ public class JTerm {
                         + "under certain conditions.\n");
 
 
-		System.out.println(prompt);
-		while (true) {
+        System.out.print(prompt);
+        while (true) {
             InputHandler.process();
         }
     }

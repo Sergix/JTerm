@@ -14,7 +14,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package jterm;
+package jterm.io;
 
 // Copyright 2015 Christian d'Heureuse, Inventec Informatik AG, Zurich, Switzerland
 // www.source-code.biz, www.inventec.ch/chdh
@@ -29,11 +29,8 @@ package jterm;
 //
 // Home page: http://www.source-code.biz/snippets/java/RawConsoleInput
 
-import com.sun.jna.*;
-import com.sun.jna.ptr.IntByReference;
-
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -41,6 +38,13 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 import java.util.Arrays;
 import java.util.List;
+
+import com.sun.jna.LastErrorException;
+import com.sun.jna.Library;
+import com.sun.jna.Native;
+import com.sun.jna.Structure;
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.IntByReference;
 
 /**
  * A JNA based driver for reading single characters from the console.
@@ -50,7 +54,7 @@ import java.util.List;
  */
 
 public class Input {
-    // FIXME: use JTerm.isWindows or this thing?
+
     private static final boolean isWindows = System.getProperty("os.name").startsWith("Windows");
     private static final int invalidKey = 0xFFFE;
     private static final String invalidKeyStr = String.valueOf((char) invalidKey);
@@ -104,13 +108,12 @@ public class Input {
         try {
             resetConsoleMode();
         } catch (Exception e) {
-            // ignore exception
         }
     }
 
 //--- Windows ------------------------------------------------------------------
 
-// The Windows VERSION uses _kbhit() and _getwch() from msvcrt.dll.
+// The Windows version uses _kbhit() and _getwch() from msvcrt.dll.
 
     private static Msvcrt msvcrt;
     private static Kernel32 kernel32;
@@ -229,7 +232,7 @@ public class Input {
 
 //--- Unix ---------------------------------------------------------------------
 
-// The Unix VERSION uses tcsetattr() to switch the console to non-canonical mode,
+// The Unix version uses tcsetattr() to switch the console to non-canonical mode,
 // System.in.available() to check whether data is available and System.in.read()
 // to read bytes from the console.
 // A CharsetDecoder is used to convert bytes to characters.

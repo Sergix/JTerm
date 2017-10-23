@@ -19,7 +19,9 @@
 * https://github.com/Sergix/JTerm/issues/31
 */
 
-package jterm;
+package jterm.io;
+
+import jterm.JTerm;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +53,7 @@ public class InputHandler {
      * booleans in JTerm class to determine
      * what OS the program is running on.
      */
-    static void process() {
+    public static void process() {
         char input = 0;
 
         try {
@@ -136,19 +138,9 @@ public class InputHandler {
             System.out.print("\n" + JTerm.prompt);
         }
 
-        // It's a letter
-        else if (Character.isLetter(input)) {
-            if (!JTerm.capsOn) {
-                JTerm.command += input;
-            } else {
-                JTerm.command += Character.toUpperCase(input);
-            }
-        }
-
         // Just print it if it is defined
-        else {
+        else if (Character.isDefined(input))
             JTerm.command += input;
-        }
 
         if (fileNames.size() > 0 && clearFilesList) {
             fileNames.clear();
@@ -219,19 +211,9 @@ public class InputHandler {
             System.out.println("\r\n" + JTerm.prompt);
         }
 
-        // It's a letter
-        else if (Character.isLetter(input)) {
-            if (!JTerm.capsOn) {
-                JTerm.command += input;
-            } else {
-                JTerm.command += Character.toUpperCase(input);
-            }
-        }
-
         // just print it if it is defined
-        else if (Character.isDefined(input)) {
+        else if (Character.isDefined(input))
             JTerm.command += input;
-        }
 
         if (fileNames.size() > 0 && clearFilesList) {
             fileNames.clear();
