@@ -40,7 +40,7 @@ public class Files {
      * Process() void
      * <br></br><br></br>
      * Process the input.
-     *
+     * <br></br>
      * @param options command options
      */
     public static void process(String options) {
@@ -53,7 +53,7 @@ public class Files {
      * Write() void
      * <br></br><br></br>
      * Get input and write it to a file.
-     *
+     * <br></br>
      * @param options command options
      */
     /*
@@ -116,7 +116,7 @@ public class Files {
      * Delete() void
      * <br></br><br></br>
      * Delete the specified file or directory.
-     *
+     * <br></br>
      * @param options command options
      */
     /*
@@ -157,7 +157,7 @@ public class Files {
      * Identical to 'delete'; calls Delete().
      * <br></br><br></br>
      * Credit to: @pmorgan3
-     *
+     * <br></br>
      * @param options command options
      */
     public static void rm(ArrayList<String> options) {
@@ -170,7 +170,7 @@ public class Files {
      * Identical to 'delete'; calls Delete().
      * <br></br><br></br>
      * Credit to: @pmorgan3
-     *
+     * <br></br>
      * @param options command options
      */
     public static void del(ArrayList<String> options) {
@@ -184,7 +184,7 @@ public class Files {
      * to the console.
      * <br></br><br></br>
      * Credit to @d4nntheman
-     *
+     * <br></br>
      * @param options command options
      */
 	/*
@@ -230,7 +230,7 @@ public class Files {
      * Download() void
      * <br></br><br></br>
      * Downloads a file to the working directory, given a valid URL.
-     *
+     * <br></br>
      * @param options command options, must include URL
      */
     public static void download(ArrayList<String> options) {

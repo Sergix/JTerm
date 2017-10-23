@@ -21,8 +21,6 @@ import jterm.command.Exec;
 import jterm.io.InputHandler;
 import org.apache.commons.lang3.SystemUtils;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
@@ -45,9 +43,6 @@ public class JTerm {
     // User input variable used among all parts of the application
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
-    // Boolean to determine if caps lock is on, since input system does not distinguish between character cases
-    // Command string which the input system will aggregate characters to
-    public static boolean capsOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
     public static String command = "";
 
     public static void main(String[] args) {
