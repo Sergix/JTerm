@@ -53,6 +53,8 @@ public class JTerm {
                         + "under certain conditions.\n");
 
 
+        InputHandler.init();
+
         System.out.print(prompt);
         while (true) {
             InputHandler.process();

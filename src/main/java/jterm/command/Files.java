@@ -291,7 +291,7 @@ public class Files {
                 downloadedBytes += count;
                 steps++;
                 if (steps % 10 == 0) { // print every 10 download steps
-                    Util.ClearLine(update, false);
+                    Util.clearLine(update, false);
                     System.out.print(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"));
                 }
             }
@@ -300,7 +300,7 @@ public class Files {
         }
 
         // clear line and notify user of download success
-        Util.ClearLine(update, false);
-        System.out.println("\nFile downloaded successfully in: " + Util.GetRunTime(System.currentTimeMillis() - start));
+        Util.clearLine(update, false);
+        System.out.println("\nFile downloaded successfully in: " + Util.getRunTime(System.currentTimeMillis() - start));
     }
 }
