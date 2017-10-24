@@ -25,7 +25,7 @@ View the [Contributing Guidelines](https://github.com/Sergix/JTerm/blob/master/C
 ## Slack
 The JTerm project now has a Slack messaging group! Request to join the [Sergix](https://sergix.slack.com/) team to recieve notifications on updates, Travis CI build status, and more!
 
-> JTerm 0.5.1  
-> `jterm-v0.5.1.jar`  
+> JTerm 0.6.1  
+> `jterm-v0.6.1.jar`  
 > This project and its source are held under the GNU General Public License, located in the LICENSE file in the project's directory.  
 > (c) 2017
