@@ -1,3 +1,16 @@
+(#96)[10/23/2017-21:05 0.6.1 Sergix]
+	Closed #45.
+	Closed #49.
+		- Should have been in changelog entry #92.
+	Closed #59.
+	Closed #60.
+	Merged #58.
+		- Thanks to @ojles for formatting!
+	Merged #61.
+		- Thanks to @nanoandrew4!
+	Updated ROADMAP.
+	Pushed updates to Git.
+
 (#95)[10/20/2017-21:28 0.6.1 Sergix]
 	Closed #56.
 		- Accidentally merged the non-updated Exec class.
