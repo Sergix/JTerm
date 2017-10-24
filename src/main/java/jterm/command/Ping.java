@@ -41,35 +41,36 @@ public class Ping {
     * -p port
     *	Port to ping the host on
     */
-    // FIXME: ping is failing when no options are set
     public Ping(ArrayList<String> options) {
-        String host = "google.com";
-        String port = "80";
-        boolean portNext = false;
+        if (options.size() == 0 || options.contains("-h")) {
+            System.out.println("Command syntax:\n\tping [-h] [-p port] host");
+            return;
+        }
 
-        for (String option : options) {
-            if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tping [-h] [-p port] host\n\n"
-                        + "Attempts to connect to the specified host. Default port is '80'.");
+        String port = "80";
+
+        int portIndex = options.indexOf("-p");
+        if (portIndex != -1) {
+            if ((options.size() != 3) || (portIndex + 1 == options.size())) {
+                System.out.println("Invalid ping usage");
                 return;
-            } else if (portNext) {
-                port = option;
-                portNext = false;
-            } else if (option.equals("-p")) {
-                portNext = true;
             } else {
-                host = option;
+                port = options.get(portIndex + 1);
+                options.remove("-p");
+                options.remove(port);
             }
         }
 
-        // FIXME: if no options set, host = "process" !!!
+        String host = options.get(options.size() - 1);
+
         try (Socket socket = new Socket()) {
             System.out.println("Pinging " + host + "...");
             socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 10000);
             System.out.println("Ping Successful");
         } catch (IOException e) {
-            // Either timeout or unreachable or failed DNS lookup
-            System.out.println("Ping Failed");
+            System.out.println("Ping failed");
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid port value");
         }
     }
 }
