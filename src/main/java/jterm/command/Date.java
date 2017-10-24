@@ -1,3 +1,4 @@
+package jterm.command;
 /*
 * JTerm - a cross-platform terminal
 * Copyright (code) 2017 Sergix, NCSGeek
@@ -14,36 +15,20 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm.command;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Date {
-	
-	private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); // DateFormat sdf
-    
-	public Date(ArrayList<String> options)
-	{
+	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-		
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\tdate [-h]\n\nPrints the system date."); // Options
-				return;
-			  
-			}
-		 
-		}
-		
-		Calendar cal = Calendar.getInstance(); // Display the date
-        System.out.println("The current date is: " + sdf.format(cal.getTime()));
-		
-	}
-	
+    public Date(ArrayList<String> options) {
+        if (options.contains("-h")) {
+            System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.");
+            return;
+        }
+		Calendar calendar = Calendar.getInstance();
+		System.out.println("The current date is: " + dateFormat.format(calendar.getTime()));
+    }
 }
