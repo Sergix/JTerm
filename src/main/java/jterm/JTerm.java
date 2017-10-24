@@ -82,18 +82,14 @@ public class JTerm {
         command = "jterm.command." + classChar + command;
         optionsArray.remove(0);
 
-        // Get the method name
-        if (optionsArray.toArray().length >= 1) {
+        if (optionsArray.size() > 0) {
             methodName = optionsArray.get(0);
-        } else {
-            optionsArray.add(methodName);
         }
 
         try {
             Object instance = Class.forName(command)
                     .getConstructor(ArrayList.class)
                     .newInstance(optionsArray);
-            optionsArray.remove(0);
             instance.getClass()
                     .getMethod(methodName, ArrayList.class)
                     .invoke(options.getClass(), optionsArray);
