@@ -20,6 +20,7 @@ package jterm.command;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Window {
     public static int windowCount = 0;
@@ -55,7 +56,7 @@ public class Window {
     *	  be resized
     *
     */
-    public Window(ArrayList<String> options) {
+    public Window(List<String> options) {
         int width = 500;
         int height = 500;
 

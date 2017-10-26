@@ -17,17 +17,18 @@ package jterm.command;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class Time {
-    public Time(ArrayList<String> options) {
+public class Time implements Command {
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss , z");
+
+    @Override
+    public void execute(List<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console."); // Options
+            System.out.println("Command syntax:\n\techo [-h] input");
             return;
         }
-        Date date = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss , z");
-        System.out.println("The Current Time is: " + dateFormat.format(date));
+        System.out.println("The Current Time is: " + DATE_FORMAT.format(new Date()));
     }
 }

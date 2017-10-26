@@ -17,18 +17,19 @@ package jterm.command;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
-public class Date {
+public class Date implements Command {
 	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-    public Date(ArrayList<String> options) {
+    @Override
+    public void execute(List<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.");
+            System.out.println("Command syntax:\n\tdate [-h]");
             return;
         }
-		Calendar calendar = Calendar.getInstance();
-		System.out.println("The current date is: " + dateFormat.format(calendar.getTime()));
+        Calendar calendar = Calendar.getInstance();
+        System.out.println("The current date is: " + dateFormat.format(calendar.getTime()));
     }
 }

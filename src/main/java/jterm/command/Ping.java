@@ -19,29 +19,11 @@ package jterm.command;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.List;
 
-/*
-* Original code credit to @chromechris
-* 
-* (edits for release done by @Sergix)
-*/
-public class Ping {
-    /*
-    * Ping() void
-    *
-    * Pings the specified host.
-    *
-    * ArrayList<String> options - command options
-
-    * -h
-    * 	Prints help information
-    * host
-    * 	Host to ping
-    * -p port
-    *	Port to ping the host on
-    */
-    public Ping(ArrayList<String> options) {
+public class Ping implements Command {
+    @Override
+    public void execute(List<String> options) {
         if (options.size() == 0 || options.contains("-h")) {
             System.out.println("Command syntax:\n\tping [-h] [-p port] host");
             return;
@@ -52,8 +34,7 @@ public class Ping {
         int portIndex = options.indexOf("-p");
         if (portIndex != -1) {
             if ((options.size() != 3) || (portIndex + 1 == options.size())) {
-                System.out.println("Invalid ping usage");
-                return;
+                throw new CommandException("Invalid ping usage");
             } else {
                 port = options.get(portIndex + 1);
                 options.remove("-p");
@@ -62,15 +43,14 @@ public class Ping {
         }
 
         String host = options.get(options.size() - 1);
-
         try (Socket socket = new Socket()) {
             System.out.println("Pinging " + host + "...");
-            socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 10000);
+            socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 3000);
             System.out.println("Ping Successful");
         } catch (IOException e) {
-            System.out.println("Ping failed");
+            throw new CommandException("Ping failed", e);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid port value");
+            throw new CommandException("Invalid port value", e);
         }
     }
 }

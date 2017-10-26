@@ -16,31 +16,22 @@
 
 package jterm.command;
 
-import java.util.ArrayList;
-import java.io.IOException;
-
 import jterm.JTerm;
+import jterm.util.Util;
 
-public class Pause {
-    /*
-    * Pause() void
-    *
-    * Pauses the interpreter until the user
-    * hits the "Enter" key.
-    *
-    * ArrayList<String> options - command options
-    *
-    * message
-    * 	Pause message to be printed
-    */
-    public Pause(ArrayList<String> options) {
+import java.io.IOException;
+import java.util.List;
+
+public class Pause implements Command {
+    @Override
+    public void execute(List<String> options) {
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tpause [-h] [input]\n\nPauses the terminal and awaits a keypress.");
+                System.out.println("Command syntax:\n\tpause [-h] [input]");
                 return;
 
             } else {
-                System.out.print(Exec.getRest(options, 0));
+                System.out.print(Util.getRest(options, 0));
             }
         }
 
