@@ -17,32 +17,45 @@
 // package = folder :P
 package jterm;
 
-import jterm.command.Exec;
+import jterm.command.*;
 import jterm.io.InputHandler;
+import jterm.util.Util;
 import org.apache.commons.lang3.SystemUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JTerm {
-    // Global VERSION variable
-    // TODO: maybe better to get the VERSION from some property file?
-    // like: VERSION = Utils.getProperty("project.VERSION");
-    public static final String VERSION = "0.6.1";
-    public static String prompt = "   \b\b\b>> ";
+    public static final Map<String, Command> COMMANDS = new HashMap<>(14);
 
-    // Global directory variable (use "cd" command to change)
-    // Default value "./" is equal to the default directory set when the program starts
-    public static String currentDirectory = "./";
+    static {
+        COMMANDS.put("clear", new Clear());
+        COMMANDS.put("date",  new Date());
+        COMMANDS.put("dir",   new Dir());
+        COMMANDS.put("echo",  new Echo());
+        COMMANDS.put("exec",  new Exec());
+        COMMANDS.put("exit",  new Exit());
+        COMMANDS.put("files", new Files());
+        COMMANDS.put("help",  new Help());
+        COMMANDS.put("pause", new Pause());
+        COMMANDS.put("ping",  new Ping());
+        COMMANDS.put("ps",    new Ps());
+        COMMANDS.put("set",   new Set());
+        COMMANDS.put("time",  new Time());
+    }
+
+
+    public static final String VERSION = "0.6.1";
+    public static final String PROMPT = "   \b\b\b>> ";
     public static final boolean IS_WIN = SystemUtils.IS_OS_WINDOWS;
     public static final boolean IS_UNIX = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
 
-    // User input variable used among all parts of the application
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
+    public static String currentDirectory = "./";
     public static String command = "";
 
     public static void main(String[] args) {
@@ -53,116 +66,31 @@ public class JTerm {
                         + "under certain conditions.\n");
 
 
-        System.out.print(prompt);
+        System.out.print(PROMPT);
         while (true) {
             InputHandler.process();
         }
     }
 
-    /*
-    * parse() boolean
-    *
-    * Checks input and passes command options to the function
-    * that runs the requested command.
-    *
-    * ArrayList<String> options - command options
-    */
-    public static boolean parse(String options) {
-        ArrayList<String> optionsArray = getAsArray(options);
+    public static void executeCommand(String options) {
+        ArrayList<String> optionsArray = Util.getAsArray(options);
 
-        // Default to process/help command if function is not found
-        String methodName = "process";
+        if (optionsArray.size() == 0) {
+            return;
+        }
 
-        // Get the first string in the options array, which is the command,
-        // and capitalize the first letter of the command
-        String original = optionsArray.get(0).toLowerCase();
-        String command = original;
-        String classChar = command.substring(0, 1).toUpperCase();
-        command = command.substring(1);
-        command = "jterm.command." + classChar + command;
+        String command = optionsArray.get(0);
         optionsArray.remove(0);
 
-        if (optionsArray.size() > 0) {
-            methodName = optionsArray.get(0);
+        if (!COMMANDS.containsKey(command)) {
+            System.out.println("Command \"" + command + "\" is not available");
+            return;
         }
 
         try {
-            Object instance = Class.forName(command)
-                    .getConstructor(ArrayList.class)
-                    .newInstance(optionsArray);
-            instance.getClass()
-                    .getMethod(methodName, ArrayList.class)
-                    .invoke(options.getClass(), optionsArray);
-        } catch (ClassNotFoundException e) {
-            ArrayList<String> execFile = new ArrayList<>();
-            execFile.add(original);
-            if (Exec.run(execFile)) {
-                System.out.println("Unknown Command \"" + original + "\"");
-            }
-        } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
-            System.out.println(e);
-        } catch (NoSuchMethodException e) {
-            // ignore exception
+            COMMANDS.get(command).execute(optionsArray);
+        } catch (CommandException e) {
+            System.err.println(e.getMessage());
         }
-
-        return false;
-        // 	// Commands to skip in batch files
-        // 	case "bcdedit":
-        // 	case "chkdsk":
-        // 	case "chkntfs":
-        // 	case "cls":
-        // 	case "cmd":
-        // 	case "color":
-        // 	case "convert":
-        // 	case "diskpart":
-        // 	case "driverquery":
-        // 	case "format":
-        // 	case "fsutil":
-        // 	case "gpresult":
-        // 	case "mode":
-        // 	case "sc":
-        // 	case "shutdown":
-        // 	case "start":
-        // 	case "tasklist":
-        // 	case "taskkill":
-        // 	case "ver":
-        // 	case "vol":
-        // 	case "wmic":
-        // 		break;
-    }
-
-    /*
-    * getAsArray() ArrayList<String>
-    *
-    * Returns a String as an ArrayList of
-    * Strings (spaces as delimiters)
-    *
-    * String options - String to be split
-    */
-    public static ArrayList<String> getAsArray(String options) {
-        try (Scanner tokenizer = new Scanner(options)) {
-            ArrayList<String> optionsArray = new ArrayList<>();
-            while (tokenizer.hasNext()) {
-                optionsArray.add(tokenizer.next());
-            }
-            return optionsArray;
-        }
-    }
-
-    /*
-    * getAsString() String
-    *
-    * Returns an ArrayList of Strings
-    * as a String (separated with spaces)
-    *
-    * ArrayList<String> options - array to be split
-    */
-    public static String getAsString(ArrayList<String> options) {
-        StringBuilder result = new StringBuilder();
-        for (String option : options) {
-            result.append(option);
-            result.append(" ");
-        }
-        return result.substring(0, result.length() - 1);
     }
 }
