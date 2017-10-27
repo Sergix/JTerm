@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JTerm {
-    public static final Map<String, Command> COMMANDS = new HashMap<>(14);
+    private static final Map<String, Command> COMMANDS = new HashMap<>(14);
 
     static {
         COMMANDS.put("clear", new Clear());

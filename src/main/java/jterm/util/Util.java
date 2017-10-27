@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Util {
 
     /**
-     * GetRuntime() String
+     * getRuntime() String
      * <br></br><br></br>
      * Takes an interval of time in milliseconds, and returns amount of time it represents.
      * Useful for determining runtime of a program in a more readable format.
@@ -17,7 +17,7 @@ public class Util {
      * @param interval milliseconds to convert to dd, hh, mm, ss, SSS format
      * @return time converted to readable format
      */
-    public static String GetRunTime(long interval) {
+    public static String getRunTime(long interval) {
         long seconds = interval / 1000;
         String time = "";
 
@@ -38,14 +38,14 @@ public class Util {
     }
 
     /**
-     * ClearLine() void
+     * clearLine() void
      * <br></br><br></br>
      * Clears a line in the console of size line.length().
      *
      * @param line        line to be cleared
      * @param clearPrompt choose to clear PROMPT along with line (only use true if PROMPT exists)
      */
-    public static void ClearLine(String line, boolean clearPrompt) {
+    public static void clearLine(String line, boolean clearPrompt) {
         for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() / 3 : 0); i++) {
             System.out.print("\b");
         }

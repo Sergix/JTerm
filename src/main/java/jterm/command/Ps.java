@@ -21,22 +21,24 @@ import jterm.JTerm;
 import java.util.List;
 
 public class Ps implements Command {
+    private static final String PS_COMMAND;
+
+    static {
+        if (JTerm.IS_UNIX) {
+            PS_COMMAND = "ps -e";
+        } else if (JTerm.IS_WIN) {
+            PS_COMMAND = System.getenv("windir") + "\\system32\\" + "tasklist.exe";
+        } else {
+            throw new Error("Undefined operating system");
+        }
+    }
+
     @Override
     public void execute(List<String> options) {
         if (options.contains("-h")) {
             System.out.println("Command syntax:\n\tps [-h]\n\nDisplays all current processes running on the host system.");
             return;
         }
-
-        String command;
-        if (JTerm.IS_UNIX) {
-            command = "ps -e";
-        } else if (JTerm.IS_WIN) {
-            command = System.getenv("windir") + "\\system32\\" + "tasklist.exe";
-        } else {
-            throw new Error("Undefined OS");
-        }
-
-        Exec.run(command);
+        Exec.run(PS_COMMAND);
     }
 }

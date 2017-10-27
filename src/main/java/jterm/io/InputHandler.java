@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
+import java.util.function.Consumer;
 
 public class InputHandler {
     // List of files for tab rotation and printing options
@@ -44,6 +45,18 @@ public class InputHandler {
 
     // Stops autocomplete from constantly erasing fileNames list when searching sub-directories
     private static boolean blockClear = false;
+
+    private static Consumer<Character> inputProcessor;
+
+    static {
+        if (JTerm.IS_WIN) {
+            inputProcessor = InputHandler::processWin;
+        } else if (JTerm.IS_UNIX) {
+            inputProcessor = InputHandler::processUnix;
+        } else {
+            throw new Error("Unknown operating system!");
+        }
+    }
 
     /**
      * process() void
@@ -62,11 +75,7 @@ public class InputHandler {
             e.printStackTrace();
         }
 
-        if (JTerm.IS_WIN) {
-            processWin(input);
-        } else if (JTerm.IS_UNIX) {
-            processUnix(input);
-        }
+        inputProcessor.accept(input);
     }
 
     /**

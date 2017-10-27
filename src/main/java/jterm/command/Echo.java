@@ -18,7 +18,6 @@
 
 package jterm.command;
 
-import jterm.JTerm;
 import jterm.util.Util;
 
 import java.util.List;
