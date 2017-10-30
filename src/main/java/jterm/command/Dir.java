@@ -22,6 +22,7 @@ import jterm.JTerm;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.lang.String;
 
 // not doing it now, because they are not invoked directly
 public class Dir {
@@ -126,7 +127,7 @@ public class Dir {
                 System.out.println("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.");
                 return;
             } else {
-                newDirectory += option + " ";
+                newDirectory += option;
             }
         }
 
@@ -146,6 +147,15 @@ public class Dir {
 
         if (newDirectory.equals("/")) {
             newDirectory = "/";
+        } else if (newDirectory.equals(".")) {
+            return;
+        } else if (newDirectory.equals("..")) {
+            if(JTerm.currentDirectory == "/") {
+                return;
+            } else {
+                newDirectory = JTerm.currentDirectory.substring(0, JTerm.currentDirectory.length() - 2);
+                newDirectory = newDirectory.substring(0, newDirectory.lastIndexOf('/'));
+            }
         } else if (newDir.exists() && newDir.isDirectory()) {
             newDirectory = JTerm.currentDirectory + newDirectory;
         } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
