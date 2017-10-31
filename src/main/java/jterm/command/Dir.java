@@ -156,7 +156,7 @@ public class Dir {
                 newDirectory = JTerm.currentDirectory.substring(0, JTerm.currentDirectory.length() - 2);
                 newDirectory = newDirectory.substring(0, newDirectory.lastIndexOf('/'));
             }
-        } else if (newDir.exists() && newDir.isDirectory()) {
+        ano .} else if (newDir.exists() && newDir.isDirectory()) {
             newDirectory = JTerm.currentDirectory + newDirectory;
         } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
             System.out.println("ERROR: Directory \"" + newDirectory + "\" is either does not exist or is not a valid directory.");
