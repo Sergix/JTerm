@@ -62,7 +62,7 @@ public class Dir implements Command {
                 System.out.println("\t" + command);
             }
         } else if (FUNCTIONS.containsKey(options.get(0))) {
-            FUNCTIONS.get(options.get(0)).accept(options);
+            FUNCTIONS.get(options.remove(0)).accept(options);
         } else {
             throw new CommandException("No command \"" + options.get(0) + "\" found");
         }
