@@ -1,3 +1,13 @@
+(#97)[10/31/2017-19:49 0.6.1 wuhugh]
+    Closed #68.
+    Edited Dir.java
+        - cd .. no longer adds the .'s to cwd string
+        - Added rm command to delete files/directories
+    Added commons.io dependency to pom.xml
+    Edited JTerm.java
+        - Program starts with cwd instead of "./"
+    Pushed updates to Git.
+
 (#96)[10/23/2017-21:05 0.6.1 Sergix]
 	Closed #45.
 	Closed #49.
