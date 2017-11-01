@@ -17,10 +17,12 @@
 // package = folder :P
 package jterm;
 
-import jterm.command.*;
+import jterm.command.Command;
+import jterm.command.CommandException;
 import jterm.io.InputHandler;
 import jterm.util.Util;
 import org.apache.commons.lang3.SystemUtils;
+import org.reflections.Reflections;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -29,29 +31,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JTerm {
-    private static final Map<String, Command> COMMANDS = new HashMap<>(14);
-
-    static {
-        COMMANDS.put("clear", new Clear());
-        COMMANDS.put("date",  new Date());
-        COMMANDS.put("dir",   new Dir());
-        COMMANDS.put("echo",  new Echo());
-        COMMANDS.put("exec",  new Exec());
-        COMMANDS.put("exit",  new Exit());
-        COMMANDS.put("files", new Files());
-        COMMANDS.put("help",  new Help());
-        COMMANDS.put("pause", new Pause());
-        COMMANDS.put("ping",  new Ping());
-        COMMANDS.put("ps",    new Ps());
-        COMMANDS.put("set",   new Set());
-        COMMANDS.put("time",  new Time());
-    }
-
+    private static final Map<String, Command> COMMANDS = new HashMap<>();
 
     public static final String VERSION = "0.6.1";
     public static final String PROMPT = "   \b\b\b>> ";
-    public static final boolean IS_WIN = SystemUtils.IS_OS_WINDOWS;
-    public static final boolean IS_UNIX = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
+    public static final boolean IS_WIN;
+    public static final boolean IS_UNIX;
+
+    static {
+        IS_WIN = SystemUtils.IS_OS_WINDOWS;
+        IS_UNIX = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
+
+        Reflections reflections = new Reflections("jterm.command");
+        for (Class<? extends Command> commandClass : reflections.getSubTypesOf(Command.class)) {
+            try {
+                Command command = commandClass.getConstructor().newInstance();
+                COMMANDS.put(commandClass.getSimpleName().toLowerCase(), command);
+            } catch (Exception e) {
+                System.err.println("Something went wrong...\n" + e);
+            }
+        }
+    }
 
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
