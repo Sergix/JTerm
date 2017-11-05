@@ -16,7 +16,7 @@
 
 package jterm.command;
 
-import org.apache.commons.lang3.SystemUtils;
+import jterm.JTerm;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -45,8 +45,7 @@ public class Ps {
             return;
         }
 
-        // FIXME: use SystemUtils or JTerm.IS_UNIX constant?
-        if (SystemUtils.IS_OS_LINUX) {
+        if (JTerm.IS_UNIX) {
             try {
                 Process process = Runtime.getRuntime().exec("ps -e");
                 BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -60,7 +59,7 @@ public class Ps {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (SystemUtils.IS_OS_WINDOWS) {
+        } else if (JTerm.IS_WIN) {
             try {
                 String line;
                 Process p = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");

@@ -60,8 +60,6 @@ public class Dir {
     *     =>     F RW 	myFile.txt		2 KB
     */
     public static void ls(ArrayList<String> options) {
-        System.out.println(options);
-
         String path = JTerm.currentDirectory;
         boolean printFull = true;
 

@@ -20,7 +20,6 @@ package jterm;
 import jterm.command.Exec;
 import jterm.io.InputHandler;
 import jterm.util.Util;
-import org.apache.commons.lang3.SystemUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
