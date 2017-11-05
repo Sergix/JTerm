@@ -21,7 +21,11 @@ package jterm.command;
 import jterm.JTerm;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.lang.String;
+
+import org.apache.commons.io.FileUtils;
 
 // not doing it now, because they are not invoked directly
 public class Dir {
@@ -29,7 +33,7 @@ public class Dir {
     }
 
     public static void process(ArrayList<String> options) {
-        System.out.println("Directory Commands\n\nls\tcd\nchdir\tpwd\nmd");
+        System.out.println("Directory Commands\n\nls\tcd\nchdir\tpwd\nmd\trm");
     }
 
     /*
@@ -126,7 +130,7 @@ public class Dir {
                 System.out.println("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.");
                 return;
             } else {
-                newDirectory += option + " ";
+                newDirectory += option;
             }
         }
 
@@ -146,6 +150,15 @@ public class Dir {
 
         if (newDirectory.equals("/")) {
             newDirectory = "/";
+        } else if (newDirectory.equals(".")) {
+            return;
+        } else if (newDirectory.equals("..")) {
+            if(JTerm.currentDirectory == "/") {
+                return;
+            } else {
+                newDirectory = JTerm.currentDirectory.substring(0, JTerm.currentDirectory.length() - 2);
+                newDirectory = newDirectory.substring(0, newDirectory.lastIndexOf('/'));
+            }
         } else if (newDir.exists() && newDir.isDirectory()) {
             newDirectory = JTerm.currentDirectory + newDirectory;
         } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
@@ -221,5 +234,57 @@ public class Dir {
                 .deleteCharAt(nameBuilder.length() - 1)
                 .insert(0, JTerm.currentDirectory);
         new File(nameBuilder.toString()).mkdir();
+    }
+
+    /*
+    * rm() void
+    *
+    * Removes a file or directory
+    *
+    * ArrayList<String> options - command options
+    *
+    * -h
+    *   Prints help information
+    *
+    * -r
+    *   Recursively remove directories
+    *
+    * name
+    *   Names of files or directories to be removed
+     */
+    public static void rm(ArrayList<String> options) {
+        ArrayList<String> filesToBeRemoved = new ArrayList<>();
+        boolean recursivelyDeleteFlag = false;
+        for (String option : options) {
+            if (option.equals("-h")) {
+                System.out.println("Command syntax:\n\t rm [-h] [-r] name... Remove files or directories");
+                return;
+            } else if (option.equals("-r")) {
+                recursivelyDeleteFlag = true;
+            } else {
+                filesToBeRemoved.add(option);
+            }
+        }
+
+        for (String fileName : filesToBeRemoved) {
+            File file = new File(JTerm.currentDirectory, fileName);
+
+            if (!file.isFile() && !file.isDirectory()) {
+                System.out.println(fileName + " is not a file or directory");
+            } else if (file.isDirectory()) {
+                if (recursivelyDeleteFlag) {
+                    try {
+                        FileUtils.deleteDirectory(file);
+                    } catch (IOException e) {
+                        System.out.println("Error when deleting " + fileName);
+                    }
+                } else {
+                    System.out.println("Attempting to delete a directory. Run the command again with -r.");
+                    return;
+                }
+            }
+
+            file.delete();
+        }
     }
 }

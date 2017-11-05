@@ -35,8 +35,8 @@ public class JTerm {
     public static String prompt = "   \b\b\b>> ";
 
     // Global directory variable (use "cd" command to change)
-    // Default value "./" is equal to the default directory set when the program starts
-    public static String currentDirectory = "./";
+    // Default value of getProperty("user.dir") is equal to the default directory set when the program starts
+    public static String currentDirectory = System.getProperty("user.dir");
     public static final boolean IS_WIN = SystemUtils.IS_OS_WINDOWS;
     public static final boolean IS_UNIX = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
 
