@@ -36,8 +36,6 @@ combined-batch.bat
 changelog.txt
 src/main/java/jterm/command/Help.java
 
-*.bat
-
 # IDEA files
 .idea/
 jterm.iml

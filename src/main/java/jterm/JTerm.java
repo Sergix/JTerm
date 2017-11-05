@@ -19,6 +19,7 @@ package jterm;
 
 import jterm.command.Exec;
 import jterm.io.InputHandler;
+import jterm.util.Util;
 import org.apache.commons.lang3.SystemUtils;
 
 import java.io.BufferedReader;
@@ -37,8 +38,8 @@ public class JTerm {
     // Global directory variable (use "cd" command to change)
     // Default value of getProperty("user.dir") is equal to the default directory set when the program starts
     public static String currentDirectory = System.getProperty("user.dir");
-    public static final boolean IS_WIN = SystemUtils.IS_OS_WINDOWS;
-    public static final boolean IS_UNIX = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
+    public static boolean IS_WIN = false;
+    public static boolean IS_UNIX = false;
 
     // User input variable used among all parts of the application
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
@@ -46,12 +47,13 @@ public class JTerm {
     public static String command = "";
 
     public static void main(String[] args) {
-        System.out.println(
-                "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
-                        + "This program comes with ABSOLUTELY NO WARRANTY.\n"
-                        + "This is free software, and you are welcome to redistribute it\n"
-                        + "under certain conditions.\n");
+        Util.setOS();
 
+        System.out.println(
+            "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
+            + "This program comes with ABSOLUTELY NO WARRANTY.\n"
+            + "This is free software, and you are welcome to redistribute it\n"
+            + "under certain conditions.\n");
 
         System.out.print(prompt);
         while (true) {

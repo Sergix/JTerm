@@ -17,12 +17,15 @@ public class Util {
         long seconds = interval / 1000;
         String time = "";
 
-        if (seconds / 86400 >= 1)
+        if (seconds / 86400 >= 1) {
             time += String.valueOf(seconds / 86400) + " days, ";
-        if ((seconds / 3600) >= 1)
+        }
+        if ((seconds / 3600) >= 1) {
             time += String.valueOf((seconds / 3600) % 24) + " hours, ";
-        if ((seconds / 60) >= 1)
+        }
+        if ((seconds / 60) >= 1) {
             time += String.valueOf((seconds / 60) % 60) + " minutes, ";
+        }
 
         time += String.valueOf(seconds % 60) + " seconds, ";
         time += String.valueOf(interval % 1000) + " millis";
@@ -39,15 +42,24 @@ public class Util {
      * @param clearPrompt choose to clear prompt along with line (only use true if prompt exists)
      */
     public static void ClearLine(String line, boolean clearPrompt) {
-
-        for (int i = 0; i < line.length() + (clearPrompt ? JTerm.prompt.length() / 3 : 0); i++)
+        for (int i = 0; i < line.length() + (clearPrompt ? JTerm.prompt.length() / 3 : 0); i++) {
             System.out.print("\b");
-
-        for (int i = 0; i < line.length() + (clearPrompt ? JTerm.prompt.length() / 3 : 0); i++)
+        }
+        for (int i = 0; i < line.length() + (clearPrompt ? JTerm.prompt.length() / 3 : 0); i++) {
             System.out.print(" ");
-
-        for (int i = 0; i < line.length() + (clearPrompt ? JTerm.prompt.length() / 3 : 0); i++)
+        }
+        for (int i = 0; i < line.length() + (clearPrompt ? JTerm.prompt.length() / 3 : 0); i++) {
             System.out.print("\b");
+        }
+    }
 
+    public static void setOS() {
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if (os.contains("windows")) {
+            JTerm.IS_WIN = true;
+        } else if ("linux".equals(os) || os.contains("mac") || "sunos".equals(os) || "freebsd".equals(os)) {
+            JTerm.IS_UNIX = true;
+        }
     }
 }
