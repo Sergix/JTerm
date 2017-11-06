@@ -22,11 +22,13 @@
 package jterm.io;
 
 import jterm.JTerm;
+import jterm.util.Key;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class InputHandler {
@@ -83,17 +85,17 @@ public class InputHandler {
         boolean clearFilesList = true;
 
         // Do not output tabs, caps lock and backspace chars
-        if (input != 127 && input != 9) {
+        if (input != Key.DELETE && input != Key.TAB) {
             System.out.print(input);
         }
 
-        if (input != 9) {
+        if (input != Key.TAB) {
             lockTab = false;
             blockClear = false;
         }
 
         // Back Space
-        if (input == 127) {
+        if (input == Key.DELETE) {
             if (JTerm.command.length() > 0) {
                 JTerm.command = JTerm.command.substring(0, JTerm.command.length() - 1);
 
@@ -108,7 +110,7 @@ public class InputHandler {
         }
 
         // Tab
-        else if (input == '\t' && JTerm.command.length() > 0) {
+        else if (input == Key.TAB && JTerm.command.length() > 0) {
             clearFilesList = false;
 
             // Split into sections
@@ -129,7 +131,7 @@ public class InputHandler {
         }
 
         // Enter, or new line
-        else if (input == '\n') {
+        else if (input == Key.NEW_LINE) {
             if (JTerm.command.length() > 0) {
                 JTerm.parse(JTerm.command);
             }
@@ -160,17 +162,17 @@ public class InputHandler {
     private static void processWin(char input) {
         boolean clearFilesList = true;
 
-        if (input != 8 && input != 9) {
+        if (input != Key.BACKSPACE && input != Key.TAB) {
             System.out.print(input);
         }
 
-        if (input != 9) {
+        if (input != Key.TAB) {
             lockTab = false;
             blockClear = false;
         }
 
         // Backspace
-        if (input == 8) {
+        if (input == Key.BACKSPACE) {
             if (JTerm.command.length() > 0) {
                 JTerm.command = JTerm.command.substring(0, JTerm.command.length() - 1);
 
@@ -180,7 +182,7 @@ public class InputHandler {
         }
 
         // Tab
-        else if (input == 9 && JTerm.command.length() > 0) {
+        else if (input == Key.TAB && JTerm.command.length() > 0) {
             clearFilesList = false;
 
             // Split into sections
@@ -201,7 +203,7 @@ public class InputHandler {
         }
 
         // New line
-        else if (input == 13) {
+        else if (input == Key.CARRIAGE_RETURN || input == Key.NEW_LINE) {
             System.out.println("\r\n");
             if (JTerm.command.length() > 0) {
                 JTerm.parse(JTerm.command);
