@@ -239,10 +239,12 @@ public class InputHandler {
         String path = "";
         if (splitPath.length > 0) {
             // re-create path to look in
+            StringBuilder pathBuilder = new StringBuilder();
             for (int i = 0; (i < (splitPath.length - 1) && !endsWithSlash) || (i < splitPath.length && endsWithSlash); i++) {
-                path += "/" + splitPath[i];
+                pathBuilder.append("/").append(splitPath[i]);
             }
-            path += "/";
+            path = pathBuilder.toString();
+            pathBuilder.append("/");
         }
 
         // get folder at path

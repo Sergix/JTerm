@@ -77,26 +77,24 @@ public class Server implements Runnable {
 
         try {
             ServerSocket server = new ServerSocket(port);
-            new Thread(new Runnable() {
-                public void run() {
-                    while (true) {
-                        System.out.print("> ");
-                        BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in), 1);
-                        try {
-                            String input = consoleInput.readLine();
-                            switch (input) {
-                                case "help":
-                                    System.out.println("Server currently opened on port " + port);
-                                    break;
+            new Thread(() -> {
+                while (true) {
+                    System.out.print("> ");
+                    BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in), 1);
+                    try {
+                        String input = consoleInput.readLine();
+                        switch (input) {
+                            case "help":
+                                System.out.println("Server currently opened on port " + port);
+                                break;
 
-                                case "quit":
-                                    run = false;
-                                    return;
-                            }
-                        } catch (IOException ioe) {
-                            System.out.println("Input Stream closed.");
-                            break;
+                            case "quit":
+                                run = false;
+                                return;
                         }
+                    } catch (IOException ioe) {
+                        System.out.println("Input Stream closed.");
+                        break;
                     }
                 }
             }).start();

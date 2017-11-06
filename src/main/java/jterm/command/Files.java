@@ -63,17 +63,17 @@ public class Files {
 	 */
     public static void write(ArrayList<String> options) {
 
-        String filename = "";
-
+        StringBuilder filenameBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
                 System.out.println("Command syntax:\n\twrite [-h] filename\n\nOpens an input prompt in which to write text to a new file.");
                 return;
 
             } else
-                filename += option;
+                filenameBuilder.append(option);
 
         }
+        String filename = filenameBuilder.toString();
 
         filename = filename.trim();
         filename = JTerm.currentDirectory + filename;
@@ -87,7 +87,7 @@ public class Files {
         try {
             System.out.println("Enter file contents (press enter after a blank line to quit):");
             String line = JTerm.userInput.readLine();
-            String output = line;
+            StringBuilder output = new StringBuilder(line);
 
             for (; ; ) {
                 line = JTerm.userInput.readLine();
@@ -95,14 +95,14 @@ public class Files {
                     break;
 
                 else if (line.equals(" "))
-                    output += "\n";
+                    output.append("\n");
 
-                output += "\n" + line;
+                output.append("\n").append(line);
 
             }
 
             FileWriter fileWriter = new FileWriter(filename);
-            fileWriter.write(output);
+            fileWriter.write(output.toString());
             fileWriter.close();
 
         } catch (IOException ioe) {
@@ -126,19 +126,19 @@ public class Files {
 	 */
     public static void delete(ArrayList<String> options) {
 
-        String filename = "";
-
+        StringBuilder filenameBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
                 System.out.println("Command syntax:\n\tdel [-h] file/directory\n\nDeletes the specified file or directory.");
                 return;
 
             } else
-                filename += option;
+                filenameBuilder.append(option);
 
         }
+        String filename = filenameBuilder.toString();
 
-        filename.trim();
+        filename = filename.trim();
         filename = JTerm.currentDirectory + filename;
 
         File dir = new File(filename);
@@ -194,7 +194,7 @@ public class Files {
 	 */
     public static void read(ArrayList<String> options) {
 
-        String filename = "";
+        String filename;
         for (String option : options) {
             if (option.equals("-h")) {
                 System.out.println("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.");
@@ -212,7 +212,7 @@ public class Files {
 
             try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
                 System.out.println("\n[JTerm - Contents of " + option + "]\n");
-                String line = null;
+                String line;
                 while ((line = reader.readLine()) != null)
                     System.out.println(line);
 
@@ -242,7 +242,7 @@ public class Files {
             return;
         }
         long start = System.currentTimeMillis();
-        long fileSize = -1;
+        long fileSize;
         long downloadedBytes = 0;
 
         String update = "";

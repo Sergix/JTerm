@@ -64,14 +64,17 @@ public class Dir {
         boolean printFull = true;
 
         for (String option : options) {
-            if (option.equals("-f")) {
-                printFull = false;
-            } else if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tdir [-f] [-h] [directory]"
-                        + "\n\nPrints a detailed table of the current working directory's subfolders and files.");
-                return;
-            } else {
-                path = option;
+            switch (option) {
+                case "-f":
+                    printFull = false;
+                    break;
+                case "-h":
+                    System.out.println("Command syntax:\n\tdir [-f] [-h] [directory]"
+                            + "\n\nPrints a detailed table of the current working directory's subfolders and files.");
+                    return;
+                default:
+                    path = option;
+                    break;
             }
         }
 
@@ -122,15 +125,16 @@ public class Dir {
     * 	Path to change the working directory to.
     */
     public static void cd(ArrayList<String> options) {
-        String newDirectory = "";
+        StringBuilder newDirectoryBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
                 System.out.println("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.");
                 return;
             } else {
-                newDirectory += option;
+                newDirectoryBuilder.append(option);
             }
         }
+        String newDirectory = newDirectoryBuilder.toString();
 
         newDirectory = newDirectory.trim();
         if (newDirectory.startsWith("\"") && newDirectory.endsWith("\"")) {
@@ -151,7 +155,7 @@ public class Dir {
         } else if (newDirectory.equals(".")) {
             return;
         } else if (newDirectory.equals("..")) {
-            if(JTerm.currentDirectory == "/") {
+            if(JTerm.currentDirectory.equals("/")) {
                 return;
             } else {
                 newDirectory = JTerm.currentDirectory.substring(0, JTerm.currentDirectory.length() - 2);
@@ -254,13 +258,16 @@ public class Dir {
         ArrayList<String> filesToBeRemoved = new ArrayList<>();
         boolean recursivelyDeleteFlag = false;
         for (String option : options) {
-            if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\t rm [-h] [-r] name... Remove files or directories");
-                return;
-            } else if (option.equals("-r")) {
-                recursivelyDeleteFlag = true;
-            } else {
-                filesToBeRemoved.add(option);
+            switch (option) {
+                case "-h":
+                    System.out.println("Command syntax:\n\t rm [-h] [-r] name... Remove files or directories");
+                    return;
+                case "-r":
+                    recursivelyDeleteFlag = true;
+                    break;
+                default:
+                    filesToBeRemoved.add(option);
+                    break;
             }
         }
 
