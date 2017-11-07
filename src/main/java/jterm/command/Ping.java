@@ -21,6 +21,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import static jterm.JTerm.logln;
+
 /*
 * Original code credit to @chromechris
 * 
@@ -49,8 +51,8 @@ public class Ping {
 
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tping [-h] [-p port] host\n\n"
-                        + "Attempts to connect to the specified host. Default port is '80'.");
+                logln("Command syntax:\n\tping [-h] [-p port] host\n\n"
+                        + "Attempts to connect to the specified host. Default port is '80'.", false);
                 return;
             } else if (portNext) {
                 port = option;
@@ -64,12 +66,12 @@ public class Ping {
 
         // FIXME: if no options set, host = "process" !!!
         try (Socket socket = new Socket()) {
-            System.out.println("Pinging " + host + "...");
+            logln("Pinging " + host + "...", true);
             socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 10000);
-            System.out.println("Ping Successful");
+            logln("Ping Successful", true);
         } catch (IOException e) {
             // Either timeout or unreachable or failed DNS lookup
-            System.out.println("Ping Failed");
+            logln("Ping Failed", true);
         }
     }
 }

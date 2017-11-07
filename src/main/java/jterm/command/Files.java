@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import jterm.JTerm;
 import jterm.util.Util;
 
+import static jterm.JTerm.log;
+import static jterm.JTerm.logln;
+
 public class Files {
 
     /**
@@ -45,7 +48,7 @@ public class Files {
      */
     public static void process(String options) {
 
-        System.out.println("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp");
+        logln("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp", false);
 
     }
 
@@ -66,7 +69,7 @@ public class Files {
         StringBuilder filenameBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\twrite [-h] filename\n\nOpens an input prompt in which to write text to a new file.");
+                logln("Command syntax:\n\twrite [-h] filename\n\nOpens an input prompt in which to write text to a new file.", false);
                 return;
 
             } else
@@ -79,13 +82,13 @@ public class Files {
         filename = JTerm.currentDirectory + filename;
 
         if (filename.equals("")) {
-            System.out.println("Error: missing filename; type \"write -h\" for more information.");
+            logln("Error: missing filename; type \"write -h\" for more information.", false);
             return;
 
         }
 
         try {
-            System.out.println("Enter file contents (press enter after a blank line to quit):");
+            logln("Enter file contents (press enter after a blank line to quit):", false);
             String line = JTerm.userInput.readLine();
             StringBuilder output = new StringBuilder(line);
 
@@ -129,7 +132,7 @@ public class Files {
         StringBuilder filenameBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tdel [-h] file/directory\n\nDeletes the specified file or directory.");
+                logln("Command syntax:\n\tdel [-h] file/directory\n\nDeletes the specified file or directory.", false);
                 return;
 
             } else
@@ -143,7 +146,7 @@ public class Files {
 
         File dir = new File(filename);
         if (!dir.exists()) {
-            System.out.println("ERROR: File/directory \"" + options.get(options.size() - 1) + "\" does not exist.");
+            logln("ERROR: File/directory \"" + options.get(options.size() - 1) + "\" does not exist.", false);
             return;
 
         }
@@ -197,7 +200,7 @@ public class Files {
         String filename;
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.");
+                logln("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.", false);
                 return;
 
             }
@@ -205,16 +208,16 @@ public class Files {
             filename = JTerm.currentDirectory + option;
             File file = new File(filename);
             if (!file.exists()) {
-                System.out.println("ERROR: File/directory \"" + option + "\" does not exist.");
+                logln("ERROR: File/directory \"" + option + "\" does not exist.", false);
                 break;
 
             }
 
             try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
-                System.out.println("\n[JTerm - Contents of " + option + "]\n");
+                logln("\n[JTerm - Contents of " + option + "]\n", true);
                 String line;
                 while ((line = reader.readLine()) != null)
-                    System.out.println(line);
+                    logln(line, true);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -238,7 +241,7 @@ public class Files {
         if (options.size() > 0)
             url = options.get(options.size() - 1);
         else {
-            System.out.println("A URL to a file must be provided as an option");
+            logln("A URL to a file must be provided as an option", false);
             return;
         }
         long start = System.currentTimeMillis();
@@ -257,7 +260,7 @@ public class Files {
             fileName += ".html";
         }
 
-        System.out.println("Starting download of file -> " + fileName);
+        logln("Starting download of file -> " + fileName, true);
 
         // request file size from server (does not work with HTML files, unimportant because they download so fast)
         HttpURLConnection conn = null;
@@ -267,7 +270,7 @@ public class Files {
             conn.getInputStream();
             fileSize = conn.getContentLength();
         } catch (IOException e) {
-            System.out.println("Error when getting file information. Download cancelled.");
+            logln("Error when getting file information. Download cancelled.", false);
             return;
         } finally {
             if (conn != null)
@@ -286,21 +289,25 @@ public class Files {
             byte data[] = new byte[buffer];
             int count, steps = 0;
             // download file, and output information about progress
+            log(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"), true);
             while ((count = in.read(data, 0, buffer)) != -1) {
                 out.write(data, 0, count);
                 downloadedBytes += count;
                 steps++;
+                //TODO: Progress bar instead maybe?
+                //Also, this causes flickering in the GUI, a lower update rate might be good
                 if (steps % 10 == 0) { // print every 10 download steps
                     Util.ClearLine(update, false);
-                    System.out.print(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"));
+                    log(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"), true);
                 }
             }
+            out.close();
         } catch (IOException e) {
-            System.out.println("Error when downloading file.");
+            logln("Error when downloading file.", false);
         }
 
         // clear line and notify user of download success
         Util.ClearLine(update, false);
-        System.out.println("\nFile downloaded successfully in: " + Util.GetRunTime(System.currentTimeMillis() - start));
+        logln("\nFile downloaded successfully in: " + Util.GetRunTime(System.currentTimeMillis() - start), true);
     }
 }

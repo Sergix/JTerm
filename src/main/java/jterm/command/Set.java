@@ -18,6 +18,8 @@ package jterm.command;
 
 import java.util.*;
 
+import static jterm.JTerm.logln;
+
 public class Set {
     // Global variable HashMap
     public static HashMap<String, String> vars = new HashMap<>();
@@ -32,13 +34,13 @@ public class Set {
     */
     public Set(ArrayList<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\tset [-h] name = value\n\nSets an environment variable.");
+            logln("Command syntax:\n\tset [-h] name = value\n\nSets an environment variable.", false);
             return;
         }
 
         if (options.size() == 0) {
             for (Map.Entry<String, String> entry : vars.entrySet()) {
-                System.out.println(entry.getKey() + "=" + entry.getValue());
+                logln(entry.getKey() + "=" + entry.getValue(), true);
             }
             return;
         }

@@ -18,9 +18,11 @@
 package jterm;
 
 import jterm.command.Exec;
+import jterm.gui.Terminal;
 import jterm.io.InputHandler;
 import jterm.util.Util;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
@@ -33,7 +35,10 @@ public class JTerm {
     // like: VERSION = Utils.getProperty("project.VERSION");
     public static final String VERSION = "0.6.1";
     public static String prompt = "   \b\b\b>> ";
-
+    public static String license = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
+            + "This program comes with ABSOLUTELY NO WARRANTY.\n"
+            + "This is free software, and you are welcome to redistribute it\n"
+            + "under certain conditions.\n";
     // Global directory variable (use "cd" command to change)
     // Default value of getProperty("user.dir") is equal to the default directory set when the program starts
     public static String currentDirectory = System.getProperty("user.dir");
@@ -44,30 +49,43 @@ public class JTerm {
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
     public static String command = "";
+    private static Terminal terminal;
+    private static boolean headless = false;
 
     public static void main(String[] args) {
         Util.setOS();
 
-        System.out.println(
-            "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
-            + "This program comes with ABSOLUTELY NO WARRANTY.\n"
-            + "This is free software, and you are welcome to redistribute it\n"
-            + "under certain conditions.\n");
-
-        System.out.print(prompt);
-        while (true) {
-            InputHandler.process();
+        if (args.length > 0 && args[0].equals("headless")) {
+            headless = true;
+            System.out.println(license);
+            System.out.print(prompt);
+            while (true) {
+                InputHandler.process();
+            }
+        } else {
+            terminal = new Terminal();
+            terminal.setTitle("JTerm");
+            terminal.setSize(720, 480);
+            terminal.setVisible(true);
         }
     }
 
+    public static boolean isHeadless() {
+        return headless;
+    }
+
+    public static Terminal getTerminal() {
+        return terminal;
+    }
+
     /*
-    * parse() boolean
-    *
-    * Checks input and passes command options to the function
-    * that runs the requested command.
-    *
-    * ArrayList<String> options - command options
-    */
+            * parse() boolean
+            *
+            * Checks input and passes command options to the function
+            * that runs the requested command.
+            *
+            * ArrayList<String> options - command options
+            */
     public static boolean parse(String options) {
         ArrayList<String> optionsArray = getAsArray(options);
 
@@ -102,10 +120,11 @@ public class JTerm {
             ArrayList<String> execFile = new ArrayList<>();
             execFile.add(original);
             if (Exec.run(execFile)) {
-                System.out.println("Unknown Command \"" + original + "\"");
+                logln("Unknown Command \"" + original + "\"", false);
             }
         } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
             System.out.println(e);
+            e.printStackTrace();
         } catch (NoSuchMethodException e) {
             // ignore exception
         }
@@ -169,5 +188,20 @@ public class JTerm {
             result.append(" ");
         }
         return result.substring(0, result.length() - 1);
+    }
+
+    public static void log(String s, boolean isWhite) {
+        System.out.print(s);
+        if (!headless) {
+            try {
+                SwingUtilities.invokeAndWait(() -> terminal.print(s, isWhite));
+            } catch (InterruptedException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void logln(String s, boolean isWhite) {
+        log(s + "\n", isWhite);
     }
 }

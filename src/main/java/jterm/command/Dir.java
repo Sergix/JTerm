@@ -27,13 +27,15 @@ import java.lang.String;
 
 import org.apache.commons.io.FileUtils;
 
+import static jterm.JTerm.logln;
+
 // not doing it now, because they are not invoked directly
 public class Dir {
     public Dir(ArrayList<String> options) {
     }
 
     public static void process(ArrayList<String> options) {
-        System.out.println("Directory Commands\n\nls\tcd\nchdir\tpwd\nmd\trm");
+        logln("Directory Commands\n\nls\tcd\nchdir\tpwd\nmd\trm", false);
     }
 
     /*
@@ -69,8 +71,8 @@ public class Dir {
                     printFull = false;
                     break;
                 case "-h":
-                    System.out.println("Command syntax:\n\tdir [-f] [-h] [directory]"
-                            + "\n\nPrints a detailed table of the current working directory's subfolders and files.");
+                    logln("Command syntax:\n\tdir [-f] [-h] [directory]"
+                            + "\n\nPrints a detailed table of the current working directory's subfolders and files.", false);
                     return;
                 default:
                     path = option;
@@ -94,18 +96,18 @@ public class Dir {
 		* Example:
 		* 	F RW	myfile.txt	   5 KB
 		*/
-        System.out.println("[Contents of \"" + path + "\"]");
+        logln("[Contents of \"" + path + "\"]", true);
         for (File file : files) {
             if (printFull) {
-                System.out.println("\t" + (file.isFile() ? "F " : "D ")
+               logln("\t" + (file.isFile() ? "F " : "D ")
                         + (file.canRead() ? "R" : "")
                         + (file.canWrite() ? "W" : "")
                         + (file.isHidden() ? "H" : "")
                         + "\t" + file.getName()
                         + (file.getName().length() < 8 ? "\t\t\t" : (file.getName().length() > 15 ? "\t" : "\t\t"))
-                        + (file.length() / 1024) + " KB");
+                        + (file.length() / 1024) + " KB", true);
             } else {
-                System.out.println("\t" + file.getName());
+                logln("\t" + file.getName(), true);
             }
         }
     }
@@ -128,7 +130,7 @@ public class Dir {
         StringBuilder newDirectoryBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.");
+                logln("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.", false);
                 return;
             } else {
                 newDirectoryBuilder.append(option);
@@ -142,7 +144,7 @@ public class Dir {
         }
 
         if (newDirectory.equals("")) {
-            System.out.println("Path not specified. Type \"cd -h\" for more information.");
+            logln("Path not specified. Type \"cd -h\" for more information.", false);
             return;
         }
 
@@ -158,13 +160,14 @@ public class Dir {
             if(JTerm.currentDirectory.equals("/")) {
                 return;
             } else {
+                //TODO: Fix this to actually remove a directory level
                 newDirectory = JTerm.currentDirectory.substring(0, JTerm.currentDirectory.length() - 2);
                 newDirectory = newDirectory.substring(0, newDirectory.lastIndexOf('/'));
             }
         } else if (newDir.exists() && newDir.isDirectory()) {
             newDirectory = JTerm.currentDirectory + newDirectory;
         } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
-            System.out.println("ERROR: Directory \"" + newDirectory + "\" is either does not exist or is not a valid directory.");
+            logln("ERROR: Directory \"" + newDirectory + "\" is either does not exist or is not a valid directory.", false);
             return;
         }
 
@@ -200,11 +203,11 @@ public class Dir {
     public static void pwd(ArrayList<String> options) {
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tpwd\n\nPrints the current Working Directory.");
+                logln("Command syntax:\n\tpwd\n\nPrints the current Working Directory.", false);
                 return;
             }
         }
-        System.out.println(JTerm.currentDirectory);
+        logln(JTerm.currentDirectory, true);
     }
 
     /*
@@ -223,7 +226,7 @@ public class Dir {
         StringBuilder nameBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tmd [-h] name\n\nCreates a new directory.");
+                logln("Command syntax:\n\tmd [-h] name\n\nCreates a new directory.", false);
                 return;
             } else {
                 nameBuilder
@@ -260,7 +263,7 @@ public class Dir {
         for (String option : options) {
             switch (option) {
                 case "-h":
-                    System.out.println("Command syntax:\n\t rm [-h] [-r] name... Remove files or directories");
+                    logln("Command syntax:\n\t rm [-h] [-r] name... Remove files or directories", false);
                     return;
                 case "-r":
                     recursivelyDeleteFlag = true;
@@ -275,16 +278,16 @@ public class Dir {
             File file = new File(JTerm.currentDirectory, fileName);
 
             if (!file.isFile() && !file.isDirectory()) {
-                System.out.println(fileName + " is not a file or directory");
+                logln(fileName + " is not a file or directory", false);
             } else if (file.isDirectory()) {
                 if (recursivelyDeleteFlag) {
                     try {
                         FileUtils.deleteDirectory(file);
                     } catch (IOException e) {
-                        System.out.println("Error when deleting " + fileName);
+                        logln("Error when deleting " + fileName, false);
                     }
                 } else {
-                    System.out.println("Attempting to delete a directory. Run the command again with -r.");
+                    logln("Attempting to delete a directory. Run the command again with -r.", false);
                     return;
                 }
             }

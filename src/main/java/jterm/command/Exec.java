@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static jterm.JTerm.logln;
+
 public class Exec {
     /**
      * Exec() void
@@ -48,20 +50,20 @@ public class Exec {
                     Scanner in = new Scanner(p.getInputStream());
                     String nextLine;
                     while (p.isAlive() && (nextLine = in.nextLine()) != null) {
-                        System.out.println(nextLine);
+                        logln(nextLine, true);
                     }
                 } else { // pass program name to system, it will open it (for executables)
                     Process p = Runtime.getRuntime().exec(s);
                     Scanner in = new Scanner(p.getInputStream());
                     String nextLine;
                     while (p.isAlive() && (nextLine = in.nextLine()) != null) {
-                        System.out.println(nextLine);
+                        logln(nextLine, true);
                     }
                 }
             }
             return true;
         } catch (IOException e) {
-            System.out.println("Program was not found or failed during runtime");
+            logln("Program was not found or failed during runtime", false);
             return false;
         }
     }

@@ -21,6 +21,8 @@ package jterm.command;
 import javax.swing.*;
 import java.util.ArrayList;
 
+import static jterm.JTerm.logln;
+
 public class Window {
     public static int windowCount = 0;
     public static ArrayList<Window> windows = new ArrayList<>();
@@ -67,9 +69,9 @@ public class Window {
         // TODO: use switch instead of else-if?
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\t\nwindow [-h] [-r] [-v] [-w width] [-l height] [-t title]"
+                logln("Command syntax:\t\nwindow [-h] [-r] [-v] [-w width] [-l height] [-t title]"
                         + "\n\nCreates a new programmable GUI window."
-                        + "\nDefault title is \"JTerm Window\", and the default width and height of the window is 500 x 500.");
+                        + "\nDefault title is \"JTerm Window\", and the default width and height of the window is 500 x 500.", false);
                 return;
             } else if (option.equals("-v")) {
                 visible = true;

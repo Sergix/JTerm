@@ -20,14 +20,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static jterm.JTerm.logln;
+
 public class Time {
     public Time(ArrayList<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console."); // Options
+            logln("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.", false); // Options
             return;
         }
         Date date = new Date();
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss , z");
-        System.out.println("The Current Time is: " + dateFormat.format(date));
+        logln("The Current Time is: " + dateFormat.format(date), true);
     }
 }

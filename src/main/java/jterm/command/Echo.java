@@ -20,6 +20,8 @@ package jterm.command;
 
 import java.util.ArrayList;
 
+import static jterm.JTerm.logln;
+
 public class Echo {
     /*
     * Echo() void
@@ -38,7 +40,7 @@ public class Echo {
         StringBuilder outputBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.");
+                logln("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.", false);
                 return;
             } else {
                 outputBuilder
@@ -46,6 +48,6 @@ public class Echo {
                         .append(" ");
             }
         }
-        System.out.println(outputBuilder.substring(0, outputBuilder.length() - 1));
+        logln(outputBuilder.substring(0, outputBuilder.length() - 1), true);
     }
 }

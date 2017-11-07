@@ -20,10 +20,12 @@ package jterm.command;
 
 import java.util.ArrayList;
 
+import static jterm.JTerm.logln;
+
 public class Exit {
     public Exit(ArrayList<String> options) {
     	if (options.contains("-h")) {
-			System.out.println("Command syntax:\n\texit [-h]\n\nExits the program.");
+			logln("Command syntax:\n\texit [-h]\n\nExits the program.", false);
 			return;
 		}
         System.exit(0);

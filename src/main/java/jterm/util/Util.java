@@ -42,14 +42,18 @@ public class Util {
      * @param clearPrompt choose to clear prompt along with line (only use true if prompt exists)
      */
     public static void ClearLine(String line, boolean clearPrompt) {
-        for (int i = 0; i < line.length() + (clearPrompt ? JTerm.prompt.length() / 3 : 0); i++) {
-            System.out.print("\b");
-        }
-        for (int i = 0; i < line.length() + (clearPrompt ? JTerm.prompt.length() / 3 : 0); i++) {
-            System.out.print(" ");
-        }
-        for (int i = 0; i < line.length() + (clearPrompt ? JTerm.prompt.length() / 3 : 0); i++) {
-            System.out.print("\b");
+        if (JTerm.isHeadless()) {
+            for (int i = 0; i < line.length() + (clearPrompt ? JTerm.prompt.length() / 3 : 0); i++) {
+                System.out.print("\b");
+            }
+            for (int i = 0; i < line.length() + (clearPrompt ? JTerm.prompt.length() / 3 : 0); i++) {
+                System.out.print(" ");
+            }
+            for (int i = 0; i < line.length() + (clearPrompt ? JTerm.prompt.length() / 3 : 0); i++) {
+                System.out.print("\b");
+            }
+        }else{
+            JTerm.getTerminal().clearLine(line);
         }
     }
 

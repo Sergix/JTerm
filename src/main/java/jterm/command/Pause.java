@@ -21,6 +21,9 @@ import java.io.IOException;
 
 import jterm.JTerm;
 
+import static jterm.JTerm.log;
+import static jterm.JTerm.logln;
+
 public class Pause {
     /*
     * Pause() void
@@ -36,18 +39,18 @@ public class Pause {
     public Pause(ArrayList<String> options) {
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tpause [-h] [input]\n\nPauses the terminal and awaits a keypress.");
+                logln("Command syntax:\n\tpause [-h] [input]\n\nPauses the terminal and awaits a keypress.", false);
                 return;
 
             } else {
-                System.out.print(Exec.getRest(options, 0));
+                log(Exec.getRest(options, 0), true);
             }
         }
 
         if (options.size() == 0) {
-            System.out.print("Press enter to continue...");
+            log("Press enter to continue...", true);
         }
-
+        //TODO: Figure out what this is doing and how to do it in GUI
         try {
             JTerm.userInput.read();
             JTerm.userInput.skip(1);

@@ -26,6 +26,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import static jterm.JTerm.logln;
+import static jterm.JTerm.log;
+
 public class Server implements Runnable {
 
     private Socket socket;
@@ -48,7 +51,7 @@ public class Server implements Runnable {
                     break;
                 }
 
-                System.out.println("\n" + line);
+                logln("\n" + line, true);
 
                 bufferedSocketInput.close();
             } catch (IOException ioe) {
@@ -62,7 +65,7 @@ public class Server implements Runnable {
         String portInput = "80";
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tserver [-h] port\n\nStarts a TCP server socket that accepts ");
+                logln("Command syntax:\n\tserver [-h] port\n\nStarts a TCP server socket that accepts ", true);
                 return;
             } else {
                 portInput = option;
@@ -79,13 +82,13 @@ public class Server implements Runnable {
             ServerSocket server = new ServerSocket(port);
             new Thread(() -> {
                 while (true) {
-                    System.out.print("> ");
+                    log("> ", true);
                     BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in), 1);
                     try {
                         String input = consoleInput.readLine();
                         switch (input) {
                             case "help":
-                                System.out.println("Server currently opened on port " + port);
+                                logln("Server currently opened on port " + port, true);
                                 break;
 
                             case "quit":
@@ -107,7 +110,7 @@ public class Server implements Runnable {
 
             server.close();
         } catch (IOException e) {
-            System.out.println("ERROR: Server closed");
+            logln("ERROR: Server closed", false);
         }
     }
 }

@@ -21,13 +21,15 @@ import jterm.JTerm;
 
 import java.util.ArrayList;
 
+import static jterm.JTerm.logln;
+
 public class Help {
     public Help(ArrayList<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\thelp [-h]\n\nPrints help information.");
+            logln("Command syntax:\n\thelp [-h]\n\nPrints help information.", false);
             return;
         }
-        System.out.println("JTerm v" + JTerm.VERSION + "\n"
+        logln("JTerm v" + JTerm.VERSION + "\n"
                 + "Available commands:\n"
                 + "  client\n"
                 + "  dir\n"
@@ -40,6 +42,6 @@ public class Help {
                 + "  ps\n"
                 + "  server\n"
                 + "  set\n"
-                + "  window\n");
+                + "  window\n", true);
     }
 }

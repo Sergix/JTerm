@@ -17,10 +17,13 @@
 package jterm.command;
 
 import jterm.JTerm;
+import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+
+import static jterm.JTerm.logln;
 
 /*
 * Original code credit to @chromechris
@@ -41,7 +44,7 @@ public class Ps {
     */
     public Ps(ArrayList<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\tps [-h]\n\nDisplays all current processes running on the host system.");
+            logln("Command syntax:\n\tps [-h]\n\nDisplays all current processes running on the host system.", false);
             return;
         }
 
@@ -49,12 +52,7 @@ public class Ps {
             try {
                 Process process = Runtime.getRuntime().exec("ps -e");
                 BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-                // TODO: can be replaced with IOUtils.toString()  (from apache commons)
-                String line;
-                while ((line = input.readLine()) != null) {
-                    System.out.println(line);
-                }
+                logln(IOUtils.toString(input), true);
                 input.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -64,9 +62,10 @@ public class Ps {
                 String line;
                 Process p = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");
                 BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                //TODO: Also switch this to IOUtils.toString() from apache commons?
                 while ((line = input.readLine()) != null) {
                     // Parse data here.
-                    System.out.println(line);
+                    logln(line, true);
                 }
                 input.close();
             } catch (Exception e) {

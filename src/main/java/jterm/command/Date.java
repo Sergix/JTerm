@@ -20,15 +20,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static jterm.JTerm.logln;
+
 public class Date {
 	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     public Date(ArrayList<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.");
+            logln("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.", false);
             return;
         }
 		Calendar calendar = Calendar.getInstance();
-		System.out.println("The current date is: " + dateFormat.format(calendar.getTime()));
+		logln("The current date is: " + dateFormat.format(calendar.getTime()), true);
     }
 }
