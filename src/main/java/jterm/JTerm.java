@@ -21,9 +21,7 @@ import jterm.command.Command;
 import jterm.command.CommandException;
 import jterm.io.InputHandler;
 import jterm.util.Util;
-import org.apache.commons.lang3.SystemUtils;
 import org.reflections.Reflections;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -35,12 +33,16 @@ public class JTerm {
 
     public static final String VERSION = "0.6.1";
     public static final String PROMPT = "   \b\b\b>> ";
-    public static final boolean IS_WIN;
-    public static final boolean IS_UNIX;
+
+    // Default value of getProperty("user.dir") is equal to the default directory set when the program starts
+    // Global directory variable (use "cd" command to change)
+    public static String currentDirectory = System.getProperty("user.dir");
+
+    public static boolean IS_WIN = false;
+    public static boolean IS_UNIX = false;
 
     static {
-        IS_WIN = SystemUtils.IS_OS_WINDOWS;
-        IS_UNIX = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
+        Util.setOS();
 
         Reflections reflections = new Reflections("jterm.command");
         for (Class<? extends Command> commandClass : reflections.getSubTypesOf(Command.class)) {
@@ -54,17 +56,16 @@ public class JTerm {
     }
 
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
-
-    public static String currentDirectory = "./";
     public static String command = "";
 
     public static void main(String[] args) {
-        System.out.println(
-                "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
-                        + "This program comes with ABSOLUTELY NO WARRANTY.\n"
-                        + "This is free software, and you are welcome to redistribute it\n"
-                        + "under certain conditions.\n");
+        Util.setOS();
 
+        System.out.println(
+            "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
+            + "This program comes with ABSOLUTELY NO WARRANTY.\n"
+            + "This is free software, and you are welcome to redistribute it\n"
+            + "under certain conditions.\n");
 
         System.out.print(PROMPT);
         while (true) {

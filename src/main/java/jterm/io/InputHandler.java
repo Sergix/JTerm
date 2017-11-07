@@ -217,7 +217,7 @@ public class InputHandler {
             }
 
             JTerm.command = "";
-            System.out.println("\r\n" + JTerm.PROMPT);
+            System.out.print("\r\n" + JTerm.PROMPT);
         }
 
         // just print it if it is defined
@@ -257,6 +257,11 @@ public class InputHandler {
         // get folder at path
         File currFolder = new File(JTerm.currentDirectory + path);
         File[] files = currFolder.listFiles();
+
+        // fixes NullPointerException (@sergix)
+        if (files == null) {
+            return;
+        }
 
         // if not empty parameter or not directory
         if (!endsWithSlash && !JTerm.command.endsWith(" ")) {

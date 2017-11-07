@@ -39,6 +39,7 @@ public class Ps implements Command {
             System.out.println("Command syntax:\n\tps [-h]\n\nDisplays all current processes running on the host system.");
             return;
         }
+
         Exec.run(PS_COMMAND);
     }
 }

@@ -20,8 +20,11 @@ package jterm.command;
 
 import jterm.JTerm;
 import jterm.util.Util;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +71,29 @@ public class Dir implements Command {
         }
     }
 
+    /*
+    * ls() void (@pmorgan3)
+    *
+    * Prints the contents of a specified directory
+    * to a file.
+    *
+    * ArrayList<String> options - command options
+    *
+    * -f
+    * 	Changes the output format to only file
+    * 	and directory names
+    * -h
+    * 	Prints help information
+    * directory [...]
+    * 	Prints this directory rather than the
+    * 	current working directory.
+    *
+    * Examples
+    *
+    *   ls(options);
+    *     => [Contents of "dir/"]
+    *     =>     F RW 	myFile.txt		2 KB
+    */
     public static void ls(List<String> options) {
         if (options.contains("-h")) {
             System.out.println("Command syntax:\n\tdir [-f] [-h] [directory]\n\n");
@@ -94,6 +120,19 @@ public class Dir implements Command {
         }
     }
 
+    /*
+    * cd() void
+    *
+    * Changes the working directory to the specified
+    * input.
+    *
+    * ArrayList<String> options - command options
+    *
+    * -h
+    * 	Prints help information
+    * directory [...]
+    * 	Path to change the working directory to.
+    */
     public static void cd(List<String> options) {
         if (options.contains("-h")) {
             System.out.println("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.");
@@ -116,6 +155,15 @@ public class Dir implements Command {
 
         if (newDirectory.equals("/")) {
             newDirectory = "/";
+        } else if (newDirectory.equals(".")) {
+            return;
+        } else if (newDirectory.equals("..")) {
+            if(JTerm.currentDirectory.equals("/")) {
+                return;
+            } else {
+                newDirectory = JTerm.currentDirectory.substring(0, JTerm.currentDirectory.length() - 2);
+                newDirectory = newDirectory.substring(0, newDirectory.lastIndexOf('/'));
+            }
         } else if (newDir.exists() && newDir.isDirectory()) {
             newDirectory = JTerm.currentDirectory + newDirectory;
         } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
@@ -150,5 +198,57 @@ public class Dir implements Command {
                 .deleteCharAt(nameBuilder.length() - 1)
                 .insert(0, JTerm.currentDirectory);
         new File(nameBuilder.toString()).mkdir();
+    }
+
+    /*
+    * rm() void
+    *
+    * Removes a file or directory
+    *
+    * ArrayList<String> options - command options
+    *
+    * -h
+    *   Prints help information
+    *
+    * -r
+    *   Recursively remove directories
+    *
+    * name
+    *   Names of files or directories to be removed
+     */
+    public static void rm(List<String> options) {
+        List<String> filesToBeRemoved = new ArrayList<>();
+        boolean recursivelyDeleteFlag = false;
+        for (String option : options) {
+            if (option.equals("-h")) {
+                System.out.println("Command syntax:\n\t rm [-h] [-r] name... Remove files or directories");
+                return;
+            } else if (option.equals("-r")) {
+                recursivelyDeleteFlag = true;
+            } else {
+                filesToBeRemoved.add(option);
+            }
+        }
+
+        for (String fileName : filesToBeRemoved) {
+            File file = new File(JTerm.currentDirectory, fileName);
+
+            if (!file.isFile() && !file.isDirectory()) {
+                System.out.println(fileName + " is not a file or directory");
+            } else if (file.isDirectory()) {
+                if (recursivelyDeleteFlag) {
+                    try {
+                        FileUtils.deleteDirectory(file);
+                    } catch (IOException e) {
+                        System.out.println("Error when deleting " + fileName);
+                    }
+                } else {
+                    System.out.println("Attempting to delete a directory. Run the command again with -r.");
+                    return;
+                }
+            }
+
+            file.delete();
+        }
     }
 }

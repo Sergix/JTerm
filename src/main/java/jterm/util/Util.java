@@ -91,4 +91,14 @@ public class Util {
         }
         return outputBuilder.toString();
     }
+
+    public static void setOS() {
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if (os.contains("windows")) {
+            JTerm.IS_WIN = true;
+        } else if ("linux".equals(os) || os.contains("mac") || "sunos".equals(os) || "freebsd".equals(os)) {
+            JTerm.IS_UNIX = true;
+        }
+    }
 }

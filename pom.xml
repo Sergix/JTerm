@@ -5,7 +5,7 @@
 
     <groupId>sergix</groupId>
     <artifactId>jterm</artifactId>
-    <version>0.6.1</version>
+    <version>0.6.2</version>
     <packaging>jar</packaging>
     <description>
         JTerm is a cross-platform terminal designed for simple use and to run batch files.
@@ -69,9 +69,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.6</version>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
         </dependency>
         <dependency>
             <groupId>com.github.waffle</groupId>
