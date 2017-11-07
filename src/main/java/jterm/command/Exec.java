@@ -41,10 +41,15 @@ public class Exec implements Command {
         try {
             Process process = Runtime.getRuntime().exec(command);
             Scanner in = new Scanner(process.getInputStream());
-            String line;
-            while (process.isAlive() && (line = in.nextLine()) != null) {
-                System.out.println(line);
+
+            while (process.isAlive() && in.hasNextLine()) {
+                System.out.print(in.nextLine());
             }
+
+            while (in.hasNextLine()) {
+                System.out.println(in.nextLine());
+            }
+
             in.close();
         } catch (IOException e) {
             throw new CommandException("Failed to execute command \"" + command + "\"");
