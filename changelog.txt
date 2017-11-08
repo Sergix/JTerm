@@ -1,3 +1,12 @@
+(#100)[11/8/2017-13:28 0.6.2 ojles]
+    Added Command interface with execute() method
+    Added CommandException for package jterm.command.*
+    Implemented Command interface in all command classes
+    Added dynamic loading of command instances using reflection, saving them in a map<String, Command>
+    Fixed some codestyle issues
+    Moved helper methods from JTerm to Util.java
+    Fixed ping command
+    Fixed Exec.java, witch was not printing all the data got from the executed process
 (#99)[11/5/2017-14:50 0.6.1 Sergix]
 	Removed lang3 dependency from POM and all imports.
 	Fixed issue where InputHandler was outputting an extra newline.

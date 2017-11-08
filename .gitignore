@@ -28,7 +28,6 @@ test.bat
 
 target/
 combined-batch.bat
-changelog.txt
 
 # IDEA files
 .idea/
