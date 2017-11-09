@@ -97,11 +97,7 @@ public class Input {
     }
 
     private static void registerShutdownHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-                shutdownHook();
-            }
-        });
+        Runtime.getRuntime().addShutdownHook(new Thread(Input::shutdownHook));
     }
 
     private static void shutdownHook() {

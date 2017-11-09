@@ -19,21 +19,56 @@
 package jterm.command;
 
 import jterm.JTerm;
+import jterm.util.Util;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.lang.String;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
-import org.apache.commons.io.FileUtils;
-
-// not doing it now, because they are not invoked directly
-public class Dir {
-    public Dir(ArrayList<String> options) {
+public class Dir implements Command {
+    @FunctionalInterface
+    private interface FilePrinter {
+        void print(File file);
     }
 
-    public static void process(ArrayList<String> options) {
-        System.out.println("Directory Commands\n\nls\tcd\nchdir\tpwd\nmd\trm");
+    private static final Map<String, Consumer<List<String>>> FUNCTIONS = new HashMap<>(5);
+
+    private static final FilePrinter SIMPLE_PRINTER = (file) -> System.out.println("\t" + file.getName());
+
+    private static final FilePrinter FULL_PRINTER = (file) -> System.out.println("\t"
+            + (file.isFile() ? "F" : "D") + " "
+            + (file.canRead() ? "R" : "")
+            + (file.canWrite() ? "W" : "")
+            + (file.isHidden() ? "H" : "")
+            + "\t" + file.getName()
+            + (file.getName().length() < 8 ? "\t\t\t" : (file.getName().length() > 15 ? "\t" : "\t\t"))
+            + (file.length() / 1024) + " KB");
+
+    static {
+        FUNCTIONS.put("ls", Dir::ls);
+        FUNCTIONS.put("cd", Dir::cd);
+        FUNCTIONS.put("chdir", Dir::cd);
+        FUNCTIONS.put("pwd", Dir::pwd);
+        FUNCTIONS.put("md", Dir::md);
+    }
+
+    @Override
+    public void execute(List<String> options) {
+        if (options.size() == 0) {
+            System.out.println("Available commands:");
+            for (String command : FUNCTIONS.keySet()) {
+                System.out.println("\t" + command);
+            }
+        } else if (FUNCTIONS.containsKey(options.get(0))) {
+            FUNCTIONS.get(options.remove(0)).accept(options);
+        } else {
+            throw new CommandException("No command \"" + options.get(0) + "\" found");
+        }
     }
 
     /*
@@ -59,54 +94,31 @@ public class Dir {
     *     => [Contents of "dir/"]
     *     =>     F RW 	myFile.txt		2 KB
     */
-    public static void ls(ArrayList<String> options) {
-        String path = JTerm.currentDirectory;
-        boolean printFull = true;
-
-        for (String option : options) {
-            if (option.equals("-f")) {
-                printFull = false;
-            } else if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tdir [-f] [-h] [directory]"
-                        + "\n\nPrints a detailed table of the current working directory's subfolders and files.");
-                return;
-            } else {
-                path = option;
-            }
+    public static void ls(List<String> options) {
+        if (options.contains("-h")) {
+            System.out.println("Command syntax:\n\tdir [-f] [-h] [directory]\n\n");
+            return;
         }
 
-        File[] files = new File(path).listFiles();
+        File[] files = new File(JTerm.currentDirectory).listFiles();
 
-		/*
-        * Format of output:
-		* [FD] [RWHE] [filename] [size in KB]
-		* 
-		* Prefix definitions:
-		* 	F -- File
-		* 	D -- Directory
-		* 	R -- Readable
-		* 	W -- Writable
-		* 	H -- Hidden
-		* 
-		* Example:
-		* 	F RW	myfile.txt	   5 KB
-		*/
-        System.out.println("[Contents of \"" + path + "\"]");
+        if (files == null) {
+            return;
+        }
+
+        FilePrinter printer;
+        if (options.contains("-f")) {
+            printer = FULL_PRINTER;
+        } else {
+            printer = SIMPLE_PRINTER;
+        }
+
+
+        System.out.println("[Contents of \"" + JTerm.currentDirectory + "\"]");
         for (File file : files) {
-            if (printFull) {
-                System.out.println("\t" + (file.isFile() ? "F " : "D ")
-                        + (file.canRead() ? "R" : "")
-                        + (file.canWrite() ? "W" : "")
-                        + (file.isHidden() ? "H" : "")
-                        + "\t" + file.getName()
-                        + (file.getName().length() < 8 ? "\t\t\t" : (file.getName().length() > 15 ? "\t" : "\t\t"))
-                        + (file.length() / 1024) + " KB");
-            } else {
-                System.out.println("\t" + file.getName());
-            }
+            printer.print(file);
         }
     }
-
 
     /*
     * cd() void
@@ -121,18 +133,13 @@ public class Dir {
     * directory [...]
     * 	Path to change the working directory to.
     */
-    public static void cd(ArrayList<String> options) {
-        String newDirectory = "";
-        for (String option : options) {
-            if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.");
-                return;
-            } else {
-                newDirectory += option;
-            }
+    public static void cd(List<String> options) {
+        if (options.contains("-h")) {
+            System.out.println("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.");
+            return;
         }
 
-        newDirectory = newDirectory.trim();
+        String newDirectory = Util.getAsString(options).trim();
         if (newDirectory.startsWith("\"") && newDirectory.endsWith("\"")) {
             newDirectory = newDirectory.substring(1, newDirectory.length() - 1);
         }
@@ -151,7 +158,7 @@ public class Dir {
         } else if (newDirectory.equals(".")) {
             return;
         } else if (newDirectory.equals("..")) {
-            if(JTerm.currentDirectory == "/") {
+            if(JTerm.currentDirectory.equals("/")) {
                 return;
             } else {
                 newDirectory = JTerm.currentDirectory.substring(0, JTerm.currentDirectory.length() - 2);
@@ -160,7 +167,7 @@ public class Dir {
         } else if (newDir.exists() && newDir.isDirectory()) {
             newDirectory = JTerm.currentDirectory + newDirectory;
         } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
-            System.out.println("ERROR: Directory \"" + newDirectory + "\" is either does not exist or is not a valid directory.");
+            System.out.println("ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
             return;
         }
 
@@ -172,62 +179,21 @@ public class Dir {
         JTerm.currentDirectory = newDirectory;
     }
 
-    /*
-    * chdir() void
-    *
-    * Identical to 'cd'; calls cd().
-    *
-    * ArrayList<String> options - command options
-    */
-    public static void chdir(ArrayList<String> options) {
-        cd(options);
-    }
-
-    /*
-    * pwd() void
-    *
-    * Prints the working directory to the console.
-    *
-    * ArrayList<String> options - command options
-    *
-    * -h
-    * 	Prints help information
-    */
-    public static void pwd(ArrayList<String> options) {
-        for (String option : options) {
-            if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tpwd\n\nPrints the current Working Directory.");
-                return;
-            }
+    public static void pwd(List<String> options) {
+        if (options.contains("-h")) {
+            System.out.println("Command syntax:\n\tpwd\n\nPrints the current working directory.");
+            return;
         }
         System.out.println(JTerm.currentDirectory);
     }
 
-    /*
-    * md() void
-    *
-    * Creates a new directory.
-    *
-    * ArrayList<String> options - command options
-    *
-    * -h
-    * 	Prints help information
-    * name [...]
-    *	Name of the new directory
-    */
-    public static void md(ArrayList<String> options) {
-        StringBuilder nameBuilder = new StringBuilder();
-        for (String option : options) {
-            if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tmd [-h] name\n\nCreates a new directory.");
-                return;
-            } else {
-                nameBuilder
-                        .append(option)
-                        .append(" ");
-            }
+    public static void md(List<String> options) {
+        if (options.contains("-h")) {
+            System.out.println("Command syntax:\n\tmd [-h] name");
+            return;
         }
 
+        StringBuilder nameBuilder = new StringBuilder(Util.getAsString(options));
         nameBuilder
                 .deleteCharAt(nameBuilder.length() - 1)
                 .insert(0, JTerm.currentDirectory);
@@ -250,8 +216,8 @@ public class Dir {
     * name
     *   Names of files or directories to be removed
      */
-    public static void rm(ArrayList<String> options) {
-        ArrayList<String> filesToBeRemoved = new ArrayList<>();
+    public static void rm(List<String> options) {
+        List<String> filesToBeRemoved = new ArrayList<>();
         boolean recursivelyDeleteFlag = false;
         for (String option : options) {
             if (option.equals("-h")) {

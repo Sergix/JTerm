@@ -18,14 +18,11 @@
 
 package jterm.command;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class Exit {
-    public Exit(ArrayList<String> options) {
-    	if (options.contains("-h")) {
-			System.out.println("Command syntax:\n\texit [-h]\n\nExits the program.");
-			return;
-		}
+public class Exit implements Command {
+    @Override
+    public void execute(List<String> options) {
         System.exit(0);
     }
 }

@@ -17,32 +17,45 @@
 // package = folder :P
 package jterm;
 
-import jterm.command.Exec;
+import jterm.command.Command;
+import jterm.command.CommandException;
 import jterm.io.InputHandler;
 import jterm.util.Util;
-
+import org.reflections.Reflections;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JTerm {
-    // Global VERSION variable
-    // TODO: maybe better to get the VERSION from some property file?
-    // like: VERSION = Utils.getProperty("project.VERSION");
-    public static final String VERSION = "0.6.1";
-    public static String prompt = "   \b\b\b>> ";
+    private static final Map<String, Command> COMMANDS = new HashMap<>();
 
-    // Global directory variable (use "cd" command to change)
+    public static final String VERSION = "0.6.1";
+    public static final String PROMPT = "   \b\b\b>> ";
+
     // Default value of getProperty("user.dir") is equal to the default directory set when the program starts
+    // Global directory variable (use "cd" command to change)
     public static String currentDirectory = System.getProperty("user.dir");
+
     public static boolean IS_WIN = false;
     public static boolean IS_UNIX = false;
 
-    // User input variable used among all parts of the application
-    public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+    static {
+        Util.setOS();
 
+        Reflections reflections = new Reflections("jterm.command");
+        for (Class<? extends Command> commandClass : reflections.getSubTypesOf(Command.class)) {
+            try {
+                Command command = commandClass.getConstructor().newInstance();
+                COMMANDS.put(commandClass.getSimpleName().toLowerCase(), command);
+            } catch (Exception e) {
+                System.err.println("Something went wrong...\n" + e);
+            }
+        }
+    }
+
+    public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
     public static String command = "";
 
     public static void main(String[] args) {
@@ -54,120 +67,31 @@ public class JTerm {
             + "This is free software, and you are welcome to redistribute it\n"
             + "under certain conditions.\n");
 
-        System.out.print(prompt);
+        System.out.print(PROMPT);
         while (true) {
             InputHandler.process();
         }
     }
 
-    /*
-    * parse() boolean
-    *
-    * Checks input and passes command options to the function
-    * that runs the requested command.
-    *
-    * ArrayList<String> options - command options
-    */
-    public static boolean parse(String options) {
-        ArrayList<String> optionsArray = getAsArray(options);
+    public static void executeCommand(String options) {
+        ArrayList<String> optionsArray = Util.getAsArray(options);
 
-        // Default to process/help command if function is not found
-        String methodName = "process";
+        if (optionsArray.size() == 0) {
+            return;
+        }
 
-        // Get the first string in the options array, which is the command,
-        // and capitalize the first letter of the command
-        String original = optionsArray.get(0).toLowerCase();
-        String command = original;
-        String classChar = command.substring(0, 1).toUpperCase();
-        command = command.substring(1);
-        command = "jterm.command." + classChar + command;
+        String command = optionsArray.get(0);
         optionsArray.remove(0);
 
-        // Get the method name
-        if (optionsArray.toArray().length >= 1) {
-            methodName = optionsArray.get(0);
-        } else {
-            optionsArray.add(methodName);
+        if (!COMMANDS.containsKey(command)) {
+            System.out.println("Command \"" + command + "\" is not available");
+            return;
         }
 
         try {
-            Object instance = Class.forName(command)
-                    .getConstructor(ArrayList.class)
-                    .newInstance(optionsArray);
-            optionsArray.remove(0);
-            instance.getClass()
-                    .getMethod(methodName, ArrayList.class)
-                    .invoke(options.getClass(), optionsArray);
-        } catch (ClassNotFoundException e) {
-            ArrayList<String> execFile = new ArrayList<>();
-            execFile.add(original);
-            if (Exec.run(execFile)) {
-                System.out.println("Unknown Command \"" + original + "\"");
-            }
-        } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
-            System.out.println(e);
-        } catch (NoSuchMethodException e) {
-            // ignore exception
+            COMMANDS.get(command).execute(optionsArray);
+        } catch (CommandException e) {
+            System.err.println(e.getMessage());
         }
-
-        return false;
-        // 	// Commands to skip in batch files
-        // 	case "bcdedit":
-        // 	case "chkdsk":
-        // 	case "chkntfs":
-        // 	case "cls":
-        // 	case "cmd":
-        // 	case "color":
-        // 	case "convert":
-        // 	case "diskpart":
-        // 	case "driverquery":
-        // 	case "format":
-        // 	case "fsutil":
-        // 	case "gpresult":
-        // 	case "mode":
-        // 	case "sc":
-        // 	case "shutdown":
-        // 	case "start":
-        // 	case "tasklist":
-        // 	case "taskkill":
-        // 	case "ver":
-        // 	case "vol":
-        // 	case "wmic":
-        // 		break;
-    }
-
-    /*
-    * getAsArray() ArrayList<String>
-    *
-    * Returns a String as an ArrayList of
-    * Strings (spaces as delimiters)
-    *
-    * String options - String to be split
-    */
-    public static ArrayList<String> getAsArray(String options) {
-        try (Scanner tokenizer = new Scanner(options)) {
-            ArrayList<String> optionsArray = new ArrayList<>();
-            while (tokenizer.hasNext()) {
-                optionsArray.add(tokenizer.next());
-            }
-            return optionsArray;
-        }
-    }
-
-    /*
-    * getAsString() String
-    *
-    * Returns an ArrayList of Strings
-    * as a String (separated with spaces)
-    *
-    * ArrayList<String> options - array to be split
-    */
-    public static String getAsString(ArrayList<String> options) {
-        StringBuilder result = new StringBuilder();
-        for (String option : options) {
-            result.append(option);
-            result.append(" ");
-        }
-        return result.substring(0, result.length() - 1);
     }
 }

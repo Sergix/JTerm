@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
+import java.util.function.Consumer;
 
 public class InputHandler {
     // List of files for tab rotation and printing options
@@ -44,6 +45,18 @@ public class InputHandler {
 
     // Stops autocomplete from constantly erasing fileNames list when searching sub-directories
     private static boolean blockClear = false;
+
+    private static Consumer<Character> inputProcessor;
+
+    static {
+        if (JTerm.IS_WIN) {
+            inputProcessor = InputHandler::processWin;
+        } else if (JTerm.IS_UNIX) {
+            inputProcessor = InputHandler::processUnix;
+        } else {
+            throw new Error("Unknown operating system!");
+        }
+    }
 
     /**
      * process() void
@@ -62,11 +75,7 @@ public class InputHandler {
             e.printStackTrace();
         }
 
-        if (JTerm.IS_WIN) {
-            processWin(input);
-        } else if (JTerm.IS_UNIX) {
-            processUnix(input);
-        }
+        inputProcessor.accept(input);
     }
 
     /**
@@ -131,11 +140,11 @@ public class InputHandler {
         // Enter, or new line
         else if (input == '\n') {
             if (JTerm.command.length() > 0) {
-                JTerm.parse(JTerm.command);
+                JTerm.executeCommand(JTerm.command);
             }
 
             JTerm.command = "";
-            System.out.print("\n" + JTerm.prompt);
+            System.out.print("\n" + JTerm.PROMPT);
         }
 
         // Just print it if it is defined
@@ -204,11 +213,11 @@ public class InputHandler {
         else if (input == 13) {
             System.out.println("\r\n");
             if (JTerm.command.length() > 0) {
-                JTerm.parse(JTerm.command);
+                JTerm.executeCommand(JTerm.command);
             }
 
             JTerm.command = "";
-            System.out.print("\r\n" + JTerm.prompt);
+            System.out.print("\r\n" + JTerm.PROMPT);
         }
 
         // just print it if it is defined
@@ -313,7 +322,7 @@ public class InputHandler {
                 JTerm.command = command + currFile.substring(startComplete, currFile.length());
 
                 // Print to screen
-                System.out.print(JTerm.prompt + JTerm.command);
+                System.out.print(JTerm.PROMPT + JTerm.command);
 
                 // Add file or dir name at end of list
                 fileNames.add(currFile);
@@ -324,7 +333,7 @@ public class InputHandler {
                 System.out.println();
 
                 // Re-output command after clearing lines
-                System.out.print(JTerm.prompt + JTerm.command);
+                System.out.print(JTerm.PROMPT + JTerm.command);
 
             }
 
@@ -340,7 +349,7 @@ public class InputHandler {
                     System.out.println("\n");
 
                     // Re-output command after clearing lines
-                    System.out.print(JTerm.prompt + JTerm.command);
+                    System.out.print(JTerm.PROMPT + JTerm.command);
 
                 } else if (!lockTab) {
                     clearLine(JTerm.command);
@@ -352,7 +361,7 @@ public class InputHandler {
                     JTerm.command = command + currFile.substring(startComplete, currFile.length());
 
                     // Print to screen
-                    System.out.print(JTerm.prompt + JTerm.command);
+                    System.out.print(JTerm.PROMPT + JTerm.command);
 
                     // Add file or dir name at end of list
                     fileNames.add(currFile);
@@ -391,15 +400,15 @@ public class InputHandler {
      * @param line line to be cleared
      */
     private static void clearLine(String line) {
-        for (int i = 0; i < line.length() + JTerm.prompt.length() / 3; i++) {
+        for (int i = 0; i < line.length() + JTerm.PROMPT.length() / 3; i++) {
             System.out.print("\b");
         }
 
-        for (int i = 0; i < line.length() + JTerm.prompt.length() / 3; i++) {
+        for (int i = 0; i < line.length() + JTerm.PROMPT.length() / 3; i++) {
             System.out.print(" ");
         }
 
-        for (int i = 0; i < line.length() + JTerm.prompt.length() / 3; i++) {
+        for (int i = 0; i < line.length() + JTerm.PROMPT.length() / 3; i++) {
             System.out.print("\b");
         }
     }
