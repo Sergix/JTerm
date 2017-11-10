@@ -21,16 +21,18 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.List;
 
+import static jterm.JTerm.logln;
+
+
 public class Ping implements Command {
     @Override
     public void execute(List<String> options) {
         if (options.size() == 0 || options.contains("-h")) {
-            System.out.println("Command syntax:\n\tping [-h] [-p port] host");
+            logln("Command syntax:\n\tping [-h] [-p port] host", false);
             return;
         }
 
         String port = "80";
-
         int portIndex = options.indexOf("-p");
         if (portIndex != -1) {
             if ((options.size() != 3) || (portIndex + 1 == options.size())) {
@@ -44,9 +46,9 @@ public class Ping implements Command {
 
         String host = options.get(options.size() - 1);
         try (Socket socket = new Socket()) {
-            System.out.println("Pinging " + host + "...");
+            logln("Pinging " + host + "...", true);
             socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 3000);
-            System.out.println("Ping Successful");
+            logln("Ping Successful", true);
         } catch (IOException e) {
             throw new CommandException("Ping failed", e);
         } catch (NumberFormatException e) {

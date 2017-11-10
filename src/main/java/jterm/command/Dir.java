@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import static jterm.JTerm.logln;
+
 public class Dir implements Command {
     @FunctionalInterface
     private interface FilePrinter {
@@ -38,16 +40,16 @@ public class Dir implements Command {
 
     private static final Map<String, Consumer<List<String>>> FUNCTIONS = new HashMap<>(5);
 
-    private static final FilePrinter SIMPLE_PRINTER = (file) -> System.out.println("\t" + file.getName());
+    private static final FilePrinter SIMPLE_PRINTER = (file) -> logln("\t" + file.getName(), true);
 
-    private static final FilePrinter FULL_PRINTER = (file) -> System.out.println("\t"
+    private static final FilePrinter FULL_PRINTER = (file) -> logln("\t"
             + (file.isFile() ? "F" : "D") + " "
             + (file.canRead() ? "R" : "")
             + (file.canWrite() ? "W" : "")
             + (file.isHidden() ? "H" : "")
             + "\t" + file.getName()
             + (file.getName().length() < 8 ? "\t\t\t" : (file.getName().length() > 15 ? "\t" : "\t\t"))
-            + (file.length() / 1024) + " KB");
+            + (file.length() / 1024) + " KB", true);
 
     static {
         FUNCTIONS.put("ls", Dir::ls);
@@ -60,9 +62,9 @@ public class Dir implements Command {
     @Override
     public void execute(List<String> options) {
         if (options.size() == 0) {
-            System.out.println("Available commands:");
+            logln("Available commands:", true);
             for (String command : FUNCTIONS.keySet()) {
-                System.out.println("\t" + command);
+                logln("\t" + command, true);
             }
         } else if (FUNCTIONS.containsKey(options.get(0))) {
             FUNCTIONS.get(options.remove(0)).accept(options);
@@ -96,10 +98,9 @@ public class Dir implements Command {
     */
     public static void ls(List<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\tdir [-f] [-h] [directory]\n\n");
+            logln("Command syntax:\n\tdir [-f] [-h] [directory]\n\n", false);
             return;
         }
-
         File[] files = new File(JTerm.currentDirectory).listFiles();
 
         if (files == null) {
@@ -113,8 +114,7 @@ public class Dir implements Command {
             printer = SIMPLE_PRINTER;
         }
 
-
-        System.out.println("[Contents of \"" + JTerm.currentDirectory + "\"]");
+        logln("[Contents of \"" + JTerm.currentDirectory + "\"]", true);
         for (File file : files) {
             printer.print(file);
         }
@@ -133,19 +133,19 @@ public class Dir implements Command {
     * directory [...]
     * 	Path to change the working directory to.
     */
+
     public static void cd(List<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.");
+            logln("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.", false);
             return;
         }
-
         String newDirectory = Util.getAsString(options).trim();
         if (newDirectory.startsWith("\"") && newDirectory.endsWith("\"")) {
             newDirectory = newDirectory.substring(1, newDirectory.length() - 1);
         }
 
         if (newDirectory.equals("")) {
-            System.out.println("Path not specified. Type \"cd -h\" for more information.");
+            logln("Path not specified. Type \"cd -h\" for more information.", false);
             return;
         }
 
@@ -158,16 +158,17 @@ public class Dir implements Command {
         } else if (newDirectory.equals(".")) {
             return;
         } else if (newDirectory.equals("..")) {
-            if(JTerm.currentDirectory.equals("/")) {
+            if (JTerm.currentDirectory.equals("/")) {
                 return;
             } else {
+                //TODO: Fix this to actually remove a directory level
                 newDirectory = JTerm.currentDirectory.substring(0, JTerm.currentDirectory.length() - 2);
                 newDirectory = newDirectory.substring(0, newDirectory.lastIndexOf('/'));
             }
         } else if (newDir.exists() && newDir.isDirectory()) {
             newDirectory = JTerm.currentDirectory + newDirectory;
         } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
-            System.out.println("ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
+            logln("ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.", false);
             return;
         }
 
@@ -181,15 +182,16 @@ public class Dir implements Command {
 
     public static void pwd(List<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\tpwd\n\nPrints the current working directory.");
+            logln("Command syntax:\n\tpwd\n\nPrints the current working directory.", false);
             return;
         }
-        System.out.println(JTerm.currentDirectory);
+        logln(JTerm.currentDirectory, true);
     }
+
 
     public static void md(List<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\tmd [-h] name");
+            logln("Command syntax:\n\tmd [-h] name", false);
             return;
         }
 
@@ -220,13 +222,16 @@ public class Dir implements Command {
         List<String> filesToBeRemoved = new ArrayList<>();
         boolean recursivelyDeleteFlag = false;
         for (String option : options) {
-            if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\t rm [-h] [-r] name... Remove files or directories");
-                return;
-            } else if (option.equals("-r")) {
-                recursivelyDeleteFlag = true;
-            } else {
-                filesToBeRemoved.add(option);
+            switch (option) {
+                case "-h":
+                    logln("Command syntax:\n\t rm [-h] [-r] name... Remove files or directories", false);
+                    return;
+                case "-r":
+                    recursivelyDeleteFlag = true;
+                    break;
+                default:
+                    filesToBeRemoved.add(option);
+                    break;
             }
         }
 
@@ -234,16 +239,16 @@ public class Dir implements Command {
             File file = new File(JTerm.currentDirectory, fileName);
 
             if (!file.isFile() && !file.isDirectory()) {
-                System.out.println(fileName + " is not a file or directory");
+                logln(fileName + " is not a file or directory", false);
             } else if (file.isDirectory()) {
                 if (recursivelyDeleteFlag) {
                     try {
                         FileUtils.deleteDirectory(file);
                     } catch (IOException e) {
-                        System.out.println("Error when deleting " + fileName);
+                        logln("Error when deleting " + fileName, false);
                     }
                 } else {
-                    System.out.println("Attempting to delete a directory. Run the command again with -r.");
+                    logln("Attempting to delete a directory. Run the command again with -r.", false);
                     return;
                 }
             }

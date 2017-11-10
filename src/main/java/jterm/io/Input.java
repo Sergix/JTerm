@@ -88,7 +88,7 @@ public class Input {
      * <p>On Unix this method switches the console back to echo mode.
      * read() leaves the console in non-echo mode.
      */
-    public static void resetConsoleMode() throws IOException {
+    private static void resetConsoleMode() throws IOException {
         if (isWindows) {
             resetConsoleModeWindows();
         } else {
@@ -154,8 +154,8 @@ public class Input {
         if (initDone) {
             return;
         }
-        msvcrt = (Msvcrt) Native.loadLibrary("msvcrt", Msvcrt.class);
-        kernel32 = (Kernel32) Native.loadLibrary("kernel32", Kernel32.class);
+        msvcrt = Native.loadLibrary("msvcrt", Msvcrt.class);
+        kernel32 = Native.loadLibrary("kernel32", Kernel32.class);
         try {
             consoleHandle = getStdInputHandle();
             originalConsoleMode = getConsoleMode(consoleHandle);
@@ -201,7 +201,7 @@ public class Input {
         consoleModeAltered = false;
     }
 
-    private static interface Msvcrt extends Library {
+    private interface Msvcrt extends Library {
         int _kbhit();
 
         int _getwch();
@@ -218,7 +218,7 @@ public class Input {
         static final int ENABLE_WINDOW_INPUT = 0x0008;
     }
 
-    private static interface Kernel32 extends Library {
+    private interface Kernel32 extends Library {
         int GetConsoleMode(Pointer hConsoleHandle, IntByReference lpMode);
 
         int SetConsoleMode(Pointer hConsoleHandle, int dwMode);
@@ -318,7 +318,7 @@ public class Input {
         if (initDone) {
             return;
         }
-        libc = (Libc) Native.loadLibrary("c", Libc.class);
+        libc = Native.loadLibrary("c", Libc.class);
         stdinIsConsole = libc.isatty(stdinFd) == 1;
         charsetDecoder = Charset.defaultCharset().newDecoder();
         if (stdinIsConsole) {
@@ -342,12 +342,12 @@ public class Input {
     }
 
     protected static class Termios extends Structure {         // termios.h
-        public int c_iflag;
-        public int c_oflag;
-        public int c_cflag;
-        public int c_lflag;
-        public byte c_line;
-        public byte[] filler = new byte[64];                  // actual length is platform dependent
+        int c_iflag;
+        int c_oflag;
+        int c_cflag;
+        int c_lflag;
+        byte c_line;
+        byte[] filler = new byte[64];                  // actual length is platform dependent
 
         @Override
         protected List<String> getFieldOrder() {
@@ -369,14 +369,14 @@ public class Input {
 
     private static class LibcDefs {
         // termios.h
-        static final int ISIG = 0000001;
-        static final int ICANON = 0000002;
-        static final int ECHO = 0000010;
-        static final int ECHONL = 0000100;
+        static final int ISIG = 1;//0000001
+        static final int ICANON = 2;//0000002
+        static final int ECHO = 8;//0000010
+        static final int ECHONL = 64;//0000100
         static final int TCSANOW = 0;
     }
 
-    private static interface Libc extends Library {
+    private interface Libc extends Library {
         // termios.h
         int tcgetattr(int fd, Termios termios) throws LastErrorException;
 
