@@ -20,6 +20,8 @@ import jterm.JTerm;
 
 import java.util.List;
 
+import static jterm.JTerm.logln;
+
 public class Ps implements Command {
     private static final String PS_COMMAND;
 
@@ -36,10 +38,9 @@ public class Ps implements Command {
     @Override
     public void execute(List<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\tps [-h]\n\nDisplays all current processes running on the host system.");
+            logln("Command syntax:\n\tps [-h]\n\nDisplays all current processes running on the host system.", false);
             return;
         }
-
         Exec.run(PS_COMMAND);
     }
 }

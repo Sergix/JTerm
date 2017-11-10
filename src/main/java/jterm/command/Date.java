@@ -20,16 +20,18 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import static jterm.JTerm.logln;
+
 public class Date implements Command {
-	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     @Override
     public void execute(List<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\tdate [-h]");
+            logln("Command syntax:\n\tdate [-h]", false);
             return;
         }
         Calendar calendar = Calendar.getInstance();
-        System.out.println("The current date is: " + dateFormat.format(calendar.getTime()));
+        logln("The current date is: " + dateFormat.format(calendar.getTime()), true);
     }
 }
