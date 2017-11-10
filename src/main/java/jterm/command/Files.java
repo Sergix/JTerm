@@ -16,65 +16,60 @@
 
 package jterm.command;
 
+import jterm.JTerm;
+import jterm.util.Util;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-
-import jterm.JTerm;
-import jterm.util.Util;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 import static jterm.JTerm.log;
 import static jterm.JTerm.logln;
 
-public class Files {
 
-    /**
-     * Files() void
-     * <br></br><br></br>
-     * Constructor for calling methods.
-     *
-     * @param options command options
-     */
-    public Files(ArrayList<String> options) {
+public class Files implements Command {
+    private static final Map<String, Consumer<List<String>>> FUNCTIONS = new HashMap<>(6);
+
+    static {
+        FUNCTIONS.put("write", Files::write);
+        FUNCTIONS.put("delete", Files::delete);
+        FUNCTIONS.put("rm", Files::delete);
+        FUNCTIONS.put("del", Files::delete);
+        FUNCTIONS.put("read", Files::read);
+        FUNCTIONS.put("download", Files::download);
     }
 
-    /**
-     * Process() void
-     * <br></br><br></br>
-     * Process the input.
-     * <br></br>
-     * @param options command options
-     */
-    public static void process(String options) {
 
-        logln("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp", false);
+    @Override
+    public void execute(List<String> options) {
+        if (options.contains("-h") || options.size() == 0) {
+            logln("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp", false);
+            return;
+        }
 
+        String command = options.get(0);
+        options.remove(0);
+        if (FUNCTIONS.containsKey(command)) {
+            FUNCTIONS.get(command).accept(options);
+        } else {
+            throw new CommandException("Invalid command name \"" + command + "\"");
+        }
     }
 
-    /**
-     * Write() void
-     * <br></br><br></br>
-     * Get input and write it to a file.
-     * <br></br>
-     * @param options command options
-     */
-    /*
-     * Options:
-	 * -h: Prints help information
-	 * filename [...]: File to write to
-	 */
-    public static void write(ArrayList<String> options) {
 
+    public static void write(List<String> options) {
         StringBuilder filenameBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
-                logln("Command syntax:\n\twrite [-h] filename\n\nOpens an input prompt in which to write text to a new file.", false);
+                logln("Command syntax:\n\twrite [-h] filename\n\nOpens an input PROMPT in which to write text to a new file.", true);
                 return;
-
-            } else
+            } else {
                 filenameBuilder.append(option);
-
+            }
         }
         String filename = filenameBuilder.toString();
 
@@ -84,7 +79,6 @@ public class Files {
         if (filename.equals("")) {
             logln("Error: missing filename; type \"write -h\" for more information.", false);
             return;
-
         }
 
         try {
@@ -94,50 +88,33 @@ public class Files {
 
             for (; ; ) {
                 line = JTerm.userInput.readLine();
-                if (line.equals(""))
+                if (line.equals("")) {
                     break;
-
-                else if (line.equals(" "))
+                } else if (line.equals(" ")) {
                     output.append("\n");
-
+                }
                 output.append("\n").append(line);
-
             }
 
             FileWriter fileWriter = new FileWriter(filename);
             fileWriter.write(output.toString());
             fileWriter.close();
-
         } catch (IOException ioe) {
             System.out.println(ioe);
-
         }
 
     }
 
-    /**
-     * Delete() void
-     * <br></br><br></br>
-     * Delete the specified file or directory.
-     * <br></br>
-     * @param options command options
-     */
-    /*
-	 * Options:
-	 * -h: Prints help information
-	 * file [...]: File to delete
-	 */
-    public static void delete(ArrayList<String> options) {
 
+    public static void delete(List<String> options) {
         StringBuilder filenameBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
                 logln("Command syntax:\n\tdel [-h] file/directory\n\nDeletes the specified file or directory.", false);
                 return;
-
-            } else
+            } else {
                 filenameBuilder.append(option);
-
+            }
         }
         String filename = filenameBuilder.toString();
 
@@ -148,61 +125,18 @@ public class Files {
         if (!dir.exists()) {
             logln("ERROR: File/directory \"" + options.get(options.size() - 1) + "\" does not exist.", false);
             return;
-
         }
-
+        //TODO: Maybe use the result of .delete() to indicate delete succeeded
         dir.delete();
     }
 
-    /**
-     * Rm() void
-     * <br></br><br></br>
-     * Identical to 'delete'; calls Delete().
-     * <br></br><br></br>
-     * Credit to: @pmorgan3
-     * <br></br>
-     * @param options command options
-     */
-    public static void rm(ArrayList<String> options) {
-        delete(options);
-    }
 
-    /**
-     * Del() void
-     * <br></br><br></br>
-     * Identical to 'delete'; calls Delete().
-     * <br></br><br></br>
-     * Credit to: @pmorgan3
-     * <br></br>
-     * @param options command options
-     */
-    public static void del(ArrayList<String> options) {
-        delete(options);
-    }
-
-    /**
-     * Read() void
-     * <br></br><br></br>
-     * Reads the specified files and outputs the contents
-     * to the console.
-     * <br></br><br></br>
-     * Credit to @d4nntheman
-     * <br></br>
-     * @param options command options
-     */
-	/*
-	 * Options:
-	 * -h: Prints help information
-	 * filename [...]: Prints the contents of the specified files
-	 */
-    public static void read(ArrayList<String> options) {
-
+    public static void read(List<String> options) {
         String filename;
         for (String option : options) {
             if (option.equals("-h")) {
                 logln("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.", false);
                 return;
-
             }
 
             filename = JTerm.currentDirectory + option;
@@ -210,37 +144,26 @@ public class Files {
             if (!file.exists()) {
                 logln("ERROR: File/directory \"" + option + "\" does not exist.", false);
                 break;
-
             }
 
             try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
                 logln("\n[JTerm - Contents of " + option + "]\n", true);
                 String line;
-                while ((line = reader.readLine()) != null)
+                while ((line = reader.readLine()) != null) {
                     logln(line, true);
-
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
-
             }
-
         }
-
     }
 
-    /**
-     * Download() void
-     * <br></br><br></br>
-     * Downloads a file to the working directory, given a valid URL.
-     * <br></br>
-     * @param options command options, must include URL
-     */
-    public static void download(ArrayList<String> options) {
+    public static void download(List<String> options) {
         String url;
-        if (options.size() > 0)
+        if (options.size() > 0) {
             url = options.get(options.size() - 1);
-        else {
+        } else {
             logln("A URL to a file must be provided as an option", false);
             return;
         }
@@ -273,8 +196,9 @@ public class Files {
             logln("Error when getting file information. Download cancelled.", false);
             return;
         } finally {
-            if (conn != null)
+            if (conn != null) {
                 conn.disconnect();
+            }
         }
 
         BufferedOutputStream out;
@@ -297,7 +221,7 @@ public class Files {
                 //TODO: Progress bar instead maybe?
                 //Also, this causes flickering in the GUI, a lower update rate might be good
                 if (steps % 10 == 0) { // print every 10 download steps
-                    Util.ClearLine(update, false);
+                    Util.clearLine(update, false);
                     log(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"), true);
                 }
             }
@@ -307,7 +231,7 @@ public class Files {
         }
 
         // clear line and notify user of download success
-        Util.ClearLine(update, false);
-        logln("\nFile downloaded successfully in: " + Util.GetRunTime(System.currentTimeMillis() - start), true);
+        Util.clearLine(update, false);
+        logln("\nFile downloaded successfully in: " + Util.getRunTime(System.currentTimeMillis() - start), true);
     }
 }

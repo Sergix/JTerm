@@ -19,16 +19,13 @@ package jterm.command;
 
 import jterm.JTerm;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static jterm.JTerm.logln;
 
-public class Help {
-    public Help(ArrayList<String> options) {
-        if (options.contains("-h")) {
-            logln("Command syntax:\n\thelp [-h]\n\nPrints help information.", false);
-            return;
-        }
+public class Help implements Command {
+    @Override
+    public void execute(List<String> options) {
         logln("JTerm v" + JTerm.VERSION + "\n"
                 + "Available commands:\n"
                 + "  client\n"

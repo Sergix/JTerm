@@ -16,31 +16,25 @@
 
 package jterm.command;
 
-import java.util.*;
+import jterm.util.Util;
 
-import static jterm.JTerm.logln;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class Set {
-    // Global variable HashMap
+public class Set implements Command {
     public static HashMap<String, String> vars = new HashMap<>();
 
-    /*
-    * Set() void
-    *
-    * Creates a new variable or prints all
-    * stored variables.
-    *
-    * ArrayList<String> options - command options
-    */
-    public Set(ArrayList<String> options) {
+    @Override
+    public void execute(List<String> options) {
         if (options.contains("-h")) {
-            logln("Command syntax:\n\tset [-h] name = value\n\nSets an environment variable.", false);
+            System.out.println("Command syntax:\n\tset [-h] <name> = <value>");
             return;
         }
 
         if (options.size() == 0) {
             for (Map.Entry<String, String> entry : vars.entrySet()) {
-                logln(entry.getKey() + "=" + entry.getValue(), true);
+                System.out.println(entry.getKey() + "=" + entry.getValue());
             }
             return;
         }
@@ -70,8 +64,6 @@ public class Set {
             Window.windows.add(newWindow);
             return;
         }
-
-        // Put the variable contents into the global hashtable
-        vars.put(key, Exec.getRest(options, 2));
+        vars.put(key, Util.getRest(options, 2));
     }
 }

@@ -25,16 +25,9 @@ build/tmp/
 
 # test scripts
 test.bat
-target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
 
 target/
-*.lst
-
-*.class
-target/classes/main/java/jterm/Client.class
 combined-batch.bat
-changelog.txt
-src/main/java/jterm/command/Help.java
 
 # IDEA files
 .idea/

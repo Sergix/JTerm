@@ -18,36 +18,21 @@
 
 package jterm.command;
 
-import java.util.ArrayList;
+import jterm.util.Util;
+
+import java.util.List;
 
 import static jterm.JTerm.logln;
 
-public class Echo {
-    /*
-    * Echo() void
-    *
-    * Echo the input to the terminal.
-    *
-    * ArrayList<String> options - command options
-    *
-    * -h
-    * 	Prints help information
-    * input
-    * 	Text to output
-    */
+public class Echo implements Command {
     // FIXME: echo is not working correctly, for example: > echo $JAVA_HOME
-    public Echo(ArrayList<String> options) {
-        StringBuilder outputBuilder = new StringBuilder();
-        for (String option : options) {
-            if (option.equals("-h")) {
-                logln("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.", false);
-                return;
-            } else {
-                outputBuilder
-                        .append(option)
-                        .append(" ");
-            }
+    @Override
+    public void execute(List<String> options) {
+        if (options.contains("-h")) {
+            logln("Command syntax:\n\techo [-h] input", false);
+            return;
         }
-        logln(outputBuilder.substring(0, outputBuilder.length() - 1), true);
+        String info = Util.getAsString(options);
+        logln(info.substring(0, info.length() - 1), true);
     }
 }

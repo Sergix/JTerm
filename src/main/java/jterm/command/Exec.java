@@ -17,68 +17,44 @@
 package jterm.command;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import static jterm.JTerm.logln;
 
-public class Exec {
-    /**
-     * Exec() void
-     * <p></p>
-     * Calls run() method
-     *
-     * @param options List of files to run
-     */
-    public Exec(ArrayList<String> options) {
-        run(options);
+
+public class Exec implements Command {
+    @Override
+    public void execute(List<String> options) {
+        if (options.size() == 0) {
+            logln("Command usage: exec <executable>", false);
+            return;
+        }
+
+        String command = options.get(0);
+        if (!command.startsWith("java") && command.endsWith(".jar")) {
+            command = "java -jar " + command;
+        }
+
+        run(command);
     }
 
-    /**
-     * run(ArrayList<String> options)
-     * <p></p>
-     * Runs a program and outputs program output to JTerm command line
-     *
-     * @param options program(s) to execute
-     * @return successful run or error during runtime
-     */
-    public static boolean run(ArrayList<String> options) {
+    public static void run(String command) {
         try {
-            for (String s : options) {
-                if (s.endsWith("jar")) { // runs jar files, takes no options
-                    Process p = Runtime.getRuntime().exec("java -jar " + s);
-                    Scanner in = new Scanner(p.getInputStream());
-                    String nextLine;
-                    while (p.isAlive() && (nextLine = in.nextLine()) != null) {
-                        logln(nextLine, true);
-                    }
-                } else { // pass program name to system, it will open it (for executables)
-                    Process p = Runtime.getRuntime().exec(s);
-                    Scanner in = new Scanner(p.getInputStream());
-                    String nextLine;
-                    while (p.isAlive() && (nextLine = in.nextLine()) != null) {
-                        logln(nextLine, true);
-                    }
-                }
-            }
-            return true;
-        } catch (IOException e) {
-            logln("Program was not found or failed during runtime", false);
-            return false;
-        }
-    }
+            Process process = Runtime.getRuntime().exec(command);
+            Scanner in = new Scanner(process.getInputStream());
 
-    public static String getRest(ArrayList<String> options, int index) {
-        StringBuilder outputBuilder = new StringBuilder();
-        for (int i = index; i < options.size(); i++) {
-            if (i != options.size() - 1) {
-                outputBuilder
-                        .append(options.get(i))
-                        .append(" ");
-            } else {
-                outputBuilder.append(options.get(i));
+            while (process.isAlive() && in.hasNextLine()) {
+                logln(in.nextLine(), true);
             }
+
+            while (in.hasNextLine()) {
+                logln(in.nextLine(), true);
+            }
+
+            in.close();
+        } catch (IOException e) {
+            throw new CommandException("Failed to execute command \"" + command + "\"");
         }
-        return outputBuilder.toString();
     }
 }

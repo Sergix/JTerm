@@ -19,34 +19,27 @@ package jterm.command;
 import jterm.JTerm;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
-import static jterm.JTerm.logln;
-
-public class Clear {
+public class Clear implements Command {
     private static final String ANSI_CLS = "\u001b[2J";
     private static final String ANSI_HOME = "\u001b[H";
 
-    public Clear(ArrayList<String> options) {
-        if (options.contains("-h")) {
-            logln("Command syntax:\n\tclear [-h]\n\nClears all lines in the terminal display.", false);
-        } else {
-            if (JTerm.isHeadless()) {
-                if (JTerm.IS_UNIX) {
-                    // Use escape sequences to clear the screen for Unix OS
-                    System.out.print(ANSI_CLS + ANSI_HOME);
-                    System.out.flush();
-                } else if (JTerm.IS_WIN) {
-                    // Invoke the command line interpreter's own 'clear' command for Windows OS
-                    try {
-                        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-                    } catch (IOException | InterruptedException e) {
-                        System.out.println(e);
-                    }
+    @Override
+    public void execute(List<String> options) {
+        if (JTerm.isHeadless()) {
+            if (JTerm.IS_UNIX) { // escape sequences to clear the screen
+                System.out.print(ANSI_CLS + ANSI_HOME);
+                System.out.flush();
+            } else if (JTerm.IS_WIN) { // Invoke the command line interpreter's own 'clear' command for Windows OS
+                try {
+                    new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                } catch (IOException | InterruptedException e) {
+                    throw new CommandException("Can't clear screen...", e);
                 }
-            } else {
-                JTerm.getTerminal().clear();
             }
+        } else {
+            JTerm.getTerminal().clear();
         }
     }
 }

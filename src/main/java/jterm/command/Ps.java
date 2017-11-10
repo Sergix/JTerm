@@ -17,60 +17,30 @@
 package jterm.command;
 
 import jterm.JTerm;
-import org.apache.commons.io.IOUtils;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.List;
 
 import static jterm.JTerm.logln;
 
-/*
-* Original code credit to @chromechris
-* 
-* (edits for release done by @Sergix)
-*/
-public class Ps {
-    /*
-    * Ps() void
-    *
-    * Prints a list of process running on
-    * the system.
-    *
-    * ArrayList<String> options - command options
-    *
-    * -h
-    * 	Prints help information
-    */
-    public Ps(ArrayList<String> options) {
+public class Ps implements Command {
+    private static final String PS_COMMAND;
+
+    static {
+        if (JTerm.IS_UNIX) {
+            PS_COMMAND = "ps -e";
+        } else if (JTerm.IS_WIN) {
+            PS_COMMAND = System.getenv("windir") + "\\system32\\" + "tasklist.exe";
+        } else {
+            throw new Error("Undefined operating system");
+        }
+    }
+
+    @Override
+    public void execute(List<String> options) {
         if (options.contains("-h")) {
             logln("Command syntax:\n\tps [-h]\n\nDisplays all current processes running on the host system.", false);
             return;
         }
-
-        if (JTerm.IS_UNIX) {
-            try {
-                Process process = Runtime.getRuntime().exec("ps -e");
-                BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                logln(IOUtils.toString(input), true);
-                input.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (JTerm.IS_WIN) {
-            try {
-                String line;
-                Process p = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");
-                BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                //TODO: Also switch this to IOUtils.toString() from apache commons?
-                while ((line = input.readLine()) != null) {
-                    // Parse data here.
-                    logln(line, true);
-                }
-                input.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        Exec.run(PS_COMMAND);
     }
 }

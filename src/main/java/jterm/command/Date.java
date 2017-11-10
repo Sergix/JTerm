@@ -17,20 +17,21 @@ package jterm.command;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import static jterm.JTerm.logln;
 
-public class Date {
-	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+public class Date implements Command {
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-    public Date(ArrayList<String> options) {
+    @Override
+    public void execute(List<String> options) {
         if (options.contains("-h")) {
-            logln("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.", false);
+            logln("Command syntax:\n\tdate [-h]", false);
             return;
         }
-		Calendar calendar = Calendar.getInstance();
-		logln("The current date is: " + dateFormat.format(calendar.getTime()), true);
+        Calendar calendar = Calendar.getInstance();
+        logln("The current date is: " + dateFormat.format(calendar.getTime()), true);
     }
 }
