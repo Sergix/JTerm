@@ -16,66 +16,82 @@
 
 package jterm.command;
 
+import com.google.common.collect.ImmutableMap;
+import jterm.JTerm;
+import jterm.util.Util;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import jterm.JTerm;
-import jterm.util.Util;
-import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl;
-
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class Files implements Command {
-    private static final Map<String, Consumer<List<String>>> FUNCTIONS = new HashMap<>(6);
+    private static class FilesCommand implements Consumer<List<String>> {
+        private Consumer<List<String>> command;
+        private String helpInfo;
+        private int minOptionsSize;
+
+        public FilesCommand(Consumer<List<String>> command, int minOptionsSize, String helpInfo) {
+            this.command = command;
+            this.minOptionsSize = minOptionsSize;
+            this.helpInfo = helpInfo;
+        }
+
+        @Override
+        public void accept(List<String> options) {
+            if (options.contains("-h")) {
+                System.out.println(helpInfo);
+                return;
+            }
+            if (options.size() < minOptionsSize) {
+                throw new CommandException("To few argumens for command");
+            }
+            command.accept(options);
+        }
+    }
+
+    private static final Map<String, FilesCommand> SUB_COMMAND;
 
     static {
-        FUNCTIONS.put("write",    Files::write);
-        FUNCTIONS.put("delete",   Files::delete);
-        FUNCTIONS.put("rm",       Files::delete);
-        FUNCTIONS.put("del",      Files::delete);
-        FUNCTIONS.put("read",     Files::read);
-        FUNCTIONS.put("download", Files::download);
-        FUNCTIONS.put("mv",       Files::move);
-        FUNCTIONS.put("rn",       Files::rename);
+        SUB_COMMAND = ImmutableMap.<String, FilesCommand>builder()
+            .put("write", new FilesCommand(Files::write, 1, ""))
+            .put("delete", new FilesCommand(Files::delete, 1, ""))
+            .put("rm", new FilesCommand(Files::delete, 1, ""))
+            .put("del", new FilesCommand(Files::delete, 1, ""))
+            .put("read", new FilesCommand(Files::read, 1, "Command syntax:\n\t read [-h] [file1 file2 ...]"))
+            .put("download", new FilesCommand(Files::download, 1, ""))
+            .put("mv", new FilesCommand(Files::move, 2, ""))
+            .put("rn", new FilesCommand(Files::rename, 2, "")).build();
     }
 
     @Override
     public void execute(List<String> options) {
-        if (options.contains("-h") || options.size() == 0) {
-            System.out.println("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp");
+        if (options.size() == 0 || options.get(0).equals("-h")) {
+            System.out.println("File Commands:");
+            SUB_COMMAND
+                    .keySet()
+                    .forEach(k -> System.out.println("\t" + k));
             return;
         }
 
         String command = options.remove(0);
-        if (FUNCTIONS.containsKey(command)) {
-            FUNCTIONS.get(command).accept(options);
+        if (SUB_COMMAND.containsKey(command)) {
+            SUB_COMMAND.get(command).accept(options);
         } else {
             throw new CommandException("Invalid command name \"" + command + "\"");
         }
     }
 
     public static void move(List<String> options) {
-        if (options.size() < 2) {
-            throw new CommandException("To few arguments for \'mv\'");
-        }
-
-        String sourceName = options.get(0);
-        String destinationName = options.get(1);
-
-        if (!sourceName.startsWith("/")) {
-            sourceName = JTerm.currentDirectory + "/" + sourceName;
-        }
-        if (!destinationName.startsWith("/")) {
-            destinationName = JTerm.currentDirectory + "/" + destinationName;
-        }
+        String sourceName = getFullName(options.get(0));
+        String destinationName = getFullName(options.get(1));
 
         Path source = Paths.get(sourceName);
         Path destination = Paths.get(destinationName);
@@ -88,19 +104,10 @@ public class Files implements Command {
     }
 
     public static void rename(List<String> options) {
-        if (options.size() < 2) {
-            throw new CommandException("To few arguments for rename");
-        }
-
-        String fileName = options.get(0);
+        String fileName = getFullName(options.get(0));
         String newName = options.get(1);
 
-        if (!fileName.startsWith("/")) {
-            fileName = JTerm.currentDirectory + "/" + fileName;
-        }
-
         Path filePath = Paths.get(fileName);
-
         try {
             java.nio.file.Files.move(filePath, filePath.resolveSibling(newName), REPLACE_EXISTING);
         } catch (IOException e) {
@@ -152,15 +159,7 @@ public class Files implements Command {
     }
 
     public static void delete(List<String> options) {
-        if (options.size() < 1) {
-            throw new CommandException("To few arguments for delete command");
-        }
-
-        String fileName = options.get(0);
-        if (!fileName.startsWith("/")) {
-            fileName = JTerm.currentDirectory + "/" + fileName;
-        }
-
+        String fileName = getFullName(options.get(0));
         try {
             java.nio.file.Files.delete(Paths.get(fileName));
         } catch (NoSuchFileException e) {
@@ -171,19 +170,7 @@ public class Files implements Command {
     }
 
     public static void read(List<String> options) {
-        if (options.size() < 1) {
-            throw new CommandException("To few arguments for read");
-        }
-        if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.");
-            return;
-        }
-
-        String fileName = options.get(0);
-        if (!fileName.startsWith("/")) {
-            fileName = JTerm.currentDirectory + "/" + fileName;
-        }
-
+        String fileName = getFullName(options.get(0));
         try {
             byte[] data = java.nio.file.Files.readAllBytes(Paths.get(fileName));
             System.out.println(new String(data));
@@ -262,5 +249,12 @@ public class Files implements Command {
         // clear line and notify user of download success
         Util.clearLine(update, false);
         System.out.println("\nFile downloaded successfully in: " + Util.getRunTime(System.currentTimeMillis() - start));
+    }
+
+    private static String getFullName(String fileName) {
+        if (!fileName.startsWith("/")) {
+            fileName = JTerm.currentDirectory + "/" + fileName;
+        }
+        return fileName;
     }
 }
