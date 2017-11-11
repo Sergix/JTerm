@@ -11,8 +11,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Terminal extends JFrame {
-    private JPanel contentPane;
-    private JTextPane textPane;
+    private JPanel contentPane = new JPanel();
+    private JTextPane textPane = new JTextPane();
     private AttributeSet asWhite;
     private AttributeSet asOffWhite;
     public static String prompt = ">>";
