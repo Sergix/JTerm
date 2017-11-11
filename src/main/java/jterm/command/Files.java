@@ -19,6 +19,7 @@ package jterm.command;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -29,6 +30,8 @@ import java.util.function.Consumer;
 import jterm.JTerm;
 import jterm.util.Util;
 import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class Files implements Command {
     private static final Map<String, Consumer<List<String>>> FUNCTIONS = new HashMap<>(6);
@@ -41,6 +44,7 @@ public class Files implements Command {
         FUNCTIONS.put("read",     Files::read);
         FUNCTIONS.put("download", Files::download);
         FUNCTIONS.put("mv",       Files::move);
+        FUNCTIONS.put("rn",       Files::rename);
     }
 
     @Override
@@ -50,8 +54,7 @@ public class Files implements Command {
             return;
         }
 
-        String command = options.get(0);
-        options.remove(0);
+        String command = options.remove(0);
         if (FUNCTIONS.containsKey(command)) {
             FUNCTIONS.get(command).accept(options);
         } else {
@@ -75,12 +78,33 @@ public class Files implements Command {
         }
 
         Path source = Paths.get(sourceName);
-        Path destination  = Paths.get(destinationName);
+        Path destination = Paths.get(destinationName);
 
         try {
             java.nio.file.Files.move(source, destination);
         } catch (IOException e) {
             throw new CommandException("Failed to move \'" + sourceName + "\' to \'" + destinationName + '\'', e);
+        }
+    }
+
+    public static void rename(List<String> options) {
+        if (options.size() < 2) {
+            throw new CommandException("To few arguments for rename");
+        }
+
+        String fileName = options.get(0);
+        String newName = options.get(1);
+
+        if (!fileName.startsWith("/")) {
+            fileName = JTerm.currentDirectory + "/" + fileName;
+        }
+
+        Path filePath = Paths.get(fileName);
+
+        try {
+            java.nio.file.Files.move(filePath, filePath.resolveSibling(newName), REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new CommandException("Failed to rename file", e);
         }
     }
 
@@ -128,54 +152,43 @@ public class Files implements Command {
     }
 
     public static void delete(List<String> options) {
-        String filename = "";
-
-        for (String option : options) {
-            if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tdel [-h] file/directory\n\nDeletes the specified file or directory.");
-                return;
-            } else {
-                filename += option;
-            }
+        if (options.size() < 1) {
+            throw new CommandException("To few arguments for delete command");
         }
 
-        filename = filename.trim();
-        filename = JTerm.currentDirectory + filename;
-
-        File dir = new File(filename);
-        if (!dir.exists()) {
-            System.out.println("ERROR: File/directory \"" + options.get(options.size() - 1) + "\" does not exist.");
-            return;
+        String fileName = options.get(0);
+        if (!fileName.startsWith("/")) {
+            fileName = JTerm.currentDirectory + "/" + fileName;
         }
 
-        dir.delete();
+        try {
+            java.nio.file.Files.delete(Paths.get(fileName));
+        } catch (NoSuchFileException e) {
+            throw new CommandException("File does not exist", e);
+        } catch (IOException e) {
+            throw new CommandException("Failed to delete \'" + fileName + "\'", e);
+        }
     }
 
     public static void read(List<String> options) {
-        String filename = "";
-        for (String option : options) {
-            if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.");
-                return;
-            }
+        if (options.size() < 1) {
+            throw new CommandException("To few arguments for read");
+        }
+        if (options.contains("-h")) {
+            System.out.println("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.");
+            return;
+        }
 
-            filename = JTerm.currentDirectory + option;
-            File file = new File(filename);
-            if (!file.exists()) {
-                System.out.println("ERROR: File/directory \"" + option + "\" does not exist.");
-                break;
-            }
+        String fileName = options.get(0);
+        if (!fileName.startsWith("/")) {
+            fileName = JTerm.currentDirectory + "/" + fileName;
+        }
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
-                System.out.println("\n[JTerm - Contents of " + option + "]\n");
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
+        try {
+            byte[] data = java.nio.file.Files.readAllBytes(Paths.get(fileName));
+            System.out.println(new String(data));
+        } catch (IOException e) {
+            throw new CommandException("Failed to read \'" + fileName + "\' content");
         }
     }
 
