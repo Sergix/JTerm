@@ -19,13 +19,14 @@ package jterm.command;
 
 import jterm.JTerm;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static jterm.JTerm.logln;
 
 public class Help implements Command {
     @Override
     public void execute(List<String> options) {
-        System.out.println("JTerm v" + JTerm.VERSION + "\n"
+        logln("JTerm v" + JTerm.VERSION + "\n"
                 + "Available commands:\n"
                 + "  client\n"
                 + "  dir\n"
@@ -38,6 +39,6 @@ public class Help implements Command {
                 + "  ps\n"
                 + "  server\n"
                 + "  set\n"
-                + "  window\n");
+                + "  window\n", true);
     }
 }

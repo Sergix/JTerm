@@ -22,19 +22,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static jterm.JTerm.logln;
+
 public class Set implements Command {
     public static HashMap<String, String> vars = new HashMap<>();
 
     @Override
     public void execute(List<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\tset [-h] <name> = <value>");
+            logln("Command syntax:\n\tset [-h] <name> = <value>", false);
             return;
         }
 
         if (options.size() == 0) {
             for (Map.Entry<String, String> entry : vars.entrySet()) {
-                System.out.println(entry.getKey() + "=" + entry.getValue());
+                logln(entry.getKey() + "=" + entry.getValue(), true);
             }
             return;
         }

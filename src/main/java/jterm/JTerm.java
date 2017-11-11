@@ -19,11 +19,15 @@ package jterm;
 
 import jterm.command.Command;
 import jterm.command.CommandException;
+import jterm.gui.Terminal;
 import jterm.io.InputHandler;
 import jterm.util.Util;
 import org.reflections.Reflections;
+
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +37,10 @@ public class JTerm {
 
     public static final String VERSION = "0.6.1";
     public static final String PROMPT = "   \b\b\b>> ";
+    public static String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
+            + "This program comes with ABSOLUTELY NO WARRANTY.\n"
+            + "This is free software, and you are welcome to redistribute it\n"
+            + "under certain conditions.\n";
 
     // Default value of getProperty("user.dir") is equal to the default directory set when the program starts
     // Global directory variable (use "cd" command to change)
@@ -57,19 +65,31 @@ public class JTerm {
 
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
     public static String command = "";
+    private static Terminal terminal;
+    private static boolean headless = false;
+
+    public static boolean isHeadless() {
+        return headless;
+    }
+
+    public static Terminal getTerminal() {
+        return terminal;
+    }
 
     public static void main(String[] args) {
         Util.setOS();
-
-        System.out.println(
-            "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
-            + "This program comes with ABSOLUTELY NO WARRANTY.\n"
-            + "This is free software, and you are welcome to redistribute it\n"
-            + "under certain conditions.\n");
-
-        System.out.print(PROMPT);
-        while (true) {
-            InputHandler.process();
+        if (args.length > 0 && args[0].equals("headless")) {
+            headless = true;
+            System.out.println(LICENSE);
+            System.out.print(PROMPT);
+            while (true) {
+                InputHandler.process();
+            }
+        } else {
+            terminal = new Terminal();
+            terminal.setTitle("JTerm");
+            terminal.setSize(720, 480);
+            terminal.setVisible(true);
         }
     }
 
@@ -84,7 +104,7 @@ public class JTerm {
         optionsArray.remove(0);
 
         if (!COMMANDS.containsKey(command)) {
-            System.out.println("Command \"" + command + "\" is not available");
+            logln("Command \"" + command + "\" is not available", false);
             return;
         }
 
@@ -93,5 +113,20 @@ public class JTerm {
         } catch (CommandException e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    public static void log(String s, boolean isWhite) {
+        System.out.print(s);
+        if (!headless) {
+            try {
+                SwingUtilities.invokeAndWait(() -> terminal.print(s, isWhite));
+            } catch (InterruptedException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void logln(String s, boolean isWhite) {
+        log(s + "\n", isWhite);
     }
 }

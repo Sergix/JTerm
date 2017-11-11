@@ -20,15 +20,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static jterm.JTerm.logln;
+
+
 public class Time implements Command {
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss , z");
 
     @Override
     public void execute(List<String> options) {
         if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\techo [-h] input");
+            logln("Command syntax:\n\techo [-h] input", false);
             return;
         }
-        System.out.println("The Current Time is: " + DATE_FORMAT.format(new Date()));
+        logln("The Current Time is: " + DATE_FORMAT.format(new Date()), true);
     }
 }

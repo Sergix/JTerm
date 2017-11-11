@@ -16,6 +16,9 @@
 
 package jterm.command;
 
+import jterm.JTerm;
+import jterm.util.Util;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -24,25 +27,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import jterm.JTerm;
-import jterm.util.Util;
+import static jterm.JTerm.log;
+import static jterm.JTerm.logln;
+
 
 public class Files implements Command {
     private static final Map<String, Consumer<List<String>>> FUNCTIONS = new HashMap<>(6);
 
     static {
-        FUNCTIONS.put("write",    Files::write);
-        FUNCTIONS.put("delete",   Files::delete);
-        FUNCTIONS.put("rm",       Files::delete);
-        FUNCTIONS.put("del",      Files::delete);
-        FUNCTIONS.put("read",     Files::read);
+        FUNCTIONS.put("write", Files::write);
+        FUNCTIONS.put("delete", Files::delete);
+        FUNCTIONS.put("rm", Files::delete);
+        FUNCTIONS.put("del", Files::delete);
+        FUNCTIONS.put("read", Files::read);
         FUNCTIONS.put("download", Files::download);
     }
+
 
     @Override
     public void execute(List<String> options) {
         if (options.contains("-h") || options.size() == 0) {
-            System.out.println("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp");
+            logln("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp", false);
             return;
         }
 
@@ -55,42 +60,44 @@ public class Files implements Command {
         }
     }
 
+
     public static void write(List<String> options) {
-        String filename = "";
+        StringBuilder filenameBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\twrite [-h] filename\n\nOpens an input PROMPT in which to write text to a new file.");
+                logln("Command syntax:\n\twrite [-h] filename\n\nOpens an input PROMPT in which to write text to a new file.", true);
                 return;
             } else {
-                filename += option;
+                filenameBuilder.append(option);
             }
         }
+        String filename = filenameBuilder.toString();
 
         filename = filename.trim();
         filename = JTerm.currentDirectory + filename;
 
         if (filename.equals("")) {
-            System.out.println("Error: missing filename; type \"write -h\" for more information.");
+            logln("Error: missing filename; type \"write -h\" for more information.", false);
             return;
         }
 
         try {
-            System.out.println("Enter file contents (press enter after a blank line to quit):");
+            logln("Enter file contents (press enter after a blank line to quit):", false);
             String line = JTerm.userInput.readLine();
-            String output = line;
+            StringBuilder output = new StringBuilder(line);
 
             for (; ; ) {
                 line = JTerm.userInput.readLine();
                 if (line.equals("")) {
                     break;
                 } else if (line.equals(" ")) {
-                    output += "\n";
+                    output.append("\n");
                 }
-                output += "\n" + line;
+                output.append("\n").append(line);
             }
 
             FileWriter fileWriter = new FileWriter(filename);
-            fileWriter.write(output);
+            fileWriter.write(output.toString());
             fileWriter.close();
         } catch (IOException ioe) {
             System.out.println(ioe);
@@ -98,50 +105,52 @@ public class Files implements Command {
 
     }
 
-    public static void delete(List<String> options) {
-        String filename = "";
 
+    public static void delete(List<String> options) {
+        StringBuilder filenameBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tdel [-h] file/directory\n\nDeletes the specified file or directory.");
+                logln("Command syntax:\n\tdel [-h] file/directory\n\nDeletes the specified file or directory.", false);
                 return;
             } else {
-                filename += option;
+                filenameBuilder.append(option);
             }
         }
+        String filename = filenameBuilder.toString();
 
         filename = filename.trim();
         filename = JTerm.currentDirectory + filename;
 
         File dir = new File(filename);
         if (!dir.exists()) {
-            System.out.println("ERROR: File/directory \"" + options.get(options.size() - 1) + "\" does not exist.");
+            logln("ERROR: File/directory \"" + options.get(options.size() - 1) + "\" does not exist.", false);
             return;
         }
-
+        //TODO: Maybe use the result of .delete() to indicate delete succeeded
         dir.delete();
     }
 
+
     public static void read(List<String> options) {
-        String filename = "";
+        String filename;
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.");
+                logln("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.", false);
                 return;
             }
 
             filename = JTerm.currentDirectory + option;
             File file = new File(filename);
             if (!file.exists()) {
-                System.out.println("ERROR: File/directory \"" + option + "\" does not exist.");
+                logln("ERROR: File/directory \"" + option + "\" does not exist.", false);
                 break;
             }
 
             try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
-                System.out.println("\n[JTerm - Contents of " + option + "]\n");
+                logln("\n[JTerm - Contents of " + option + "]\n", true);
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
+                    logln(line, true);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -155,11 +164,11 @@ public class Files implements Command {
         if (options.size() > 0) {
             url = options.get(options.size() - 1);
         } else {
-            System.out.println("A URL to a file must be provided as an option");
+            logln("A URL to a file must be provided as an option", false);
             return;
         }
         long start = System.currentTimeMillis();
-        long fileSize = -1;
+        long fileSize;
         long downloadedBytes = 0;
 
         String update = "";
@@ -174,7 +183,7 @@ public class Files implements Command {
             fileName += ".html";
         }
 
-        System.out.println("Starting download of file -> " + fileName);
+        logln("Starting download of file -> " + fileName, true);
 
         // request file size from server (does not work with HTML files, unimportant because they download so fast)
         HttpURLConnection conn = null;
@@ -184,7 +193,7 @@ public class Files implements Command {
             conn.getInputStream();
             fileSize = conn.getContentLength();
         } catch (IOException e) {
-            System.out.println("Error when getting file information. Download cancelled.");
+            logln("Error when getting file information. Download cancelled.", false);
             return;
         } finally {
             if (conn != null) {
@@ -204,21 +213,25 @@ public class Files implements Command {
             byte data[] = new byte[buffer];
             int count, steps = 0;
             // download file, and output information about progress
+            log(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"), true);
             while ((count = in.read(data, 0, buffer)) != -1) {
                 out.write(data, 0, count);
                 downloadedBytes += count;
                 steps++;
+                //TODO: Progress bar instead maybe?
+                //Also, this causes flickering in the GUI, a lower update rate might be good
                 if (steps % 10 == 0) { // print every 10 download steps
                     Util.clearLine(update, false);
-                    System.out.print(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"));
+                    log(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"), true);
                 }
             }
+            out.close();
         } catch (IOException e) {
-            System.out.println("Error when downloading file.");
+            logln("Error when downloading file.", false);
         }
 
         // clear line and notify user of download success
         Util.clearLine(update, false);
-        System.out.println("\nFile downloaded successfully in: " + Util.getRunTime(System.currentTimeMillis() - start));
+        logln("\nFile downloaded successfully in: " + Util.getRunTime(System.currentTimeMillis() - start), true);
     }
 }

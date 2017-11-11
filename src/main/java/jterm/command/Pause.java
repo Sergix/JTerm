@@ -22,23 +22,26 @@ import jterm.util.Util;
 import java.io.IOException;
 import java.util.List;
 
+import static jterm.JTerm.log;
+import static jterm.JTerm.logln;
+
+
 public class Pause implements Command {
     @Override
     public void execute(List<String> options) {
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tpause [-h] [input]");
+                logln("Command syntax:\n\tpause [-h] [input]", false);
                 return;
-
             } else {
-                System.out.print(Util.getRest(options, 0));
+                log(Util.getRest(options, 0), true);
             }
         }
 
         if (options.size() == 0) {
-            System.out.print("Press enter to continue...");
+            log("Press enter to continue...", true);
         }
-
+        //TODO: Figure out what this is doing and how to do it in GUI
         try {
             JTerm.userInput.read();
             JTerm.userInput.skip(1);
