@@ -107,4 +107,44 @@ public class Util {
             JTerm.IS_UNIX = true;
         }
     }
+
+    /**
+     * Removes blank space before and after command if any exists.
+     *
+     * @param command Command to parse
+     * @return Command without white space
+     */
+    public static String removeSpaces(String command) {
+
+        int fpos = 0;
+        for (int i = 0; i < command.length(); i++) {
+            if (command.charAt(i) == ' ')
+                fpos++;
+            else
+                break;
+        }
+
+        int bpos = command.length() > 0 ? command.length() : 0;
+        for (int i = command.length() - 1; i > 0; i--) {
+            if (command.charAt(i) == ' ')
+                bpos--;
+            else
+                break;
+        }
+
+        return command.substring(fpos, bpos);
+    }
+
+    /**
+     * Determines if a string is composed only of spaces.
+     *
+     * @param s string to check
+     * @return true if s is composed of only spaces, false if there is a character in it
+     */
+    public static boolean containsOnlySpaces(String s) {
+        for (int i = 0; i < s.length(); i++)
+            if (s.charAt(i) != ' ')
+                return false;
+        return true;
+    }
 }

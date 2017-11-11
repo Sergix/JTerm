@@ -35,6 +35,8 @@ import java.util.Map;
 public class JTerm {
     private static final Map<String, Command> COMMANDS = new HashMap<>();
 
+    private static InputHandler inputHandler;
+
     public static final String VERSION = "0.6.1";
     public static final String PROMPT = "   \b\b\b>> ";
     public static String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
@@ -45,6 +47,7 @@ public class JTerm {
     // Default value of getProperty("user.dir") is equal to the default directory set when the program starts
     // Global directory variable (use "cd" command to change)
     public static String currentDirectory = System.getProperty("user.dir");
+    public static final String USER_HOME_DIR = System.getProperty("user.home");
 
     public static boolean IS_WIN = false;
     public static boolean IS_UNIX = false;
@@ -64,7 +67,6 @@ public class JTerm {
     }
 
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
-    public static String command = "";
     private static Terminal terminal;
     private static boolean headless = false;
 
@@ -78,12 +80,13 @@ public class JTerm {
 
     public static void main(String[] args) {
         Util.setOS();
+        inputHandler = new InputHandler();
         if (args.length > 0 && args[0].equals("headless")) {
             headless = true;
             System.out.println(LICENSE);
             System.out.print(PROMPT);
             while (true) {
-                InputHandler.process();
+                inputHandler.process();
             }
         } else {
             terminal = new Terminal();
@@ -109,6 +112,7 @@ public class JTerm {
         }
 
         try {
+            System.out.println();
             COMMANDS.get(command).execute(optionsArray);
         } catch (CommandException e) {
             System.err.println(e.getMessage());
