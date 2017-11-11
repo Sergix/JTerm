@@ -19,6 +19,8 @@ package jterm.command;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,7 @@ import java.util.function.Consumer;
 
 import jterm.JTerm;
 import jterm.util.Util;
+import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl;
 
 public class Files implements Command {
     private static final Map<String, Consumer<List<String>>> FUNCTIONS = new HashMap<>(6);
@@ -37,6 +40,7 @@ public class Files implements Command {
         FUNCTIONS.put("del",      Files::delete);
         FUNCTIONS.put("read",     Files::read);
         FUNCTIONS.put("download", Files::download);
+        FUNCTIONS.put("mv",       Files::move);
     }
 
     @Override
@@ -52,6 +56,31 @@ public class Files implements Command {
             FUNCTIONS.get(command).accept(options);
         } else {
             throw new CommandException("Invalid command name \"" + command + "\"");
+        }
+    }
+
+    public static void move(List<String> options) {
+        if (options.size() < 2) {
+            throw new CommandException("To few arguments for \'mv\'");
+        }
+
+        String sourceName = options.get(0);
+        String destinationName = options.get(1);
+
+        if (!sourceName.startsWith("/")) {
+            sourceName = JTerm.currentDirectory + "/" + sourceName;
+        }
+        if (!destinationName.startsWith("/")) {
+            destinationName = JTerm.currentDirectory + "/" + destinationName;
+        }
+
+        Path source = Paths.get(sourceName);
+        Path destination  = Paths.get(destinationName);
+
+        try {
+            java.nio.file.Files.move(source, destination);
+        } catch (IOException e) {
+            throw new CommandException("Failed to move \'" + sourceName + "\' to \'" + destinationName + '\'', e);
         }
     }
 
