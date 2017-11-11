@@ -38,8 +38,8 @@ public class JTerm {
     // Global directory variable (use "cd" command to change)
     public static String currentDirectory = System.getProperty("user.dir");
 
-    public static boolean IS_WIN = false;
-    public static boolean IS_UNIX = false;
+    public static boolean IS_WIN;
+    public static boolean IS_UNIX;
 
     static {
         Util.setOS();
@@ -59,8 +59,6 @@ public class JTerm {
     public static String command = "";
 
     public static void main(String[] args) {
-        Util.setOS();
-
         System.out.println(
             "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
             + "This program comes with ABSOLUTELY NO WARRANTY.\n"
@@ -80,9 +78,7 @@ public class JTerm {
             return;
         }
 
-        String command = optionsArray.get(0);
-        optionsArray.remove(0);
-
+        String command = optionsArray.remove(0);
         if (!COMMANDS.containsKey(command)) {
             System.out.println("Command \"" + command + "\" is not available");
             return;

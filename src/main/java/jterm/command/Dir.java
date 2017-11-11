@@ -106,13 +106,7 @@ public class Dir implements Command {
             return;
         }
 
-        FilePrinter printer;
-        if (options.contains("-f")) {
-            printer = FULL_PRINTER;
-        } else {
-            printer = SIMPLE_PRINTER;
-        }
-
+        FilePrinter printer = options.contains("-f") ? FULL_PRINTER : SIMPLE_PRINTER;
 
         System.out.println("[Contents of \"" + JTerm.currentDirectory + "\"]");
         for (File file : files) {
