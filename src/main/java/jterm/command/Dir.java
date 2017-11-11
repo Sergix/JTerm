@@ -24,6 +24,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,7 +102,6 @@ public class Dir implements Command {
         }
 
         File[] files = new File(JTerm.currentDirectory).listFiles();
-
         if (files == null) {
             return;
         }
@@ -127,6 +127,7 @@ public class Dir implements Command {
     * directory [...]
     * 	Path to change the working directory to.
     */
+    // FIXME: throws exception if no options specified
     public static void cd(List<String> options) {
         if (options.contains("-h")) {
             System.out.println("Command syntax:\n\tcd [-h] directory\n\nChanges the working directory to the path specified.");
@@ -182,16 +183,24 @@ public class Dir implements Command {
     }
 
     public static void md(List<String> options) {
+        if (options.size() < 1) {
+            throw new CommandException("To few arguments for md");
+        }
         if (options.contains("-h")) {
             System.out.println("Command syntax:\n\tmd [-h] name");
             return;
         }
 
-        StringBuilder nameBuilder = new StringBuilder(Util.getAsString(options));
-        nameBuilder
-                .deleteCharAt(nameBuilder.length() - 1)
-                .insert(0, JTerm.currentDirectory);
-        new File(nameBuilder.toString()).mkdir();
+        String dirName = options.get(0);
+        if (!dirName.startsWith("/")) {
+            dirName = JTerm.currentDirectory + "/" + dirName;
+        }
+
+        try {
+            java.nio.file.Files.createDirectory(Paths.get(dirName));
+        } catch (IOException e) {
+            throw new CommandException("Failed to create directory \'" + dirName + '\'');
+        }
     }
 
     /*
