@@ -22,15 +22,25 @@ import jterm.util.Util;
 import java.io.IOException;
 import java.util.List;
 
+import static jterm.JTerm.log;
+import static jterm.JTerm.logln;
+
 public class Pause {
     @Command(name = "pause", syntax = "pause [-h] [input]")
-    public static void pause(List<String> options) {
-        System.out.print(Util.getRest(options, 0));
-
-        if (options.size() == 0) {
-            System.out.print("Press enter to continue...");
+    public void execute(List<String> options) {
+        for (String option : options) {
+            if (option.equals("-h")) {
+                logln("Command syntax:\n\tpause [-h] [input]", false);
+                return;
+            } else {
+                log(Util.getRest(options, 0), true);
+            }
         }
 
+        if (options.size() == 0) {
+            log("Press enter to continue...", true);
+        }
+        // TODO: Figure out what this is doing and how to do it in GUI
         try {
             JTerm.userInput.read();
             JTerm.userInput.skip(1);

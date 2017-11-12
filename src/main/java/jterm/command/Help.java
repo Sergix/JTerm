@@ -21,10 +21,12 @@ import jterm.JTerm;
 
 import java.util.List;
 
+import static jterm.JTerm.logln;
+
 public class Help {
     @Command(name = "help")
     public static void printHelp(List<String> options) {
-        System.out.println("JTerm v" + JTerm.VERSION + "\n"
+        logln("JTerm v" + JTerm.VERSION + "\n"
                 + "Available commands:\n"
                 + "  client\n"
                 + "  dir\n"
@@ -37,6 +39,6 @@ public class Help {
                 + "  ps\n"
                 + "  server\n"
                 + "  set\n"
-                + "  window\n");
+                + "  window\n", true);
     }
 }

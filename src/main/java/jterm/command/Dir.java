@@ -28,22 +28,22 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import static jterm.JTerm.logln;
 
 public class Dir {
-    private static final Consumer<File> SIMPLE_PRINTER = (file) -> System.out.println("\t" + file.getName());
+    private static final Consumer<File> SIMPLE_PRINTER = (file) -> logln("\t" + file.getName(), true);
 
-    private static final Consumer<File> FULL_PRINTER = (file) -> System.out.println("\t"
+    private static final Consumer<File> FULL_PRINTER = (file) -> logln("\t"
             + (file.isFile() ? "F" : "D") + " "
             + (file.canRead() ? "R" : "")
             + (file.canWrite() ? "W" : "")
             + (file.isHidden() ? "H" : "")
             + "\t" + file.getName()
             + (file.getName().length() < 8 ? "\t\t\t" : (file.getName().length() > 15 ? "\t" : "\t\t"))
-            + (file.length() / 1024) + " KB");
+            + (file.length() / 1024) + " KB", true);
 
     @Command(name = "ls", syntax = "ls [-f] [-h] [directory]")
     public static void ls(List<String> options) {
-        // FIXME: options not used to list directory
         File[] files = new File(JTerm.currentDirectory).listFiles();
         if (files == null) {
             return;
@@ -51,7 +51,7 @@ public class Dir {
 
         Consumer<File> printer = options.contains("-f") ? FULL_PRINTER : SIMPLE_PRINTER;
 
-        System.out.println("[Contents of \"" + JTerm.currentDirectory + "\"]");
+        logln("[Contents of \"" + JTerm.currentDirectory + "\"]", true);
         for (File file : files) {
             printer.accept(file);
         }
@@ -66,7 +66,7 @@ public class Dir {
         }
 
         if (newDirectory.equals("")) {
-            System.out.println("Path not specified. Type \"cd -h\" for more information.");
+            logln("Path not specified. Type \"cd -h\" for more information.", false);
             return;
         }
 
@@ -82,13 +82,14 @@ public class Dir {
             if (JTerm.currentDirectory.equals("/")) {
                 return;
             } else {
+                //TODO: Fix this to actually remove a directory level
                 newDirectory = JTerm.currentDirectory.substring(0, JTerm.currentDirectory.length() - 2);
                 newDirectory = newDirectory.substring(0, newDirectory.lastIndexOf('/'));
             }
         } else if (newDir.exists() && newDir.isDirectory()) {
             newDirectory = JTerm.currentDirectory + newDirectory;
         } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
-            System.out.println("ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
+            logln("ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.", false);
             return;
         }
 
@@ -102,15 +103,12 @@ public class Dir {
 
     @Command(name = "pwd")
     public static void pwd(List<String> options) {
-        System.out.println(JTerm.currentDirectory);
+        logln(JTerm.currentDirectory, true);
     }
 
     @Command(name = {"md", "mkdir"}, minOptions = 1, syntax = "md [-h] dirName")
     public static void md(List<String> options) {
-        String dirName = options.get(0);
-        if (!dirName.startsWith("/")) {
-            dirName = JTerm.currentDirectory + "/" + dirName;
-        }
+        String dirName = Util.getFullPath(options.get(0));
 
         try {
             java.nio.file.Files.createDirectory(Paths.get(dirName));
@@ -124,27 +122,29 @@ public class Dir {
         List<String> filesToBeRemoved = new ArrayList<>();
         boolean recursivelyDeleteFlag = false;
         for (String option : options) {
-            if (option.equals("-r")) {
-                recursivelyDeleteFlag = true;
-            } else {
-                filesToBeRemoved.add(option);
+            switch (option) {
+                case "-r":
+                    recursivelyDeleteFlag = true;
+                    break;
+                default:
+                    filesToBeRemoved.add(option);
+                    break;
             }
         }
 
         for (String fileName : filesToBeRemoved) {
             File file = new File(JTerm.currentDirectory, fileName);
-
             if (!file.isFile() && !file.isDirectory()) {
-                System.out.println(fileName + " is not a file or directory");
+                logln(fileName + " is not a file or directory", false);
             } else if (file.isDirectory()) {
                 if (recursivelyDeleteFlag) {
                     try {
                         FileUtils.deleteDirectory(file);
                     } catch (IOException e) {
-                        System.out.println("Error when deleting " + fileName);
+                        logln("Error when deleting " + fileName, false);
                     }
                 } else {
-                    System.out.println("Attempting to delete a directory. Run the command again with -r.");
+                    logln("Attempting to delete a directory. Run the command again with -r.", false);
                     return;
                 }
             }

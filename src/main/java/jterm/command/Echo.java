@@ -21,12 +21,13 @@ package jterm.command;
 import jterm.util.Util;
 
 import java.util.List;
+import static jterm.JTerm.logln;
 
 public class Echo {
     // FIXME: echo is not working correctly, for example: > echo $JAVA_HOME
     @Command(name = "echo", minOptions = 1, syntax = "echo [-h] input")
     public static void echo(List<String> options) {
         String info = Util.getAsString(options);
-        System.out.println(info.substring(0, info.length() - 1));
+        logln(info.substring(0, info.length() - 1), true);
     }
 }

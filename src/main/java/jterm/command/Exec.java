@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
+import static jterm.JTerm.logln;
+
 public class Exec {
     @Command(name = "exec", minOptions = 1, syntax = "exec <executable>")
     public static void execute(List<String> options) {
@@ -36,11 +38,11 @@ public class Exec {
             Scanner in = new Scanner(process.getInputStream());
 
             while (process.isAlive() && in.hasNextLine()) {
-                System.out.println(in.nextLine());
+                logln(in.nextLine(), true);
             }
 
             while (in.hasNextLine()) {
-                System.out.println(in.nextLine());
+                logln(in.nextLine(), true);
             }
 
             in.close();

@@ -18,28 +18,40 @@
 package jterm;
 
 import jterm.command.Command;
-import jterm.command.CommandExecutor;
 import jterm.command.CommandException;
+import jterm.command.CommandExecutor;
+import jterm.gui.Terminal;
 import jterm.io.InputHandler;
 import jterm.util.Util;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class JTerm {
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
 
+    private static InputHandler inputHandler;
+
     public static final String VERSION = "0.6.1";
     public static final String PROMPT = "   \b\b\b>> ";
+    public static String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
+            + "This program comes with ABSOLUTELY NO WARRANTY.\n"
+            + "This is free software, and you are welcome to redistribute it\n"
+            + "under certain conditions.\n";
 
     // Default value of getProperty("user.dir") is equal to the default directory set when the program starts
     // Global directory variable (use "cd" command to change)
     public static String currentDirectory = System.getProperty("user.dir");
+    public static final String USER_HOME_DIR = System.getProperty("user.home");
 
     public static boolean IS_WIN;
     public static boolean IS_UNIX;
@@ -50,18 +62,23 @@ public class JTerm {
     }
 
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
-    public static String command = "";
+    private static Terminal terminal;
+    private static boolean headless = false;
 
     public static void main(String[] args) {
-        System.out.println(
-                "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
-                        + "This program comes with ABSOLUTELY NO WARRANTY.\n"
-                        + "This is free software, and you are welcome to redistribute it\n"
-                        + "under certain conditions.\n");
-
-        System.out.print(PROMPT);
-        while (true) {
-            InputHandler.process();
+        inputHandler = new InputHandler();
+        if (args.length > 0 && args[0].equals("headless")) {
+            headless = true;
+            System.out.println(LICENSE);
+            System.out.print(PROMPT);
+            while (true) {
+                inputHandler.process();
+            }
+        } else {
+            terminal = new Terminal();
+            terminal.setTitle("JTerm");
+            terminal.setSize(720, 480);
+            terminal.setVisible(true);
         }
     }
 
@@ -74,11 +91,12 @@ public class JTerm {
 
         String command = optionsArray.remove(0);
         if (!COMMANDS.containsKey(command)) {
-            System.out.println("Command \"" + command + "\" is not available");
+            logln("Command \"" + command + "\" is not available", false);
             return;
         }
 
         try {
+            System.out.println();
             COMMANDS.get(command).execute(optionsArray);
         } catch (CommandException e) {
             System.err.println(e.getMessage());
@@ -110,13 +128,35 @@ public class JTerm {
         }
     }
 
+    public static void log(String s, boolean isWhite) {
+        System.out.print(s);
+        if (!headless) {
+            try {
+                SwingUtilities.invokeAndWait(() -> terminal.print(s, isWhite));
+            } catch (InterruptedException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private static void setOS() {
         String os = System.getProperty("os.name").toLowerCase();
-
         if (os.contains("windows")) {
             JTerm.IS_WIN = true;
         } else if ("linux".equals(os) || os.contains("mac") || "sunos".equals(os) || "freebsd".equals(os)) {
             JTerm.IS_UNIX = true;
         }
+    }
+
+    public static void logln(String s, boolean isWhite) {
+        log(s + "\n", isWhite);
+    }
+
+    public static boolean isHeadless() {
+        return headless;
+    }
+
+    public static Terminal getTerminal() {
+        return terminal;
     }
 }

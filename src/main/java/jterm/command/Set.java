@@ -22,15 +22,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static jterm.JTerm.logln;
+
 public class Set {
     public static HashMap<String, String> vars = new HashMap<>();
 
     @Command(name = "set", minOptions = 3, syntax = "set [-h] <name> = <value>")
     public static void set(List<String> options) {
-
         if (options.size() == 0) {
             for (Map.Entry<String, String> entry : vars.entrySet()) {
-                System.out.println(entry.getKey() + "=" + entry.getValue());
+                logln(entry.getKey() + "=" + entry.getValue(), true);
             }
             return;
         }

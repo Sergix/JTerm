@@ -36,6 +36,8 @@ public class Clear {
             } catch (IOException | InterruptedException e) {
                 throw new CommandException("Can't clear screen...", e);
             }
+        } else {
+            JTerm.getTerminal().clear();
         }
     }
 }
