@@ -46,6 +46,7 @@ public class JTerm {
 
     static {
         setOS();
+        initCommands();
     }
 
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
@@ -57,9 +58,6 @@ public class JTerm {
                         + "This program comes with ABSOLUTELY NO WARRANTY.\n"
                         + "This is free software, and you are welcome to redistribute it\n"
                         + "under certain conditions.\n");
-
-        initCommands();
-
 
         System.out.print(PROMPT);
         while (true) {
@@ -76,7 +74,7 @@ public class JTerm {
 
         String command = optionsArray.remove(0);
         if (!COMMANDS.containsKey(command)) {
-            System.out.println("CommandExecutor \"" + command + "\" is not available");
+            System.out.println("Command \"" + command + "\" is not available");
             return;
         }
 
