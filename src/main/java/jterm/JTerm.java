@@ -18,18 +18,21 @@
 package jterm;
 
 import jterm.command.Command;
+import jterm.command.CommandExecutor;
 import jterm.command.CommandException;
 import jterm.io.InputHandler;
 import jterm.util.Util;
 import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 
 public class JTerm {
-    private static final Map<String, Command> COMMANDS = new HashMap<>();
+    private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
 
     public static final String VERSION = "0.6.1";
     public static final String PROMPT = "   \b\b\b>> ";
@@ -42,17 +45,7 @@ public class JTerm {
     public static boolean IS_UNIX;
 
     static {
-        Util.setOS();
-
-        Reflections reflections = new Reflections("jterm.command");
-        for (Class<? extends Command> commandClass : reflections.getSubTypesOf(Command.class)) {
-            try {
-                Command command = commandClass.getConstructor().newInstance();
-                COMMANDS.put(commandClass.getSimpleName().toLowerCase(), command);
-            } catch (Exception e) {
-                System.err.println("Something went wrong...\n" + e);
-            }
-        }
+        setOS();
     }
 
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
@@ -60,10 +53,13 @@ public class JTerm {
 
     public static void main(String[] args) {
         System.out.println(
-            "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
-            + "This program comes with ABSOLUTELY NO WARRANTY.\n"
-            + "This is free software, and you are welcome to redistribute it\n"
-            + "under certain conditions.\n");
+                "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
+                        + "This program comes with ABSOLUTELY NO WARRANTY.\n"
+                        + "This is free software, and you are welcome to redistribute it\n"
+                        + "under certain conditions.\n");
+
+        initCommands();
+
 
         System.out.print(PROMPT);
         while (true) {
@@ -72,7 +68,7 @@ public class JTerm {
     }
 
     public static void executeCommand(String options) {
-        ArrayList<String> optionsArray = Util.getAsArray(options);
+        List<String> optionsArray = Util.getAsArray(options);
 
         if (optionsArray.size() == 0) {
             return;
@@ -80,7 +76,7 @@ public class JTerm {
 
         String command = optionsArray.remove(0);
         if (!COMMANDS.containsKey(command)) {
-            System.out.println("Command \"" + command + "\" is not available");
+            System.out.println("CommandExecutor \"" + command + "\" is not available");
             return;
         }
 
@@ -88,6 +84,41 @@ public class JTerm {
             COMMANDS.get(command).execute(optionsArray);
         } catch (CommandException e) {
             System.err.println(e.getMessage());
+        }
+    }
+
+    private static void initCommands() {
+        Reflections reflections = new Reflections("jterm.command", new MethodAnnotationsScanner());
+        Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
+
+        for (Method method : methods) {
+            method.setAccessible(true);
+            Command command = method.getDeclaredAnnotation(Command.class);
+            for (String commandName : command.name()) {
+                CommandExecutor executor = new CommandExecutor()
+                        .setCommandName(commandName)
+                        .setSyntax(command.syntax())
+                        .setMinOptions(command.minOptions())
+                        .setCommand((List<String> options) -> {
+                            try {
+                                System.out.println(options);
+                                method.invoke(null, options);
+                            } catch (Exception e) {
+                                System.err.println("Weird stuff...");
+                            }
+                        });
+                COMMANDS.put(commandName, executor);
+            }
+        }
+    }
+
+    private static void setOS() {
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if (os.contains("windows")) {
+            JTerm.IS_WIN = true;
+        } else if ("linux".equals(os) || os.contains("mac") || "sunos".equals(os) || "freebsd".equals(os)) {
+            JTerm.IS_UNIX = true;
         }
     }
 }
