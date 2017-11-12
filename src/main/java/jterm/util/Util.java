@@ -98,16 +98,6 @@ public class Util {
         return outputBuilder.toString();
     }
 
-    public static void setOS() {
-        String os = System.getProperty("os.name").toLowerCase();
-
-        if (os.contains("windows")) {
-            JTerm.IS_WIN = true;
-        } else if ("linux".equals(os) || os.contains("mac") || "sunos".equals(os) || "freebsd".equals(os)) {
-            JTerm.IS_UNIX = true;
-        }
-    }
-
     /**
      * Removes blank space before and after command if any exists.
      *
@@ -115,7 +105,6 @@ public class Util {
      * @return Command without white space
      */
     public static String removeSpaces(String command) {
-
         int fpos = 0;
         for (int i = 0; i < command.length(); i++) {
             if (command.charAt(i) == ' ')
@@ -146,5 +135,12 @@ public class Util {
             if (s.charAt(i) != ' ')
                 return false;
         return true;
+    }
+
+    public static String getFullPath(String fileName) {
+        if (!fileName.startsWith("/")) {
+            fileName = JTerm.currentDirectory + "/" + fileName;
+        }
+        return fileName;
     }
 }

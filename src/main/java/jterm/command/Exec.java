@@ -22,20 +22,13 @@ import java.util.Scanner;
 
 import static jterm.JTerm.logln;
 
-
-public class Exec implements Command {
-    @Override
-    public void execute(List<String> options) {
-        if (options.size() == 0) {
-            logln("Command usage: exec <executable>", false);
-            return;
-        }
-
+public class Exec {
+    @Command(name = "exec", minOptions = 1, syntax = "exec <executable>")
+    public static void execute(List<String> options) {
         String command = options.get(0);
         if (!command.startsWith("java") && command.endsWith(".jar")) {
             command = "java -jar " + command;
         }
-
         run(command);
     }
 

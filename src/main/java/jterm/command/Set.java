@@ -24,16 +24,11 @@ import java.util.Map;
 
 import static jterm.JTerm.logln;
 
-public class Set implements Command {
+public class Set {
     public static HashMap<String, String> vars = new HashMap<>();
 
-    @Override
-    public void execute(List<String> options) {
-        if (options.contains("-h")) {
-            logln("Command syntax:\n\tset [-h] <name> = <value>", false);
-            return;
-        }
-
+    @Command(name = "set", minOptions = 3, syntax = "set [-h] <name> = <value>")
+    public static void set(List<String> options) {
         if (options.size() == 0) {
             for (Map.Entry<String, String> entry : vars.entrySet()) {
                 logln(entry.getKey() + "=" + entry.getValue(), true);

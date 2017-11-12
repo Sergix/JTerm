@@ -19,21 +19,25 @@ package jterm;
 
 import jterm.command.Command;
 import jterm.command.CommandException;
+import jterm.command.CommandExecutor;
 import jterm.gui.Terminal;
 import jterm.io.InputHandler;
 import jterm.util.Util;
 import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
 
 import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class JTerm {
-    private static final Map<String, Command> COMMANDS = new HashMap<>();
+    private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
 
     private static InputHandler inputHandler;
 
@@ -49,37 +53,19 @@ public class JTerm {
     public static String currentDirectory = System.getProperty("user.dir");
     public static final String USER_HOME_DIR = System.getProperty("user.home");
 
-    public static boolean IS_WIN = false;
-    public static boolean IS_UNIX = false;
+    public static boolean IS_WIN;
+    public static boolean IS_UNIX;
 
     static {
-        Util.setOS();
-
-        Reflections reflections = new Reflections("jterm.command");
-        for (Class<? extends Command> commandClass : reflections.getSubTypesOf(Command.class)) {
-            try {
-                Command command = commandClass.getConstructor().newInstance();
-                COMMANDS.put(commandClass.getSimpleName().toLowerCase(), command);
-            } catch (Exception e) {
-                System.err.println("Something went wrong...\n" + e);
-            }
-        }
+        setOS();
+        initCommands();
     }
 
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
     private static Terminal terminal;
     private static boolean headless = false;
 
-    public static boolean isHeadless() {
-        return headless;
-    }
-
-    public static Terminal getTerminal() {
-        return terminal;
-    }
-
     public static void main(String[] args) {
-        Util.setOS();
         inputHandler = new InputHandler();
         if (args.length > 0 && args[0].equals("headless")) {
             headless = true;
@@ -97,15 +83,13 @@ public class JTerm {
     }
 
     public static void executeCommand(String options) {
-        ArrayList<String> optionsArray = Util.getAsArray(options);
+        List<String> optionsArray = Util.getAsArray(options);
 
         if (optionsArray.size() == 0) {
             return;
         }
 
-        String command = optionsArray.get(0);
-        optionsArray.remove(0);
-
+        String command = optionsArray.remove(0);
         if (!COMMANDS.containsKey(command)) {
             logln("Command \"" + command + "\" is not available", false);
             return;
@@ -116,6 +100,31 @@ public class JTerm {
             COMMANDS.get(command).execute(optionsArray);
         } catch (CommandException e) {
             System.err.println(e.getMessage());
+        }
+    }
+
+    private static void initCommands() {
+        Reflections reflections = new Reflections("jterm.command", new MethodAnnotationsScanner());
+        Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
+
+        for (Method method : methods) {
+            method.setAccessible(true);
+            Command command = method.getDeclaredAnnotation(Command.class);
+            for (String commandName : command.name()) {
+                CommandExecutor executor = new CommandExecutor()
+                        .setCommandName(commandName)
+                        .setSyntax(command.syntax())
+                        .setMinOptions(command.minOptions())
+                        .setCommand((List<String> options) -> {
+                            try {
+                                System.out.println(options);
+                                method.invoke(null, options);
+                            } catch (Exception e) {
+                                System.err.println("Weird stuff...");
+                            }
+                        });
+                COMMANDS.put(commandName, executor);
+            }
         }
     }
 
@@ -130,7 +139,24 @@ public class JTerm {
         }
     }
 
+    private static void setOS() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("windows")) {
+            JTerm.IS_WIN = true;
+        } else if ("linux".equals(os) || os.contains("mac") || "sunos".equals(os) || "freebsd".equals(os)) {
+            JTerm.IS_UNIX = true;
+        }
+    }
+
     public static void logln(String s, boolean isWhite) {
         log(s + "\n", isWhite);
+    }
+
+    public static boolean isHeadless() {
+        return headless;
+    }
+
+    public static Terminal getTerminal() {
+        return terminal;
     }
 }

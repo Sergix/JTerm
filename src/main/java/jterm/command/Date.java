@@ -22,15 +22,11 @@ import java.util.List;
 
 import static jterm.JTerm.logln;
 
-public class Date implements Command {
+public class Date {
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-    @Override
-    public void execute(List<String> options) {
-        if (options.contains("-h")) {
-            logln("Command syntax:\n\tdate [-h]", false);
-            return;
-        }
+    @Command(name = "date", syntax = "date [-h]")
+    public static void printDate(List<String> options) {
         Calendar calendar = Calendar.getInstance();
         logln("The current date is: " + dateFormat.format(calendar.getTime()), true);
     }

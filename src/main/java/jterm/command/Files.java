@@ -22,45 +22,46 @@ import jterm.util.Util;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import static jterm.JTerm.log;
 import static jterm.JTerm.logln;
 
+public class Files {
+    @Command(name = "mv", minOptions = 2)
+    public static void move(List<String> options) {
+        String sourceName = Util.getFullPath(options.get(0));
+        String destinationName = Util.getFullPath(options.get(1));
 
-public class Files implements Command {
-    private static final Map<String, Consumer<List<String>>> FUNCTIONS = new HashMap<>(6);
+        Path source = Paths.get(sourceName);
+        Path destination = Paths.get(destinationName);
 
-    static {
-        FUNCTIONS.put("write", Files::write);
-        FUNCTIONS.put("delete", Files::delete);
-        FUNCTIONS.put("rm", Files::delete);
-        FUNCTIONS.put("del", Files::delete);
-        FUNCTIONS.put("read", Files::read);
-        FUNCTIONS.put("download", Files::download);
-    }
-
-
-    @Override
-    public void execute(List<String> options) {
-        if (options.contains("-h") || options.size() == 0) {
-            logln("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp", false);
-            return;
-        }
-
-        String command = options.get(0);
-        options.remove(0);
-        if (FUNCTIONS.containsKey(command)) {
-            FUNCTIONS.get(command).accept(options);
-        } else {
-            throw new CommandException("Invalid command name \"" + command + "\"");
+        try {
+            java.nio.file.Files.move(source, destination);
+        } catch (IOException e) {
+            throw new CommandException("Failed to move \'" + sourceName + "\' to \'" + destinationName + '\'', e);
         }
     }
 
+    @Command(name = "rn", minOptions = 2)
+    public static void rename(List<String> options) {
+        String fileName = Util.getFullPath(options.get(0));
+        String newName = options.get(1);
 
+        Path filePath = Paths.get(fileName);
+        try {
+            java.nio.file.Files.move(filePath, filePath.resolveSibling(newName), REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new CommandException("Failed to rename file", e);
+        }
+    }
+
+    @Command(name = "write", minOptions = 1, syntax = "write [-h] filename")
     public static void write(List<String> options) {
         StringBuilder filenameBuilder = new StringBuilder();
         for (String option : options) {
@@ -105,60 +106,30 @@ public class Files implements Command {
 
     }
 
-
+    @Command(name = {"rm", "del", "delete"}, minOptions = 1)
     public static void delete(List<String> options) {
-        StringBuilder filenameBuilder = new StringBuilder();
-        for (String option : options) {
-            if (option.equals("-h")) {
-                logln("Command syntax:\n\tdel [-h] file/directory\n\nDeletes the specified file or directory.", false);
-                return;
-            } else {
-                filenameBuilder.append(option);
-            }
+        String fileName = Util.getFullPath(options.get(0));
+        try {
+            java.nio.file.Files.delete(Paths.get(fileName));
+        } catch (NoSuchFileException e) {
+            throw new CommandException("File does not exist", e);
+        } catch (IOException e) {
+            throw new CommandException("Failed to delete \'" + fileName + "\'", e);
         }
-        String filename = filenameBuilder.toString();
-
-        filename = filename.trim();
-        filename = JTerm.currentDirectory + filename;
-
-        File dir = new File(filename);
-        if (!dir.exists()) {
-            logln("ERROR: File/directory \"" + options.get(options.size() - 1) + "\" does not exist.", false);
-            return;
-        }
-        //TODO: Maybe use the result of .delete() to indicate delete succeeded
-        dir.delete();
     }
 
-
+    @Command(name = "read", minOptions = 1, syntax = "read [-h] [file1 file2 ...]")
     public static void read(List<String> options) {
-        String filename;
-        for (String option : options) {
-            if (option.equals("-h")) {
-                logln("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.", false);
-                return;
-            }
-
-            filename = JTerm.currentDirectory + option;
-            File file = new File(filename);
-            if (!file.exists()) {
-                logln("ERROR: File/directory \"" + option + "\" does not exist.", false);
-                break;
-            }
-
-            try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
-                logln("\n[JTerm - Contents of " + option + "]\n", true);
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    logln(line, true);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
+        String fileName = Util.getFullPath(options.get(0));
+        try {
+            byte[] data = java.nio.file.Files.readAllBytes(Paths.get(fileName));
+            logln(new String(data), true);
+        } catch (IOException e) {
+            throw new CommandException("Failed to read \'" + fileName + "\' content");
         }
     }
 
+    @Command(name = "download", minOptions = 1)
     public static void download(List<String> options) {
         String url;
         if (options.size() > 0) {

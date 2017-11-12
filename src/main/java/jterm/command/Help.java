@@ -23,9 +23,9 @@ import java.util.List;
 
 import static jterm.JTerm.logln;
 
-public class Help implements Command {
-    @Override
-    public void execute(List<String> options) {
+public class Help {
+    @Command(name = "help")
+    public static void printHelp(List<String> options) {
         logln("JTerm v" + JTerm.VERSION + "\n"
                 + "Available commands:\n"
                 + "  client\n"

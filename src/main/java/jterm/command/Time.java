@@ -22,16 +22,11 @@ import java.util.List;
 
 import static jterm.JTerm.logln;
 
-
-public class Time implements Command {
+public class Time {
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss , z");
 
-    @Override
-    public void execute(List<String> options) {
-        if (options.contains("-h")) {
-            logln("Command syntax:\n\techo [-h] input", false);
-            return;
-        }
+    @Command(name = "time")
+    public static void printTime(List<String> options) {
         logln("The Current Time is: " + DATE_FORMAT.format(new Date()), true);
     }
 }

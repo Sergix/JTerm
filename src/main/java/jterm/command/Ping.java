@@ -23,15 +23,9 @@ import java.util.List;
 
 import static jterm.JTerm.logln;
 
-
-public class Ping implements Command {
-    @Override
-    public void execute(List<String> options) {
-        if (options.size() == 0 || options.contains("-h")) {
-            logln("Command syntax:\n\tping [-h] [-p port] host", false);
-            return;
-        }
-
+public class Ping {
+    @Command(name = "ping", minOptions = 1, syntax = "ping [-h] [-p port] host")
+    public static void ping(List<String> options) {
         String port = "80";
         int portIndex = options.indexOf("-p");
         if (portIndex != -1) {
