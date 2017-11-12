@@ -29,8 +29,7 @@ public class CommandExecutor {
         return this;
     }
 
-    public void execute(List<String> options)
-    {
+    public void execute(List<String> options) {
         if (options.contains("-h")) {
             if (syntax == null || !syntax.isEmpty()) {
                 System.out.println(syntax);
