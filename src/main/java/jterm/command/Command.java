@@ -1,7 +1,14 @@
 package jterm.command;
 
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface Command {
-    void execute(List<String> options);
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Command {
+    String[] name();
+    int minOptions() default 0;
+    String syntax() default "";
 }
