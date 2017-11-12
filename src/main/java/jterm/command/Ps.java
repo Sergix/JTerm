@@ -20,7 +20,7 @@ import jterm.JTerm;
 
 import java.util.List;
 
-public class Ps implements Command {
+public class Ps {
     private static final String PS_COMMAND;
 
     static {
@@ -33,13 +33,8 @@ public class Ps implements Command {
         }
     }
 
-    @Override
-    public void execute(List<String> options) {
-        if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\tps [-h]\n\nDisplays all current processes running on the host system.");
-            return;
-        }
-
+    @Command(name = "ps", syntax = "ps [-h]")
+    public void printRunningProcesses(List<String> options) {
         Exec.run(PS_COMMAND);
     }
 }

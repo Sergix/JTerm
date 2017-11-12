@@ -20,9 +20,9 @@ package jterm.command;
 
 import java.util.List;
 
-public class Exit implements Command {
-    @Override
-    public void execute(List<String> options) {
+public class Exit {
+    @Command(name = "exit")
+    public void exit(List<String> options) {
         System.exit(0);
     }
 }

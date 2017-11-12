@@ -16,7 +16,6 @@
 
 package jterm.command;
 
-import com.google.common.collect.ImmutableMap;
 import jterm.JTerm;
 import jterm.util.Util;
 
@@ -27,68 +26,11 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-public class Files implements Command {
-    private static class FilesCommand implements Consumer<List<String>> {
-        private Consumer<List<String>> command;
-        private String helpInfo;
-        private int minOptionsSize;
-
-        public FilesCommand(Consumer<List<String>> command, int minOptionsSize, String helpInfo) {
-            this.command = command;
-            this.minOptionsSize = minOptionsSize;
-            this.helpInfo = helpInfo;
-        }
-
-        @Override
-        public void accept(List<String> options) {
-            if (options.contains("-h")) {
-                System.out.println(helpInfo);
-                return;
-            }
-            if (options.size() < minOptionsSize) {
-                throw new CommandException("To few argumens for command");
-            }
-            command.accept(options);
-        }
-    }
-
-    private static final Map<String, FilesCommand> SUB_COMMAND;
-
-    static {
-        SUB_COMMAND = ImmutableMap.<String, FilesCommand>builder()
-            .put("write", new FilesCommand(Files::write, 1, ""))
-            .put("delete", new FilesCommand(Files::delete, 1, ""))
-            .put("rm", new FilesCommand(Files::delete, 1, ""))
-            .put("del", new FilesCommand(Files::delete, 1, ""))
-            .put("read", new FilesCommand(Files::read, 1, "Command syntax:\n\t read [-h] [file1 file2 ...]"))
-            .put("download", new FilesCommand(Files::download, 1, ""))
-            .put("mv", new FilesCommand(Files::move, 2, ""))
-            .put("rn", new FilesCommand(Files::rename, 2, "")).build();
-    }
-
-    @Override
-    public void execute(List<String> options) {
-        if (options.size() == 0 || options.get(0).equals("-h")) {
-            System.out.println("File Commands:");
-            SUB_COMMAND
-                    .keySet()
-                    .forEach(k -> System.out.println("\t" + k));
-            return;
-        }
-
-        String command = options.remove(0);
-        if (SUB_COMMAND.containsKey(command)) {
-            SUB_COMMAND.get(command).accept(options);
-        } else {
-            throw new CommandException("Invalid command name \"" + command + "\"");
-        }
-    }
-
+public class Files {
+    @Command(name = "mv", minOptions = 2)
     public static void move(List<String> options) {
         String sourceName = getFullName(options.get(0));
         String destinationName = getFullName(options.get(1));
@@ -103,6 +45,7 @@ public class Files implements Command {
         }
     }
 
+    @Command(name = "rn", minOptions = 2)
     public static void rename(List<String> options) {
         String fileName = getFullName(options.get(0));
         String newName = options.get(1);
@@ -115,11 +58,12 @@ public class Files implements Command {
         }
     }
 
+    @Command(name = "write", minOptions = 1)
     public static void write(List<String> options) {
         String filename = "";
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\twrite [-h] filename\n\nOpens an input PROMPT in which to write text to a new file.");
+                System.out.println("CommandExecutor syntax:\n\twrite [-h] filename\n\nOpens an input PROMPT in which to write text to a new file.");
                 return;
             } else {
                 filename += option;
@@ -158,6 +102,7 @@ public class Files implements Command {
 
     }
 
+    @Command(name = {"rm", "del", "delete"}, minOptions = 1)
     public static void delete(List<String> options) {
         String fileName = getFullName(options.get(0));
         try {
@@ -169,6 +114,7 @@ public class Files implements Command {
         }
     }
 
+    @Command(name = "read", minOptions = 1, syntax = "read [-h] [file1 file2 ...]")
     public static void read(List<String> options) {
         String fileName = getFullName(options.get(0));
         try {
@@ -179,6 +125,7 @@ public class Files implements Command {
         }
     }
 
+    @Command(name = "download", minOptions = 1)
     public static void download(List<String> options) {
         String url;
         if (options.size() > 0) {

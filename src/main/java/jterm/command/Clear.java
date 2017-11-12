@@ -21,12 +21,12 @@ import jterm.JTerm;
 import java.io.IOException;
 import java.util.List;
 
-public class Clear implements Command {
+public class Clear {
     private static final String ANSI_CLS = "\u001b[2J";
     private static final String ANSI_HOME = "\u001b[H";
 
-    @Override
-    public void execute(List<String> options) {
+    @Command(name = {"clear", "cls"})
+    public static void clearScreen(List<String> options) {
         if (JTerm.IS_UNIX) { // escape sequences to clear the screen
             System.out.print(ANSI_CLS + ANSI_HOME);
             System.out.flush();

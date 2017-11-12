@@ -17,23 +17,16 @@
 package jterm.command;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Exec implements Command {
-    @Override
+public class Exec {
+    @Command(name = "exec", minOptions = 1, syntax = "exec <executable>")
     public void execute(List<String> options) {
-        if (options.size() == 0) {
-            System.out.println("Command usage: exec <executable>");
-            return;
-        }
-
         String command = options.get(0);
         if (!command.startsWith("java") && command.endsWith(".jar")) {
             command = "java -jar " + command;
         }
-
         run(command);
     }
 

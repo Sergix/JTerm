@@ -19,12 +19,11 @@ package jterm.command;
 
 import jterm.JTerm;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Help implements Command {
-    @Override
-    public void execute(List<String> options) {
+public class Help {
+    @Command(name = "help")
+    public static void printHelp(List<String> options) {
         System.out.println("JTerm v" + JTerm.VERSION + "\n"
                 + "Available commands:\n"
                 + "  client\n"

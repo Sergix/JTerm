@@ -22,14 +22,10 @@ import jterm.util.Util;
 
 import java.util.List;
 
-public class Echo implements Command {
+public class Echo {
     // FIXME: echo is not working correctly, for example: > echo $JAVA_HOME
-    @Override
-    public void execute(List<String> options) {
-        if (options.contains("-h")) {
-            System.out.println("Command syntax:\n\techo [-h] input");
-            return;
-        }
+    @Command(name = "echo", minOptions = 1, syntax = "echo [-h] input")
+    public void echo(List<String> options) {
         String info = Util.getAsString(options);
         System.out.println(info.substring(0, info.length() - 1));
     }
