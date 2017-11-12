@@ -34,7 +34,7 @@ public class Ps {
     }
 
     @Command(name = "ps", syntax = "ps [-h]")
-    public void printRunningProcesses(List<String> options) {
+    public static void printRunningProcesses(List<String> options) {
         Exec.run(PS_COMMAND);
     }
 }

@@ -22,7 +22,7 @@ import java.util.List;
 
 public class Exit {
     @Command(name = "exit")
-    public void exit(List<String> options) {
+    public static void exit(List<String> options) {
         System.exit(0);
     }
 }

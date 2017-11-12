@@ -24,7 +24,7 @@ public class Date {
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     @Command(name = "date", syntax = "date [-h]")
-    public void printDate(List<String> options) {
+    public static void printDate(List<String> options) {
         Calendar calendar = Calendar.getInstance();
         System.out.println("The current date is: " + dateFormat.format(calendar.getTime()));
     }

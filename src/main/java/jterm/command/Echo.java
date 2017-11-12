@@ -25,7 +25,7 @@ import java.util.List;
 public class Echo {
     // FIXME: echo is not working correctly, for example: > echo $JAVA_HOME
     @Command(name = "echo", minOptions = 1, syntax = "echo [-h] input")
-    public void echo(List<String> options) {
+    public static void echo(List<String> options) {
         String info = Util.getAsString(options);
         System.out.println(info.substring(0, info.length() - 1));
     }

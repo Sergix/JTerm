@@ -24,7 +24,7 @@ import java.util.List;
 
 public class Pause {
     @Command(name = "pause", syntax = "pause [-h] [input]")
-    public void pause(List<String> options) {
+    public static void pause(List<String> options) {
         System.out.print(Util.getRest(options, 0));
 
         if (options.size() == 0) {

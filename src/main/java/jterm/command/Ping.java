@@ -23,7 +23,7 @@ import java.util.List;
 
 public class Ping {
     @Command(name = "ping", minOptions = 1, syntax = "ping [-h] [-p port] host")
-    public void ping(List<String> options) {
+    public static void ping(List<String> options) {
         String port = "80";
         int portIndex = options.indexOf("-p");
         if (portIndex != -1) {

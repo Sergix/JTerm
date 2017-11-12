@@ -24,7 +24,7 @@ public class Time {
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss , z");
 
     @Command(name = "time")
-    public void printTime(List<String> options) {
+    public static void printTime(List<String> options) {
         System.out.println("The Current Time is: " + DATE_FORMAT.format(new Date()));
     }
 }
