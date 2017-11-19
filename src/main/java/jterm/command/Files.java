@@ -33,7 +33,8 @@ import static jterm.JTerm.log;
 import static jterm.JTerm.logln;
 
 public class Files {
-    @Command(name = "mv", minOptions = 2)
+    // @ojles and @Kaperskyguru
+    @Command(name = "mv", "move", minOptions = 2)
     public static void move(List<String> options) {
         String sourceName = Util.getFullPath(options.get(0));
         String destinationName = Util.getFullPath(options.get(1));
@@ -205,15 +206,4 @@ public class Files {
         Util.clearLine(update, false);
         logln("\nFile downloaded successfully in: " + Util.getRunTime(System.currentTimeMillis() - start), true);
     }
-    
-    	@Command(name = {"move", "mv"}, minOptions = 2)
-	public static void moveFile(File fileName, String newLocation){
-		if(fileName.renameTo(new File(newLocation + fileName.getName()))){
-			System.out.println(fileName + "Successfully Moved");
-		}else{
-			System.out.println(fileName + "Failed to Moved");
-		}
-		
-	}
-    
 }

@@ -23,18 +23,26 @@ import jterm.command.CommandExecutor;
 import jterm.gui.Terminal;
 import jterm.io.InputHandler;
 import jterm.util.Util;
-import org.reflections.Reflections;
-import org.reflections.scanners.MethodAnnotationsScanner;
 
 import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Constructor;
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.net.URLDecoder;
+import java.net.URL;
+import java.io.File;
+import java.io.IOException;
+import java.security.CodeSource;
 
 public class JTerm {
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
@@ -104,8 +112,61 @@ public class JTerm {
     }
 
     private static void initCommands() {
-        Reflections reflections = new Reflections("jterm.command", new MethodAnnotationsScanner());
-        Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
+        // Reflections reflections = new Reflections("jterm.command", new MethodAnnotationsScanner());
+        // Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
+        ArrayList<Method> methods = new ArrayList<Method>();
+        Method[] unsortedMethods = {};
+        ArrayList<String> classes = new ArrayList<String>();
+
+        try {
+            CodeSource src = JTerm.class.getProtectionDomain().getCodeSource();
+            if (src != null) {
+                URL jar = src.getLocation();
+                ZipInputStream zip = new ZipInputStream(jar.openStream());
+                while (true) {
+                    ZipEntry e = zip.getNextEntry();
+                    if (e == null)
+                        break;
+                    String name = e.getName();
+                    if (name.startsWith("jterm/command")) {
+                        classes.add(
+                                name.replace('/', '.')
+                                .substring(0, name.length() - 6)
+                        );
+                    }
+                }
+            }
+        } catch (IOException ioe) {
+            System.out.println(ioe);
+        }
+
+        classes.remove(0);
+
+        for (int i = 0; i < classes.size(); i++) {
+            try {
+                Class<?> clazz = Class.forName(classes.get(i));
+			    Constructor<?> constructor = clazz.getConstructor();
+			    Object obj = constructor.newInstance();
+
+                unsortedMethods = obj.getClass().getDeclaredMethods();
+                for (Method method : unsortedMethods) {
+                    Annotation[] annotations = method.getDeclaredAnnotations();
+                    if (method.isAnnotationPresent(Command.class)) {
+                        methods.add(method);
+                    }
+                }
+            } catch (ClassNotFoundException cnfe) {
+                System.out.println(cnfe);
+            } catch (NoSuchMethodException nsme) {
+                // System.out.println(nsme);
+            } catch (InstantiationException ie) {
+                // System.out.println(ie);
+            } catch (IllegalAccessException iae) {
+                System.out.println(iae);
+            } catch (InvocationTargetException iae) {
+                // System.out.println(iae);
+            }
+        }
 
         for (Method method : methods) {
             method.setAccessible(true);
@@ -117,7 +178,6 @@ public class JTerm {
                         .setMinOptions(command.minOptions())
                         .setCommand((List<String> options) -> {
                             try {
-                                System.out.println(options);
                                 method.invoke(null, options);
                             } catch (Exception e) {
                                 System.err.println("Weird stuff...");
