@@ -255,7 +255,7 @@ public class Files
 	}
 	
 	public static void moveFile(File fileName, String newLocation){
-		if(fileName.renameTo(newLocation + fileName.getName())){
+		if(fileName.renameTo(new File(newLocation + fileName.getName()))){
 			System.out.println(fileName + "Successfully Moved");
 		}else{
 			System.out.println(fileName + "Failed to Moved");
