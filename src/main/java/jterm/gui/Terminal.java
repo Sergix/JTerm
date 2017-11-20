@@ -1,12 +1,13 @@
 package jterm.gui;
 
 import jterm.JTerm;
+import jterm.io.InputHandler;
+import jterm.io.Keys;
 
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.PrintStream;
 
 public class Terminal extends JFrame {
     private JPanel contentPane;
@@ -16,7 +17,6 @@ public class Terminal extends JFrame {
     public static String prompt = ">>";
     private ProtectedTextComponent ptc;
     private int preTypeLength = 0;
-    private PrintStream oldOut;
 
     public Terminal() {
         setContentPane(contentPane);
@@ -47,14 +47,43 @@ public class Terminal extends JFrame {
         asOffWhite = sc.addAttribute(asOffWhite, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
 
         textPane.setEditable(true);
+        textPane.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                //Consume under certain conditions
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_TAB:
+                    case KeyEvent.VK_UP:
+                    case KeyEvent.VK_DOWN:
+                        e.consume();
+                        break;
+                    case KeyEvent.VK_SHIFT:
+                    case KeyEvent.VK_CAPS_LOCK:
+                        e.consume();
+                        return;
+                }
+                //Handle key
+                if ((int) e.getKeyChar() == 65535) {
+                    new Thread(() -> InputHandler.process(Keys.getKeyByValue(e.getKeyCode() * -1), e.getKeyChar())).start();
+                } else
+                    new Thread(() -> InputHandler.process(Keys.getKeyByValue((int) e.getKeyChar()), e.getKeyChar())).start();
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
         ptc = new ProtectedTextComponent(textPane);
-        oldOut = System.out;
         println(JTerm.LICENSE, false);
         showPrompt();
-        overrideEnter();
-        System.setOut(new PrintStreamInterceptor(System.out, this));
+        //overrideEnter();
         JTerm.IS_WIN = false;
         JTerm.IS_UNIX = true;
+        JTerm.PROMPT = ">> ";
     }
 
     private void onCancel() {
@@ -62,24 +91,8 @@ public class Terminal extends JFrame {
         System.exit(0);
     }
 
-    private void overrideEnter() {
-        textPane.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enter");
-        textPane.getActionMap().put("enter", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Thread(() -> {
-                    String text = textPane.getText();
-                    String command = text.substring(preTypeLength, text.length());
-                    println("", true);
-                    JTerm.executeCommand(command);
-                    showPrompt();
-                }).start();
-            }
-        });
-    }
-
-    private void showPrompt() {
-        print(prompt, false);
+    public void showPrompt() {
+        print(prompt, true);
         print(" ", true);
         int promptIndex = textPane.getDocument().getLength();
         textPane.setCaretPosition(promptIndex);
@@ -92,12 +105,13 @@ public class Terminal extends JFrame {
         textPane.setText("");
     }
 
-    public void clearLine(String line) {
+    public void clearLine(String line, boolean clearPrompt) {
         ptc.clearProtections();
         String text = textPane.getText().replaceAll("\r", "");
         int ix = text.lastIndexOf("\n") + 1;
+        int addlen = clearPrompt ? 3 : 0;
         try {
-            textPane.getDocument().remove(ix, line.length());
+            textPane.getDocument().remove(ix, line.length() + addlen);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }

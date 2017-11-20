@@ -16,6 +16,8 @@
 
 package jterm.command;
 
+import jterm.JTerm;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
@@ -36,11 +38,11 @@ public class Exec {
             Scanner in = new Scanner(process.getInputStream());
 
             while (process.isAlive() && in.hasNextLine()) {
-                System.out.println(in.nextLine());
+                JTerm.out.println(in.nextLine());
             }
 
             while (in.hasNextLine()) {
-                System.out.println(in.nextLine());
+                JTerm.out.println(in.nextLine());
             }
 
             in.close();

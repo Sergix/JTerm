@@ -48,11 +48,11 @@ public class Server implements Runnable {
                     break;
                 }
 
-                System.out.println("\n" + line);
+                JTerm.out.println("\n" + line);
 
                 bufferedSocketInput.close();
             } catch (IOException ioe) {
-                System.out.println(ioe);
+                JTerm.out.println(ioe);
                 break;
             }
         }
@@ -62,7 +62,7 @@ public class Server implements Runnable {
         String portInput = "80";
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tserver [-h] port\n\nStarts a TCP server socket that accepts ");
+                JTerm.out.println("Command syntax:\n\tserver [-h] port\n\nStarts a TCP server socket that accepts ");
                 return;
             } else {
                 portInput = option;
@@ -79,13 +79,13 @@ public class Server implements Runnable {
             ServerSocket server = new ServerSocket(port);
             new Thread(() -> {
                 while (true) {
-                    System.out.print("> ");
+                    JTerm.out.print("> ");
                     BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in), 1);
                     try {
                         String input = consoleInput.readLine();
                         switch (input) {
                             case "help":
-                                System.out.println("Server currently opened on port " + port);
+                                JTerm.out.println("Server currently opened on port " + port);
                                 break;
 
                             case "quit":
@@ -93,7 +93,7 @@ public class Server implements Runnable {
                                 return;
                         }
                     } catch (IOException ioe) {
-                        System.out.println("Input Stream closed.");
+                        JTerm.out.println("Input Stream closed.");
                         break;
                     }
                 }
@@ -107,7 +107,7 @@ public class Server implements Runnable {
 
             server.close();
         } catch (IOException e) {
-            System.out.println("ERROR: Server closed");
+            JTerm.out.println("ERROR: Server closed");
         }
     }
 }

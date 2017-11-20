@@ -15,6 +15,8 @@ package jterm.command;
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import jterm.JTerm;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -26,6 +28,6 @@ public class Date {
     @Command(name = "date", syntax = "date [-h]")
     public static void printDate(List<String> options) {
         Calendar calendar = Calendar.getInstance();
-        System.out.println("The current date is: " + dateFormat.format(calendar.getTime()));
+        JTerm.out.println("The current date is: " + dateFormat.format(calendar.getTime()));
     }
 }

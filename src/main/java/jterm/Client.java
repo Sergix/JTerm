@@ -30,7 +30,7 @@ public class Client implements Runnable {
             try {
                 String output = Client.input.readLine();
                 if (output != null) {
-                    System.out.println(output);
+                    JTerm.out.println(output);
                 }
             } catch (IOException e) {
                 return;
@@ -45,7 +45,7 @@ public class Client implements Runnable {
 
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tconnect [-h] [-p port] address\n\n"
+                JTerm.out.println("Command syntax:\n\tconnect [-h] [-p port] address\n\n"
                         + "connect to the specified IP address using TCP/IP. "
                         + "Default address is \"0.0.0.0\". Default port is 80.");
                 return;
@@ -61,7 +61,7 @@ public class Client implements Runnable {
 
         int port = Integer.valueOf(portInput);
         try (Socket connection = new Socket(address, port)) {
-            System.out.println("Connecting to " + address + ":" + port);
+            JTerm.out.println("Connecting to " + address + ":" + port);
 
             InputStream input = connection.getInputStream();
             OutputStream output = connection.getOutputStream();
@@ -71,7 +71,7 @@ public class Client implements Runnable {
             Thread readThread = new Thread(client);
             readThread.start();
 
-            System.out.println("Connected to server. Enter a blank line to quit. Reading for input...");
+            JTerm.out.println("Connected to server. Enter a blank line to quit. Reading for input...");
 
             while (true) {
                 BufferedReader bufferedSocketOutput = new BufferedReader(new InputStreamReader(System.in), 1);
@@ -87,7 +87,7 @@ public class Client implements Runnable {
                 bufferedSocketOutput.close();
             }
         } catch (IOException e) {
-            System.out.println("Connection severed.");
+            JTerm.out.println("Connection severed.");
         }
     }
 }

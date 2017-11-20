@@ -1,5 +1,7 @@
 package jterm.gui;
 
+import jterm.JTerm;
+
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -47,7 +49,7 @@ class ProtectedDocument {
         try {
             positions.put(doc.createPosition(start), doc.createPosition(end));
         } catch (BadLocationException ble) {
-            System.out.println(ble);
+            JTerm.out.println(ble);
         }
     }
 
