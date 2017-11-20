@@ -15,10 +15,11 @@ public class InputHandler {
     // Stores current TermInputProcessor.command when iterating through prevCommands
     private static String currCommand = "";
     // Stores all entered commands
-    private static ArrayList<String> prevCommands = new ArrayList<>();
+    private static final ArrayList<String> prevCommands = new ArrayList<>();
     private static String command = "";
     // Stops autocomplete from reprinting command it completed if tab is pressed at the end of a complete file name
     private static boolean lockTab = false;
+    ;
     // Stops autocomplete from constantly erasing fileNames list when searching sub-directories
     private static boolean blockClear = false;
     // For resetting all variables in FileAutocomplete once a key press other than a tab is registered
@@ -28,10 +29,6 @@ public class InputHandler {
 
     // Last arrow key that was pressed (if any other key is pressed sets to Keys.NONE)
     private static Keys lastArrowPress = Keys.NONE;
-
-    private static void setCurrCommand(String curr) {
-        currCommand = curr;
-    }
 
     private static void setCommandListPosition(int commandListPos) {
         commandListPosition = commandListPos;
@@ -58,17 +55,17 @@ public class InputHandler {
     }
 
     static void ctrlZEvent() {
-
+        //TODO: Handle this key shortcut
     }
 
     static void processUp() {
         prevCommandIterator(Keys.UP);
-        setCursorPos(getCommand().length());
+        setCursorPos(command.length());
     }
 
     static void processDown() {
         prevCommandIterator(Keys.DOWN);
-        setCursorPos(getCommand().length());
+        setCursorPos(command.length());
     }
 
     static void processLeft() {
@@ -79,9 +76,9 @@ public class InputHandler {
     }
 
     static void processRight() {
-        if (getCursorPos() < getCommand().length()) {
-            Util.clearLine(getCommand(), true);
-            JTerm.out.printWithPrompt(getCommand());
+        if (getCursorPos() < command.length()) {
+            Util.clearLine(command, true);
+            JTerm.out.printWithPrompt(command);
             increaseCursorPos();
             moveToCursorPos();
         }
@@ -96,18 +93,18 @@ public class InputHandler {
     private static void prevCommandIterator(Keys ak) {
         // Saves currently typed command before moving through the list of previously typed commands
         if (lastArrowPress == Keys.NONE)
-            currCommand = getCommand();
+            currCommand = command;
         lastArrowPress = ak;
-        Util.clearLine(getCommand(), true);
+        Util.clearLine(command, true);
         commandListPosition += ak == Keys.UP ? -1 : 1;
         commandListPosition = Math.max(commandListPosition, 0);
         if (commandListPosition >= getPrevCommands().size()) {
             commandListPosition = Math.min(commandListPosition, getPrevCommands().size());
             JTerm.out.printWithPrompt(currCommand);
-            setCommand(currCommand);
+            command = currCommand;
         } else {
             JTerm.out.printWithPrompt(getPrevCommands().get(commandListPosition));
-            setCommand(getPrevCommands().get(commandListPosition));
+            command = getPrevCommands().get(commandListPosition);
         }
     }
 
@@ -119,35 +116,33 @@ public class InputHandler {
 
     static void newLineEvent() {
         lastArrowPress = Keys.NONE;
-        boolean empty = Util.containsOnlySpaces(getCommand());
+        boolean empty = Util.containsOnlySpaces(command);
 
-        String command = getCommand();
         ArrayList<String> prevCommands = getPrevCommands();
 
         if (!empty)
             prevCommands.add(command);
 
         setCommandListPosition(prevCommands.size());
-        setCurrCommand("");
+        currCommand = "";
         setCursorPos(0);
         setResetVars(true);
         parse();
-        setCommand("");
+        command = "";
         JTerm.out.printWithPrompt("");
     }
 
     static void charEvent() {
         lastArrowPress = Keys.NONE;
-        String command = getCommand();
         int cursorPos = getCursorPos();
 
-        if (getCursorPos() == getCommand().length()) {
+        if (getCursorPos() == command.length()) {
             if (JTerm.isHeadless()) JTerm.out.print(lastChar);
-            setCommand(getCommand() + lastChar);
+            command += lastChar;
         } else {
-            Util.clearLine(getCommand(), true);
-            setCommand(new StringBuilder(command).insert(cursorPos, lastChar).toString());
-            JTerm.out.printWithPrompt(getCommand());
+            Util.clearLine(command, true);
+            command = new StringBuilder(command).insert(cursorPos, lastChar).toString();
+            JTerm.out.printWithPrompt(command);
         }
 
         increaseCursorPos();
@@ -157,12 +152,11 @@ public class InputHandler {
 
     static void backspaceEvent() {
         lastArrowPress = Keys.NONE;
-        if (getCommand().length() > 0 && getCursorPos() > 0) {
+        if (command.length() > 0 && getCursorPos() > 0) {
             int charToDelete = getCursorPos() - 1;
-            String command = getCommand();
-            if (JTerm.isHeadless()) Util.clearLine(getCommand(), false);
-            setCommand(new StringBuilder(command).deleteCharAt(charToDelete).toString());
-            if (JTerm.isHeadless()) JTerm.out.print(getCommand());
+            if (JTerm.isHeadless()) Util.clearLine(command, false);
+            command = new StringBuilder(command).deleteCharAt(charToDelete).toString();
+            if (JTerm.isHeadless()) JTerm.out.print(command);
             decreaseCursorPos();
             moveToCursorPos();
             setResetVars(true);
@@ -172,7 +166,7 @@ public class InputHandler {
     /**
      * Sends command to terminal class for parsing, source is the newlineEvent in the key processor
      */
-    protected static void parse() {
+    private static void parse() {
         String[] commands = command.split("&&");
         for (String command : commands) {
             command = Util.removeSpaces(command);
@@ -279,14 +273,6 @@ public class InputHandler {
 
     private static ArrayList<String> getPrevCommands() {
         return prevCommands;
-    }
-
-    public static String getCommand() {
-        return command;
-    }
-
-    public static void setCommand(String comm) {
-        command = comm;
     }
 
     private static void setResetVars(boolean resetVa) {

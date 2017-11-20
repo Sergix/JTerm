@@ -14,7 +14,6 @@ public class Terminal extends JFrame {
     private JTextPane textPane;
     private AttributeSet asWhite;
     private AttributeSet asOffWhite;
-    public static String prompt = ">>";
     private ProtectedTextComponent ptc;
     private int preTypeLength = 0;
 
@@ -83,7 +82,6 @@ public class Terminal extends JFrame {
         //overrideEnter();
         JTerm.IS_WIN = false;
         JTerm.IS_UNIX = true;
-        JTerm.PROMPT = ">> ";
     }
 
     private void onCancel() {
@@ -92,6 +90,7 @@ public class Terminal extends JFrame {
     }
 
     public void showPrompt() {
+        String prompt = JTerm.PROMPT;
         print(prompt, true);
         print(" ", true);
         int promptIndex = textPane.getDocument().getLength();

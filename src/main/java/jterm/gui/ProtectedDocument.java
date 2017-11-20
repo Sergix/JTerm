@@ -25,7 +25,7 @@ import java.util.Map;
  *  protected text is not a requirement.
  */
 class ProtectedDocument {
-    private AbstractDocument doc;
+    private final AbstractDocument doc;
     private Map<Position, Position> positions = new HashMap<>();
 
     ProtectedDocument(JTextComponent component) {
@@ -158,7 +158,7 @@ class ProtectedDocument {
      *  next unprotected text.
      */
     class ProtectedNavigationFilter extends NavigationFilter implements MouseListener {
-        private JTextComponent component;
+        private final JTextComponent component;
         private boolean isMousePressed = false;
         private int mouseDot = -1;
         private int lastDot = -1;

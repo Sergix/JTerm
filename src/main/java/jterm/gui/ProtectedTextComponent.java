@@ -13,9 +13,9 @@ import javax.swing.text.JTextComponent;
  *  a) notify the ProtectedDocument class of the text to be protected.
  *  b) notify the ProtectedHighlighter class of the text to be protected.
  */
-public class ProtectedTextComponent {
-    private JTextComponent component;
-    private ProtectedDocument document;
+class ProtectedTextComponent {
+    private final JTextComponent component;
+    private final ProtectedDocument document;
 
     /**
      * Specify the component to be protected. The text will be highlighted
@@ -56,7 +56,7 @@ public class ProtectedTextComponent {
      * @param firstLine first line in the range
      * @param lastLine  last line in the range
      */
-    public void protectLines(int firstLine, int lastLine) {
+    private void protectLines(int firstLine, int lastLine) {
         Element root = component.getDocument().getDefaultRootElement();
 
         firstLine = Math.max(firstLine, 0);

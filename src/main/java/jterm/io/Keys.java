@@ -13,7 +13,7 @@ public enum Keys {
     CTRL_Z(26, InputHandler::ctrlZEvent),
     NONE(-1, null);
     int value;
-    Runnable r;
+    final Runnable r;
 
     Keys(Runnable r) {
         this.r = r;

@@ -235,7 +235,7 @@ public class FileAutocomplete {
      *
      * @return Path found
      */
-    protected static String getPath() {
+    private static String getPath() {
         boolean startsWithSlash = originalCommand.startsWith("/") || currText.startsWith("/");
         endsWithSlash = originalCommand.endsWith("/") || currText.endsWith("/");
 

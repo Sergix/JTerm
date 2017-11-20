@@ -4,7 +4,7 @@ import java.io.PrintStream;
 
 public abstract class PromptPrinter extends PrintStream {
 
-    public PromptPrinter() {
+    PromptPrinter() {
         super(System.out);
     }
 

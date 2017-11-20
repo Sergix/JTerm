@@ -26,7 +26,7 @@ import java.util.List;
 
 public class Window {
     public static int windowCount = 0;
-    public static ArrayList<Window> windows = new ArrayList<>();
+    public static final ArrayList<Window> windows = new ArrayList<>();
 
     private int id;
     private JFrame window;
