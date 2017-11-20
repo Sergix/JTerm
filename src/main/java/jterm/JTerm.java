@@ -25,6 +25,9 @@ import jterm.gui.Terminal;
 import jterm.io.InputHandler;
 import jterm.io.Keys;
 import jterm.io.RawConsoleInput;
+import jterm.util.PrintStreamInterceptor;
+import jterm.util.PromptInterceptor;
+import jterm.util.PromptPrinter;
 import jterm.util.Util;
 
 import java.io.BufferedReader;
@@ -46,9 +49,9 @@ public class JTerm {
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
 
     public static InputHandler inputHandler;
-
+    public static PromptPrinter out;
     public static final String VERSION = "0.6.1";
-    public static final String PROMPT = "   \b\b\b>> ";
+    public static  String PROMPT = "   \b\b\b>> ";
     public static String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
             + "This program comes with ABSOLUTELY NO WARRANTY.\n"
             + "This is free software, and you are welcome to redistribute it\n"
@@ -74,9 +77,10 @@ public class JTerm {
     public static void main(String[] args) {
         inputHandler = new InputHandler(new RawConsoleInput());
         if (args.length > 0 && args[0].equals("headless")) {
+            out = new PromptInterceptor();
             headless = true;
-            System.out.println(LICENSE);
-            System.out.print(PROMPT);
+            out.println(LICENSE);
+            out.print(PROMPT);
             try {
                 while (true) {
                     inputHandler.read();
@@ -89,7 +93,8 @@ public class JTerm {
             terminal.setTitle("JTerm");
             terminal.setSize(720, 480);
             terminal.setVisible(true);
-
+            out = new PrintStreamInterceptor(terminal);
+            Keys.initGUI();
         }
     }
 
@@ -102,12 +107,12 @@ public class JTerm {
 
         String command = optionsArray.remove(0);
         if (!COMMANDS.containsKey(command)) {
-            System.out.println("Command \"" + command + "\" is not available");
+            out.println("Command \"" + command + "\" is not available");
             return;
         }
 
         try {
-            if(JTerm.isHeadless()) System.out.println();
+            if(JTerm.isHeadless()) out.println();
             COMMANDS.get(command).execute(optionsArray);
         } catch (CommandException e) {
             System.err.println(e.getMessage());
@@ -140,7 +145,7 @@ public class JTerm {
                 }
             }
         } catch (IOException ioe) {
-            System.out.println(ioe);
+            out.println(ioe);
         }
 
         classes.remove(0);
@@ -159,15 +164,15 @@ public class JTerm {
                     }
                 }
             } catch (ClassNotFoundException cnfe) {
-                System.out.println(cnfe);
+                out.println(cnfe);
             } catch (NoSuchMethodException nsme) {
-                // System.out.println(nsme);
+                // out.println(nsme);
             } catch (InstantiationException ie) {
-                // System.out.println(ie);
+                // out.println(ie);
             } catch (IllegalAccessException iae) {
-                System.out.println(iae);
+                out.println(iae);
             } catch (InvocationTargetException iae) {
-                // System.out.println(iae);
+                // out.println(iae);
             }
         }
 

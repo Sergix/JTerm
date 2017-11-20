@@ -24,7 +24,7 @@ import java.util.List;
 public class Help {
     @Command(name = "help")
     public static void printHelp(List<String> options) {
-        System.out.println("JTerm v" + JTerm.VERSION + "\n"
+        JTerm.out.println("JTerm v" + JTerm.VERSION + "\n"
                 + "Available commands:\n"
                 + "  client\n"
                 + "  dir\n"

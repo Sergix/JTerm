@@ -111,7 +111,7 @@ public class InputHandler {
 
     private void processLeft() {
         if (getCursorPos() > 0) {
-            System.out.print("\b");
+            JTerm.out.print("\b");
             decreaseCursorPos();
         }
     }
@@ -119,7 +119,7 @@ public class InputHandler {
     private void processRight() {
         if (getCursorPos() < getCommand().length()) {
             Util.clearLine(getCommand(), true);
-            System.out.print(JTerm.PROMPT + getCommand());
+            JTerm.out.printWithPrompt(getCommand());
             increaseCursorPos();
             moveToCursorPos();
         }
@@ -141,10 +141,10 @@ public class InputHandler {
         commandListPosition = Math.max(commandListPosition, 0);
         if (commandListPosition >= getPrevCommands().size()) {
             commandListPosition = Math.min(commandListPosition, getPrevCommands().size());
-            System.out.print(JTerm.PROMPT + currCommand);
+            JTerm.out.printWithPrompt(currCommand);
             setCommand(currCommand);
         } else {
-            System.out.print(JTerm.PROMPT + getPrevCommands().get(commandListPosition));
+            JTerm.out.printWithPrompt(getPrevCommands().get(commandListPosition));
             setCommand(getPrevCommands().get(commandListPosition));
         }
     }
@@ -169,7 +169,7 @@ public class InputHandler {
         setResetVars(true);
         parse();
         setCommand("");
-        System.out.print(JTerm.PROMPT);
+        JTerm.out.printWithPrompt("");
     }
 
     private void charEvent(char input) {
@@ -177,12 +177,12 @@ public class InputHandler {
         int cursorPos = getCursorPos();
 
         if (getCursorPos() == getCommand().length()) {
-            System.out.print(input);
+            if (JTerm.isHeadless()) JTerm.out.print(input);
             setCommand(getCommand() + input);
         } else {
             Util.clearLine(getCommand(), true);
             setCommand(new StringBuilder(command).insert(cursorPos, input).toString());
-            System.out.print(JTerm.PROMPT + getCommand());
+            JTerm.out.printWithPrompt(getCommand());
         }
 
         increaseCursorPos();
@@ -195,10 +195,11 @@ public class InputHandler {
             int charToDelete = getCursorPos() - 1;
             String command = getCommand();
 
-            Util.clearLine(getCommand(), true);
-
             setCommand(new StringBuilder(command).deleteCharAt(charToDelete).toString());
-            System.out.print(JTerm.PROMPT + getCommand());
+            if (JTerm.isHeadless()) {
+                Util.clearLine(getCommand(), true);
+                JTerm.out.printWithPrompt(getCommand());
+            }
 
             decreaseCursorPos();
             moveToCursorPos();
@@ -223,7 +224,7 @@ public class InputHandler {
      */
     private void moveToCursorPos() {
         for (int i = command.length(); i > cursorPos; i--)
-            System.out.print("\b");
+            JTerm.out.print("\b");
     }
 
     /**

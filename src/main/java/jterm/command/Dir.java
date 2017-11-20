@@ -30,9 +30,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Dir {
-    private static final Consumer<File> SIMPLE_PRINTER = (file) -> System.out.println("\t" + file.getName());
+    private static final Consumer<File> SIMPLE_PRINTER = (file) -> JTerm.out.println("\t" + file.getName());
 
-    private static final Consumer<File> FULL_PRINTER = (file) -> System.out.println("\t"
+    private static final Consumer<File> FULL_PRINTER = (file) -> JTerm.out.println("\t"
             + (file.isFile() ? "F" : "D") + " "
             + (file.canRead() ? "R" : "")
             + (file.canWrite() ? "W" : "")
@@ -50,7 +50,7 @@ public class Dir {
 
         Consumer<File> printer = options.contains("-f") ? FULL_PRINTER : SIMPLE_PRINTER;
 
-        System.out.println("[Contents of \"" + JTerm.currentDirectory + "\"]");
+        JTerm.out.println("[Contents of \"" + JTerm.currentDirectory + "\"]");
         for (File file : files) {
             printer.accept(file);
         }
@@ -65,7 +65,7 @@ public class Dir {
         }
 
         if (newDirectory.equals("")) {
-            System.out.println("Path not specified. Type \"cd -h\" for more information.");
+            JTerm.out.println("Path not specified. Type \"cd -h\" for more information.");
             return;
         }
 
@@ -88,7 +88,7 @@ public class Dir {
         } else if (newDir.exists() && newDir.isDirectory()) {
             newDirectory = JTerm.currentDirectory + newDirectory;
         } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
-            System.out.println("ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
+            JTerm.out.println("ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
             return;
         }
 
@@ -102,7 +102,7 @@ public class Dir {
 
     @Command(name = "pwd")
     public static void pwd(List<String> options) {
-        System.out.println(JTerm.currentDirectory);
+        JTerm.out.println(JTerm.currentDirectory);
     }
 
     @Command(name = {"md", "mkdir"}, minOptions = 1, syntax = "md [-h] dirName")
@@ -134,16 +134,16 @@ public class Dir {
         for (String fileName : filesToBeRemoved) {
             File file = new File(JTerm.currentDirectory, fileName);
             if (!file.isFile() && !file.isDirectory()) {
-                System.out.println(fileName + " is not a file or directory");
+                JTerm.out.println(fileName + " is not a file or directory");
             } else if (file.isDirectory()) {
                 if (recursivelyDeleteFlag) {
                     try {
                         FileUtils.deleteDirectory(file);
                     } catch (IOException e) {
-                        System.out.println("Error when deleting " + fileName);
+                        JTerm.out.println("Error when deleting " + fileName);
                     }
                 } else {
-                    System.out.println("Attempting to delete a directory. Run the command again with -r.");
+                    JTerm.out.println("Attempting to delete a directory. Run the command again with -r.");
                     return;
                 }
             }

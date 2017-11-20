@@ -39,6 +39,15 @@ public enum Keys {
         NWLN.value = 10;
     }
 
+    public static void initGUI() {
+        UP.value = -38;
+        DOWN.value = -40;
+        RIGHT.value = -39;
+        LEFT.value = -37;
+        BACKSPACE.value = 8;
+        NWLN.value = 10;
+    }
+
     public static Keys getKeyByValue(int c) {
         Keys[] keys = Keys.values();
         for (Keys key : keys) {

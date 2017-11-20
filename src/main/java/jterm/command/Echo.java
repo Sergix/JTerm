@@ -18,6 +18,7 @@
 
 package jterm.command;
 
+import jterm.JTerm;
 import jterm.util.Util;
 
 import java.util.List;
@@ -27,6 +28,6 @@ public class Echo {
     @Command(name = "echo", minOptions = 1, syntax = "echo [-h] input")
     public static void echo(List<String> options) {
         String info = Util.getAsString(options);
-        System.out.println(info.substring(0, info.length() - 1));
+        JTerm.out.println(info.substring(0, info.length() - 1));
     }
 }

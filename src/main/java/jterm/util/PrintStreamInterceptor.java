@@ -1,17 +1,16 @@
-package jterm.gui;
+package jterm.util;
+
+import jterm.gui.Terminal;
 
 import javax.swing.*;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
-public class PrintStreamInterceptor extends PrintStream {
+public class PrintStreamInterceptor extends PromptPrinter {
     private Terminal terminal;
-    private PrintStream out;
 
-    PrintStreamInterceptor(Terminal terminal) {
-        super(System.out);
-        this.out = System.out;
+    public PrintStreamInterceptor(Terminal terminal) {
         this.terminal = terminal;
     }
 
@@ -138,12 +137,27 @@ public class PrintStreamInterceptor extends PrintStream {
         return this;
     }
 
+    @Override
+    public void printWithPrompt(String s) {
+        invoke(() -> {
+            terminal.showPrompt();
+            terminal.print(s, true);
+        });
+    }
+
+    @Override
+    public void printlnWithPrompt(String s) {
+        invoke(() -> {
+            terminal.showPrompt();
+            terminal.println(s, true);
+        });
+    }
+
     private void invoke(Runnable action) {
         try {
             SwingUtilities.invokeAndWait(action);
         } catch (InterruptedException | InvocationTargetException e) {
-            e.printStackTrace(out);
+            e.printStackTrace();
         }
     }
-
 }
