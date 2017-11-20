@@ -1,13 +1,13 @@
 package jterm.gui;
 
 import jterm.JTerm;
+import jterm.io.InputHandler;
 import jterm.io.Keys;
 
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.PrintStream;
 
 public class Terminal extends JFrame {
     private JPanel contentPane;
@@ -68,9 +68,9 @@ public class Terminal extends JFrame {
                 }
                 //Handle key
                 if ((int) e.getKeyChar() == 65535) {
-                    new Thread(() -> JTerm.inputHandler.process(Keys.getKeyByValue(e.getKeyCode() * -1), e.getKeyChar())).start();
+                    new Thread(() -> InputHandler.process(Keys.getKeyByValue(e.getKeyCode() * -1), e.getKeyChar())).start();
                 } else
-                    new Thread(() -> JTerm.inputHandler.process(Keys.getKeyByValue((int) e.getKeyChar()), e.getKeyChar())).start();
+                    new Thread(() -> InputHandler.process(Keys.getKeyByValue((int) e.getKeyChar()), e.getKeyChar())).start();
             }
 
             @Override

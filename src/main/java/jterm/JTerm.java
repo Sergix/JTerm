@@ -24,7 +24,6 @@ import jterm.command.CommandExecutor;
 import jterm.gui.Terminal;
 import jterm.io.InputHandler;
 import jterm.io.Keys;
-import jterm.io.RawConsoleInput;
 import jterm.util.PrintStreamInterceptor;
 import jterm.util.PromptInterceptor;
 import jterm.util.PromptPrinter;
@@ -47,8 +46,6 @@ import java.security.CodeSource;
 
 public class JTerm {
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
-
-    public static InputHandler inputHandler;
     public static PromptPrinter out;
     public static final String VERSION = "0.6.1";
     public static  String PROMPT = "   \b\b\b>> ";
@@ -65,17 +62,13 @@ public class JTerm {
     public static boolean IS_WIN;
     public static boolean IS_UNIX;
 
-    static {
-        setOS();
-        initCommands();
-    }
-
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
     private static Terminal terminal;
     private static boolean headless = false;
 
     public static void main(String[] args) {
-        inputHandler = new InputHandler(new RawConsoleInput());
+        setOS();
+        initCommands();
         if (args.length > 0 && args[0].equals("headless")) {
             out = new PromptInterceptor();
             headless = true;
@@ -83,7 +76,7 @@ public class JTerm {
             out.print(PROMPT);
             try {
                 while (true) {
-                    inputHandler.read();
+                    InputHandler.read();
                 }
             }catch (IOException e){
                 e.printStackTrace();

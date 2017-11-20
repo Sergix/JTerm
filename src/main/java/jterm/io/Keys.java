@@ -1,17 +1,32 @@
 package jterm.io;
 
 public enum Keys {
-    UP, DOWN, LEFT, RIGHT, TAB(9), BACKSPACE, NWLN, CHAR, CTRL_C(3), CTRL_Z(26), NONE(-1);
+    UP(InputHandler::processUp),
+    DOWN(InputHandler::processDown),
+    LEFT(InputHandler::processLeft),
+    RIGHT(InputHandler::processRight),
+    TAB(9, InputHandler::tabEvent),
+    BACKSPACE(InputHandler::backspaceEvent),
+    NWLN(InputHandler::newLineEvent),
+    CHAR(InputHandler::charEvent),
+    CTRL_C(3, InputHandler::ctrlCEvent),
+    CTRL_Z(26, InputHandler::ctrlZEvent),
+    NONE(-1, null);
+    int value;
+    Runnable r;
 
-    Keys() {
-
+    Keys(Runnable r) {
+        this.r = r;
     }
 
-    Keys(int value) {
+    public void executeAction() {
+        if (r != null) r.run();
+    }
+
+    Keys(int value, Runnable r) {
+        this.r = r;
         this.value = value;
     }
-
-    int value;
 
     public int getValue() {
         return value;

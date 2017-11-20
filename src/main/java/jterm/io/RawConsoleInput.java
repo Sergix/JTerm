@@ -35,7 +35,7 @@ import com.sun.jna.ptr.IntByReference;
  * <p>This class is used for console mode programs.
  * It supports non-blocking reads of single key strokes without echo.
  */
-public class RawConsoleInput implements Input{
+public class RawConsoleInput {
 
 	private static final boolean           isWindows     = System.getProperty("os.name").startsWith("Windows");
 	private static final int               invalidKey    = 0xFFFE;
@@ -56,7 +56,7 @@ public class RawConsoleInput implements Input{
 	 *   -1 on EOF.
 	 *   Otherwise an Unicode character code within the range 0 to 0xFFFF.
 	 */
-	public int read (boolean wait) throws IOException {
+	public static int read (boolean wait) throws IOException {
 		if (isWindows) {
 			return readWindows(wait); }
 		else {
