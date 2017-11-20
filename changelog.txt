@@ -1,3 +1,24 @@
+(#106)[11/20/2017-12:56 0.6.1 Sergix]
+	Merged #85.
+		- Thanks @lbenedetto!
+		- Added PrintStreamInterceptor to System.out.
+		- Removed log() and logln()
+		- Should have been in CL #103.
+	Merged #87.
+		- Thanks to @lbenedetto!
+		- Routes input and output through JTerm.out.
+		- Closes #80.
+		- Added PromptInterceptor class.
+		- Added PromptPrinter class.
+		- Added RawConsoleInput class.
+			- Removed ArrowKeyHandler class.
+			- Removed ArrowKeys enum.
+			- Removed Command (io) class.
+			- Removed Input class.
+			- Removed UnixInput class.
+			- Removed WinInput class.
+	Closed #80.
+
 (#105)[11/20/2017-12:18 0.6.1 Sergix]
 	Fixed PROMPT (@nanoandrew4).
 	Pushed updates to Git.
