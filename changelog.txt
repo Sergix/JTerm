@@ -1,3 +1,7 @@
+(#105)[11/20/2017-12:18 0.6.1 Sergix]
+	Fixed PROMPT (@nanoandrew4).
+	Pushed updates to Git.
+
 (#104)[11/20/2017-10:49 0.6.1 Sergix]
 	Merged #86.
 		- Thanks @nanoandrew4!
