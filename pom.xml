@@ -5,7 +5,7 @@
 
     <groupId>sergix</groupId>
     <artifactId>jterm</artifactId>
-    <version>0.6.2</version>
+    <version>0.7.0</version>
     <packaging>jar</packaging>
     <description>
         JTerm is a cross-platform terminal designed for simple use and to run batch files.
@@ -57,11 +57,6 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.10</version>
-        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit-dep</artifactId>

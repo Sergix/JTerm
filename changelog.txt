@@ -1,4 +1,69 @@
-(#100)[11/8/2017-13:28 0.6.2 ojles]
+(#102)[11/19/2017-20:44 0.6.1 Sergix]
+	Fixed issue with Command annotation in Files.move().
+	Pushed updates to Git.
+
+(#101)[11/19/2017-16:23 0.6.1 Sergix]
+	Removed org.reflections import. JTerm.initCommands() has been updated to compensate.
+	Closed #40.
+	Closed #47.
+		- PR #78.
+	Closed #48.
+	Closed #52 (wontfix).
+	Closed #53.
+	Closed #71.
+		- PR #74.
+	Closed #73.
+	Closed #75.
+	Closed PR #77.
+		- PR #79.
+	Closed #81.
+	Closed PR #82.
+		- PR #83.
+	Merged #74.
+		- Thanks @lbenedetto!
+		- Added a fully functioning JavaX GUI!
+		- Runs commands without recreating anything.
+		- Added log functions to JTerm.java
+			- log()
+			- logln()
+			- All output should be through these from now on.
+		- Added ProtectedDocument class
+		- Added ProtectedTextComponent class
+		- Added Terminal class (GUI)
+		- Added com.intellij.forms_rt import for Terminal.form GUI layout.
+	Merged #78.
+		- Thanks @nanoandrew4!
+		- Added ArrowKeyHandler class.
+		- Added ArrowKeys enum.
+		- Added Command enum.
+		- Added KeyHandler class.
+		- Added Keys enum.
+		- Moved UNIX and Windows input functions from Input class to UnixInput and WinInput classes, respectively.
+		- Added FileAutocomplete class.
+		- Added Util functions.
+			- removeSpaces()
+			- containsOnlySpaces()
+	Merged #67, #79.
+		- Thanks @ojles!
+		- Added a Command interface.
+		- Command methods now have a @Command annotation.
+		- All commands are automatically updated and stored in a global hashmap.
+		- Added target/ to .gitignore.
+		- Added CommandException class.
+		- Added functions to Util.java.
+			- getRunTime()
+			- clearLine()
+			- getAsArray()
+			- getAsString()
+			- getRest()
+			- getFullPath()
+	Merged #83.
+		- Thanks @Kaperskyguru!
+		- Created Files.move()
+	Updated ROADMAP.md.
+	Pushed updates to Git.
+
+(#100)[11/8/2017-13:28 0.6.1 ojles]
     Added Command interface with execute() method
     Added CommandException for package jterm.command.*
     Implemented Command interface in all command classes
@@ -7,6 +72,7 @@
     Moved helper methods from JTerm to Util.java
     Fixed ping command
     Fixed Exec.java, witch was not printing all the data got from the executed process
+
 (#99)[11/5/2017-14:50 0.6.1 Sergix]
 	Removed lang3 dependency from POM and all imports.
 	Fixed issue where InputHandler was outputting an extra newline.

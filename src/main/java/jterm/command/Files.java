@@ -30,7 +30,8 @@ import java.util.List;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class Files {
-    @Command(name = "mv", minOptions = 2)
+    // @ojles and @Kaperskyguru
+    @Command(name = {"mv", "move"}, minOptions = 2)
     public static void move(List<String> options) {
         String sourceName = Util.getFullPath(options.get(0));
         String destinationName = Util.getFullPath(options.get(1));
