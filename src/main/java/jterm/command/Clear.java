@@ -25,7 +25,7 @@ public class Clear {
     private static final String ANSI_CLS = "\u001b[2J";
     private static final String ANSI_HOME = "\u001b[H";
 
-    @Command(name = {"clear", "cls"})
+    @Command(name = {"clear", "cls"}, syntax = "clear [-h]")
     public static void clearScreen(List<String> options) {
         if (JTerm.isHeadless()) {
             if (JTerm.IS_UNIX) { // escape sequences to clear the screen

@@ -1,3 +1,19 @@
+(#104)[11/20/2017-10:49 0.6.1 Sergix]
+	Merged #86.
+		- Thanks @nanoandrew4!
+		- Removed duplicate Input.java file in jterm.io package.
+		- Simplified UNIX Arrow Key input.
+		- Fixed Windows headless mode.
+	Created I/O, GUI, and ROADMAP Issue labels.
+	Fixed command annotations and gave more syntax information.
+	Pushed updates to Git.
+
+(#103)[11/19/2017-21:48 0.6.1 Sergix]
+	Fixed issue with Echo cutting off extra character.
+	Fixed v0.6.0 docs.
+	v0.6.1 is now DEPRECATED.
+	Updated Help list.
+
 (#102)[11/19/2017-20:44 0.6.1 Sergix]
 	Fixed issue with Command annotation in Files.move().
 	Pushed updates to Git.

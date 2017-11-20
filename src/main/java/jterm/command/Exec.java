@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Exec {
-    @Command(name = "exec", minOptions = 1, syntax = "exec <executable>")
+    @Command(name = "exec", minOptions = 1, syntax = "exec executable")
     public static void execute(List<String> options) {
         String command = options.get(0);
         if (!command.startsWith("java") && command.endsWith(".jar")) {

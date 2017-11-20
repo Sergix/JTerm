@@ -26,16 +26,12 @@ public class Help {
     public static void printHelp(List<String> options) {
         System.out.println("JTerm v" + JTerm.VERSION + "\n"
                 + "Available commands:\n"
-                + "  client\n"
-                + "  dir\n"
                 + "  echo\n"
                 + "  exec\n"
                 + "  exit\n"
-                + "  files\n"
                 + "  pause\n"
                 + "  ping\n"
                 + "  ps\n"
-                + "  server\n"
                 + "  set\n"
                 + "  window\n");
     }

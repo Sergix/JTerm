@@ -57,7 +57,7 @@ public class Dir {
     }
 
     // FIXME: throws exception if no options specified
-    @Command(name = "cd", minOptions = 1, syntax = "cd [-h] directory")
+    @Command(name = {"cd", "chdir"}, minOptions = 1, syntax = "cd [-h] directory")
     public static void cd(List<String> options) {
         String newDirectory = Util.getAsString(options).trim();
         if (newDirectory.startsWith("\"") && newDirectory.endsWith("\"")) {
@@ -100,7 +100,7 @@ public class Dir {
         JTerm.currentDirectory = newDirectory;
     }
 
-    @Command(name = "pwd")
+    @Command(name = "pwd", syntax = "pwd [-h]")
     public static void pwd(List<String> options) {
         System.out.println(JTerm.currentDirectory);
     }

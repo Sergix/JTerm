@@ -48,7 +48,7 @@ public class JTerm {
 
     public static InputHandler inputHandler;
 
-    public static final String VERSION = "0.6.1";
+    public static final String VERSION = "0.7.0";
     public static final String PROMPT = ">> ";
     public static String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
             + "This program comes with ABSOLUTELY NO WARRANTY.\n"

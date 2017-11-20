@@ -31,7 +31,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class Files {
     // @ojles and @Kaperskyguru
-    @Command(name = {"mv", "move"}, minOptions = 2)
+    @Command(name = {"mv", "move"}, minOptions = 2, syntax = "move, mv [-h] source destination")
     public static void move(List<String> options) {
         String sourceName = Util.getFullPath(options.get(0));
         String destinationName = Util.getFullPath(options.get(1));
@@ -46,7 +46,7 @@ public class Files {
         }
     }
 
-    @Command(name = "rn", minOptions = 2)
+    @Command(name = "rn", minOptions = 2, syntax = "rn [-h] file newName")
     public static void rename(List<String> options) {
         String fileName = Util.getFullPath(options.get(0));
         String newName = options.get(1);
@@ -104,7 +104,7 @@ public class Files {
 
     }
 
-    @Command(name = {"rm", "del", "delete"}, minOptions = 1)
+    @Command(name = {"rm", "del", "delete"}, minOptions = 1, syntax = "rm, del, delete [-h] file")
     public static void delete(List<String> options) {
         String fileName = Util.getFullPath(options.get(0));
         try {
@@ -127,7 +127,7 @@ public class Files {
         }
     }
 
-    @Command(name = "download", minOptions = 1)
+    @Command(name = "download", minOptions = 1, syntax = "download [-h] url")
     public static void download(List<String> options) {
         String url;
         if (options.size() > 0) {
