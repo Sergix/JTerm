@@ -43,11 +43,8 @@ public class InputHandler {
         int c2 = RawConsoleInput.read(false);
         int c3 = RawConsoleInput.read(false);
         Keys keyType;
-        if (c2 == -2 && c3 == -2) {
-            keyType = Keys.getKeyByValue(c1);
-        } else {
-            keyType = Keys.getKeyByValue((c1 + c2 + c3) * -1);
-        }
+        if (!(c2 == -2 && c3 == -2)) c1 = (c1 + c2 + c3) * -1;
+        keyType = Keys.getKeyByValue(c1);
         process(keyType, (char) c1);
     }
 
