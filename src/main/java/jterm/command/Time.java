@@ -15,6 +15,8 @@
 */
 package jterm.command;
 
+import jterm.JTerm;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,6 +27,6 @@ public class Time {
 
     @Command(name = "time")
     public static void printTime(List<String> options) {
-        System.out.println("The Current Time is: " + DATE_FORMAT.format(new Date()));
+        JTerm.out.println("The Current Time is: " + DATE_FORMAT.format(new Date()));
     }
 }

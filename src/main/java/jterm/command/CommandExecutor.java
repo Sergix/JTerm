@@ -1,5 +1,7 @@
 package jterm.command;
 
+import jterm.JTerm;
+
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -32,7 +34,7 @@ public class CommandExecutor {
     public void execute(List<String> options) {
         if (options.contains("-h")) {
             if (syntax == null || !syntax.isEmpty()) {
-                System.out.println(syntax);
+                JTerm.out.println(syntax);
             }
             return;
         }

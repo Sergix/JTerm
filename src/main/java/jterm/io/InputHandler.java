@@ -1,28 +1,6 @@
-/*
-* JTerm - a cross-platform terminal
-* Copyright (C) 2017 Sergix, NCSGeek
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/*
-* Special thanks to @nanoandrew4 for this feature!
-* https://github.com/Sergix/JTerm/issues/31
-*/
-
 package jterm.io;
 
 import jterm.JTerm;
-import jterm.io.input.Input;
 import jterm.util.FileAutocomplete;
 import jterm.util.Util;
 
@@ -30,122 +8,171 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-/**
- * Input processor for terminal module.
- *
- * @see KeyHandler
- * @see ArrowKeyHandler
- */
 public class InputHandler {
 
-    private KeyHandler keyHandler;
-    private ArrowKeyHandler arrowKeyHandler;
-
+    // Position on prevCommands list (used to iterate through it)
+    private static int commandListPosition = 0;
+    // Stores current TermInputProcessor.command when iterating through prevCommands
+    private static String currCommand = "";
     // Stores all entered commands
-    private ArrayList<String> prevCommands = new ArrayList<>();
-
-    private String command = "";
-
+    private static ArrayList<String> prevCommands = new ArrayList<>();
+    private static String command = "";
     // Stops autocomplete from reprinting command it completed if tab is pressed at the end of a complete file name
-    private boolean lockTab = false;
-
+    private static boolean lockTab = false;
     // Stops autocomplete from constantly erasing fileNames list when searching sub-directories
-    private boolean blockClear = false;
-
+    private static boolean blockClear = false;
     // For resetting all variables in FileAutocomplete once a key press other than a tab is registered
-    private boolean resetVars = false;
+    private static boolean resetVars = false;
+    private static int cursorPos = 0;
+    private static char lastChar;
 
-    private int cursorPos = 0;
+    // Last arrow key that was pressed (if any other key is pressed sets to Keys.NONE)
+    private static Keys lastArrowPress = Keys.NONE;
 
-    public InputHandler() {
-
-        keyHandler = new KeyHandler(this);
-        arrowKeyHandler = new ArrowKeyHandler(this);
-
-        KeyHandler.initKeysMap();
+    private static void setCurrCommand(String curr) {
+        currCommand = curr;
     }
 
-    protected KeyHandler getKeyProcessor() {
-        return keyHandler;
+    private static void setCommandListPosition(int commandListPos) {
+        commandListPosition = commandListPos;
     }
 
-    protected ArrowKeyHandler getArrowKeyProcessor() {
-        return arrowKeyHandler;
+
+    public static void read() throws IOException {
+        int c1 = RawConsoleInput.read(true);
+        int c2 = RawConsoleInput.read(false);
+        int c3 = RawConsoleInput.read(false);
+        Keys keyType;
+        if (!(c2 == -2 && c3 == -2)) c1 = (c1 + c2 + c3) * -1;
+        keyType = Keys.getKeyByValue(c1);
+        process(keyType, (char) c1);
     }
 
-    protected ArrayList<String> getPrevCommands() {
-        return prevCommands;
+    public static void process(Keys key, char c) {
+        lastChar = c;
+        key.executeAction();
     }
 
-    public String getCommand() {
-        return command;
+    static void ctrlCEvent() {
+        System.exit(0);
     }
 
-    public void setCommand(String command) {
-        this.command = command;
+    static void ctrlZEvent() {
+
     }
 
-    protected void setLockTab(boolean lockTab) {
-        this.lockTab = lockTab;
+    static void processUp() {
+        prevCommandIterator(Keys.UP);
+        setCursorPos(getCommand().length());
     }
 
-    protected void setBlockClear(boolean blockClear) {
-        this.blockClear = blockClear;
+    static void processDown() {
+        prevCommandIterator(Keys.DOWN);
+        setCursorPos(getCommand().length());
     }
 
-    protected void setResetVars(boolean resetVars) {
-        this.resetVars = resetVars;
+    static void processLeft() {
+        if (getCursorPos() > 0) {
+            JTerm.out.print("\b");
+            decreaseCursorPos();
+        }
     }
 
-    protected void increaseCursorPos() {
-        cursorPos++;
-    }
-
-    protected void decreaseCursorPos() {
-        cursorPos--;
-    }
-
-    protected int getCursorPos() {
-        return cursorPos;
-    }
-
-    protected void setCursorPos(int cursorPos) {
-        this.cursorPos = cursorPos;
+    static void processRight() {
+        if (getCursorPos() < getCommand().length()) {
+            Util.clearLine(getCommand(), true);
+            JTerm.out.printWithPrompt(getCommand());
+            increaseCursorPos();
+            moveToCursorPos();
+        }
     }
 
     /**
-     * Calls appropriate method for handling input read from the input class.
+     * Iterates through the prevCommands list. Emulates Unix terminal behaviour when using
+     * vertical arrow keys.
+     *
+     * @param ak Arrow key to process
      */
-    public void process() {
+    private static void prevCommandIterator(Keys ak) {
+        // Saves currently typed command before moving through the list of previously typed commands
+        if (lastArrowPress == Keys.NONE)
+            currCommand = getCommand();
+        lastArrowPress = ak;
+        Util.clearLine(getCommand(), true);
+        commandListPosition += ak == Keys.UP ? -1 : 1;
+        commandListPosition = Math.max(commandListPosition, 0);
+        if (commandListPosition >= getPrevCommands().size()) {
+            commandListPosition = Math.min(commandListPosition, getPrevCommands().size());
+            JTerm.out.printWithPrompt(currCommand);
+            setCommand(currCommand);
+        } else {
+            JTerm.out.printWithPrompt(getPrevCommands().get(commandListPosition));
+            setCommand(getPrevCommands().get(commandListPosition));
+        }
+    }
 
-        int input = 0;
-        try {
-            input = Input.read(true);
-        } catch (IOException e) {
-            e.printStackTrace();
+    static void tabEvent() {
+        lastArrowPress = Keys.NONE;
+        fileAutocomplete();
+        setResetVars(false);
+    }
+
+    static void newLineEvent() {
+        lastArrowPress = Keys.NONE;
+        boolean empty = Util.containsOnlySpaces(getCommand());
+
+        String command = getCommand();
+        ArrayList<String> prevCommands = getPrevCommands();
+
+        if (!empty)
+            prevCommands.add(command);
+
+        setCommandListPosition(prevCommands.size());
+        setCurrCommand("");
+        setCursorPos(0);
+        setResetVars(true);
+        parse();
+        setCommand("");
+        JTerm.out.printWithPrompt("");
+    }
+
+    static void charEvent() {
+        lastArrowPress = Keys.NONE;
+        String command = getCommand();
+        int cursorPos = getCursorPos();
+
+        if (getCursorPos() == getCommand().length()) {
+            if (JTerm.isHeadless()) JTerm.out.print(lastChar);
+            setCommand(getCommand() + lastChar);
+        } else {
+            Util.clearLine(getCommand(), true);
+            setCommand(new StringBuilder(command).insert(cursorPos, lastChar).toString());
+            JTerm.out.printWithPrompt(getCommand());
         }
 
-        if (JTerm.IS_WIN) {
-            ArrowKeys ak = ArrowKeyHandler.arrowKeyCheckWindows(input);
+        increaseCursorPos();
+        moveToCursorPos();
+        setResetVars(true);
+    }
 
-            if (ak != ArrowKeys.NONE)
-                arrowKeyHandler.process(ak);
-
-            keyHandler.process(input);
-        } else if (JTerm.IS_UNIX) {
-            ArrowKeys ak = ArrowKeyHandler.arrowKeyCheckUnix(input);
-
-            if (ak != ArrowKeys.NONE)
-                arrowKeyHandler.process(ak);
-            if (input != 27)
-                keyHandler.process(input);
+    static void backspaceEvent() {
+        lastArrowPress = Keys.NONE;
+        if (getCommand().length() > 0 && getCursorPos() > 0) {
+            int charToDelete = getCursorPos() - 1;
+            String command = getCommand();
+            if (JTerm.isHeadless()) Util.clearLine(getCommand(), false);
+            setCommand(new StringBuilder(command).deleteCharAt(charToDelete).toString());
+            if (JTerm.isHeadless()) JTerm.out.print(getCommand());
+            decreaseCursorPos();
+            moveToCursorPos();
+            setResetVars(true);
         }
     }
 
     /**
      * Sends command to terminal class for parsing, source is the newlineEvent in the key processor
      */
-    protected void parse() {
+    protected static void parse() {
         String[] commands = command.split("&&");
         for (String command : commands) {
             command = Util.removeSpaces(command);
@@ -157,15 +184,15 @@ public class InputHandler {
      * Moves the cursor from the end of the command to where it should be (if the user is using arrow keys)
      * Usually only used after modifying 'command'
      */
-    protected void moveToCursorPos() {
+    private static void moveToCursorPos() {
         for (int i = command.length(); i > cursorPos; i--)
-            System.out.print("\b");
+            JTerm.out.print("\b");
     }
 
     /**
      * Autocompletes desired file name similar to how terminals do it.
      */
-    protected void fileAutocomplete() {
+    private static void fileAutocomplete() {
 
         if (FileAutocomplete.getFiles() == null) {
             FileAutocomplete.init(disassembleCommand(command), blockClear, lockTab);
@@ -197,7 +224,7 @@ public class InputHandler {
      * @return Returns disassembled string, with non relevant info in elements 0 and 2, and the string to autocomplete
      * in element 1
      */
-    protected String[] disassembleCommand(String command) {
+    private static String[] disassembleCommand(String command) {
 
         if (!command.contains("&&"))
             return new String[]{"", command, ""};
@@ -249,5 +276,36 @@ public class InputHandler {
 
         return splitCommand;
     }
-}
 
+    private static ArrayList<String> getPrevCommands() {
+        return prevCommands;
+    }
+
+    public static String getCommand() {
+        return command;
+    }
+
+    public static void setCommand(String comm) {
+        command = comm;
+    }
+
+    private static void setResetVars(boolean resetVa) {
+        resetVars = resetVa;
+    }
+
+    private static void increaseCursorPos() {
+        cursorPos++;
+    }
+
+    private static void decreaseCursorPos() {
+        cursorPos--;
+    }
+
+    private static int getCursorPos() {
+        return cursorPos;
+    }
+
+    private static void setCursorPos(int cursorPosition) {
+        cursorPos = cursorPosition;
+    }
+}
