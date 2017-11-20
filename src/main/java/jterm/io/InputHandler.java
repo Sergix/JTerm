@@ -55,9 +55,6 @@ public class InputHandler {
     // For resetting all variables in FileAutocomplete once a key press other than a tab is registered
     private boolean resetVars = false;
 
-    // For use in detecting arrow presses on Unix, see comment block in ArrowKeyHandler
-    private long lastPress = System.currentTimeMillis();
-
     private int cursorPos = 0;
 
     public InputHandler() {
@@ -129,22 +126,20 @@ public class InputHandler {
         }
 
         if (JTerm.IS_WIN) {
-            ArrowKeys ak = arrowKeyHandler.process(ArrowKeyHandler.arrowKeyCheckWindows(input));
+            ArrowKeys ak = ArrowKeyHandler.arrowKeyCheckWindows(input);
 
             if (ak != ArrowKeys.NONE)
                 arrowKeyHandler.process(ak);
-            if (ak != ArrowKeys.NONE)
-                keyHandler.process(input);
+
+            keyHandler.process(input);
         } else if (JTerm.IS_UNIX) {
             ArrowKeys ak = ArrowKeyHandler.arrowKeyCheckUnix(input);
 
             if (ak != ArrowKeys.NONE)
                 arrowKeyHandler.process(ak);
-            if (System.currentTimeMillis() - lastPress > 10 && input != 27)
+            if (input != 27)
                 keyHandler.process(input);
         }
-
-        lastPress = System.currentTimeMillis();
     }
 
     /**
