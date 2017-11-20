@@ -34,7 +34,7 @@ import static jterm.JTerm.logln;
 
 public class Files {
     // @ojles and @Kaperskyguru
-    @Command(name = "mv", "move", minOptions = 2)
+    @Command(name = {"mv", "move"}, minOptions = 2)
     public static void move(List<String> options) {
         String sourceName = Util.getFullPath(options.get(0));
         String destinationName = Util.getFullPath(options.get(1));

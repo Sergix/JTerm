@@ -1,3 +1,7 @@
+(#102)[11/19/2017-20:44 0.6.1 Sergix]
+	Fixed issue with Command annotation in Files.move().
+	Pushed updates to Git.
+
 (#101)[11/19/2017-16:23 0.6.1 Sergix]
 	Removed org.reflections import. JTerm.initCommands() has been updated to compensate.
 	Closed #40.
