@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
 public class PrintStreamInterceptor extends PromptPrinter {
-    private Terminal terminal;
+    private final Terminal terminal;
 
     public PrintStreamInterceptor(Terminal terminal) {
         this.terminal = terminal;

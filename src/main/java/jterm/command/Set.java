@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Set {
-    public static HashMap<String, String> vars = new HashMap<>();
+    public static final HashMap<String, String> vars = new HashMap<>();
 
     @Command(name = "set", minOptions = 3, syntax = "set [-h] <name> = <value>")
     public static void set(List<String> options) {

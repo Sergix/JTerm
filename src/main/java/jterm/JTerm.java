@@ -48,8 +48,8 @@ public class JTerm {
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
     public static PromptPrinter out;
     public static final String VERSION = "0.7.0";
-    public static String PROMPT = ">> ";
-    public static String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
+    public static final String PROMPT = ">> ";
+    public static final String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
             + "This program comes with ABSOLUTELY NO WARRANTY.\n"
             + "This is free software, and you are welcome to redistribute it\n"
             + "under certain conditions.\n";
@@ -62,7 +62,7 @@ public class JTerm {
     public static boolean IS_WIN;
     public static boolean IS_UNIX;
 
-    public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+    public static final BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
     private static Terminal terminal;
     private static boolean headless = false;
 
