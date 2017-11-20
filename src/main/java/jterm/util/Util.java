@@ -49,19 +49,19 @@ public class Util {
         if (JTerm.isHeadless()) {
 
             for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() / 3 : 0); i++) {
-                System.out.print("\b");
+                JTerm.out.print("\b");
             }
 
             for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() / 3 : 0); i++) {
-                System.out.print(" ");
+                JTerm.out.print(" ");
             }
 
             for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() / 3 : 0); i++) {
-                System.out.print("\b");
+                JTerm.out.print("\b");
 
             }
         } else {
-            JTerm.getTerminal().clearLine(line);
+            JTerm.getTerminal().clearLine(line, clearPrompt);
         }
     }
 
@@ -131,12 +131,11 @@ public class Util {
      * @return true if s is composed of only spaces, false if there is a character in it
      */
     public static boolean containsOnlySpaces(String s) {
-        for (int i = 0; i < s.length(); i++)
-            if (s.charAt(i) != ' ')
-                return false;
-        return true;
+        return s.trim().isEmpty();
     }
-
+    public static int shrinkToBounds(int i, int min, int max){
+        return  Math.min(Math.max(i, min), max);
+    }
     public static String getFullPath(String fileName) {
         if (!fileName.startsWith("/")) {
             fileName = JTerm.currentDirectory + "/" + fileName;

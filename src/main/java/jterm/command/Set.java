@@ -16,6 +16,7 @@
 
 package jterm.command;
 
+import jterm.JTerm;
 import jterm.util.Util;
 
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class Set {
     public static void set(List<String> options) {
         if (options.size() == 0) {
             for (Map.Entry<String, String> entry : vars.entrySet()) {
-                System.out.println(entry.getKey() + "=" + entry.getValue());
+                JTerm.out.println(entry.getKey() + "=" + entry.getValue());
             }
             return;
         }

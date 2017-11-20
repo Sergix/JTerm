@@ -23,6 +23,10 @@ import jterm.command.CommandException;
 import jterm.command.CommandExecutor;
 import jterm.gui.Terminal;
 import jterm.io.InputHandler;
+import jterm.io.Keys;
+import jterm.util.PrintStreamInterceptor;
+import jterm.util.PromptInterceptor;
+import jterm.util.PromptPrinter;
 import jterm.util.Util;
 
 import java.io.BufferedReader;
@@ -33,23 +37,18 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.net.URLDecoder;
 import java.net.URL;
-import java.io.File;
 import java.io.IOException;
 import java.security.CodeSource;
 
 public class JTerm {
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
-
-    public static InputHandler inputHandler;
-
+    public static PromptPrinter out;
     public static final String VERSION = "0.7.0";
-    public static final String PROMPT = "   \b\b\b>> ";
+    public static String PROMPT = "   \b\b\b>> ";
     public static String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
             + "This program comes with ABSOLUTELY NO WARRANTY.\n"
             + "This is free software, and you are welcome to redistribute it\n"
@@ -63,29 +62,32 @@ public class JTerm {
     public static boolean IS_WIN;
     public static boolean IS_UNIX;
 
-    static {
-        setOS();
-        initCommands();
-    }
-
     public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
     private static Terminal terminal;
     private static boolean headless = false;
 
     public static void main(String[] args) {
-        inputHandler = new InputHandler();
+        setOS();
+        initCommands();
         if (args.length > 0 && args[0].equals("headless")) {
+            out = new PromptInterceptor();
             headless = true;
-            System.out.println(LICENSE);
-            System.out.print(PROMPT);
-            while (true) {
-                inputHandler.process();
+            out.println(LICENSE);
+            out.print(PROMPT);
+            try {
+                while (true) {
+                    InputHandler.read();
+                }
+            }catch (IOException e){
+                e.printStackTrace();
             }
         } else {
             terminal = new Terminal();
             terminal.setTitle("JTerm");
             terminal.setSize(720, 480);
             terminal.setVisible(true);
+            out = new PrintStreamInterceptor(terminal);
+            Keys.initGUI();
         }
     }
 
@@ -98,12 +100,12 @@ public class JTerm {
 
         String command = optionsArray.remove(0);
         if (!COMMANDS.containsKey(command)) {
-            System.out.println("Command \"" + command + "\" is not available");
+            out.println("Command \"" + command + "\" is not available");
             return;
         }
 
         try {
-            if(JTerm.isHeadless()) System.out.println();
+            if(JTerm.isHeadless()) out.println();
             COMMANDS.get(command).execute(optionsArray);
         } catch (CommandException e) {
             System.err.println(e.getMessage());
@@ -113,9 +115,9 @@ public class JTerm {
     private static void initCommands() {
         // Reflections reflections = new Reflections("jterm.command", new MethodAnnotationsScanner());
         // Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
-        ArrayList<Method> methods = new ArrayList<Method>();
-        Method[] unsortedMethods = {};
-        ArrayList<String> classes = new ArrayList<String>();
+        ArrayList<Method> methods = new ArrayList<>();
+        Method[] unsortedMethods;
+        ArrayList<String> classes = new ArrayList<>();
 
         try {
             CodeSource src = JTerm.class.getProtectionDomain().getCodeSource();
@@ -136,16 +138,16 @@ public class JTerm {
                 }
             }
         } catch (IOException ioe) {
-            System.out.println(ioe);
+            out.println(ioe);
         }
 
         classes.remove(0);
 
-        for (int i = 0; i < classes.size(); i++) {
+        for (String aClass : classes) {
             try {
-                Class<?> clazz = Class.forName(classes.get(i));
-			    Constructor<?> constructor = clazz.getConstructor();
-			    Object obj = constructor.newInstance();
+                Class<?> clazz = Class.forName(aClass);
+                Constructor<?> constructor = clazz.getConstructor();
+                Object obj = constructor.newInstance();
 
                 unsortedMethods = obj.getClass().getDeclaredMethods();
                 for (Method method : unsortedMethods) {
@@ -155,15 +157,15 @@ public class JTerm {
                     }
                 }
             } catch (ClassNotFoundException cnfe) {
-                System.out.println(cnfe);
+                out.println(cnfe);
             } catch (NoSuchMethodException nsme) {
-                // System.out.println(nsme);
+                // out.println(nsme);
             } catch (InstantiationException ie) {
-                // System.out.println(ie);
+                // out.println(ie);
             } catch (IllegalAccessException iae) {
-                System.out.println(iae);
+                out.println(iae);
             } catch (InvocationTargetException iae) {
-                // System.out.println(iae);
+                // out.println(iae);
             }
         }
 
@@ -190,8 +192,10 @@ public class JTerm {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("windows")) {
             JTerm.IS_WIN = true;
+            Keys.initWindows();
         } else if ("linux".equals(os) || os.contains("mac") || "sunos".equals(os) || "freebsd".equals(os)) {
             JTerm.IS_UNIX = true;
+            Keys.initUnix();
         }
     }
 

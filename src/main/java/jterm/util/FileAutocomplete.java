@@ -183,7 +183,7 @@ public class FileAutocomplete {
         Util.clearLine(getCommand(), true);
 
         command = originalCommand + fileName.substring(startComplete) + end;
-        System.out.print(JTerm.PROMPT + getCommand());
+        JTerm.out.printWithPrompt(getCommand());
 
         lockTab = true;
 
@@ -208,7 +208,7 @@ public class FileAutocomplete {
         // Print matching file names
         if (newList)
             for (String s : fileNames)
-                System.out.print(s + "\t");
+                JTerm.out.print(s + "\t");
 
             // Rotate
         else if (!lockTab || endsWithSlash) {
@@ -217,15 +217,17 @@ public class FileAutocomplete {
             String currFile = fileNames.pollFirst();
 
             command = originalCommand + currFile.substring(startComplete);
-            System.out.print(JTerm.PROMPT + getCommand());
+            JTerm.out.printWithPrompt(getCommand());
 
             // Add to end of list (rotate through list)
             fileNames.add(currFile);
         }
 
-        if (fileNames.size() > 0 && newList)
+        if (fileNames.size() > 0 && newList) {
             // Re-output command after clearing lines
-            System.out.print("\n" + JTerm.PROMPT + getCommand());
+            JTerm.out.print("\n");
+            JTerm.out.printWithPrompt(getCommand());
+        }
     }
 
     /**

@@ -27,22 +27,22 @@ public class Pause {
     public void execute(List<String> options) {
         for (String option : options) {
             if (option.equals("-h")) {
-                System.out.println("Command syntax:\n\tpause [-h] [input]");
+                JTerm.out.println("Command syntax:\n\tpause [-h] [input]");
                 return;
             } else {
-                System.out.print(Util.getRest(options, 0));
+                JTerm.out.print(Util.getRest(options, 0));
             }
         }
 
         if (options.size() == 0) {
-            System.out.print("Press enter to continue...");
+            JTerm.out.print("Press enter to continue...");
         }
         // TODO: Figure out what this is doing and how to do it in GUI
         try {
             JTerm.userInput.read();
             JTerm.userInput.skip(1);
         } catch (IOException e) {
-            System.out.println(e);
+            JTerm.out.println(e);
         }
     }
 }
