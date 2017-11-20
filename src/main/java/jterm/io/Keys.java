@@ -1,5 +1,5 @@
 package jterm.io;
 
 public enum Keys {
-    TAB, BCKSP, NWLN, NONE
+	UP, DOWN, LEFT, RIGHT, TAB, BACKSPACE, NWLN, CHAR, CTRL_C, CTRL_Z, NONE
 }

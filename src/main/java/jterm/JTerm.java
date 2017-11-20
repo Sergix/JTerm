@@ -23,6 +23,7 @@ import jterm.command.CommandException;
 import jterm.command.CommandExecutor;
 import jterm.gui.Terminal;
 import jterm.io.InputHandler;
+import jterm.io.RawConsoleInput;
 import jterm.util.Util;
 
 import java.io.BufferedReader;
@@ -33,13 +34,10 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.net.URLDecoder;
 import java.net.URL;
-import java.io.File;
 import java.io.IOException;
 import java.security.CodeSource;
 
@@ -49,7 +47,7 @@ public class JTerm {
     public static InputHandler inputHandler;
 
     public static final String VERSION = "0.6.1";
-    public static final String PROMPT = ">> ";
+    public static final String PROMPT = "   \b\b\b>> ";
     public static String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
             + "This program comes with ABSOLUTELY NO WARRANTY.\n"
             + "This is free software, and you are welcome to redistribute it\n"
@@ -73,13 +71,17 @@ public class JTerm {
     private static boolean headless = false;
 
     public static void main(String[] args) {
-        inputHandler = new InputHandler();
+        inputHandler = new InputHandler(new RawConsoleInput());
         if (args.length > 0 && args[0].equals("headless")) {
             headless = true;
             System.out.println(LICENSE);
             System.out.print(PROMPT);
-            while (true) {
-                inputHandler.process();
+            try {
+                while (true) {
+                    inputHandler.process();
+                }
+            }catch (IOException e){
+                e.printStackTrace();
             }
         } else {
             terminal = new Terminal();
