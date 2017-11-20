@@ -1,7 +1,11 @@
 package jterm.io;
 
 import jterm.JTerm;
+import jterm.io.input.Input;
+import jterm.io.input.UnixInput;
 import jterm.util.Util;
+
+import java.io.IOException;
 
 /**
  * Processes arrow keys for Terminal module.
@@ -77,16 +81,17 @@ public class ArrowKeyHandler {
 	*/
     public static ArrowKeys arrowKeyCheckUnix(int i) {
 
-        if (vals[2] > 64 && vals[2] < 69) {
-            // Reset array and position tracker if key was previously returned
-            vals = new int[3];
-            pos = 0;
+        int c1 = -1, c2 = -1;
+
+        try {
+            c1 = Input.read(false);
+            c2 = Input.read(false);
+        } catch (IOException e) {
+            System.out.println("Error in arrowKeyCheckUnix");
         }
 
-        vals[pos++ % 3] = i;
-
-        if (vals[0] == 27 && vals[1] == 91) {
-            switch (vals[2]) {
+        if (i == 27 && c1 == 91) {
+            switch (c2) {
                 case 65:
                     return ArrowKeys.UP;
                 case 66:
@@ -98,10 +103,6 @@ public class ArrowKeyHandler {
                 default:
                     return ArrowKeys.NONE;
             }
-        } else if ((vals[0] != 27 && vals[0] != 0) || (i != vals[0] && i == 91 && vals[0] != 0)) {
-            // Resets vals array if either of first two positions don't align with expected pattern
-            vals = new int[3];
-            pos = 0;
         }
 
         return ArrowKeys.NONE;

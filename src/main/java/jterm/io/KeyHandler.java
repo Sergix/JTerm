@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 /**
  * Processes key presses (except arrow keys).
+ * 
  */
 public class KeyHandler {
 
@@ -123,7 +124,7 @@ public class KeyHandler {
         inputProcessor.setResetVars(true);
         inputProcessor.parse();
         inputProcessor.setCommand("");
-        System.out.print(JTerm.PROMPT);
+        System.out.print("\n" + JTerm.PROMPT);
     }
     
     public void charEvent(char input) {
