@@ -9,9 +9,9 @@ public class PrintStreamInterceptor extends PrintStream {
     private Terminal terminal;
     private PrintStream out;
 
-    PrintStreamInterceptor(PrintStream out, Terminal terminal) {
-        super(out);
-        this.out = out;
+    PrintStreamInterceptor(Terminal terminal) {
+        super(System.out);
+        this.out = System.out;
         this.terminal = terminal;
     }
 

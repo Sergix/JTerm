@@ -77,9 +77,7 @@ public class RawConsoleInput implements Input{
 			resetConsoleModeUnix(); }}
 
 	private static void registerShutdownHook() {
-		Runtime.getRuntime().addShutdownHook( new Thread() {
-			public void run() {
-				shutdownHook(); }}); }
+		Runtime.getRuntime().addShutdownHook(new Thread(RawConsoleInput::shutdownHook)); }
 
 	private static void shutdownHook() {
 		try {

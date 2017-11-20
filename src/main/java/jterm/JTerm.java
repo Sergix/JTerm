@@ -23,6 +23,7 @@ import jterm.command.CommandException;
 import jterm.command.CommandExecutor;
 import jterm.gui.Terminal;
 import jterm.io.InputHandler;
+import jterm.io.Keys;
 import jterm.io.RawConsoleInput;
 import jterm.util.Util;
 
@@ -78,7 +79,7 @@ public class JTerm {
             System.out.print(PROMPT);
             try {
                 while (true) {
-                    inputHandler.process();
+                    inputHandler.read();
                 }
             }catch (IOException e){
                 e.printStackTrace();
@@ -88,6 +89,7 @@ public class JTerm {
             terminal.setTitle("JTerm");
             terminal.setSize(720, 480);
             terminal.setVisible(true);
+
         }
     }
 
@@ -115,9 +117,9 @@ public class JTerm {
     private static void initCommands() {
         // Reflections reflections = new Reflections("jterm.command", new MethodAnnotationsScanner());
         // Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
-        ArrayList<Method> methods = new ArrayList<Method>();
-        Method[] unsortedMethods = {};
-        ArrayList<String> classes = new ArrayList<String>();
+        ArrayList<Method> methods = new ArrayList<>();
+        Method[] unsortedMethods;
+        ArrayList<String> classes = new ArrayList<>();
 
         try {
             CodeSource src = JTerm.class.getProtectionDomain().getCodeSource();
@@ -143,11 +145,11 @@ public class JTerm {
 
         classes.remove(0);
 
-        for (int i = 0; i < classes.size(); i++) {
+        for (String aClass : classes) {
             try {
-                Class<?> clazz = Class.forName(classes.get(i));
-			    Constructor<?> constructor = clazz.getConstructor();
-			    Object obj = constructor.newInstance();
+                Class<?> clazz = Class.forName(aClass);
+                Constructor<?> constructor = clazz.getConstructor();
+                Object obj = constructor.newInstance();
 
                 unsortedMethods = obj.getClass().getDeclaredMethods();
                 for (Method method : unsortedMethods) {
@@ -192,8 +194,10 @@ public class JTerm {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("windows")) {
             JTerm.IS_WIN = true;
+            Keys.initWindows();
         } else if ("linux".equals(os) || os.contains("mac") || "sunos".equals(os) || "freebsd".equals(os)) {
             JTerm.IS_UNIX = true;
+            Keys.initUnix();
         }
     }
 

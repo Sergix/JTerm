@@ -48,16 +48,20 @@ public class InputHandler {
         this.input = input;
     }
 
-    public void process() throws IOException {
+    public void read() throws IOException {
         int c1 = input.read(true);
         int c2 = input.read(false);
         int c3 = input.read(false);
         Keys keyType;
         if (c2 == -2 && c3 == -2) {
-            keyType = KeyInterpreter.interpret(c1);
+            keyType = Keys.getKeyByValue(c1);
         } else {
-            keyType = KeyInterpreter.interpret(c1, c2, c3);
+            keyType = Keys.getKeyByValue((c1 + c2 + c3) * -1);
         }
+        process(keyType, (char) c1);
+    }
+
+    public void process(Keys keyType, char c) {
         switch (keyType) {
             case UP:
                 processUp();
@@ -84,7 +88,7 @@ public class InputHandler {
                 newLineEvent();
                 return;
             case CHAR:
-                charEvent((char) c1);
+                charEvent(c);
                 return;
             case CTRL_C:
                 System.exit(0);

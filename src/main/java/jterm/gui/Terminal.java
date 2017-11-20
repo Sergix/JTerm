@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.PrintStream;
 
 public class Terminal extends JFrame {
     private JPanel contentPane;
@@ -16,7 +15,6 @@ public class Terminal extends JFrame {
     public static String prompt = ">>";
     private ProtectedTextComponent ptc;
     private int preTypeLength = 0;
-    private PrintStream oldOut;
 
     public Terminal() {
         setContentPane(contentPane);
@@ -48,11 +46,10 @@ public class Terminal extends JFrame {
 
         textPane.setEditable(true);
         ptc = new ProtectedTextComponent(textPane);
-        oldOut = System.out;
         println(JTerm.LICENSE, false);
         showPrompt();
         overrideEnter();
-        System.setOut(new PrintStreamInterceptor(System.out, this));
+        System.setOut(new PrintStreamInterceptor(this));
         JTerm.IS_WIN = false;
         JTerm.IS_UNIX = true;
     }
