@@ -9,7 +9,6 @@ import java.util.HashMap;
 
 /**
  * Processes key presses (except arrow keys).
- * 
  */
 public class KeyHandler {
 

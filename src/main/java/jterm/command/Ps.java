@@ -20,9 +20,6 @@ import jterm.JTerm;
 
 import java.util.List;
 
-
-import static jterm.JTerm.logln;
-
 public class Ps {
     private static final String PS_COMMAND;
 

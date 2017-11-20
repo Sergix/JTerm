@@ -22,9 +22,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import static jterm.JTerm.logln;
-import static jterm.JTerm.log;
-
 public class Client implements Runnable {
     private static BufferedReader input;
 
@@ -33,7 +30,7 @@ public class Client implements Runnable {
             try {
                 String output = Client.input.readLine();
                 if (output != null) {
-                    logln(output, true);
+                    System.out.println(output);
                 }
             } catch (IOException e) {
                 return;
@@ -48,9 +45,9 @@ public class Client implements Runnable {
 
         for (String option : options) {
             if (option.equals("-h")) {
-                logln("Command syntax:\n\tconnect [-h] [-p port] address\n\n"
+                System.out.println("Command syntax:\n\tconnect [-h] [-p port] address\n\n"
                         + "connect to the specified IP address using TCP/IP. "
-                        + "Default address is \"0.0.0.0\". Default port is 80.", true);
+                        + "Default address is \"0.0.0.0\". Default port is 80.");
                 return;
             } else if (option.equals("-p")) {
                 next = true;
@@ -64,7 +61,7 @@ public class Client implements Runnable {
 
         int port = Integer.valueOf(portInput);
         try (Socket connection = new Socket(address, port)) {
-            logln("Connecting to " + address + ":" + port, true);
+            System.out.println("Connecting to " + address + ":" + port);
 
             InputStream input = connection.getInputStream();
             OutputStream output = connection.getOutputStream();
@@ -74,7 +71,7 @@ public class Client implements Runnable {
             Thread readThread = new Thread(client);
             readThread.start();
 
-            logln("Connected to server. Enter a blank line to quit. Reading for input...", true);
+            System.out.println("Connected to server. Enter a blank line to quit. Reading for input...");
 
             while (true) {
                 BufferedReader bufferedSocketOutput = new BufferedReader(new InputStreamReader(System.in), 1);
@@ -90,7 +87,7 @@ public class Client implements Runnable {
                 bufferedSocketOutput.close();
             }
         } catch (IOException e) {
-            logln("Connection severed.", false);
+            System.out.println("Connection severed.");
         }
     }
 }

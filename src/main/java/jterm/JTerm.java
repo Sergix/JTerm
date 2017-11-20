@@ -17,6 +17,7 @@
 // package = folder :P
 package jterm;
 
+import java.lang.reflect.InvocationTargetException;
 import jterm.command.Command;
 import jterm.command.CommandException;
 import jterm.command.CommandExecutor;
@@ -24,10 +25,8 @@ import jterm.gui.Terminal;
 import jterm.io.InputHandler;
 import jterm.util.Util;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
 import java.lang.annotation.Annotation;
@@ -47,10 +46,10 @@ import java.security.CodeSource;
 public class JTerm {
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
 
-    private static InputHandler inputHandler;
+    public static InputHandler inputHandler;
 
     public static final String VERSION = "0.6.1";
-    public static final String PROMPT = "   \b\b\b>> ";
+    public static final String PROMPT = ">> ";
     public static String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
             + "This program comes with ABSOLUTELY NO WARRANTY.\n"
             + "This is free software, and you are welcome to redistribute it\n"
@@ -99,12 +98,12 @@ public class JTerm {
 
         String command = optionsArray.remove(0);
         if (!COMMANDS.containsKey(command)) {
-            logln("Command \"" + command + "\" is not available", false);
+            System.out.println("Command \"" + command + "\" is not available");
             return;
         }
 
         try {
-            System.out.println();
+            if(JTerm.isHeadless()) System.out.println();
             COMMANDS.get(command).execute(optionsArray);
         } catch (CommandException e) {
             System.err.println(e.getMessage());
@@ -187,18 +186,6 @@ public class JTerm {
             }
         }
     }
-
-    public static void log(String s, boolean isWhite) {
-        System.out.print(s);
-        if (!headless) {
-            try {
-                SwingUtilities.invokeAndWait(() -> terminal.print(s, isWhite));
-            } catch (InterruptedException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private static void setOS() {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("windows")) {
@@ -206,10 +193,6 @@ public class JTerm {
         } else if ("linux".equals(os) || os.contains("mac") || "sunos".equals(os) || "freebsd".equals(os)) {
             JTerm.IS_UNIX = true;
         }
-    }
-
-    public static void logln(String s, boolean isWhite) {
-        log(s + "\n", isWhite);
     }
 
     public static boolean isHeadless() {

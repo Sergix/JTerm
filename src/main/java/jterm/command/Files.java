@@ -29,9 +29,6 @@ import java.util.List;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-import static jterm.JTerm.log;
-import static jterm.JTerm.logln;
-
 public class Files {
     // @ojles and @Kaperskyguru
     @Command(name = {"mv", "move"}, minOptions = 2)
@@ -67,7 +64,7 @@ public class Files {
         StringBuilder filenameBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
-                logln("Command syntax:\n\twrite [-h] filename\n\nOpens an input PROMPT in which to write text to a new file.", true);
+                System.out.println("Command syntax:\n\twrite [-h] filename\n\nOpens an input PROMPT in which to write text to a new file.");
                 return;
             } else {
                 filenameBuilder.append(option);
@@ -79,12 +76,12 @@ public class Files {
         filename = JTerm.currentDirectory + filename;
 
         if (filename.equals("")) {
-            logln("Error: missing filename; type \"write -h\" for more information.", false);
+            System.out.println("Error: missing filename; type \"write -h\" for more information.");
             return;
         }
 
         try {
-            logln("Enter file contents (press enter after a blank line to quit):", false);
+            System.out.println("Enter file contents (press enter after a blank line to quit):");
             String line = JTerm.userInput.readLine();
             StringBuilder output = new StringBuilder(line);
 
@@ -102,7 +99,7 @@ public class Files {
             fileWriter.write(output.toString());
             fileWriter.close();
         } catch (IOException ioe) {
-            System.out.println(ioe);
+            System.out.println(String.valueOf(ioe));
         }
 
     }
@@ -124,7 +121,7 @@ public class Files {
         String fileName = Util.getFullPath(options.get(0));
         try {
             byte[] data = java.nio.file.Files.readAllBytes(Paths.get(fileName));
-            logln(new String(data), true);
+            System.out.println(new String(data));
         } catch (IOException e) {
             throw new CommandException("Failed to read \'" + fileName + "\' content");
         }
@@ -136,7 +133,7 @@ public class Files {
         if (options.size() > 0) {
             url = options.get(options.size() - 1);
         } else {
-            logln("A URL to a file must be provided as an option", false);
+            System.out.println("A URL to a file must be provided as an option");
             return;
         }
         long start = System.currentTimeMillis();
@@ -155,7 +152,7 @@ public class Files {
             fileName += ".html";
         }
 
-        logln("Starting download of file -> " + fileName, true);
+        System.out.println("Starting download of file -> " + fileName);
 
         // request file size from server (does not work with HTML files, unimportant because they download so fast)
         HttpURLConnection conn = null;
@@ -165,7 +162,7 @@ public class Files {
             conn.getInputStream();
             fileSize = conn.getContentLength();
         } catch (IOException e) {
-            logln("Error when getting file information. Download cancelled.", false);
+            System.out.println("Error when getting file information. Download cancelled.");
             return;
         } finally {
             if (conn != null) {
@@ -185,7 +182,7 @@ public class Files {
             byte data[] = new byte[buffer];
             int count, steps = 0;
             // download file, and output information about progress
-            log(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"), true);
+            System.out.print(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"));
             while ((count = in.read(data, 0, buffer)) != -1) {
                 out.write(data, 0, count);
                 downloadedBytes += count;
@@ -194,16 +191,16 @@ public class Files {
                 //Also, this causes flickering in the GUI, a lower update rate might be good
                 if (steps % 10 == 0) { // print every 10 download steps
                     Util.clearLine(update, false);
-                    log(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"), true);
+                    System.out.print(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"));
                 }
             }
             out.close();
         } catch (IOException e) {
-            logln("Error when downloading file.", false);
+            System.out.println("Error when downloading file.");
         }
 
         // clear line and notify user of download success
         Util.clearLine(update, false);
-        logln("\nFile downloaded successfully in: " + Util.getRunTime(System.currentTimeMillis() - start), true);
+        System.out.println("\nFile downloaded successfully in: " + Util.getRunTime(System.currentTimeMillis() - start));
     }
 }
