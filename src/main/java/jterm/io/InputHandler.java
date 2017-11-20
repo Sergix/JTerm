@@ -163,13 +163,9 @@ public class InputHandler {
         if (getCommand().length() > 0 && getCursorPos() > 0) {
             int charToDelete = getCursorPos() - 1;
             String command = getCommand();
-
+            if (JTerm.isHeadless()) Util.clearLine(getCommand(), false);
             setCommand(new StringBuilder(command).deleteCharAt(charToDelete).toString());
-            if (JTerm.isHeadless()) {
-                Util.clearLine(getCommand(), true);
-                JTerm.out.printWithPrompt(getCommand());
-            }
-
+            if (JTerm.isHeadless()) JTerm.out.print(getCommand());
             decreaseCursorPos();
             moveToCursorPos();
             setResetVars(true);

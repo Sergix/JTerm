@@ -48,17 +48,10 @@ public class Util {
     public static void clearLine(String line, boolean clearPrompt) {
         if (JTerm.isHeadless()) {
 
-            for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() / 3 : 0); i++) {
+            for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() : 0); i++) {
                 JTerm.out.print("\b");
-            }
-
-            for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() / 3 : 0); i++) {
                 JTerm.out.print(" ");
-            }
-
-            for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() / 3 : 0); i++) {
                 JTerm.out.print("\b");
-
             }
         } else {
             JTerm.getTerminal().clearLine(line, clearPrompt);
