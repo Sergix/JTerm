@@ -17,6 +17,7 @@
 // package = folder :P
 package jterm;
 
+import java.lang.reflect.InvocationTargetException;
 import jterm.command.Command;
 import jterm.command.CommandException;
 import jterm.command.CommandExecutor;
