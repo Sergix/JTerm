@@ -9,7 +9,6 @@ import java.util.HashMap;
 
 /**
  * Processes key presses (except arrow keys).
- * 
  */
 public class KeyHandler {
 
@@ -132,7 +131,7 @@ public class KeyHandler {
         int cursorPos = inputProcessor.getCursorPos();
 
         if (inputProcessor.getCursorPos() == inputProcessor.getCommand().length()) {
-            System.out.print(input);
+            if (JTerm.isHeadless()) System.out.print(input);
             inputProcessor.setCommand(inputProcessor.getCommand() + input);
         } else {
             Util.clearLine(inputProcessor.getCommand(), true);

@@ -26,9 +26,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import static jterm.JTerm.logln;
-import static jterm.JTerm.log;
-
 public class Server implements Runnable {
 
     private Socket socket;
@@ -51,7 +48,7 @@ public class Server implements Runnable {
                     break;
                 }
 
-                logln("\n" + line, true);
+                System.out.println("\n" + line);
 
                 bufferedSocketInput.close();
             } catch (IOException ioe) {
@@ -65,7 +62,7 @@ public class Server implements Runnable {
         String portInput = "80";
         for (String option : options) {
             if (option.equals("-h")) {
-                logln("Command syntax:\n\tserver [-h] port\n\nStarts a TCP server socket that accepts ", true);
+                System.out.println("Command syntax:\n\tserver [-h] port\n\nStarts a TCP server socket that accepts ");
                 return;
             } else {
                 portInput = option;
@@ -82,13 +79,13 @@ public class Server implements Runnable {
             ServerSocket server = new ServerSocket(port);
             new Thread(() -> {
                 while (true) {
-                    log("> ", true);
+                    System.out.print("> ");
                     BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in), 1);
                     try {
                         String input = consoleInput.readLine();
                         switch (input) {
                             case "help":
-                                logln("Server currently opened on port " + port, true);
+                                System.out.println("Server currently opened on port " + port);
                                 break;
 
                             case "quit":
@@ -110,7 +107,7 @@ public class Server implements Runnable {
 
             server.close();
         } catch (IOException e) {
-            logln("ERROR: Server closed", false);
+            System.out.println("ERROR: Server closed");
         }
     }
 }

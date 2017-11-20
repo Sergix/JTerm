@@ -22,8 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static jterm.JTerm.logln;
-
 public class Set {
     public static HashMap<String, String> vars = new HashMap<>();
 
@@ -31,7 +29,7 @@ public class Set {
     public static void set(List<String> options) {
         if (options.size() == 0) {
             for (Map.Entry<String, String> entry : vars.entrySet()) {
-                logln(entry.getKey() + "=" + entry.getValue(), true);
+                System.out.println(entry.getKey() + "=" + entry.getValue());
             }
             return;
         }

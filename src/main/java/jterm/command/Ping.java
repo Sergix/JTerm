@@ -21,8 +21,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.List;
 
-import static jterm.JTerm.logln;
-
 public class Ping {
     @Command(name = "ping", minOptions = 1, syntax = "ping [-h] [-p port] host")
     public static void ping(List<String> options) {
@@ -40,9 +38,9 @@ public class Ping {
 
         String host = options.get(options.size() - 1);
         try (Socket socket = new Socket()) {
-            logln("Pinging " + host + "...", true);
+            System.out.println("Pinging " + host + "...");
             socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 3000);
-            logln("Ping Successful", true);
+            System.out.println("Ping Successful");
         } catch (IOException e) {
             throw new CommandException("Ping failed", e);
         } catch (NumberFormatException e) {

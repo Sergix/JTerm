@@ -5,14 +5,11 @@ import jterm.JTerm;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
 public class Terminal extends JFrame {
-    private JPanel contentPane = new JPanel();
-    private JTextPane textPane = new JTextPane();
+    private JPanel contentPane;
+    private JTextPane textPane;
     private AttributeSet asWhite;
     private AttributeSet asOffWhite;
     public static String prompt = ">>";
@@ -52,6 +49,9 @@ public class Terminal extends JFrame {
         println(JTerm.LICENSE, false);
         showPrompt();
         overrideEnter();
+        System.setOut(new PrintStreamInterceptor(System.out, this));
+        JTerm.IS_WIN = false;
+        JTerm.IS_UNIX = true;
     }
 
     private void onCancel() {
