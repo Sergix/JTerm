@@ -27,14 +27,16 @@ public class Clear {
 
     @Command(name = {"clear", "cls"})
     public static void clearScreen(List<String> options) {
-        if (JTerm.IS_UNIX) { // escape sequences to clear the screen
-            System.out.print(ANSI_CLS + ANSI_HOME);
-            System.out.flush();
-        } else if (JTerm.IS_WIN) { // Invoke the command line interpreter's own 'clear' command for Windows OS
-            try {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } catch (IOException | InterruptedException e) {
-                throw new CommandException("Can't clear screen...", e);
+        if (JTerm.isHeadless()) {
+            if (JTerm.IS_UNIX) { // escape sequences to clear the screen
+                System.out.print(ANSI_CLS + ANSI_HOME);
+                System.out.flush();
+            } else if (JTerm.IS_WIN) { // Invoke the command line interpreter's own 'clear' command for Windows OS
+                try {
+                    new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                } catch (IOException | InterruptedException e) {
+                    throw new CommandException("Can't clear screen...", e);
+                }
             }
         } else {
             JTerm.getTerminal().clear();

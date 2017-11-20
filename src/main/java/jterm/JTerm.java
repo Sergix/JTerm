@@ -94,7 +94,7 @@ public class JTerm {
         }
 
         try {
-            System.out.println();
+            if(JTerm.isHeadless()) System.out.println();
             COMMANDS.get(command).execute(optionsArray);
         } catch (CommandException e) {
             System.err.println(e.getMessage());

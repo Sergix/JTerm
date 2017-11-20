@@ -131,7 +131,7 @@ public class KeyHandler {
         int cursorPos = inputProcessor.getCursorPos();
 
         if (inputProcessor.getCursorPos() == inputProcessor.getCommand().length()) {
-            if (JTerm.isHeadless()) System.out.print(input);
+            System.out.print(input);
             inputProcessor.setCommand(inputProcessor.getCommand() + input);
         } else {
             Util.clearLine(inputProcessor.getCommand(), true);
