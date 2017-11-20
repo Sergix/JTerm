@@ -1,3 +1,16 @@
+(#108)[11/20/2017-17:52 0.6.1 Sergix]
+	Help.java now automates command outputs and is no longer hard coded.
+	Added JTerm.getCommands() function.
+	JTerm.COMMANDS is now public.
+	Pushed updates to Git.
+
+(#107)[11/20/2017-16:12 0.6.1 Sergix]
+	Merged #88.
+		- Thanks to @lbenedetto!
+		- A static class was using getters and setters to access its own private static variable.
+		- A lot of things should have been delcared final in other classes.
+		- Removed Key.java.
+
 (#106)[11/20/2017-12:56 0.6.1 Sergix]
 	Merged #85.
 		- Thanks @lbenedetto!

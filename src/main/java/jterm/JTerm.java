@@ -36,6 +36,7 @@ import java.lang.reflect.Constructor;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
@@ -45,7 +46,7 @@ import java.io.IOException;
 import java.security.CodeSource;
 
 public class JTerm {
-    private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
+    public static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
     public static PromptPrinter out;
     public static final String VERSION = "0.7.0";
     public static final String PROMPT = ">> ";
@@ -205,5 +206,9 @@ public class JTerm {
 
     public static Terminal getTerminal() {
         return terminal;
+    }
+
+    public static Set<String> getCommands() {
+        return COMMANDS.keySet();
     }
 }

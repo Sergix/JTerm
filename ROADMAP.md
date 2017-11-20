@@ -54,7 +54,7 @@ This section provides a list of "foundational" elements that MUST be finished be
 - [x] System process listing (PR #9) (CL #60)
 - [ ] Edit prompt text
 - [x] Date/time printing (I #49) (PR #54) (CL #96)
-- [ ] Environment Variables (I #) (CL #74)
+- [ ] Environment Variables (CL #74)
 - [ ] Create new terminal window instance
 - [x] Internet file downloader (I #45) (PR #61) (CL #96)
 

@@ -19,20 +19,19 @@ package jterm.command;
 
 import jterm.JTerm;
 
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.List;
 
 public class Help {
     @Command(name = "help")
     public static void printHelp(List<String> options) {
         JTerm.out.println("JTerm v" + JTerm.VERSION + "\n"
-                + "Available commands:\n"
-                + "  echo\n"
-                + "  exec\n"
-                + "  exit\n"
-                + "  pause\n"
-                + "  ping\n"
-                + "  ps\n"
-                + "  set\n"
-                + "  window\n");
+                + "Available Commands\n"
+                + "(type [command] -h to view specific help information)");
+        Set<String> commandNames = new TreeSet<String>(JTerm.getCommands());
+        for (String command : commandNames) {
+            JTerm.out.println("\t" + command);
+        }
     }
 }
