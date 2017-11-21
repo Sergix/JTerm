@@ -1,6 +1,7 @@
 package jterm.util;
 
 import jterm.JTerm;
+import jterm.io.InputHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,14 +46,16 @@ public class Util {
      * @param line        line to be cleared
      * @param clearPrompt choose to clear PROMPT along with line (only use true if PROMPT exists)
      */
-    public static void clearLine(String line, boolean clearPrompt) {
+    public static void clearLine(String line, int cursorPos, boolean clearPrompt) {
         if (JTerm.isHeadless()) {
 
-            for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() : 0); i++) {
+            for (int i = 0; i < cursorPos + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
                 JTerm.out.print("\b");
+            for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
                 JTerm.out.print(" ");
+            for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
                 JTerm.out.print("\b");
-            }
+
         } else {
             JTerm.getTerminal().clearLine(line, clearPrompt);
         }
