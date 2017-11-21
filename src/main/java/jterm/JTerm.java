@@ -46,7 +46,7 @@ import java.io.IOException;
 import java.security.CodeSource;
 
 public class JTerm {
-    public static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
+    private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
     public static PromptPrinter out;
     public static final String VERSION = "0.7.0";
     public static final String PROMPT = ">> ";
@@ -209,6 +209,6 @@ public class JTerm {
     }
 
     public static Set<String> getCommands() {
-        return COMMANDS.keySet();
+        return JTerm.COMMANDS.keySet();
     }
 }

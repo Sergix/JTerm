@@ -1,3 +1,10 @@
+(#109)[11/21/2017-17:35 0.6.1 Sergix]
+	Made JTerm.COMMANDS private.
+	Merged #90.
+		- Thanks to @nanoandrew4!
+		- Fixes autocomplete bugs
+		- Fixes character deletion
+
 (#108)[11/20/2017-17:52 0.6.1 Sergix]
 	Help.java now automates command outputs and is no longer hard coded.
 	Added JTerm.getCommands() function.
