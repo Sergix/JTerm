@@ -1,9 +1,7 @@
 @echo off
-
 cls
-
 
 rd /S /Q target
 
-
-mvn clean package
+mvn -e clean package
+run

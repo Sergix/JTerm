@@ -14,95 +14,27 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm.command;
+package jterm.command;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import jterm.JTerm;
 
-import org.apache.commons.lang3.SystemUtils;
+import java.util.List;
 
-/*
-* Original code credit to @chromechris
-* 
-* (edits for release done by @Sergix)
-*/
-public class Ps 
-{
+public class Ps {
+    private static final String PS_COMMAND;
 
-	/*
-	* Ps() void
-	* 
-	* Prints a list of process running on
-	* the system.
-	*
-	* ArrayList<String> options - command options
-	*
-	* -h
-	* 	Prints help information
-	*/
-	public Ps(ArrayList<String> options)
-	{
+    static {
+        if (JTerm.IS_UNIX) {
+            PS_COMMAND = "ps -e";
+        } else if (JTerm.IS_WIN) {
+            PS_COMMAND = System.getenv("windir") + "\\system32\\" + "tasklist.exe";
+        } else {
+            throw new Error("Undefined operating system");
+        }
+    }
 
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\tps [-h]\n\nDisplays all current processes running on the host system.");
-				return;
-				
-			}
-			
-		}
-
-		if (SystemUtils.IS_OS_LINUX)
-		{
-			try
-			{
-				String line;
-				Process p = Runtime.getRuntime().exec("ps -e");
-				BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-				while ((line = input.readLine()) != null)
-				{
-					// Parse data here.
-					System.out.println(line);
-					
-				}
-				input.close();
-				
-			}
-			catch (Exception err)
-			{
-				err.printStackTrace();
-				
-			}
-
-		}
-		else if (SystemUtils.IS_OS_WINDOWS)
-		{
-			try
-			{
-				String line;
-				Process p = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");
-				BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-				while ((line = input.readLine()) != null)
-				{
-					// Parse data here.
-					System.out.println(line);
-					
-				}
-				
-				input.close();
-				
-			}
-			catch (Exception err)
-			{
-				err.printStackTrace();
-				
-			}
-			
-		}
-
-	}
-
+    @Command(name = "ps", syntax = "ps [-h]")
+    public static void printRunningProcesses(List<String> options) {
+        Exec.run(PS_COMMAND);
+    }
 }

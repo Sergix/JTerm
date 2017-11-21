@@ -1,3 +1,5 @@
+
+package jterm.command;
 /*
 * JTerm - a cross-platform terminal
 * Copyright (code) 2017 Sergix, NCSGeek
@@ -14,58 +16,30 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm.command;
-
-import main.java.jterm.JTerm;
+import jterm.JTerm;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Class for the "Clear" command
- *
- * Clears the terminal display by removing all lines
- */
-public class Clear
-{
+public class Clear {
+    private static final String ANSI_CLS = "\u001b[2J";
+    private static final String ANSI_HOME = "\u001b[H";
 
-    final private String ANSI_CLS = "\u001b[2J";
-    final private String ANSI_HOME = "\u001b[H";
-
-    public Clear(ArrayList<String> options)
-    {
-
-        for (String option : options)
-        {
-          if (option.equals("-h"))
-          {
-              System.out.println("Command syntax:\n\tclear [-h]\n\nClears all lines in the terminal display.");
-            
-          }
-
-        }
-
-        // If '-h' was not used - Clear the Screen
-        if (!options.contains("-h"))
-        {
-            if (JTerm.isUnix)
-            {
-                // Use escape sequences to clear the screen for Unix OS
-                System.out.print(ANSI_CLS + ANSI_HOME);
-                System.out.flush();
-            }
-            else if (JTerm.isWin)
-            {
-                // Invoke the command line interpreter's own 'clear' command for Windows OS
-                try
-                {
-                  new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-                }
-                catch (IOException | InterruptedException e)
-                {
-                  System.out.println(e);
+    @Command(name = {"clear", "cls"}, syntax = "clear [-h]")
+    public static void clearScreen(List<String> options) {
+        if (JTerm.isHeadless()) {
+            if (JTerm.IS_UNIX) { // escape sequences to clear the screen
+                JTerm.out.print(ANSI_CLS + ANSI_HOME);
+                JTerm.out.flush();
+            } else if (JTerm.IS_WIN) { // Invoke the command line interpreter's own 'clear' command for Windows OS
+                try {
+                    new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                } catch (IOException | InterruptedException e) {
+                    throw new CommandException("Can't clear screen...", e);
                 }
             }
+        } else {
+            JTerm.getTerminal().clear();
         }
     }
 }

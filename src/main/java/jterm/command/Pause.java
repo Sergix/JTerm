@@ -14,57 +14,35 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm.command;
+package jterm.command;
 
-import java.util.ArrayList;
+import jterm.JTerm;
+import jterm.util.Util;
+
 import java.io.IOException;
+import java.util.List;
 
-import main.java.jterm.JTerm;
+public class Pause {
+    @Command(name = "pause", syntax = "pause [-h] [input]")
+    public void execute(List<String> options) {
+        for (String option : options) {
+            if (option.equals("-h")) {
+                JTerm.out.println("Command syntax:\n\tpause [-h] [input]");
+                return;
+            } else {
+                JTerm.out.print(Util.getRest(options, 0));
+            }
+        }
 
-public class Pause
-{
-
-	/*
-	* Pause() void
-	* 
-	* Pauses the interpreter until the user
-	* hits the "Enter" key.
-	*
-	* ArrayList<String> options - command options
-	*
-	* message
-	* 	Pause message to be printed
-	*/
-	public Pause(ArrayList<String> options) { 
-
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\tpause [-h] [input]\n\nPauses the terminal and awaits a keypress.");
-				return;
-
-			}
-			else
-				System.out.print(Exec.GetRest(options, 0));
-
-		}
-
-		if (options.size() == 0)
-			System.out.print("Press enter to continue...");
-
-		try
-		{
-			JTerm.userInput.read();
-			JTerm.userInput.skip(1);
-
-		}
-		catch (IOException ioe)
-		{
-			System.out.println(ioe);
-
-		}
-
-	}
-
+        if (options.size() == 0) {
+            JTerm.out.print("Press enter to continue...");
+        }
+        // TODO: Figure out what this is doing and how to do it in GUI
+        try {
+            JTerm.userInput.read();
+            JTerm.userInput.skip(1);
+        } catch (IOException e) {
+            JTerm.out.println(e);
+        }
+    }
 }

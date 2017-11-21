@@ -1,21 +1,3 @@
-/*
-* JTerm - a cross-platform terminal
-* Copyright (C) 2017 Sergix, NCSGeek
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-package main.java.jterm;
-
 // Copyright 2015 Christian d'Heureuse, Inventec Informatik AG, Zurich, Switzerland
 // www.source-code.biz, www.inventec.ch/chdh
 //
@@ -28,6 +10,8 @@ package main.java.jterm;
 // This module is provided "as is", without warranties of any kind.
 //
 // Home page: http://www.source-code.biz/snippets/java/RawConsoleInput
+
+package jterm.io;
 
 import java.io.InputStream;
 import java.io.IOException;
@@ -51,8 +35,7 @@ import com.sun.jna.ptr.IntByReference;
  * <p>This class is used for console mode programs.
  * It supports non-blocking reads of single key strokes without echo.
  */
-
-public class Input {
+public class RawConsoleInput {
 
 	private static final boolean           isWindows     = System.getProperty("os.name").startsWith("Windows");
 	private static final int               invalidKey    = 0xFFFE;
@@ -94,9 +77,7 @@ public class Input {
 			resetConsoleModeUnix(); }}
 
 	private static void registerShutdownHook() {
-		Runtime.getRuntime().addShutdownHook( new Thread() {
-			public void run() {
-				shutdownHook(); }}); }
+		Runtime.getRuntime().addShutdownHook(new Thread(RawConsoleInput::shutdownHook)); }
 
 	private static void shutdownHook() {
 		try {

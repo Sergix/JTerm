@@ -14,77 +14,39 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm.command;
+package jterm.command;
+
+import jterm.JTerm;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.List;
 
-/*
-* Original code credit to @chromechris
-* 
-* (edits for release done by @Sergix)
-*/
-public class Ping
-{
+public class Ping {
+    @Command(name = "ping", minOptions = 1, syntax = "ping [-h] [-p port] host")
+    public static void ping(List<String> options) {
+        String port = "80";
+        int portIndex = options.indexOf("-p");
+        if (portIndex != -1) {
+            if ((options.size() != 3) || (portIndex + 1 == options.size())) {
+                throw new CommandException("Invalid ping usage");
+            } else {
+                port = options.get(portIndex + 1);
+                options.remove("-p");
+                options.remove(port);
+            }
+        }
 
-	/*
-	* Ping() void
-	* 
-	* Pings the specified host.
-	*
-	* ArrayList<String> options - command options
-
-	* -h
-	* 	Prints help information
-	* host
-	* 	Host to ping
-	* -p port
-	*	Port to ping the host on
-	*/
-	public Ping(ArrayList<String> options) 
-	{
-
-		String host = "google.com", port = "80";
-		boolean portNext = false;
-		
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\tping [-h] [-p port] host\n\nAttempts to connect to the specified host. Default port is '80'.");
-				return;
-				
-			}
-			else if (portNext)
-			{
-				port = option;
-				portNext = false;
-				
-			}
-			else if (option.equals("-p"))
-				portNext = true;
-			
-			else
-				host = option;
-			
-		}
-		
-	    try (Socket socket = new Socket())
-	    {
-	    	System.out.println("Pinging " + host + "...");
-	        socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 10000);
-	        System.out.println("Ping Successful");
-	        
-	    }
-	    catch (IOException e)
-	    {
-	    	// Either timeout or unreachable or failed DNS lookup
-	    	System.out.println("Ping Failed");
-	        
-		}
-		
-	}
-	
+        String host = options.get(options.size() - 1);
+        try (Socket socket = new Socket()) {
+            JTerm.out.println("Pinging " + host + "...");
+            socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 3000);
+            JTerm.out.println("Ping Successful");
+        } catch (IOException e) {
+            throw new CommandException("Ping failed", e);
+        } catch (NumberFormatException e) {
+            throw new CommandException("Invalid port value", e);
+        }
+    }
 }

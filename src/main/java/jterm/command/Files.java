@@ -14,244 +14,193 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm.command;
+package jterm.command;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
+import jterm.JTerm;
+import jterm.util.Util;
 
-import main.java.jterm.JTerm;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
-public class Files
-{
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-	/*
-	* Files() void
-	* 
-	* Constructor for calling methods.
-	*
-	* ArrayList<String> options - command options
-	*/
-	public Files(ArrayList<String> options) { }
-	
-	/*
-	* Process() void
-	* 
-	* Process the input.
-	* 
-	* String options - command options
-	*/
-	public static void Process(String options)
-	{
+public class Files {
+    // @ojles and @Kaperskyguru
+    @Command(name = {"mv", "move"}, minOptions = 2, syntax = "move, mv [-h] source destination")
+    public static void move(List<String> options) {
+        String sourceName = Util.getFullPath(options.get(0));
+        String destinationName = Util.getFullPath(options.get(1));
 
-		System.out.println("File Commands\n\nwrite\tdelete\ndel\trm\nread\thelp");
+        Path source = Paths.get(sourceName);
+        Path destination = Paths.get(destinationName);
 
-	}
+        try {
+            java.nio.file.Files.move(source, destination);
+        } catch (IOException e) {
+            throw new CommandException("Failed to move \'" + sourceName + "\' to \'" + destinationName + '\'', e);
+        }
+    }
 
-	/*
-	* Write() void
-	* 
-	* Get input and write it to a file.
-	* Changelog (#65)
-	* 
-	* ArrayList<String> options - command options
-	* 
-	* -h
-	*   Prints help information
-	* filename [...]
-	*	File to write to
-	*/
-	public static void Write(ArrayList<String> options)
-	{
-		
-		String filename = "";
-		
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\twrite [-h] filename\n\nOpens an input prompt in which to write text to a new file.");
-				return;
-				
-			}
-			else
-				filename += option;
-			
-		}
-		
-		filename = filename.trim();
-		filename = JTerm.currentDirectory + filename;
-		
-		if (filename.equals(""))
-		{
-			System.out.println("Error: missing filename; type \"write -h\" for more information.");
-			return;
-			
-		}
-		
-		try
-		{
-			System.out.println("Enter file contents (press enter after a blank line to quit):");
-			String line = JTerm.userInput.readLine();
-			String output = line;
-			
-			for(;;)
-			{
-				line = JTerm.userInput.readLine();
-				if (line.equals(""))
-					break;
-				
-				else if (line.equals(" "))
-					output += "\n";
-				
-				output += "\n" + line;
-				
-			}
-			
-			FileWriter fileWriter = new FileWriter(filename);
-			fileWriter.write(output);
-			fileWriter.close();
-			
-		}
-		catch (IOException ioe)
-		{
-			System.out.println(ioe);
-			
-		}
-		
-	}
-	
-	/*
-	* Delete() void
-	* 
-	* Delete the specified file or directory.
-	* 
-	* ArrayList<String> options - command options
-	* 
-	* -h
-	*   Prints help information
-	* file [...]
-	* 	File to delete
-	*/
-	public static void Delete(ArrayList<String> options)
-	{
-		
-		String filename = "";
-		
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\tdel [-h] file/directory\n\nDeletes the specified file or directory.");
-				return;
-				
-			}
-			else
-				filename += option;
-			
-		}
-		
-		filename.trim();
-		filename = JTerm.currentDirectory + filename;
-		
-		File dir = new File(filename);
-		if (!dir.exists())
-		{
-			System.out.println("ERROR: File/directory \"" + options.get(options.size() - 1) + "\" does not exist.");
-			return;
-			  
-		}
-		
-		dir.delete();
-		
-	}
+    @Command(name = "rn", minOptions = 2, syntax = "rn [-h] file newName")
+    public static void rename(List<String> options) {
+        String fileName = Util.getFullPath(options.get(0));
+        String newName = options.get(1);
 
-	/*
-	* Rm() void (@pmorgan3)
-	* 
-	* Identical to 'delete'; calls Delete().
-	*
-	* ArrayList<String> options - command options
-	*/
-	public static void Rm(ArrayList<String> options)
-	{
-		
-		Delete(options);
+        Path filePath = Paths.get(fileName);
+        try {
+            java.nio.file.Files.move(filePath, filePath.resolveSibling(newName), REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new CommandException("Failed to rename file", e);
+        }
+    }
 
-	}
+    @Command(name = "write", minOptions = 1, syntax = "write [-h] filename")
+    public static void write(List<String> options) {
+        StringBuilder filenameBuilder = new StringBuilder();
+        for (String option : options) {
+            if (option.equals("-h")) {
+                JTerm.out.println("Command syntax:\n\twrite [-h] filename\n\nOpens an input PROMPT in which to write text to a new file.");
+                return;
+            } else {
+                filenameBuilder.append(option);
+            }
+        }
+        String filename = filenameBuilder.toString();
 
-	/*
-	* Del() void (@pmorgan3)
-	* 
-	* Identical to 'delete'; calls Delete().
-	*
-	* ArrayList<String> options - command options
-	*/
-	public static void Del(ArrayList<String> options)
-	{
-		
-		Delete(options);
+        filename = filename.trim();
+        filename = JTerm.currentDirectory + filename;
 
-	}
+        if (filename.equals("")) {
+            JTerm.out.println("Error: missing filename; type \"write -h\" for more information.");
+            return;
+        }
 
-	/*
-	* Read() void
-	* Changelog (#68)
-	* 
-	* Reads the specified files and outputs the contents
-	* to the console.
-	* 
-	* ArrayList<String> options - command options
-	* 
-	* -h
-	*   Prints help information
-	* filename [...]
-	*	Prints the contents of the specified files
-	*     
-	* Credit to @d4nntheman
-	*/
-	public static void Read(ArrayList<String> options)
-	{
-		
-		String filename = "";
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\t read [-h] [file1 file2 ...]\n\nReads and outputs the contents of the specified files.");
-				return;
-				
-			}
-	
-			filename = JTerm.currentDirectory + option;
-			File file = new File(filename);
-			if (!file.exists())
-			{
-			    System.out.println("ERROR: File/directory \"" + option + "\" does not exist.");
-			    break;
-			    
-			}
-		
-			try ( BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath())) )
-	        {
-				System.out.println("\n[JTerm - Contents of " + option + "]\n");
-	            String line = null;
-	            while( (line = reader.readLine()) != null )
-	                System.out.println(line);
-	            
-	        }
-			catch (IOException e)
-			{
-	            e.printStackTrace();
-	            return;
-	            
-	        }
-			
-	    }
-		
-	}
-	
+        try {
+            JTerm.out.println("Enter file contents (press enter after a blank line to quit):");
+            String line = JTerm.userInput.readLine();
+            StringBuilder output = new StringBuilder(line);
+
+            for (; ; ) {
+                line = JTerm.userInput.readLine();
+                if (line.equals("")) {
+                    break;
+                } else if (line.equals(" ")) {
+                    output.append("\n");
+                }
+                output.append("\n").append(line);
+            }
+
+            FileWriter fileWriter = new FileWriter(filename);
+            fileWriter.write(output.toString());
+            fileWriter.close();
+        } catch (IOException ioe) {
+            JTerm.out.println(String.valueOf(ioe));
+        }
+
+    }
+
+    @Command(name = {"rm", "del", "delete"}, minOptions = 1, syntax = "rm, del, delete [-h] file")
+    public static void delete(List<String> options) {
+        String fileName = Util.getFullPath(options.get(0));
+        try {
+            java.nio.file.Files.delete(Paths.get(fileName));
+        } catch (NoSuchFileException e) {
+            throw new CommandException("File does not exist", e);
+        } catch (IOException e) {
+            throw new CommandException("Failed to delete \'" + fileName + "\'", e);
+        }
+    }
+
+    @Command(name = "read", minOptions = 1, syntax = "read [-h] [file1 file2 ...]")
+    public static void read(List<String> options) {
+        String fileName = Util.getFullPath(options.get(0));
+        try {
+            byte[] data = java.nio.file.Files.readAllBytes(Paths.get(fileName));
+            JTerm.out.println(new String(data));
+        } catch (IOException e) {
+            throw new CommandException("Failed to read \'" + fileName + "\' content");
+        }
+    }
+
+    @Command(name = "download", minOptions = 1, syntax = "download [-h] url")
+    public static void download(List<String> options) {
+        String url;
+        if (options.size() > 0) {
+            url = options.get(options.size() - 1);
+        } else {
+            JTerm.out.println("A URL to a file must be provided as an option");
+            return;
+        }
+        long start = System.currentTimeMillis();
+        long fileSize;
+        long downloadedBytes = 0;
+
+        String update = "";
+
+        // split url provided to find file name (will be last element if split by "/" char)
+        String[] split = url.split("/");
+        String fileName = split[split.length - 1];
+        // if no file extension, assume HTML
+        if (!split[split.length - 1].contains(".")) {
+            url += ".html";
+            split[split.length - 1] += ".html";
+            fileName += ".html";
+        }
+
+        JTerm.out.println("Starting download of file -> " + fileName);
+
+        // request file size from server (does not work with HTML files, unimportant because they download so fast)
+        HttpURLConnection conn = null;
+        try {
+            conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setRequestMethod("GET");
+            conn.getInputStream();
+            fileSize = conn.getContentLength();
+        } catch (IOException e) {
+            JTerm.out.println("Error when getting file information. Download cancelled.");
+            return;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+
+        BufferedOutputStream out;
+        BufferedInputStream in;
+        try {
+            // output file
+            out = new BufferedOutputStream(new FileOutputStream(JTerm.currentDirectory + "/" + fileName));
+            // input from server
+            in = new BufferedInputStream(new URL(url).openStream());
+
+            int buffer = 1024;
+            byte data[] = new byte[buffer];
+            int count, steps = 0;
+            // download file, and output information about progress
+            JTerm.out.print(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"));
+            while ((count = in.read(data, 0, buffer)) != -1) {
+                out.write(data, 0, count);
+                downloadedBytes += count;
+                steps++;
+                //TODO: Progress bar instead maybe?
+                //Also, this causes flickering in the GUI, a lower update rate might be good
+                if (steps % 10 == 0) { // print every 10 download steps
+                    Util.clearLine(update, update.length(), false);
+                    JTerm.out.print(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"));
+                }
+            }
+            out.close();
+        } catch (IOException e) {
+            JTerm.out.println("Error when downloading file.");
+        }
+
+        // clear line and notify user of download success
+        Util.clearLine(update, update.length(), false);
+        JTerm.out.println("\nFile downloaded successfully in: " + Util.getRunTime(System.currentTimeMillis() - start));
+    }
 }
