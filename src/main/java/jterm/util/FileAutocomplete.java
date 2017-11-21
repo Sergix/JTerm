@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
+import java.util.TreeSet;
 
 /**
  * Class that autocompletes filenames.
@@ -14,11 +15,12 @@ import java.util.LinkedList;
 public class FileAutocomplete {
 
     private static File[] files;
-    private static LinkedList<String> fileNames = new LinkedList<>();
+    private static TreeSet<String> fileNames = new TreeSet<>();
     private static String[] splitCommand = {"", "", ""};
     private static String command = "", originalCommand = "", currText = "", path = "";
     private static boolean blockClear, lockTab, resetVars, endsWithSlash, newList;
     private static int startComplete;
+    private static int cursorPos;
 
     private static boolean available = true;
 
@@ -28,6 +30,10 @@ public class FileAutocomplete {
 
     public static File[] getFiles() {
         return files;
+    }
+
+    public static int getCursorPos() {
+        return cursorPos;
     }
 
     public static boolean isBlockClear() {
@@ -61,6 +67,7 @@ public class FileAutocomplete {
         FileAutocomplete.command = command[1];
         FileAutocomplete.blockClear = blockClear;
         FileAutocomplete.lockTab = lockTab;
+        FileAutocomplete.cursorPos = getCommand().length();
 
         if ("".equals(command[1]))
             FileAutocomplete.command = " ";
@@ -86,7 +93,7 @@ public class FileAutocomplete {
 
     public static void resetVars() {
         files = null;
-        fileNames = new LinkedList<>();
+        fileNames = new TreeSet<>();
         splitCommand = new String[]{"", "", ""};
         command = "";
         originalCommand = "";
@@ -106,6 +113,7 @@ public class FileAutocomplete {
      * Otherwise autocompletes the file name.
      */
     public static void fileAutocomplete() {
+
 
         String[] commandArr = originalCommand.split(" ");
         FileAutocomplete.currText = originalCommand.endsWith(" ") ? " " : commandArr[commandArr.length - 1];
@@ -145,6 +153,8 @@ public class FileAutocomplete {
             fileNamesIterator();
         else if (!lockTab)
             autocomplete();
+
+        cursorPos = (splitCommand[0] + command).length();
     }
 
     /**
@@ -169,7 +179,7 @@ public class FileAutocomplete {
      * when there is only one option to autocomplete.
      */
     private static void autocomplete() {
-        String fileName = fileNames.getFirst();
+        String fileName = fileNames.first();
         String end = "";
 
         Path p = path.startsWith("/") ? Paths.get(path + fileName) : Paths.get(JTerm.currentDirectory + path + fileName);
@@ -180,13 +190,12 @@ public class FileAutocomplete {
         else if (Files.isRegularFile(p))
             end = " ";
 
-        Util.clearLine(getCommand(), true);
+        Util.clearLine(getCommand(), getCommand().length(), true);
 
         command = originalCommand + fileName.substring(startComplete) + end;
         JTerm.out.printWithPrompt(getCommand());
 
         lockTab = true;
-
         resetVars = true;
     }
 
@@ -203,7 +212,7 @@ public class FileAutocomplete {
 
         // Clear line
         if (fileNames.size() > 0 || " ".equals(currText))
-            Util.clearLine(getCommand(), true);
+            Util.clearLine(getCommand(), getCommand().length(), true);
 
         // Print matching file names
         if (newList)
@@ -212,7 +221,7 @@ public class FileAutocomplete {
 
             // Rotate
         else if (!lockTab || endsWithSlash) {
-            Util.clearLine(command, true);
+            Util.clearLine(command, getCommand().length(), true);
 
             String currFile = fileNames.pollFirst();
 
