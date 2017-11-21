@@ -190,7 +190,7 @@ public class Files {
                 //TODO: Progress bar instead maybe?
                 //Also, this causes flickering in the GUI, a lower update rate might be good
                 if (steps % 10 == 0) { // print every 10 download steps
-                    Util.clearLine(update, false);
+                    Util.clearLine(update, update.length(), false);
                     JTerm.out.print(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"));
                 }
             }
@@ -200,7 +200,7 @@ public class Files {
         }
 
         // clear line and notify user of download success
-        Util.clearLine(update, false);
+        Util.clearLine(update, update.length(), false);
         JTerm.out.println("\nFile downloaded successfully in: " + Util.getRunTime(System.currentTimeMillis() - start));
     }
 }
