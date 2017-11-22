@@ -219,6 +219,7 @@ public class InputHandler {
         blockClear = FileAutocomplete.isBlockClear();
         lockTab = FileAutocomplete.isLockTab();
         setCursorPos(FileAutocomplete.getCursorPos());
+        moveToCursorPos();
     }
 
     /**

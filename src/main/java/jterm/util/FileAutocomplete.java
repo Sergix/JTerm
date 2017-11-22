@@ -6,6 +6,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
@@ -16,6 +17,7 @@ public class FileAutocomplete {
 
     private static File[] files;
     private static TreeSet<String> fileNames = new TreeSet<>();
+    private static Iterator<String> iterator;
     private static String[] splitCommand = {"", "", ""};
     private static String command = "", originalCommand = "", currText = "", path = "";
     private static boolean blockClear, lockTab, resetVars, endsWithSlash, newList;
@@ -94,6 +96,7 @@ public class FileAutocomplete {
     public static void resetVars() {
         files = null;
         fileNames = new TreeSet<>();
+        iterator = fileNames.iterator();
         splitCommand = new String[]{"", "", ""};
         command = "";
         originalCommand = "";
@@ -171,6 +174,8 @@ public class FileAutocomplete {
             if ((fileName.startsWith(currText) || " ".equals(currText)) && (!f.isHidden() || currText.startsWith(".")))
                 fileNames.add(f.getName());
         }
+
+        iterator = fileNames.iterator();
     }
 
     /**
@@ -219,11 +224,11 @@ public class FileAutocomplete {
             for (String s : fileNames)
                 JTerm.out.print(s + "\t");
 
-            // Rotate
+        // Rotate
         else if (!lockTab || endsWithSlash) {
             Util.clearLine(command, getCommand().length(), true);
 
-            String currFile = fileNames.pollFirst();
+            String currFile = iterator.next();
 
             command = originalCommand + currFile.substring(startComplete);
             JTerm.out.printWithPrompt(getCommand());
