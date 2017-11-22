@@ -76,12 +76,6 @@ public class JTerm {
             headless = true;
             out.println(LICENSE);
             out.print(PROMPT);
-
-            if (IS_UNIX)
-                dirChar = "/";
-            else
-                dirChar = "\\";
-
             try {
                 while (true) {
                     InputHandler.read();
@@ -200,9 +194,11 @@ public class JTerm {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("windows")) {
             JTerm.IS_WIN = true;
+            dirChar = "\\";
             Keys.initWindows();
         } else if ("linux".equals(os) || os.contains("mac") || "sunos".equals(os) || "freebsd".equals(os)) {
             JTerm.IS_UNIX = true;
+            dirChar = "/";
             Keys.initUnix();
         }
     }
