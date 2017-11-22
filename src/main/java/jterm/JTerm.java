@@ -36,6 +36,7 @@ import java.lang.reflect.Constructor;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
@@ -49,6 +50,7 @@ public class JTerm {
     public static PromptPrinter out;
     public static final String VERSION = "0.7.0";
     public static final String PROMPT = ">> ";
+    public static String dirChar;
     public static final String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
             + "This program comes with ABSOLUTELY NO WARRANTY.\n"
             + "This is free software, and you are welcome to redistribute it\n"
@@ -74,6 +76,12 @@ public class JTerm {
             headless = true;
             out.println(LICENSE);
             out.print(PROMPT);
+
+            if (IS_UNIX)
+                dirChar = "/";
+            else
+                dirChar = "\\";
+
             try {
                 while (true) {
                     InputHandler.read();
@@ -205,5 +213,9 @@ public class JTerm {
 
     public static Terminal getTerminal() {
         return terminal;
+    }
+
+    public static Set<String> getCommands() {
+        return JTerm.COMMANDS.keySet();
     }
 }

@@ -1,12 +1,15 @@
 package jterm.util;
 
 import jterm.JTerm;
+import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.TreeSet;
 
 /**
  * Class that autocompletes filenames.
@@ -14,11 +17,13 @@ import java.util.LinkedList;
 public class FileAutocomplete {
 
     private static File[] files;
-    private static LinkedList<String> fileNames = new LinkedList<>();
+    private static TreeSet<String> fileNames = new TreeSet<>();
+    private static Iterator<String> iterator;
     private static String[] splitCommand = {"", "", ""};
     private static String command = "", originalCommand = "", currText = "", path = "";
-    private static boolean blockClear, lockTab, resetVars, endsWithSlash, newList;
+    private static boolean blockClear, lockTab, resetVars, endsWithDirChar, newList;
     private static int startComplete;
+    private static int cursorPos;
 
     private static boolean available = true;
 
@@ -28,6 +33,10 @@ public class FileAutocomplete {
 
     public static File[] getFiles() {
         return files;
+    }
+
+    public static int getCursorPos() {
+        return cursorPos;
     }
 
     public static boolean isBlockClear() {
@@ -61,6 +70,7 @@ public class FileAutocomplete {
         FileAutocomplete.command = command[1];
         FileAutocomplete.blockClear = blockClear;
         FileAutocomplete.lockTab = lockTab;
+        FileAutocomplete.cursorPos = getCommand().length();
 
         if ("".equals(command[1]))
             FileAutocomplete.command = " ";
@@ -86,7 +96,8 @@ public class FileAutocomplete {
 
     public static void resetVars() {
         files = null;
-        fileNames = new LinkedList<>();
+        fileNames = new TreeSet<>();
+        iterator = fileNames.iterator();
         splitCommand = new String[]{"", "", ""};
         command = "";
         originalCommand = "";
@@ -95,7 +106,7 @@ public class FileAutocomplete {
         blockClear = false;
         lockTab = false;
         resetVars = false;
-        endsWithSlash = false;
+        endsWithDirChar = false;
         newList = false;
         startComplete = 0;
     }
@@ -107,6 +118,7 @@ public class FileAutocomplete {
      */
     public static void fileAutocomplete() {
 
+
         String[] commandArr = originalCommand.split(" ");
         FileAutocomplete.currText = originalCommand.endsWith(" ") ? " " : commandArr[commandArr.length - 1];
 
@@ -116,21 +128,24 @@ public class FileAutocomplete {
         // Path to directory in which to find files to complete with
         path = getPath();
 
-        Path p = path.startsWith("/") ? Paths.get(path) : Paths.get(JTerm.currentDirectory + path);
+        Path p = path.startsWith(JTerm.dirChar) || path.startsWith("C:")
+                ? Paths.get(path) : Paths.get(JTerm.currentDirectory + path);
         files = p.toFile().listFiles();
 
         if (files == null)
             return;
 
-        if ((!endsWithSlash && !currText.startsWith("~")) && !command.endsWith(" "))
-            currText = currText.split("/")[currText.split("/").length - 1];
+        if (!endsWithDirChar && !currText.startsWith("~") && !command.endsWith(" ")) {
+            String[] split = currText.split(JTerm.IS_WIN ? "\\\\" : "/");
+            currText = split[split.length - 1];
+        }
 
         /*
          * If ends with slash directory and list not yet cleared from previous tab, clear,
          * block clear so tab rotation works and set modText to empty string,
          * so that all files in the directory are output
          */
-        else if ((endsWithSlash || currText.startsWith("~")) && !blockClear) {
+        else if ((endsWithDirChar || currText.startsWith("~")) && !blockClear) {
             fileNames.clear();
             blockClear = true;
             currText = " ";
@@ -145,6 +160,8 @@ public class FileAutocomplete {
             fileNamesIterator();
         else if (!lockTab)
             autocomplete();
+
+        cursorPos = (splitCommand[0] + command).length();
     }
 
     /**
@@ -153,7 +170,7 @@ public class FileAutocomplete {
     private static void populateFileNames() {
 
         // For tab rotation
-        startComplete = (endsWithSlash || currText.endsWith(" ")) ? 0 : currText.endsWith(" ") ? 0 : currText.length();
+        startComplete = (endsWithDirChar || currText.endsWith(" ")) ? 0 : currText.endsWith(" ") ? 0 : currText.length();
 
         assert files != null;
         for (File f : files) {
@@ -161,6 +178,8 @@ public class FileAutocomplete {
             if ((fileName.startsWith(currText) || " ".equals(currText)) && (!f.isHidden() || currText.startsWith(".")))
                 fileNames.add(f.getName());
         }
+
+        iterator = fileNames.iterator();
     }
 
     /**
@@ -169,24 +188,24 @@ public class FileAutocomplete {
      * when there is only one option to autocomplete.
      */
     private static void autocomplete() {
-        String fileName = fileNames.getFirst();
+        String fileName = fileNames.first();
         String end = "";
 
-        Path p = path.startsWith("/") ? Paths.get(path + fileName) : Paths.get(JTerm.currentDirectory + path + fileName);
+        Path p = path.startsWith(JTerm.IS_WIN ? "C:" : "/")
+                ? Paths.get(path + fileName) : Paths.get(JTerm.currentDirectory + path + fileName);
 
         if (Files.isDirectory(p))
-            end = "/";
+            end = JTerm.dirChar;
 
         else if (Files.isRegularFile(p))
             end = " ";
 
-        Util.clearLine(getCommand(), true);
+        Util.clearLine(getCommand(), getCommand().length(), true);
 
         command = originalCommand + fileName.substring(startComplete) + end;
         JTerm.out.printWithPrompt(getCommand());
 
         lockTab = true;
-
         resetVars = true;
     }
 
@@ -203,18 +222,18 @@ public class FileAutocomplete {
 
         // Clear line
         if (fileNames.size() > 0 || " ".equals(currText))
-            Util.clearLine(getCommand(), true);
+            Util.clearLine(getCommand(), getCommand().length(), true);
 
         // Print matching file names
         if (newList)
             for (String s : fileNames)
                 JTerm.out.print(s + "\t");
 
-            // Rotate
-        else if (!lockTab || endsWithSlash) {
-            Util.clearLine(command, true);
+        // Rotate
+        else if (!lockTab || endsWithDirChar) {
+            Util.clearLine(command, getCommand().length(), true);
 
-            String currFile = fileNames.pollFirst();
+            String currFile = iterator.next();
 
             command = originalCommand + currFile.substring(startComplete);
             JTerm.out.printWithPrompt(getCommand());
@@ -236,33 +255,34 @@ public class FileAutocomplete {
      * @return Path found
      */
     private static String getPath() {
-        boolean startsWithSlash = originalCommand.startsWith("/") || currText.startsWith("/");
-        endsWithSlash = originalCommand.endsWith("/") || currText.endsWith("/");
+        boolean startsAtRoot = originalCommand.startsWith("/") || currText.startsWith("/")
+                || originalCommand.startsWith("C:") || currText.startsWith("C:");
+        endsWithDirChar = originalCommand.endsWith(JTerm.dirChar) || currText.endsWith(JTerm.dirChar);
 
         StringBuilder path = new StringBuilder(currText.startsWith("~") ? JTerm.USER_HOME_DIR : "");
 
         if (!"".equals(path.toString())) {
             currText = currText.substring(1);
-            if (startsWithSlash)
-                currText = currText.substring(1);
+            if (startsAtRoot)
+                currText = currText.substring(JTerm.IS_UNIX ? 1 : 2);
         }
 
         // Get path from string (discard all text after the last '/')
         for (int i = currText.length() - 1; i >= 0; i--) {
-            if (currText.charAt(i) == '/') {
+            if (currText.charAt(i) == JTerm.dirChar.charAt(0)) {
                 path.append(currText.substring(0, i));
                 break;
             } else if (i == 0)
                 path = new StringBuilder(JTerm.currentDirectory);
         }
 
-        // If text passed is just "" do not add a "/"
+        // If text passed is just "" do not add a JTerm.dirChar
         if (!"".equals(path.toString()) && !"~".equals(currText))
-            path.append("/");
+            path.append(JTerm.dirChar);
 
-        // If path is just "/" return it (top level dir)
-        if (startsWithSlash && "".equals(path.toString()))
-            path = new StringBuilder("/");
+        // If path is just JTerm.dirChar return it (top level dir)
+        if (startsAtRoot && "".equals(path.toString()))
+            path = new StringBuilder(JTerm.IS_UNIX ? JTerm.dirChar : "C:");
 
         return path.toString();
     }
