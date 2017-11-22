@@ -4,6 +4,7 @@
 		- Thanks to @nanoandrew4!
 		- Fixes Windows crashing issues
 		- Fixes tab rotation with autocomplete
+	Pushed updates to Git.
 
 (#109)[11/21/2017-17:35 0.6.1 Sergix]
 	Made JTerm.COMMANDS private.
