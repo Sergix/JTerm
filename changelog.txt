@@ -1,3 +1,8 @@
+(#111)[11/22/2017-18:46 0.6.1 Sergix]
+	Merged #93.
+		- Thanks to @lbenedetto!
+		- Fixes GUI tab parser
+
 (#110)[11/22/2017-10:01 0.6.1 Sergix]
 	Created "Bug Fix" issue label.
 	Merged #91.
