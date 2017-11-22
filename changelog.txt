@@ -1,3 +1,10 @@
+(#110)[11/22/2017-10:01 0.6.1 Sergix]
+	Created "Bug Fix" issue label.
+	Merged #91.
+		- Thanks to @nanoandrew4!
+		- Fixes Windows crashing issues
+		- Fixes tab rotation with autocomplete
+
 (#109)[11/21/2017-17:35 0.6.1 Sergix]
 	Made JTerm.COMMANDS private.
 	Merged #90.
