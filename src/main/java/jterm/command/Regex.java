@@ -15,7 +15,7 @@ public class Regex {
     public static void clearScreen(List<String> options) {
         PromptPrinter backup = JTerm.out;
         StringBuilder commandBuilder = new StringBuilder();
-        boolean multiline = options.get(0).equals("-g");
+        boolean multiline = options.get(0).equals("-m");
         if (multiline) options.remove(0);
         options.forEach(commandBuilder::append);
         String command = commandBuilder.toString();
