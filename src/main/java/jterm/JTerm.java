@@ -94,7 +94,7 @@ public class JTerm {
 
         String command = optionsArray.remove(0);
         if (!COMMANDS.containsKey(command)) {
-            out.println("Command \"" + command + "\" is not available");
+            out.printf("Command \"%s\" is not available%n", command);
             return;
         }
 
@@ -135,13 +135,12 @@ public class JTerm {
         }
 
         // TODO: This line makes the program crash on Linux Kubuntu, don't know about windows
-        //classes.remove(0);
+        classes.remove(0);
 
         classes.forEach(aClass -> {
             try {
                 Arrays.stream(Class.forName(aClass).getDeclaredMethods()).forEach(method -> {
                     if (method.isAnnotationPresent(Command.class)) {
-                        // TODO: No methods added on Linux Kubuntu
                         methods.add(method);
                     }
                 });
