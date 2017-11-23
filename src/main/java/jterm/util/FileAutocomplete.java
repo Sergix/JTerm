@@ -72,7 +72,7 @@ public class FileAutocomplete {
         FileAutocomplete.lockTab = lockTab;
         FileAutocomplete.cursorPos = getCommand().length();
 
-        if ("".equals(command[1]))
+        if ("".equals(command[1]) && (JTerm.isHeadless() || JTerm.IS_WIN))
             FileAutocomplete.command = " ";
 
         // Stores original command so that command does not keep adding to itself
@@ -229,7 +229,7 @@ public class FileAutocomplete {
             for (String s : fileNames)
                 JTerm.out.print(s + "\t");
 
-        // Rotate
+            // Rotate
         else if (!lockTab || endsWithDirChar) {
             Util.clearLine(command, getCommand().length(), true);
 
