@@ -124,7 +124,7 @@ public class InputHandler {
 
     static void newLineEvent() {
         lastArrowPress = Keys.NONE;
-        boolean empty = Util.containsOnlySpaces(command);
+        boolean empty = command.trim().isEmpty();
 
         ArrayList<String> prevCommands = getPrevCommands();
 
@@ -184,7 +184,7 @@ public class InputHandler {
     private static void parse() {
         String[] commands = command.split("&&");
         for (String command : commands) {
-            command = Util.removeSpaces(command);
+            command = command.trim();
             JTerm.executeCommand(command);
         }
     }
@@ -287,7 +287,7 @@ public class InputHandler {
         }
 
         // Remove spaces so that autocomplete can work properly
-        splitCommand[1] = Util.removeSpaces(splitCommand[1]);
+        splitCommand[1] = splitCommand[1].trim();
 
         return splitCommand;
     }
