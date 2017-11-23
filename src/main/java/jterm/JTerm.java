@@ -17,7 +17,6 @@
 // package = folder :P
 package jterm;
 
-import java.lang.reflect.InvocationTargetException;
 import jterm.command.Command;
 import jterm.command.CommandException;
 import jterm.command.CommandExecutor;
@@ -30,20 +29,13 @@ import jterm.util.PromptPrinter;
 import jterm.util.Util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
-import java.lang.annotation.Annotation;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
-import java.util.ArrayList;
+import java.security.CodeSource;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.net.URL;
-import java.io.IOException;
-import java.security.CodeSource;
 
 public class JTerm {
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
@@ -80,7 +72,7 @@ public class JTerm {
                 while (true) {
                     InputHandler.read();
                 }
-            }catch (IOException e){
+            } catch (IOException e){
                 e.printStackTrace();
             }
         } else {
@@ -107,7 +99,7 @@ public class JTerm {
         }
 
         try {
-            if(JTerm.isHeadless()) out.println();
+            if (JTerm.isHeadless()) out.println();
             COMMANDS.get(command).execute(optionsArray);
         } catch (CommandException e) {
             System.err.println(e.getMessage());
@@ -118,24 +110,23 @@ public class JTerm {
         // Reflections reflections = new Reflections("jterm.command", new MethodAnnotationsScanner());
         // Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
         ArrayList<Method> methods = new ArrayList<>();
-        Method[] unsortedMethods;
         ArrayList<String> classes = new ArrayList<>();
 
         try {
             CodeSource src = JTerm.class.getProtectionDomain().getCodeSource();
             if (src != null) {
-                URL jar = src.getLocation();
-                ZipInputStream zip = new ZipInputStream(jar.openStream());
+                ZipInputStream zip = new ZipInputStream(src.getLocation().openStream());
+
                 while (true) {
                     ZipEntry e = zip.getNextEntry();
-                    if (e == null)
+
+                    if (e == null) {
                         break;
+                    }
+
                     String name = e.getName();
                     if (name.startsWith("jterm/command")) {
-                        classes.add(
-                                name.replace('/', '.')
-                                .substring(0, name.length() - 6)
-                        );
+                        classes.add(name.replace('/', '.').substring(0, name.length() - 6));
                     }
                 }
             }
@@ -143,38 +134,26 @@ public class JTerm {
             out.println(ioe);
         }
 
-        classes.remove(0);
+        // TODO: This line makes the program crash on Linux Kubuntu, don't know about windows
+        //classes.remove(0);
 
-        for (String aClass : classes) {
+        classes.forEach(aClass -> {
             try {
-                Class<?> clazz = Class.forName(aClass);
-                Constructor<?> constructor = clazz.getConstructor();
-                Object obj = constructor.newInstance();
-
-                unsortedMethods = obj.getClass().getDeclaredMethods();
-                for (Method method : unsortedMethods) {
-                    Annotation[] annotations = method.getDeclaredAnnotations();
+                Arrays.stream(Class.forName(aClass).getDeclaredMethods()).forEach(method -> {
                     if (method.isAnnotationPresent(Command.class)) {
+                        // TODO: No methods added on Linux Kubuntu
                         methods.add(method);
                     }
-                }
+                });
             } catch (ClassNotFoundException cnfe) {
                 out.println(cnfe);
-            } catch (NoSuchMethodException nsme) {
-                // out.println(nsme);
-            } catch (InstantiationException ie) {
-                // out.println(ie);
-            } catch (IllegalAccessException iae) {
-                out.println(iae);
-            } catch (InvocationTargetException iae) {
-                // out.println(iae);
             }
-        }
+        });
 
-        for (Method method : methods) {
+        methods.forEach(method -> {
             method.setAccessible(true);
             Command command = method.getDeclaredAnnotation(Command.class);
-            for (String commandName : command.name()) {
+            Arrays.stream(command.name()).forEach(commandName -> {
                 CommandExecutor executor = new CommandExecutor()
                         .setCommandName(commandName)
                         .setSyntax(command.syntax())
@@ -186,10 +165,12 @@ public class JTerm {
                                 System.err.println("Weird stuff...");
                             }
                         });
+
                 COMMANDS.put(commandName, executor);
-            }
-        }
+            });
+        });
     }
+
     private static void setOS() {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("windows")) {

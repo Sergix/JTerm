@@ -6,6 +6,7 @@ import jterm.util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class InputHandler {
@@ -180,11 +181,7 @@ public class InputHandler {
      * Sends command to terminal class for parsing, source is the newlineEvent in the key processor
      */
     private static void parse() {
-        String[] commands = command.split("&&");
-        for (String command : commands) {
-            command = Util.removeSpaces(command);
-            JTerm.executeCommand(command);
-        }
+        Arrays.stream(command.split("&&")).forEach(argument -> JTerm.executeCommand(command.trim()));
     }
 
     /**
@@ -192,8 +189,9 @@ public class InputHandler {
      * Usually only used after modifying 'command'
      */
     private static void moveToCursorPos() {
-        for (int i = command.length(); i > cursorPos; i--)
+        for (int i = command.length(); i > cursorPos; i--) {
             JTerm.out.print("\b");
+        }
     }
 
     /**

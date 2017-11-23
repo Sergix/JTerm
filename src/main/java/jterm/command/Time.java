@@ -27,6 +27,6 @@ public class Time {
 
     @Command(name = "time")
     public static void printTime(List<String> options) {
-        JTerm.out.println("The Current Time is: " + DATE_FORMAT.format(new Date()));
+        JTerm.out.printf("The Current Time is: %s%n", DATE_FORMAT.format(new Date()));
     }
 }
