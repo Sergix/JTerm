@@ -108,9 +108,11 @@ public class Terminal extends JFrame {
         ptc.clearProtections();
         String text = textPane.getText().replaceAll("\r", "");
         int ix = text.lastIndexOf("\n") + 1;
-        int addlen = clearPrompt ? 4 : 0;
+        ix += clearPrompt ? 0 : 3;
+        int len = line.length();
+        len += clearPrompt ? 3 : 0;
         try {
-            textPane.getDocument().remove(ix, line.length() + addlen);
+            textPane.getDocument().remove(ix, len + 1);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -125,6 +127,10 @@ public class Terminal extends JFrame {
 
     public void println(String s, boolean white) {
         print(s + "\n", white);
+    }
+
+    public JTextPane getTextPane() {
+        return textPane;
     }
 
     {

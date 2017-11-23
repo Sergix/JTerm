@@ -51,11 +51,11 @@ public class Util {
         if (JTerm.isHeadless()) {
 
             for (int i = 0; i < cursorPos + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
-                JTerm.out.print("\b");
+                JTerm.out.print('\b');
             for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
-                JTerm.out.print(" ");
+                JTerm.out.print(' ');
             for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
-                JTerm.out.print("\b");
+                JTerm.out.print('\b');
 
         } else {
             JTerm.getTerminal().clearLine(line, clearPrompt);
