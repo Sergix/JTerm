@@ -1,29 +1,33 @@
 package jterm.gui;
 
 import jterm.JTerm;
-import jterm.io.InputHandler;
-import jterm.io.Keys;
+import jterm.io.input.InputHandler;
+import jterm.io.input.Keys;
+import jterm.io.output.TextColor;
 
 import javax.swing.*;
-import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+<<<<<<< HEAD
 public class Terminal extends JFrame {
 
+=======
+public class Terminal extends JFrame implements KeyListener {
+>>>>>>> upstream/dev
     private JPanel contentPane;
     private JTextPane textPane;
-    private AttributeSet asWhite;
-    private AttributeSet asOffWhite;
-    private ProtectedTextComponent ptc;
-    private int preTypeLength = 0;
+
 
     public Terminal() {
-        setContentPane(contentPane);
+        TextColor.initGui();
+        JTerm.IS_WIN = false;
+        JTerm.IS_UNIX = true;
 
+        setContentPane(contentPane);
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -31,106 +35,43 @@ public class Terminal extends JFrame {
                 onCancel();
             }
         });
-
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(e -> onCancel(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
                 JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
         textPane.setBackground(new Color(28, 28, 28));
-
-        StyleContext sc = StyleContext.getDefaultStyleContext();
-        //Color 1 - White
-        asWhite = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, new Color(255, 255, 255));
-        asWhite = sc.addAttribute(asWhite, StyleConstants.FontFamily, "Lucida Console");
-        asWhite = sc.addAttribute(asWhite, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
-        sc = StyleContext.getDefaultStyleContext();
-        //Color 2 - Off White
-        asOffWhite = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, new Color(130, 130, 130));
-        asOffWhite = sc.addAttribute(asOffWhite, StyleConstants.FontFamily, "Lucida Console");
-        asOffWhite = sc.addAttribute(asOffWhite, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
-
         textPane.setEditable(true);
-        textPane.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
+        textPane.addKeyListener(this);
+    }
 
-            @Override
-            public void keyPressed(KeyEvent e) {
-                //Consume under certain conditions
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_TAB:
-                    case KeyEvent.VK_UP:
-                    case KeyEvent.VK_DOWN:
-                        e.consume();
-                        break;
-                    case KeyEvent.VK_SHIFT:
-                    case KeyEvent.VK_CAPS_LOCK:
-                        e.consume();
-                        return;
-                }
-                //Handle key
-                if ((int) e.getKeyChar() == 65535) {
-                    new Thread(() -> InputHandler.process(Keys.getKeyByValue(e.getKeyCode() * -1), e.getKeyChar())).start();
-                } else
-                    new Thread(() -> InputHandler.process(Keys.getKeyByValue((int) e.getKeyChar()), e.getKeyChar())).start();
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-        });
-        ptc = new ProtectedTextComponent(textPane);
-        println(JTerm.LICENSE, false);
-        showPrompt();
-        //overrideEnter();
-        JTerm.IS_WIN = false;
-        JTerm.IS_UNIX = true;
+    @Override
+    public void keyPressed(KeyEvent e) {
+        //Consume under certain conditions
+        switch (e.getKeyCode()) {
+            //These keys need to be handled by InputHandler only
+            case KeyEvent.VK_TAB:
+            case KeyEvent.VK_UP:
+            case KeyEvent.VK_DOWN:
+                e.consume();
+                break;
+            //Consume without processing shift and capslock keys
+            //These keys are modifiers. We can ignore them
+            case KeyEvent.VK_SHIFT:
+            case KeyEvent.VK_CAPS_LOCK:
+                e.consume();
+                return;
+        }
+        if ((int) e.getKeyChar() == 65535) {
+            //An arrow key was pressed. Switch the key code into the negatives so it wont interfere with any real chars
+            new Thread(() -> InputHandler.process(Keys.getKeyByValue(e.getKeyCode() * -1), e.getKeyChar())).start();
+        } else
+            new Thread(() -> InputHandler.process(Keys.getKeyByValue((int) e.getKeyChar()), e.getKeyChar())).start();
     }
 
     private void onCancel() {
         dispose();
         System.exit(0);
-    }
-
-    public void showPrompt() {
-        String prompt = JTerm.PROMPT;
-        print(prompt, true);
-        print(" ", true);
-        int promptIndex = textPane.getDocument().getLength();
-        textPane.setCaretPosition(promptIndex);
-        preTypeLength = textPane.getText().length();
-        ptc.protectText(0, promptIndex - 1);
-    }
-
-    public void clear() {
-        ptc.clearProtections();
-        textPane.setText("");
-    }
-
-    public void clearLine(String line, boolean clearPrompt) {
-        ptc.clearProtections();
-        String text = textPane.getText().replaceAll("\r", "");
-        int ix = text.lastIndexOf("\n") + 1;
-        ix += clearPrompt ? 0 : 3;
-        int len = line.length();
-        len += clearPrompt ? 3 : 0;
-        try {
-            textPane.getDocument().remove(ix, len + 1);
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void print(String s, boolean white) {
-        int len = textPane.getDocument().getLength();
-        textPane.setCaretPosition(len);
-        textPane.setCharacterAttributes(white ? asWhite : asOffWhite, false);
-        textPane.replaceSelection(s);
-    }
-
-    public void println(String s, boolean white) {
-        print(s + "\n", white);
     }
 
     public JTextPane getTextPane() {
@@ -168,5 +109,13 @@ public class Terminal extends JFrame {
      */
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 }

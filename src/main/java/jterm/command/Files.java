@@ -17,6 +17,7 @@
 package jterm.command;
 
 import jterm.JTerm;
+import jterm.io.output.TextColor;
 import jterm.util.Util;
 
 import java.io.*;
@@ -64,7 +65,7 @@ public class Files {
 
         for (String option : options) {
             if (option.equals("-h")) {
-                JTerm.out.println("Command syntax:\n\twrite [-h] filename\n\nOpens an input PROMPT in which to write text to a new file.");
+                JTerm.out.println(TextColor.INFO, "Command syntax:\n\twrite [-h] filename\n\nOpens an input PROMPT in which to write text to a new file.");
                 return;
             } else {
                 filenameBuilder.append(option);
@@ -73,16 +74,16 @@ public class Files {
 
         String fileName = String.format("%s%s", JTerm.currentDirectory, filenameBuilder.toString().trim());
         if (fileName.equals("")) {
-            JTerm.out.println("Error: missing filename; type \"write -h\" for more information.");
+            JTerm.out.println(TextColor.ERROR, "Error: missing filename; type \"write -h\" for more information.");
             return;
         }
 
         try (FileWriter fileWriter = new FileWriter(fileName)) {
-            JTerm.out.println("Enter file contents (press enter after a blank line to quit):");
+            JTerm.out.println(TextColor.INFO, "Enter file contents (press enter after a blank line to quit):");
             String line = JTerm.userInput.readLine();
             StringBuilder output = new StringBuilder(line);
 
-            for (;;) {
+            for (; ; ) {
                 line = JTerm.userInput.readLine();
                 if (line.equals("")) {
                     break;
@@ -94,7 +95,7 @@ public class Files {
 
             fileWriter.write(output.toString());
         } catch (IOException ioe) {
-            JTerm.out.println(String.valueOf(ioe));
+            JTerm.out.println(TextColor.ERROR, ioe.toString());
         }
 
     }
@@ -117,7 +118,7 @@ public class Files {
         String fileName = Util.getFullPath(options.get(0));
 
         try {
-            JTerm.out.println(new String(java.nio.file.Files.readAllBytes(Paths.get(fileName))));
+            JTerm.out.println(TextColor.INFO, new String(java.nio.file.Files.readAllBytes(Paths.get(fileName))));
         } catch (IOException e) {
             throw new CommandException(String.format("Failed to read '%s' content", fileName));
         }
@@ -129,7 +130,7 @@ public class Files {
         if (options.size() > 0) {
             url = options.get(options.size() - 1);
         } else {
-            JTerm.out.println("A URL to a file must be provided as an option");
+            JTerm.out.println(TextColor.ERROR, "A URL to a file must be provided as an option");
             return;
         }
 
@@ -149,7 +150,7 @@ public class Files {
             fileName += ".html";
         }
 
-        JTerm.out.printf("Starting download of file -> %s%n", fileName);
+        JTerm.out.printf(TextColor.INFO, "Starting download of file -> %s%n", fileName);
 
         // request file size from server (does not work with HTML files, unimportant because they download so fast)
         HttpURLConnection conn = null;
@@ -159,7 +160,7 @@ public class Files {
             conn.getInputStream();
             fileSize = conn.getContentLength();
         } catch (IOException e) {
-            JTerm.out.println("Error when getting file information. Download cancelled.");
+            JTerm.out.println(TextColor.ERROR, "Error when getting file information. Download cancelled.");
             return;
         } finally {
             if (conn != null) {
@@ -174,7 +175,7 @@ public class Files {
             byte data[] = new byte[buffer];
             int count, steps = 0;
             // download file, and output information about progress
-            JTerm.out.print(update = (String.format("Download is: %s%% complete", ((double) downloadedBytes / (double) fileSize) * 100d)));
+            JTerm.out.print(TextColor.INFO, update = (String.format("Download is: %s%% complete", ((double) downloadedBytes / (double) fileSize) * 100d)));
             while ((count = in.read(data, 0, buffer)) != -1) {
                 out.write(data, 0, count);
                 downloadedBytes += count;
@@ -182,16 +183,16 @@ public class Files {
                 //TODO: Progress bar instead maybe?
                 //Also, this causes flickering in the GUI, a lower update rate might be good
                 if (steps % 10 == 0) { // print every 10 download steps
-                    Util.clearLine(update, update.length(), false);
-                    JTerm.out.print(update = (String.format("Download is: %s%% complete", ((double) downloadedBytes / (double) fileSize) * 100d)));
+                    JTerm.out.clearLine(update, update.length(), false);
+                    JTerm.out.print(TextColor.INFO, update = (String.format("Download is: %s%% complete", ((double) downloadedBytes / (double) fileSize) * 100d)));
                 }
             }
         } catch (IOException e) {
-            JTerm.out.println("Error when downloading file.");
+            JTerm.out.println(TextColor.ERROR, "Error when downloading file.");
         }
 
         // clear line and notify user of download success
-        Util.clearLine(update, update.length(), false);
-        JTerm.out.printf("\nFile downloaded successfully in: %s%n", Util.getRunTime(System.currentTimeMillis() - start));
+        JTerm.out.clearLine(update, update.length(), false);
+        JTerm.out.printf(TextColor.INFO, "\nFile downloaded successfully in: %s%n", Util.getRunTime(System.currentTimeMillis() - start));
     }
 }

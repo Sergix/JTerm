@@ -2,13 +2,12 @@ package jterm.util;
 
 import jterm.JTerm;
 import jterm.gui.Terminal;
+import jterm.io.output.HeadlessPrinter;
+import jterm.io.output.TextColor;
+import jterm.io.output.CollectorPrinter;
+import jterm.io.output.GuiPrinter;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
 import javax.swing.text.*;
 import java.util.Arrays;
 
@@ -23,50 +22,58 @@ class UtilTest {
     @Test
     void clearLineHeadless() throws BadLocationException {
         JTerm.setheadless(true);
-        PrintStreamCollector collector = new PrintStreamCollector();
+        CollectorPrinter collector = new CollectorPrinter(new HeadlessPrinter());
         JTerm.out = collector;
+        JTerm.setPrompt("/dir>> ");
 
-        JTerm.out.print(">> ");
-        Util.clearLine("", 0, true);
-        assertEquals(">> \b\b\b   \b\b\b", collector.export());
+        JTerm.out.printPrompt();
+        JTerm.out.clearLine("", 0, true);
+        assertEquals("/dir>> \b\b\b\b\b\b\b       \b\b\b\b\b\b\b", collector.export());
 
-        JTerm.out.print(">> stuff");
-        Util.clearLine("stuff", 5, true);
-        assertEquals(">> stuff\b\b\b\b\b\b\b\b        \b\b\b\b\b\b\b\b", collector.export());
+        JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
+        JTerm.out.clearLine("stuff", 5, true);
+        assertEquals("/dir>> stuff\b\b\b\b\b\b\b\b\b\b\b\b            \b\b\b\b\b\b\b\b\b\b\b\b", collector.export());
 
-        JTerm.out.print(">> stuff");
-        Util.clearLine("stuff", 5, false);
-        assertEquals(">> stuff\b\b\b\b\b     \b\b\b\b\b", collector.export());
+        JTerm.out.printPrompt();
+        JTerm.out.clearLine("", 0, false);
+        assertEquals("/dir>> ", collector.export());
+
+        JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
+        JTerm.out.clearLine("stuff", 5, false);
+        assertEquals("/dir>> stuff\b\b\b\b\b     \b\b\b\b\b", collector.export());
     }
 
     @Test
-    void clearLineTerminal() throws BadLocationException {
+    void clearLineGUI() throws BadLocationException {
         JTerm.setheadless(false);
         Terminal terminal = new Terminal();
         terminal.setTitle("JTerm");
         terminal.setSize(720, 480);
         terminal.setVisible(true);
         JTerm.setTerminal(terminal);
-        JTerm.out = new PrintStreamInterceptor(terminal);
+        JTerm.out = new GuiPrinter(terminal.getTextPane());
         Document doc = terminal.getTextPane().getDocument();
+        JTerm.currentDirectory = "/dir";
 
-        terminal.clear();
-        JTerm.out.println();
-        JTerm.out.printWithPrompt("");
-        Util.clearLine("", 0, true);
-        assertEquals("\n", doc.getText(0, doc.getLength()));
+        JTerm.out.clearAll();
+        JTerm.out.printPrompt();
+        JTerm.out.clearLine("", 0, true);
+        assertEquals("", doc.getText(0, doc.getLength()));
 
-        terminal.clear();
-        terminal.print("\n", true);
-        JTerm.out.printWithPrompt("stuff");
-        Util.clearLine("stuff", 0, true);
-        assertEquals("\n", doc.getText(0, doc.getLength()));
+        JTerm.out.clearAll();
+        JTerm.out.printPrompt();
+        JTerm.out.clearLine("", 0, false);
+        assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
 
-        terminal.clear();
-        terminal.print("\n", true);
-        JTerm.out.printWithPrompt("stuff");
-        Util.clearLine("stuff", 0, false);
-        assertEquals("\n>> ", doc.getText(0, doc.getLength()));
+        JTerm.out.clearAll();
+        JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
+        JTerm.out.clearLine("stuff", 0, true);
+        assertEquals("", doc.getText(0, doc.getLength()));
+
+        JTerm.out.clearAll();
+        JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
+        JTerm.out.clearLine("stuff", 0, false);
+        assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
     }
 
     @Test
@@ -79,12 +86,6 @@ class UtilTest {
     void getAsString() {
         assertEquals("This function is just concatenating an array",
                 Util.getAsString(Arrays.asList("This", "function", "is", "just", "concatenating", "an", "array")));
-    }
-
-    @Test
-    void getRest() {
-        assertEquals("is just concatenating an array",
-                Util.getRest(Arrays.asList("This", "function", "is", "just", "concatenating", "an", "array"), 2));
     }
 
     @Test

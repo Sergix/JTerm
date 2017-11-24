@@ -1,3 +1,28 @@
+(#116)[11/24/2017-13:45 0.7.0 Sergix]
+	Wrote documentation for version "0.7.0".
+	Compiled changelog.
+	Compiled source zip
+	Compiled "jterm-v0.7.0.jar".
+	Modified README, CONTRIBUTING, and ROADMAP suffix version.
+	Pushed updates to Git.
+
+(#115)[11/24/2017-13:38 0.6.1 Sergix]
+	Merged #97.
+		- Thanks to @lbenedetto!
+		- Major refactor of code to prepare for text color in headless mode.
+		- Moved RawConsoleInput, InputHandler, and Keys classes to own package jterm.io.input
+		- Added jterm.io.output package
+			- Added CollectorPrinter
+			- Added GUIPrinter
+			- Added HeadlessPrinter
+			- Added Printer
+			- Added TextColor
+		- Removed PrintStreamCollector
+		- Removed PrintStreamInterceptor
+		- Removed PromptInterceptor
+		- Removed PromptPrinter
+		- Added InputHander test to test package
+
 (#114)[11/23/2017-23:39 0.6.1 Sergix]
 	Closed #94.
 		- Added JTerm.setPrompt(prompt)

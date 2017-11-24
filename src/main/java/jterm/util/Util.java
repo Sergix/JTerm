@@ -37,29 +37,6 @@ public class Util {
         return builder.toString();
     }
 
-    /**
-     * clearLine() void
-     * <br></br><br></br>
-     * Clears a line in the console of size line.length().
-     *
-     * @param line        line to be cleared
-     * @param clearPrompt choose to clear PROMPT along with line (only use true if PROMPT exists)
-     */
-    public static void clearLine(String line, int cursorPos, boolean clearPrompt) {
-        if (JTerm.isHeadless()) {
-
-            for (int i = 0; i < cursorPos + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
-                JTerm.out.print('\b');
-            for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
-                JTerm.out.print(' ');
-            for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
-                JTerm.out.print('\b');
-
-        } else {
-            JTerm.getTerminal().clearLine(line, clearPrompt);
-        }
-    }
-
     public static ArrayList<String> getAsArray(String options) {
         return new ArrayList<>(Arrays.asList(options.split(" ")));
     }
@@ -113,7 +90,7 @@ public class Util {
     }
 
     public static int shrinkToBounds(int i, int min, int max){
-        return Math.min(Math.max(i, min), max);
+        return options.toString().replaceAll("[,\\[\\]]", "");
     }
 
     public static String getFullPath(String fileName) {

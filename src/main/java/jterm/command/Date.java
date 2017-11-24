@@ -16,6 +16,7 @@ package jterm.command;
 */
 
 import jterm.JTerm;
+import jterm.io.output.TextColor;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,6 +29,6 @@ public class Date {
 
     @Command(name = "date", syntax = "date [-h]")
     public static void printDate(List<String> options) {
-        JTerm.out.println("The current date is: " + dateFormat.format(Calendar.getInstance().getTime()));
+        JTerm.out.println(TextColor.INFO, "The current date is: " + dateFormat.format(Calendar.getInstance().getTime()));
     }
 }

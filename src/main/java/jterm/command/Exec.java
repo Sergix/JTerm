@@ -17,6 +17,7 @@
 package jterm.command;
 
 import jterm.JTerm;
+import jterm.io.output.TextColor;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,11 +41,11 @@ public class Exec {
             Scanner in = new Scanner(process.getInputStream());
 
             while (process.isAlive() && in.hasNextLine()) {
-                JTerm.out.println(in.nextLine());
+                JTerm.out.println(TextColor.INFO, in.nextLine());
             }
 
             while (in.hasNextLine()) {
-                JTerm.out.println(in.nextLine());
+                JTerm.out.println(TextColor.INFO, in.nextLine());
             }
 
             in.close();

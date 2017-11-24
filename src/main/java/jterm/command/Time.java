@@ -16,6 +16,7 @@
 package jterm.command;
 
 import jterm.JTerm;
+import jterm.io.output.TextColor;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,6 +29,6 @@ public class Time {
 
     @Command(name = "time")
     public static void printTime(List<String> options) {
-        JTerm.out.printf("The Current Time is: %s%n", DATE_FORMAT.format(new Date()));
+        JTerm.out.printf(TextColor.INFO, "The Current Time is: %s%n", DATE_FORMAT.format(new Date()));
     }
 }

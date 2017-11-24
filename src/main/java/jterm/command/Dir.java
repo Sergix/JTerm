@@ -19,6 +19,7 @@
 package jterm.command;
 
 import jterm.JTerm;
+import jterm.io.output.TextColor;
 import jterm.util.Util;
 import org.apache.commons.io.FileUtils;
 
@@ -31,10 +32,14 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Dir {
+<<<<<<< HEAD
 
     private static final Consumer<File> SIMPLE_PRINTER = (file) -> JTerm.out.println("\t" + file.getName());
+=======
+    private static final Consumer<File> SIMPLE_PRINTER = (file) -> JTerm.out.println(TextColor.INFO, "\t" + file.getName());
+>>>>>>> upstream/dev
 
-    private static final Consumer<File> FULL_PRINTER = (file) -> JTerm.out.println("\t"
+    private static final Consumer<File> FULL_PRINTER = (file) -> JTerm.out.println(TextColor.INFO, "\t"
             + (file.isFile() ? "F" : "D") + " "
             + (file.canRead() ? "R" : "")
             + (file.canWrite() ? "W" : "")
@@ -50,7 +55,11 @@ public class Dir {
             return;
         }
 
+<<<<<<< HEAD
         JTerm.out.printf("[Contents of \"%s\"]%n", JTerm.currentDirectory);
+=======
+        JTerm.out.println(TextColor.INFO, "[Contents of \"" + JTerm.currentDirectory + "\"]");
+>>>>>>> upstream/dev
         Arrays.stream(files).forEach(options.contains("-f") ? FULL_PRINTER : SIMPLE_PRINTER);
     }
 
@@ -63,7 +72,7 @@ public class Dir {
         }
 
         if (newDirectory.equals("")) {
-            JTerm.out.println("Path not specified. Type \"cd -h\" for more information.");
+            JTerm.out.println(TextColor.ERROR, "Path not specified. Type \"cd -h\" for more information.");
             return;
         }
 
@@ -86,7 +95,11 @@ public class Dir {
         } else if (newDir.exists() && newDir.isDirectory()) {
             newDirectory = JTerm.currentDirectory + newDirectory;
         } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
+<<<<<<< HEAD
             JTerm.out.printf("ERROR: Directory \"%s\" either does not exist or is not a valid directory.%n", newDirectory);
+=======
+            JTerm.out.println(TextColor.ERROR, "ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
+>>>>>>> upstream/dev
             return;
         }
 
@@ -96,12 +109,11 @@ public class Dir {
 
         // It does exist, and it is a directory, so just change the global working directory variable to the input
         JTerm.currentDirectory = newDirectory;
-        JTerm.setPrompt(JTerm.currentDirectory + ">>");
     }
 
     @Command(name = "pwd", syntax = "pwd [-h]")
     public static void pwd(List<String> options) {
-        JTerm.out.println(JTerm.currentDirectory);
+        JTerm.out.println(TextColor.INFO, JTerm.currentDirectory);
     }
 
     @Command(name = {"md", "mkdir"}, minOptions = 1, syntax = "md [-h] dirName")
@@ -135,16 +147,16 @@ public class Dir {
         filesToBeRemoved.forEach(fileName -> {
             File file = new File(JTerm.currentDirectory, fileName);
             if (!file.isFile() && !file.isDirectory()) {
-                JTerm.out.printf("%s is not a file or directory%n", fileName);
+                JTerm.out.printf(TextColor.ERROR, "%s is not a file or directory%n", fileName);
             } else if (file.isDirectory()) {
                 if (finalRecursivelyDeleteFlag) {
                     try {
                         FileUtils.deleteDirectory(file);
                     } catch (IOException e) {
-                        JTerm.out.printf("Error when deleting %s%n", fileName);
+                        JTerm.out.printf(TextColor.ERROR, "Error when deleting %s%n", fileName);
                     }
                 } else {
-                    JTerm.out.println("Attempting to delete a directory. Run the command again with -r.");
+                    JTerm.out.println(TextColor.ERROR, "Attempting to delete a directory. Run the command again with -r.");
                     return;
                 }
             }
