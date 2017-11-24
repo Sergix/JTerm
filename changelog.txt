@@ -1,3 +1,9 @@
+(#117)[11/24/2017-18:49 0.7.0 Sergix]
+	Merged #99.
+		- Thanks to @DataSecs!
+		- General code formatting and cleanup.
+		- Reworked JTerm.initCommands() to be more concise and fix issues with it running on other systems.
+
 (#116)[11/24/2017-13:45 0.7.0 Sergix]
 	Wrote documentation for version "0.7.0".
 	Compiled changelog.
