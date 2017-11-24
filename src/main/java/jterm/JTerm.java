@@ -41,7 +41,7 @@ public class JTerm {
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
     public static PromptPrinter out;
     public static final String VERSION = "0.7.0";
-    public static final String PROMPT = ">> ";
+    public static String PROMPT = ">> ";
     public static String dirChar;
     public static final String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
             + "This program comes with ABSOLUTELY NO WARRANTY.\n"
@@ -61,6 +61,7 @@ public class JTerm {
     private static boolean headless = false;
 
     public static void main(String[] args) {
+        PROMPT = currentDirectory + PROMPT;
         setOS();
         initCommands();
         if (args.length > 0 && args[0].equals("headless")) {
@@ -202,5 +203,9 @@ public class JTerm {
 
     public static void setTerminal(Terminal terminal) {
         JTerm.terminal = terminal;
+    }
+
+    public static void setPrompt(String prompt) {
+        PROMPT = prompt;
     }
 }
