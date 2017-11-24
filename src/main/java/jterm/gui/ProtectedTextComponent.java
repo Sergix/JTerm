@@ -13,7 +13,7 @@ import javax.swing.text.JTextComponent;
  *  a) notify the ProtectedDocument class of the text to be protected.
  *  b) notify the ProtectedHighlighter class of the text to be protected.
  */
-class ProtectedTextComponent {
+public class ProtectedTextComponent {
     private final JTextComponent component;
     private final ProtectedDocument document;
 
@@ -21,7 +21,7 @@ class ProtectedTextComponent {
      * Specify the component to be protected. The text will be highlighted
      * using the default color
      */
-    ProtectedTextComponent(JTextComponent component) {
+    public ProtectedTextComponent(JTextComponent component) {
         this.component = component;
         // Handles updates to the Document and caret movement
         document = new ProtectedDocument(component);

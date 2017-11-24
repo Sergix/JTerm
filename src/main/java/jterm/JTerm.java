@@ -21,11 +21,12 @@ import jterm.command.Command;
 import jterm.command.CommandException;
 import jterm.command.CommandExecutor;
 import jterm.gui.Terminal;
-import jterm.io.InputHandler;
-import jterm.io.Keys;
-import jterm.util.PrintStreamInterceptor;
-import jterm.util.PromptInterceptor;
-import jterm.util.PromptPrinter;
+import jterm.io.input.InputHandler;
+import jterm.io.input.Keys;
+import jterm.io.output.Printer;
+import jterm.io.output.TextColor;
+import jterm.io.output.GuiPrinter;
+import jterm.io.output.HeadlessPrinter;
 import jterm.util.Util;
 
 import java.io.BufferedReader;
@@ -39,7 +40,7 @@ import java.util.zip.ZipInputStream;
 
 public class JTerm {
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
-    public static PromptPrinter out;
+    public static Printer out;
     public static final String VERSION = "0.7.0";
     public static String PROMPT = ">> ";
     public static String dirChar;
@@ -61,14 +62,23 @@ public class JTerm {
     private static boolean headless = false;
 
     public static void main(String[] args) {
-        PROMPT = currentDirectory + PROMPT;
         setOS();
         initCommands();
         if (args.length > 0 && args[0].equals("headless")) {
-            out = new PromptInterceptor();
+            out = new HeadlessPrinter();
             headless = true;
-            out.println(LICENSE);
-            out.printPrompt();
+            TextColor.initHeadless();
+        } else {
+            terminal = new Terminal();
+            terminal.setTitle("JTerm");
+            terminal.setSize(720, 480);
+            terminal.setVisible(true);
+            out = new GuiPrinter(terminal.getTextPane());
+            Keys.initGUI();
+        }
+        JTerm.out.println(TextColor.INFO, JTerm.LICENSE);
+        JTerm.out.printPrompt();
+        if(headless){
             try {
                 while (true) {
                     InputHandler.read();
@@ -76,13 +86,6 @@ public class JTerm {
             } catch (IOException e){
                 e.printStackTrace();
             }
-        } else {
-            terminal = new Terminal();
-            terminal.setTitle("JTerm");
-            terminal.setSize(720, 480);
-            terminal.setVisible(true);
-            out = new PrintStreamInterceptor(terminal);
-            Keys.initGUI();
         }
     }
 
@@ -95,12 +98,12 @@ public class JTerm {
 
         String command = optionsArray.remove(0);
         if (!COMMANDS.containsKey(command)) {
-            out.printf("Command \"%s\" is not available%n", command);
+            out.printf(TextColor.ERROR,"Command \"%s\" is not available%n", command);
             return;
         }
 
         try {
-            if (JTerm.isHeadless()) out.println();
+            if (JTerm.isHeadless()) out.println(TextColor.INFO);
             COMMANDS.get(command).execute(optionsArray);
         } catch (CommandException e) {
             System.err.println(e.getMessage());
@@ -132,7 +135,7 @@ public class JTerm {
                 }
             }
         } catch (IOException ioe) {
-            out.println(ioe);
+            out.println(TextColor.ERROR,ioe.toString());
         }
 
         // TODO: This line makes the program crash on Linux Kubuntu, don't know about windows
@@ -146,7 +149,7 @@ public class JTerm {
                     }
                 });
             } catch (ClassNotFoundException cnfe) {
-                out.println(cnfe);
+                out.println(TextColor.ERROR,cnfe.toString());
             }
         });
 

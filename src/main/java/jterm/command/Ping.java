@@ -17,6 +17,7 @@
 package jterm.command;
 
 import jterm.JTerm;
+import jterm.io.output.TextColor;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -41,9 +42,9 @@ public class Ping {
 
         String host = options.get(options.size() - 1);
         try (Socket socket = new Socket()) {
-            JTerm.out.println("Pinging " + host + "...");
+            JTerm.out.println(TextColor.INFO, "Pinging " + host + "...");
             socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 3000);
-            JTerm.out.println("Ping Successful");
+            JTerm.out.println(TextColor.INFO, "Ping Successful");
         } catch (IOException e) {
             throw new CommandException("Ping failed", e);
         } catch (NumberFormatException e) {

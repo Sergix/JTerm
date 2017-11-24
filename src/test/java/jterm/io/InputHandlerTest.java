@@ -1,5 +1,6 @@
 package jterm.io;
 
+import jterm.io.input.InputHandler;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;

@@ -1,8 +1,8 @@
-package jterm.io;
+package jterm.io.input;
 
 import jterm.JTerm;
+import jterm.io.output.TextColor;
 import jterm.util.FileAutocomplete;
-import jterm.util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class InputHandler {
 
     static void processLeft() {
         if (getCursorPos() > 0) {
-            if (JTerm.isHeadless()) JTerm.out.print("\b");
+            if (JTerm.isHeadless()) JTerm.out.print(TextColor.INPUT, "\b");
             decreaseCursorPos();
         }
     }
@@ -78,8 +78,8 @@ public class InputHandler {
     static void processRight() {
         if (getCursorPos() < command.length()) {
             if (JTerm.isHeadless()) {
-                Util.clearLine(command, cursorPos, false);
-                JTerm.out.print(command);
+                JTerm.out.clearLine(command, cursorPos, false);
+                JTerm.out.print(TextColor.INPUT, command);
             }
             increaseCursorPos();
             moveToCursorPos();
@@ -97,15 +97,15 @@ public class InputHandler {
         if (lastArrowPress == Keys.NONE)
             currCommand = command;
         lastArrowPress = ak;
-        Util.clearLine(command, cursorPos, false);
+        JTerm.out.clearLine(command, cursorPos, false);
         commandListPosition += ak == Keys.UP ? -1 : 1;
         commandListPosition = Math.max(commandListPosition, 0);
         if (commandListPosition >= getPrevCommands().size()) {
             commandListPosition = Math.min(commandListPosition, getPrevCommands().size());
-            JTerm.out.print(currCommand);
+            JTerm.out.print(TextColor.INPUT, currCommand);
             command = currCommand;
         } else {
-            JTerm.out.print(getPrevCommands().get(commandListPosition));
+            JTerm.out.print(TextColor.INPUT, getPrevCommands().get(commandListPosition));
             command = getPrevCommands().get(commandListPosition);
         }
     }
@@ -140,12 +140,12 @@ public class InputHandler {
         int cursorPos = getCursorPos();
 
         if (getCursorPos() == command.length()) {
-            if (JTerm.isHeadless()) JTerm.out.print(lastChar);
+            if (JTerm.isHeadless()) JTerm.out.print(TextColor.INPUT, lastChar);
             command += lastChar;
         } else {
-            Util.clearLine(command, cursorPos, false);
+            JTerm.out.clearLine(command, cursorPos, false);
             command = new StringBuilder(command).insert(cursorPos, lastChar).toString();
-            JTerm.out.print(command);
+            JTerm.out.print(TextColor.INPUT, command);
         }
 
         increaseCursorPos();
@@ -159,12 +159,12 @@ public class InputHandler {
 
             int charToDelete = getCursorPos() - 1;
             if (JTerm.isHeadless())
-                Util.clearLine(command, cursorPos, false);
+                JTerm.out.clearLine(command, cursorPos, false);
 
             command = new StringBuilder(command).deleteCharAt(charToDelete).toString();
 
             if (JTerm.isHeadless())
-                JTerm.out.print(command);
+                JTerm.out.print(TextColor.INPUT, command);
 
             decreaseCursorPos();
             moveToCursorPos();
@@ -188,9 +188,9 @@ public class InputHandler {
      * Usually only used after modifying 'command'
      */
     private static void moveToCursorPos() {
-        if(JTerm.isHeadless()) {
+        if (JTerm.isHeadless()) {
             for (int i = command.length(); i > cursorPos; i--)
-                JTerm.out.print("\b");
+                JTerm.out.print(TextColor.INPUT, "\b");
         }
     }
 

@@ -18,6 +18,8 @@
 
 package jterm;
 
+import jterm.io.output.TextColor;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class Client implements Runnable {
             try {
                 String output = Client.input.readLine();
                 if (output != null) {
-                    JTerm.out.println(output);
+                    JTerm.out.println(TextColor.INFO, output);
                 }
             } catch (IOException e) {
                 return;
@@ -45,7 +47,7 @@ public class Client implements Runnable {
 
         for (String option : options) {
             if (option.equals("-h")) {
-                JTerm.out.println("Command syntax:\n\tconnect [-h] [-p port] address\n\n"
+                JTerm.out.println(TextColor.INFO, "Command syntax:\n\tconnect [-h] [-p port] address\n\n"
                         + "connect to the specified IP address using TCP/IP. "
                         + "Default address is \"0.0.0.0\". Default port is 80.");
                 return;
@@ -63,7 +65,7 @@ public class Client implements Runnable {
         try (Socket connection = new Socket(address, port); InputStream input = connection.getInputStream(); OutputStream output = connection.getOutputStream();
              BufferedReader bufferedSocketOutput = new BufferedReader(new InputStreamReader(System.in), 1)) {
 
-            JTerm.out.printf("Connecting to %s:%d%n", address, port);
+            JTerm.out.printf(TextColor.INFO, "Connecting to %s:%d%n", address, port);
 
             Client.input = new BufferedReader(new InputStreamReader(input));
 
@@ -71,14 +73,14 @@ public class Client implements Runnable {
             Thread readThread = new Thread(client);
             readThread.start();
 
-            JTerm.out.println("Connected to server. Enter a blank line to quit. Reading for input...");
+            JTerm.out.println(TextColor.INFO, "Connected to server. Enter a blank line to quit. Reading for input...");
 
             String line;
             while ((line = bufferedSocketOutput.readLine()) != null && !line.equals("")) {
                 output.write(line.getBytes());
             }
         } catch (IOException e) {
-            JTerm.out.println("Connection severed.");
+            JTerm.out.println(TextColor.ERROR, "Connection severed.");
         }
     }
 }

@@ -1,6 +1,7 @@
 package jterm.command;
 
 import jterm.JTerm;
+import jterm.io.output.TextColor;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -34,7 +35,7 @@ public class CommandExecutor {
     public void execute(List<String> options) {
         if (options.contains("-h")) {
             if (syntax == null || !syntax.isEmpty()) {
-                JTerm.out.println(syntax);
+                JTerm.out.println(TextColor.INFO, syntax);
             }
             return;
         }

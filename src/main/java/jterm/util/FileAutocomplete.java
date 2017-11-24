@@ -1,14 +1,13 @@
 package jterm.util;
 
 import jterm.JTerm;
-import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl;
+import jterm.io.output.TextColor;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.TreeSet;
 
 /**
@@ -196,10 +195,10 @@ public class FileAutocomplete {
         else if (Files.isRegularFile(p))
             end = " ";
 
-        Util.clearLine(getCommand(), getCommand().length(), false);
+        JTerm.out.clearLine(getCommand(), getCommand().length(), false);
 
         command = originalCommand + fileName.substring(startComplete) + end;
-        JTerm.out.print(getCommand());
+        JTerm.out.print(TextColor.INPUT, getCommand());
 
         lockTab = true;
         resetVars = true;
@@ -218,21 +217,21 @@ public class FileAutocomplete {
 
         // Clear line
         if (fileNames.size() > 0 || " ".equals(currText))
-            Util.clearLine(getCommand(), getCommand().length(), true);
+            JTerm.out.clearLine(getCommand(), getCommand().length(), true);
 
         // Print matching file names
         if (newList)
             for (String s : fileNames)
-                JTerm.out.print(s + "\t");
+                JTerm.out.print(TextColor.INFO, s + "\t");
 
             // Rotate
         else if (!lockTab || endsWithDirChar) {
-            Util.clearLine(command, getCommand().length(), false);
+            JTerm.out.clearLine(command, getCommand().length(), false);
 
             String currFile = iterator.next();
 
             command = originalCommand + currFile.substring(startComplete);
-            JTerm.out.print(getCommand());
+            JTerm.out.print(TextColor.INPUT, getCommand());
 
             // Add to end of list (rotate through list)
             fileNames.add(currFile);
@@ -240,8 +239,8 @@ public class FileAutocomplete {
 
         if (fileNames.size() > 0 && newList) {
             // Re-output command after clearing lines
-            JTerm.out.print("\n");
-            JTerm.out.printWithPrompt(getCommand());
+            JTerm.out.println(TextColor.INPUT);
+            JTerm.out.printWithPrompt(TextColor.INPUT, getCommand());
         }
     }
 

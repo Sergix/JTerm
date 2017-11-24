@@ -2,6 +2,10 @@ package jterm.util;
 
 import jterm.JTerm;
 import jterm.gui.Terminal;
+import jterm.io.output.HeadlessPrinter;
+import jterm.io.output.TextColor;
+import jterm.io.output.CollectorPrinter;
+import jterm.io.output.GuiPrinter;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.text.*;
@@ -18,24 +22,24 @@ class UtilTest {
     @Test
     void clearLineHeadless() throws BadLocationException {
         JTerm.setheadless(true);
-        PrintStreamCollector collector = new PrintStreamCollector();
+        CollectorPrinter collector = new CollectorPrinter(new HeadlessPrinter());
         JTerm.out = collector;
         JTerm.setPrompt("/dir>> ");
 
         JTerm.out.printPrompt();
-        Util.clearLine("", 0, true);
+        JTerm.out.clearLine("", 0, true);
         assertEquals("/dir>> \b\b\b\b\b\b\b       \b\b\b\b\b\b\b", collector.export());
 
-        JTerm.out.printWithPrompt("stuff");
-        Util.clearLine("stuff", 5, true);
+        JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
+        JTerm.out.clearLine("stuff", 5, true);
         assertEquals("/dir>> stuff\b\b\b\b\b\b\b\b\b\b\b\b            \b\b\b\b\b\b\b\b\b\b\b\b", collector.export());
 
         JTerm.out.printPrompt();
-        Util.clearLine("", 0, false);
+        JTerm.out.clearLine("", 0, false);
         assertEquals("/dir>> ", collector.export());
 
-        JTerm.out.printWithPrompt("stuff");
-        Util.clearLine("stuff", 5, false);
+        JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
+        JTerm.out.clearLine("stuff", 5, false);
         assertEquals("/dir>> stuff\b\b\b\b\b     \b\b\b\b\b", collector.export());
     }
 
@@ -47,28 +51,28 @@ class UtilTest {
         terminal.setSize(720, 480);
         terminal.setVisible(true);
         JTerm.setTerminal(terminal);
-        JTerm.out = new PrintStreamInterceptor(terminal);
+        JTerm.out = new GuiPrinter(terminal.getTextPane());
         Document doc = terminal.getTextPane().getDocument();
-        JTerm.setPrompt("/dir>> ");
+        JTerm.currentDirectory = "/dir";
 
-        terminal.clear();
+        JTerm.out.clearAll();
         JTerm.out.printPrompt();
-        Util.clearLine("", 0, true);
+        JTerm.out.clearLine("", 0, true);
         assertEquals("", doc.getText(0, doc.getLength()));
 
-        terminal.clear();
+        JTerm.out.clearAll();
         JTerm.out.printPrompt();
-        Util.clearLine("", 0, false);
+        JTerm.out.clearLine("", 0, false);
         assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
 
-        terminal.clear();
-        JTerm.out.printWithPrompt("stuff");
-        Util.clearLine("stuff", 0, true);
+        JTerm.out.clearAll();
+        JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
+        JTerm.out.clearLine("stuff", 0, true);
         assertEquals("", doc.getText(0, doc.getLength()));
 
-        terminal.clear();
-        JTerm.out.printWithPrompt("stuff");
-        Util.clearLine("stuff", 0, false);
+        JTerm.out.clearAll();
+        JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
+        JTerm.out.clearLine("stuff", 0, false);
         assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
     }
 

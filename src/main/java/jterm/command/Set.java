@@ -17,6 +17,7 @@
 package jterm.command;
 
 import jterm.JTerm;
+import jterm.io.output.TextColor;
 import jterm.util.Util;
 
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class Set {
     @Command(name = "set", minOptions = 3, syntax = "set [-h] <name> = <value>")
     public static void set(List<String> options) {
         if (options.size() == 0) {
-            vars.forEach((key, value) -> JTerm.out.printf("%s=%s%n", key, value));
+            vars.forEach((key, value) -> JTerm.out.printf(TextColor.INFO, "%s=%s%n", key, value));
             return;
         }
 
