@@ -18,6 +18,8 @@
 
 package jterm;
 
+import jterm.io.output.TextColor;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,11 +50,11 @@ public class Server implements Runnable {
                     break;
                 }
 
-                JTerm.out.println("\n" + line);
+                JTerm.out.println(TextColor.INFO, "\n" + line);
 
                 bufferedSocketInput.close();
             } catch (IOException ioe) {
-                JTerm.out.println(ioe);
+                JTerm.out.println(TextColor.ERROR, ioe.toString());
                 break;
             }
         }
@@ -62,7 +64,7 @@ public class Server implements Runnable {
         String portInput = "80";
         for (String option : options) {
             if (option.equals("-h")) {
-                JTerm.out.println("Command syntax:\n\tserver [-h] port\n\nStarts a TCP server socket that accepts ");
+                JTerm.out.println(TextColor.INFO, "Command syntax:\n\tserver [-h] port\n\nStarts a TCP server socket that accepts ");
                 return;
             } else {
                 portInput = option;
@@ -79,13 +81,13 @@ public class Server implements Runnable {
             ServerSocket server = new ServerSocket(port);
             new Thread(() -> {
                 while (true) {
-                    JTerm.out.print("> ");
+                    JTerm.out.print(TextColor.INFO, "> ");
                     BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in), 1);
                     try {
                         String input = consoleInput.readLine();
                         switch (input) {
                             case "help":
-                                JTerm.out.println("Server currently opened on port " + port);
+                                JTerm.out.println(TextColor.INFO, "Server currently opened on port " + port);
                                 break;
 
                             case "quit":
@@ -93,7 +95,7 @@ public class Server implements Runnable {
                                 return;
                         }
                     } catch (IOException ioe) {
-                        JTerm.out.println("Input Stream closed.");
+                        JTerm.out.println(TextColor.ERROR, "Input Stream closed.");
                         break;
                     }
                 }
@@ -107,7 +109,7 @@ public class Server implements Runnable {
 
             server.close();
         } catch (IOException e) {
-            JTerm.out.println("ERROR: Server closed");
+            JTerm.out.println(TextColor.ERROR, "ERROR: Server closed");
         }
     }
 }

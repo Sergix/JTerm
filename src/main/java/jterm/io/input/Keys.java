@@ -1,4 +1,4 @@
-package jterm.io;
+package jterm.io.input;
 
 public enum Keys {
     UP(InputHandler::processUp),
