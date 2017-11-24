@@ -21,6 +21,7 @@ package jterm.command;
 import java.util.List;
 
 public class Exit {
+
     @Command(name = "exit", syntax = "exit [-h]")
     public static void exit(List<String> options) {
         System.exit(0);

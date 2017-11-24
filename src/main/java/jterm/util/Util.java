@@ -1,12 +1,10 @@
 package jterm.util;
 
 import jterm.JTerm;
-import jterm.io.InputHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 public class Util {
 
@@ -21,22 +19,22 @@ public class Util {
      */
     public static String getRunTime(long interval) {
         long seconds = interval / 1000;
-        String time = "";
+        StringBuilder builder = new StringBuilder();
 
-        if (seconds / 86400 >= 1) {
-            time += String.valueOf(seconds / 86400) + " days, ";
+        if ((seconds / 86400) >= 1) {
+            builder.append(String.valueOf(seconds / 86400)).append(" days, ");
         }
         if ((seconds / 3600) >= 1) {
-            time += String.valueOf((seconds / 3600) % 24) + " hours, ";
+            builder.append(String.valueOf((seconds / 3600) % 24)).append(" hours, ");
         }
         if ((seconds / 60) >= 1) {
-            time += String.valueOf((seconds / 60) % 60) + " minutes, ";
+            builder.append(String.valueOf((seconds / 60) % 60)).append(" minutes, ");
         }
 
-        time += String.valueOf(seconds % 60) + " seconds, ";
-        time += String.valueOf(interval % 1000) + " millis";
+        builder.append(String.valueOf(seconds % 60)).append(" seconds, ");
+        builder.append(String.valueOf(interval % 1000)).append(" millis");
 
-        return time;
+        return builder.toString();
     }
 
     /**
@@ -67,32 +65,58 @@ public class Util {
     }
 
     public static String getAsString(List<String> options) {
-        StringBuilder result = new StringBuilder();
-        for (String option : options) {
-            result.append(option);
-            result.append(" ");
-        }
-        return result.substring(0, result.length() - 1);
+        return options.toString().replaceAll(",", "").replace("[", "").replace("]", "");
     }
 
     public static String getRest(List<String> options, int index) {
         StringBuilder outputBuilder = new StringBuilder();
-        for (int i = index; i < options.size(); i++) {
-            if (i != options.size() - 1) {
-                outputBuilder
-                        .append(options.get(i))
-                        .append(" ");
-            } else {
-                outputBuilder.append(options.get(i));
-            }
+        options.subList(index, options.size()).forEach(option -> outputBuilder.append(option).append(" "));
+
+        return outputBuilder.toString().trim();
+    }
+
+    /**
+     * Removes blank space before and after command if any exists.
+     *
+     * @param command Command to parse
+     * @return Command without white space
+     */
+    public static String removeSpaces(String command) {
+        int fpos = 0;
+        for (int i = 0; i < command.length(); i++) {
+            if (command.charAt(i) == ' ')
+                fpos++;
+            else
+                break;
         }
-        return outputBuilder.toString();
+
+        int bpos = command.length() > 0 ? command.length() : 0;
+        for (int i = command.length() - 1; i > 0; i--) {
+            if (command.charAt(i) == ' ')
+                bpos--;
+            else
+                break;
+        }
+
+        // TODO: This method basically does the same as String.trim(), should be replaced by trim()
+        return command.substring(fpos, bpos);
+    }
+
+    /**
+     * Determines if a string is composed only of spaces.
+     *
+     * @param s string to check
+     * @return true if s is composed of only spaces, false if there is a character in it
+     */
+    public static boolean containsOnlySpaces(String s) {
+        return s.trim().isEmpty();
+    }
+
+    public static int shrinkToBounds(int i, int min, int max){
+        return Math.min(Math.max(i, min), max);
     }
 
     public static String getFullPath(String fileName) {
-        if (!fileName.startsWith("/")) {
-            fileName = JTerm.currentDirectory + "/" + fileName;
-        }
-        return fileName;
+        return !fileName.startsWith("/") ? String.format("%s/%s", JTerm.currentDirectory, fileName) : fileName;
     }
 }

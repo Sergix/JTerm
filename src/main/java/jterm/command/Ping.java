@@ -28,6 +28,7 @@ public class Ping {
     public static void ping(List<String> options) {
         String port = "80";
         int portIndex = options.indexOf("-p");
+
         if (portIndex != -1) {
             if ((options.size() != 3) || (portIndex + 1 == options.size())) {
                 throw new CommandException("Invalid ping usage");

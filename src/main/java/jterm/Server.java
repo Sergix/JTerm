@@ -33,7 +33,7 @@ public class Server implements Runnable {
     public static int port = 0;
     private static String line;
 
-    Server(Socket newSocket) {
+    public Server(Socket newSocket) {
         socket = newSocket;
     }
 
@@ -58,7 +58,7 @@ public class Server implements Runnable {
         }
     }
 
-    public static void Start(ArrayList<String> options) {
+    public static void start(ArrayList<String> options) {
         String portInput = "80";
         for (String option : options) {
             if (option.equals("-h")) {

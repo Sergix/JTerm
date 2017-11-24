@@ -21,7 +21,6 @@ import jterm.util.Util;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Set {
     public static final HashMap<String, String> vars = new HashMap<>();
@@ -29,9 +28,7 @@ public class Set {
     @Command(name = "set", minOptions = 3, syntax = "set [-h] <name> = <value>")
     public static void set(List<String> options) {
         if (options.size() == 0) {
-            for (Map.Entry<String, String> entry : vars.entrySet()) {
-                JTerm.out.println(entry.getKey() + "=" + entry.getValue());
-            }
+            vars.forEach((key, value) -> JTerm.out.printf("%s=%s%n", key, value));
             return;
         }
 
@@ -60,6 +57,7 @@ public class Set {
             Window.windows.add(newWindow);
             return;
         }
+
         vars.put(key, Util.getRest(options, 2));
     }
 }

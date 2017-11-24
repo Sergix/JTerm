@@ -37,6 +37,7 @@ public class Pause {
         if (options.size() == 0) {
             JTerm.out.print("Press enter to continue...");
         }
+
         // TODO: Figure out what this is doing and how to do it in GUI
         try {
             JTerm.userInput.read();
