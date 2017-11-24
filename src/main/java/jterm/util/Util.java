@@ -65,55 +65,7 @@ public class Util {
     }
 
     public static String getAsString(List<String> options) {
-        return options.toString().replaceAll(",", "").replace("[", "").replace("]", "");
-    }
-
-    public static String getRest(List<String> options, int index) {
-        StringBuilder outputBuilder = new StringBuilder();
-        options.subList(index, options.size()).forEach(option -> outputBuilder.append(option).append(" "));
-
-        return outputBuilder.toString().trim();
-    }
-
-    /**
-     * Removes blank space before and after command if any exists.
-     *
-     * @param command Command to parse
-     * @return Command without white space
-     */
-    public static String removeSpaces(String command) {
-        int fpos = 0;
-        for (int i = 0; i < command.length(); i++) {
-            if (command.charAt(i) == ' ')
-                fpos++;
-            else
-                break;
-        }
-
-        int bpos = command.length() > 0 ? command.length() : 0;
-        for (int i = command.length() - 1; i > 0; i--) {
-            if (command.charAt(i) == ' ')
-                bpos--;
-            else
-                break;
-        }
-
-        // TODO: This method basically does the same as String.trim(), should be replaced by trim()
-        return command.substring(fpos, bpos);
-    }
-
-    /**
-     * Determines if a string is composed only of spaces.
-     *
-     * @param s string to check
-     * @return true if s is composed of only spaces, false if there is a character in it
-     */
-    public static boolean containsOnlySpaces(String s) {
-        return s.trim().isEmpty();
-    }
-
-    public static int shrinkToBounds(int i, int min, int max){
-        return Math.min(Math.max(i, min), max);
+        return options.toString().replaceAll("[,\\[\\]]", "");
     }
 
     public static String getFullPath(String fileName) {

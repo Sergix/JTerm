@@ -1,15 +1,15 @@
 package jterm.util;
 
 import jterm.JTerm;
+import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.TreeSet;
-
-//import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl;
 
 /**
  * Class that autocompletes filenames.
@@ -88,10 +88,6 @@ public class FileAutocomplete {
 
         String[] commandArr = command.split(" ");
         FileAutocomplete.currText = command.endsWith(" ") ? "" : commandArr[commandArr.length - 1];
-    }
-
-    protected static void setCurrText(String currText) {
-        FileAutocomplete.currText = currText;
     }
 
     public static void resetVars() {
@@ -200,10 +196,10 @@ public class FileAutocomplete {
         else if (Files.isRegularFile(p))
             end = " ";
 
-        Util.clearLine(getCommand(), getCommand().length(), true);
+        Util.clearLine(getCommand(), getCommand().length(), false);
 
         command = originalCommand + fileName.substring(startComplete) + end;
-        JTerm.out.printWithPrompt(getCommand());
+        JTerm.out.print(getCommand());
 
         lockTab = true;
         resetVars = true;
@@ -231,12 +227,12 @@ public class FileAutocomplete {
 
             // Rotate
         else if (!lockTab || endsWithDirChar) {
-            Util.clearLine(command, getCommand().length(), true);
+            Util.clearLine(command, getCommand().length(), false);
 
             String currFile = iterator.next();
 
             command = originalCommand + currFile.substring(startComplete);
-            JTerm.out.printWithPrompt(getCommand());
+            JTerm.out.print(getCommand());
 
             // Add to end of list (rotate through list)
             fileNames.add(currFile);

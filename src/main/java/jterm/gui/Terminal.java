@@ -9,13 +9,12 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Terminal extends JFrame {
+public class Terminal extends JFrame implements KeyListener {
     private JPanel contentPane;
     private JTextPane textPane;
     private AttributeSet asWhite;
     private AttributeSet asOffWhite;
     private ProtectedTextComponent ptc;
-    private int preTypeLength = 0;
 
     public Terminal() {
         setContentPane(contentPane);
@@ -46,42 +45,37 @@ public class Terminal extends JFrame {
         asOffWhite = sc.addAttribute(asOffWhite, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
 
         textPane.setEditable(true);
-        textPane.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                //Consume under certain conditions
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_TAB:
-                    case KeyEvent.VK_UP:
-                    case KeyEvent.VK_DOWN:
-                        e.consume();
-                        break;
-                    case KeyEvent.VK_SHIFT:
-                    case KeyEvent.VK_CAPS_LOCK:
-                        e.consume();
-                        return;
-                }
-                //Handle key
-                if ((int) e.getKeyChar() == 65535) {
-                    new Thread(() -> InputHandler.process(Keys.getKeyByValue(e.getKeyCode() * -1), e.getKeyChar())).start();
-                } else
-                    new Thread(() -> InputHandler.process(Keys.getKeyByValue((int) e.getKeyChar()), e.getKeyChar())).start();
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-        });
+        textPane.addKeyListener(this);
         ptc = new ProtectedTextComponent(textPane);
         println(JTerm.LICENSE, false);
         showPrompt();
         //overrideEnter();
         JTerm.IS_WIN = false;
         JTerm.IS_UNIX = true;
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        //Consume under certain conditions
+        switch (e.getKeyCode()) {
+            //These keys need to be handled by InputHandler only
+            case KeyEvent.VK_TAB:
+            case KeyEvent.VK_UP:
+            case KeyEvent.VK_DOWN:
+                e.consume();
+                break;
+            //Consume without processing shift and capslock keys
+            //These keys are modifiers. We can ignore them
+            case KeyEvent.VK_SHIFT:
+            case KeyEvent.VK_CAPS_LOCK:
+                e.consume();
+                return;
+        }
+        if ((int) e.getKeyChar() == 65535) {
+            //An arrow key was pressed. Switch the key code into the negatives so it wont interfere with any real chars
+            new Thread(() -> InputHandler.process(Keys.getKeyByValue(e.getKeyCode() * -1), e.getKeyChar())).start();
+        } else
+            new Thread(() -> InputHandler.process(Keys.getKeyByValue((int) e.getKeyChar()), e.getKeyChar())).start();
     }
 
     private void onCancel() {
@@ -92,10 +86,9 @@ public class Terminal extends JFrame {
     public void showPrompt() {
         String prompt = JTerm.PROMPT;
         print(prompt, true);
-        print(" ", true);
+        print("", true);
         int promptIndex = textPane.getDocument().getLength();
         textPane.setCaretPosition(promptIndex);
-        preTypeLength = textPane.getText().length();
         ptc.protectText(0, promptIndex - 1);
     }
 
@@ -105,14 +98,15 @@ public class Terminal extends JFrame {
     }
 
     public void clearLine(String line, boolean clearPrompt) {
-        ptc.clearProtections();
+        if (clearPrompt) ptc.clearProtections();
         String text = textPane.getText().replaceAll("\r", "");
         int ix = text.lastIndexOf("\n") + 1;
-        ix += clearPrompt ? 0 : 3;
         int len = line.length();
-        len += clearPrompt ? 3 : 0;
+        if (clearPrompt) len += 3;
+        else ix += 3;
+        if (ix >= text.length()) return;
         try {
-            textPane.getDocument().remove(ix, len + 1);
+            textPane.getDocument().remove(ix, len);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -164,5 +158,13 @@ public class Terminal extends JFrame {
      */
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 }

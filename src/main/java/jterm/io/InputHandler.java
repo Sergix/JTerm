@@ -6,7 +6,6 @@ import jterm.util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 
 public class InputHandler {
@@ -20,12 +19,6 @@ public class InputHandler {
     // Stores all entered commands
     private static final ArrayList<String> prevCommands = new ArrayList<>();
     private static String command = "";
-
-    // Stops autocomplete from reprinting command it completed if tab is pressed at the end of a complete file name
-    private static boolean lockTab = false;
-
-    // Stops autocomplete from constantly erasing fileNames list when searching sub-directories
-    private static boolean blockClear = false;
 
     // For resetting all variables in FileAutocomplete once a key press other than a tab is registered
     private static boolean resetVars = false;
@@ -85,8 +78,8 @@ public class InputHandler {
     static void processRight() {
         if (getCursorPos() < command.length()) {
             if (JTerm.isHeadless()) {
-                Util.clearLine(command, cursorPos, true);
-                JTerm.out.printWithPrompt(command);
+                Util.clearLine(command, cursorPos, false);
+                JTerm.out.print(command);
             }
             increaseCursorPos();
             moveToCursorPos();
@@ -104,15 +97,15 @@ public class InputHandler {
         if (lastArrowPress == Keys.NONE)
             currCommand = command;
         lastArrowPress = ak;
-        Util.clearLine(command, cursorPos, true);
+        Util.clearLine(command, cursorPos, false);
         commandListPosition += ak == Keys.UP ? -1 : 1;
         commandListPosition = Math.max(commandListPosition, 0);
         if (commandListPosition >= getPrevCommands().size()) {
             commandListPosition = Math.min(commandListPosition, getPrevCommands().size());
-            JTerm.out.printWithPrompt(currCommand);
+            JTerm.out.print(currCommand);
             command = currCommand;
         } else {
-            JTerm.out.printWithPrompt(getPrevCommands().get(commandListPosition));
+            JTerm.out.print(getPrevCommands().get(commandListPosition));
             command = getPrevCommands().get(commandListPosition);
         }
     }
@@ -150,9 +143,9 @@ public class InputHandler {
             if (JTerm.isHeadless()) JTerm.out.print(lastChar);
             command += lastChar;
         } else {
-            Util.clearLine(command, cursorPos, true);
+            Util.clearLine(command, cursorPos, false);
             command = new StringBuilder(command).insert(cursorPos, lastChar).toString();
-            JTerm.out.printWithPrompt(command);
+            JTerm.out.print(command);
         }
 
         increaseCursorPos();
@@ -183,7 +176,11 @@ public class InputHandler {
      * Sends command to terminal class for parsing, source is the newlineEvent in the key processor
      */
     private static void parse() {
-        Arrays.stream(command.split("&&")).forEach(argument -> JTerm.executeCommand(command.trim()));
+        String[] commands = command.split("&&");
+        for (String command : commands) {
+            command = command.trim();
+            JTerm.executeCommand(command);
+        }
     }
 
     /**
@@ -217,8 +214,6 @@ public class InputHandler {
             FileAutocomplete.resetVars();
 
         // Get variables and set cursor position
-        blockClear = FileAutocomplete.isBlockClear();
-        lockTab = FileAutocomplete.isLockTab();
         setCursorPos(FileAutocomplete.getCursorPos());
         moveToCursorPos();
     }
