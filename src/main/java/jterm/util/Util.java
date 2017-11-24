@@ -115,7 +115,7 @@ public class Util {
     public static int shrinkToBounds(int i, int min, int max){
         return Math.min(Math.max(i, min), max);
     }
-    
+
     public static String getFullPath(String fileName) {
         return !fileName.startsWith("/") ? String.format("%s/%s", JTerm.currentDirectory, fileName) : fileName;
     }

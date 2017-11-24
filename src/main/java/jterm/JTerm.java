@@ -194,7 +194,7 @@ public class JTerm {
     public static Set<String> getCommands() {
         return JTerm.COMMANDS.keySet();
     }
-    
+
     /** For Unit Tests **/
     public static void setheadless(boolean b){
         headless = b;
