@@ -58,6 +58,6 @@ public class Set {
             return;
         }
 
-        vars.put(key, Util.getRest(options, 2));
+        vars.put(key, Util.getAsString(options).substring(2));
     }
 }
