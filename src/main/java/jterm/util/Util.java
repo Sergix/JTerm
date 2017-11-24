@@ -81,6 +81,7 @@ public class Util {
      * @param command Command to parse
      * @return Command without white space
      */
+    // TODO: This method basically does the same as String.trim(), should be replaced by trim()
     public static String removeSpaces(String command) {
         int fpos = 0;
         for (int i = 0; i < command.length(); i++) {
@@ -98,7 +99,6 @@ public class Util {
                 break;
         }
 
-        // TODO: This method basically does the same as String.trim(), should be replaced by trim()
         return command.substring(fpos, bpos);
     }
 
