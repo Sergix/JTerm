@@ -132,7 +132,7 @@ public class InputHandler {
         System.out.println();
         parse();
         command = "";
-        JTerm.out.printWithPrompt("");
+        JTerm.out.printPrompt();
     }
 
     static void charEvent() {

@@ -20,22 +20,23 @@ class UtilTest {
         JTerm.setheadless(true);
         PrintStreamCollector collector = new PrintStreamCollector();
         JTerm.out = collector;
+        JTerm.setPrompt("/dir>> ");
 
-        JTerm.out.print(">> ");
+        JTerm.out.printPrompt();
         Util.clearLine("", 0, true);
-        assertEquals(">> \b\b\b   \b\b\b", collector.export());
+        assertEquals("/dir>> \b\b\b\b\b\b\b       \b\b\b\b\b\b\b", collector.export());
 
-        JTerm.out.print(">> stuff");
+        JTerm.out.printWithPrompt("stuff");
         Util.clearLine("stuff", 5, true);
-        assertEquals(">> stuff\b\b\b\b\b\b\b\b        \b\b\b\b\b\b\b\b", collector.export());
+        assertEquals("/dir>> stuff\b\b\b\b\b\b\b\b\b\b\b\b            \b\b\b\b\b\b\b\b\b\b\b\b", collector.export());
 
-        JTerm.out.print(">> ");
+        JTerm.out.printPrompt();
         Util.clearLine("", 0, false);
-        assertEquals(">> ", collector.export());
+        assertEquals("/dir>> ", collector.export());
 
-        JTerm.out.print(">> stuff");
+        JTerm.out.printWithPrompt("stuff");
         Util.clearLine("stuff", 5, false);
-        assertEquals(">> stuff\b\b\b\b\b     \b\b\b\b\b", collector.export());
+        assertEquals("/dir>> stuff\b\b\b\b\b     \b\b\b\b\b", collector.export());
     }
 
     @Test
@@ -48,16 +49,17 @@ class UtilTest {
         JTerm.setTerminal(terminal);
         JTerm.out = new PrintStreamInterceptor(terminal);
         Document doc = terminal.getTextPane().getDocument();
+        JTerm.setPrompt("/dir>> ");
 
         terminal.clear();
-        JTerm.out.printWithPrompt("");
+        JTerm.out.printPrompt();
         Util.clearLine("", 0, true);
         assertEquals("", doc.getText(0, doc.getLength()));
 
         terminal.clear();
-        JTerm.out.printWithPrompt("");
+        JTerm.out.printPrompt();
         Util.clearLine("", 0, false);
-        assertEquals(">> ", doc.getText(0, doc.getLength()));
+        assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
 
         terminal.clear();
         JTerm.out.printWithPrompt("stuff");
@@ -67,7 +69,7 @@ class UtilTest {
         terminal.clear();
         JTerm.out.printWithPrompt("stuff");
         Util.clearLine("stuff", 0, false);
-        assertEquals(">> ", doc.getText(0, doc.getLength()));
+        assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
     }
 
     @Test

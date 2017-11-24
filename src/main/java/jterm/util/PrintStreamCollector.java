@@ -134,6 +134,11 @@ public class PrintStreamCollector extends PromptPrinter {
     }
 
     @Override
+    public void printPrompt() {
+        lines.append(JTerm.PROMPT);
+    }
+
+    @Override
     public void printWithPrompt(String s) {
         lines.append(JTerm.PROMPT).append(s);
     }
@@ -143,14 +148,15 @@ public class PrintStreamCollector extends PromptPrinter {
         lines.append(JTerm.PROMPT).append(s).append("\n");
     }
 
-    public String[] exportArray(){
+    public String[] exportArray() {
         String[] out = lines.toString().split("\n");
-        lines= new StringBuilder();
+        lines = new StringBuilder();
         return out;
     }
-    public String export(){
+
+    public String export() {
         String out = lines.toString();
-        lines= new StringBuilder();
+        lines = new StringBuilder();
         return out;
     }
 }

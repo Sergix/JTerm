@@ -68,7 +68,7 @@ public class JTerm {
             out = new PromptInterceptor();
             headless = true;
             out.println(LICENSE);
-            out.print(PROMPT);
+            out.printPrompt();
             try {
                 while (true) {
                     InputHandler.read();
@@ -163,6 +163,7 @@ public class JTerm {
                                 method.invoke(null, options);
                             } catch (Exception e) {
                                 System.err.println("Weird stuff...");
+                                e.printStackTrace();
                             }
                         });
 

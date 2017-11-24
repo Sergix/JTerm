@@ -4,6 +4,11 @@ import jterm.JTerm;
 
 public class PromptInterceptor extends PromptPrinter {
     @Override
+    public void printPrompt() {
+        System.out.print(JTerm.PROMPT);
+    }
+
+    @Override
     public void printWithPrompt(String s) {
         System.out.print(JTerm.PROMPT + s);
     }

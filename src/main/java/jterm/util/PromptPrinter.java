@@ -8,6 +8,8 @@ public abstract class PromptPrinter extends PrintStream {
         super(System.out);
     }
 
+    public abstract void printPrompt();
+
     public abstract void printWithPrompt(String s);
 
     public abstract void printlnWithPrompt(String s);

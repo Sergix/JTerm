@@ -138,9 +138,14 @@ public class PrintStreamInterceptor extends PromptPrinter {
     }
 
     @Override
+    public void printPrompt() {
+        invoke(terminal::printPrompt);
+    }
+
+    @Override
     public void printWithPrompt(String s) {
         invoke(() -> {
-            terminal.showPrompt();
+            terminal.printPrompt();
             terminal.print(s, true);
         });
     }
@@ -148,7 +153,7 @@ public class PrintStreamInterceptor extends PromptPrinter {
     @Override
     public void printlnWithPrompt(String s) {
         invoke(() -> {
-            terminal.showPrompt();
+            terminal.printPrompt();
             terminal.println(s, true);
         });
     }

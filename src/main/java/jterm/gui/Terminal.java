@@ -48,7 +48,7 @@ public class Terminal extends JFrame implements KeyListener {
         textPane.addKeyListener(this);
         ptc = new ProtectedTextComponent(textPane);
         println(JTerm.LICENSE, false);
-        showPrompt();
+        printPrompt();
         //overrideEnter();
         JTerm.IS_WIN = false;
         JTerm.IS_UNIX = true;
@@ -83,9 +83,8 @@ public class Terminal extends JFrame implements KeyListener {
         System.exit(0);
     }
 
-    public void showPrompt() {
-        String prompt = JTerm.PROMPT;
-        print(prompt, true);
+    public void printPrompt() {
+        print(JTerm.PROMPT, true);
         print("", true);
         int promptIndex = textPane.getDocument().getLength();
         textPane.setCaretPosition(promptIndex);
@@ -102,8 +101,8 @@ public class Terminal extends JFrame implements KeyListener {
         String text = textPane.getText().replaceAll("\r", "");
         int ix = text.lastIndexOf("\n") + 1;
         int len = line.length();
-        if (clearPrompt) len += 3;
-        else ix += 3;
+        if (clearPrompt) len += JTerm.PROMPT.length();
+        else ix += JTerm.PROMPT.length();
         if (ix >= text.length()) return;
         try {
             textPane.getDocument().remove(ix, len);
