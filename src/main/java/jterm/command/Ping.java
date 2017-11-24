@@ -25,6 +25,7 @@ import java.net.Socket;
 import java.util.List;
 
 public class Ping {
+
     @Command(name = "ping", minOptions = 1, syntax = "ping [-h] [-p port] host")
     public static void ping(List<String> options) {
         String port = "80";
