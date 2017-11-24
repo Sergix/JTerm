@@ -26,6 +26,7 @@ import java.util.Map;
  *  protected text is not a requirement.
  */
 class ProtectedDocument {
+
     private final AbstractDocument doc;
     private Map<Position, Position> positions = new HashMap<>();
 

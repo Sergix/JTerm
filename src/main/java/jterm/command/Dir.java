@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Dir {
+
     private static final Consumer<File> SIMPLE_PRINTER = (file) -> JTerm.out.println(TextColor.INFO, "\t" + file.getName());
 
     private static final Consumer<File> FULL_PRINTER = (file) -> JTerm.out.println(TextColor.INFO, "\t"
@@ -51,6 +52,7 @@ public class Dir {
         }
 
         JTerm.out.println(TextColor.INFO, "[Contents of \"" + JTerm.currentDirectory + "\"]");
+
         Arrays.stream(files).forEach(options.contains("-f") ? FULL_PRINTER : SIMPLE_PRINTER);
     }
 
@@ -87,6 +89,7 @@ public class Dir {
             newDirectory = JTerm.currentDirectory + newDirectory;
         } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
             JTerm.out.println(TextColor.ERROR, "ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
+            
             return;
         }
 
@@ -110,31 +113,33 @@ public class Dir {
         try {
             java.nio.file.Files.createDirectory(Paths.get(dirName));
         } catch (IOException e) {
-            throw new CommandException("Failed to create directory \'" + dirName + '\'');
+            throw new CommandException(String.format("Failed to create directory '%s'", dirName));
         }
     }
 
     @Command(name = "rmdir", minOptions = 1, syntax = "rm [-h] [-r] dirName")
     public static void rm(List<String> options) {
         List<String> filesToBeRemoved = new ArrayList<>();
-        final boolean[] recursivelyDeleteFlag = {false};
-        options.forEach(option -> {
+        boolean recursivelyDeleteFlag = false;
+
+        for (String option : options) {
             switch (option) {
                 case "-r":
-                    recursivelyDeleteFlag[0] = true;
+                    recursivelyDeleteFlag = true;
                     break;
                 default:
                     filesToBeRemoved.add(option);
                     break;
             }
-        });
+        }
 
+        boolean finalRecursivelyDeleteFlag = recursivelyDeleteFlag;
         filesToBeRemoved.forEach(fileName -> {
             File file = new File(JTerm.currentDirectory, fileName);
             if (!file.isFile() && !file.isDirectory()) {
                 JTerm.out.printf(TextColor.ERROR, "%s is not a file or directory%n", fileName);
             } else if (file.isDirectory()) {
-                if (recursivelyDeleteFlag[0]) {
+                if (finalRecursivelyDeleteFlag) {
                     try {
                         FileUtils.deleteDirectory(file);
                     } catch (IOException e) {

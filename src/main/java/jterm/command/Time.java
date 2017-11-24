@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Time {
+
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss , z");
 
     @Command(name = "time")

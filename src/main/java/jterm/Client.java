@@ -25,6 +25,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Client implements Runnable {
+
     private static BufferedReader input;
 
     public void run() {

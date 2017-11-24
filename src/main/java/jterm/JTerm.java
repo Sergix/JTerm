@@ -30,15 +30,15 @@ import jterm.io.output.HeadlessPrinter;
 import jterm.util.Util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.security.CodeSource;
+import java.net.URL;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public class JTerm {
+
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
     public static Printer out;
     public static final String VERSION = "0.7.0";
@@ -114,42 +114,22 @@ public class JTerm {
         // Reflections reflections = new Reflections("jterm.command", new MethodAnnotationsScanner());
         // Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
         ArrayList<Method> methods = new ArrayList<>();
-        ArrayList<String> classes = new ArrayList<>();
+        String packageName = "jterm.command";
 
-        try {
-            CodeSource src = JTerm.class.getProtectionDomain().getCodeSource();
-            if (src != null) {
-                ZipInputStream zip = new ZipInputStream(src.getLocation().openStream());
-
-                while (true) {
-                    ZipEntry e = zip.getNextEntry();
-
-                    if (e == null) {
-                        break;
-                    }
-
-                    String name = e.getName();
-                    if (name.startsWith("jterm/command")) {
-                        classes.add(name.replace('/', '.').substring(0, name.length() - 6));
-                    }
-                }
-            }
-        } catch (IOException ioe) {
-            out.println(TextColor.ERROR,ioe.toString());
-        }
-
-        // TODO: This line makes the program crash on Linux Kubuntu, don't know about windows
-        classes.remove(0);
-
-        classes.forEach(aClass -> {
+        URL root = Thread.currentThread().getContextClassLoader().getResource(packageName.replace(".", "/"));
+        Arrays.stream(new File(root.getFile()).listFiles()).forEach(file -> {
             try {
-                Arrays.stream(Class.forName(aClass).getDeclaredMethods()).forEach(method -> {
-                    if (method.isAnnotationPresent(Command.class)) {
-                        methods.add(method);
-                    }
-                });
-            } catch (ClassNotFoundException cnfe) {
-                out.println(TextColor.ERROR,cnfe.toString());
+                Class clazz = Class.forName(String.format("%s.%s", packageName, file.getName().replaceAll(".class$", "")));
+
+                if (!clazz.getSimpleName().startsWith("Command")) {
+                    Arrays.stream(clazz.getDeclaredMethods()).forEach(method -> {
+                        if (method.isAnnotationPresent(Command.class)) {
+                            methods.add(method);
+                        }
+                    });
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
         });
 
