@@ -77,15 +77,17 @@ public class InputHandler {
 
     static void processLeft() {
         if (getCursorPos() > 0) {
-            JTerm.out.print("\b");
+            if (JTerm.isHeadless()) JTerm.out.print("\b");
             decreaseCursorPos();
         }
     }
 
     static void processRight() {
         if (getCursorPos() < command.length()) {
-            Util.clearLine(command, cursorPos, true);
-            JTerm.out.printWithPrompt(command);
+            if (JTerm.isHeadless()) {
+                Util.clearLine(command, cursorPos, true);
+                JTerm.out.printWithPrompt(command);
+            }
             increaseCursorPos();
             moveToCursorPos();
         }
@@ -123,7 +125,7 @@ public class InputHandler {
 
     static void newLineEvent() {
         lastArrowPress = Keys.NONE;
-        boolean empty = Util.containsOnlySpaces(command);
+        boolean empty = command.trim().isEmpty();
 
         ArrayList<String> prevCommands = getPrevCommands();
 
@@ -189,8 +191,9 @@ public class InputHandler {
      * Usually only used after modifying 'command'
      */
     private static void moveToCursorPos() {
-        for (int i = command.length(); i > cursorPos; i--) {
-            JTerm.out.print("\b");
+        if(JTerm.isHeadless()) {
+            for (int i = command.length(); i > cursorPos; i--)
+                JTerm.out.print("\b");
         }
     }
 
@@ -281,7 +284,7 @@ public class InputHandler {
         }
 
         // Remove spaces so that autocomplete can work properly
-        splitCommand[1] = Util.removeSpaces(splitCommand[1]);
+        splitCommand[1] = splitCommand[1].trim();
 
         return splitCommand;
     }
