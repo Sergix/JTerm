@@ -67,7 +67,7 @@ public class Window {
         boolean heightNext = false;
         boolean widthNext = false;
 
-        // TODO: use switch instead of else-if?
+        // TODO: use switch instead of else-if? FROM DATASEC: Yes do it!
         for (String option : options) {
             if (option.equals("-h")) {
                 JTerm.out.println("Command syntax:\t\nwindow [-h] [-r] [-v] [-w width] [-l height] [-t title]"
@@ -96,8 +96,7 @@ public class Window {
             }
         }
 
-        windowCount += 1;
-        id = windowCount;
+        id = ++windowCount;
 
         if (title == null) {
             title = "JTerm Window";
@@ -112,6 +111,7 @@ public class Window {
         windows.add(this);
     }
 
+    // TODO: Refactor these methods to use proper JavaDoc
     /*
     * toggleVisible() void
     *

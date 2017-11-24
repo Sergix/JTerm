@@ -27,7 +27,6 @@ public class Date {
 
     @Command(name = "date", syntax = "date [-h]")
     public static void printDate(List<String> options) {
-        Calendar calendar = Calendar.getInstance();
-        JTerm.out.println("The current date is: " + dateFormat.format(calendar.getTime()));
+        JTerm.out.println("The current date is: " + dateFormat.format(Calendar.getInstance().getTime()));
     }
 }

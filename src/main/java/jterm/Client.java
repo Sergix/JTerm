@@ -60,11 +60,11 @@ public class Client implements Runnable {
         }
 
         int port = Integer.valueOf(portInput);
-        try (Socket connection = new Socket(address, port)) {
-            JTerm.out.println("Connecting to " + address + ":" + port);
+        try (Socket connection = new Socket(address, port); InputStream input = connection.getInputStream(); OutputStream output = connection.getOutputStream();
+             BufferedReader bufferedSocketOutput = new BufferedReader(new InputStreamReader(System.in), 1)) {
 
-            InputStream input = connection.getInputStream();
-            OutputStream output = connection.getOutputStream();
+            JTerm.out.printf("Connecting to %s:%d%n", address, port);
+
             Client.input = new BufferedReader(new InputStreamReader(input));
 
             Client client = new Client();
@@ -73,18 +73,9 @@ public class Client implements Runnable {
 
             JTerm.out.println("Connected to server. Enter a blank line to quit. Reading for input...");
 
-            while (true) {
-                BufferedReader bufferedSocketOutput = new BufferedReader(new InputStreamReader(System.in), 1);
-                String line = bufferedSocketOutput.readLine();
-
-                if (line.equals("")) {
-                    break;
-                }
-
+            String line;
+            while ((line = bufferedSocketOutput.readLine()) != null && !line.equals("")) {
                 output.write(line.getBytes());
-
-                output.close();
-                bufferedSocketOutput.close();
             }
         } catch (IOException e) {
             JTerm.out.println("Connection severed.");

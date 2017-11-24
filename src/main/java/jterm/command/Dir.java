@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -48,12 +49,8 @@ public class Dir {
             return;
         }
 
-        Consumer<File> printer = options.contains("-f") ? FULL_PRINTER : SIMPLE_PRINTER;
-
         JTerm.out.println("[Contents of \"" + JTerm.currentDirectory + "\"]");
-        for (File file : files) {
-            printer.accept(file);
-        }
+        Arrays.stream(files).forEach(options.contains("-f") ? FULL_PRINTER : SIMPLE_PRINTER);
     }
 
     // FIXME: throws exception if no options specified
@@ -119,28 +116,28 @@ public class Dir {
     @Command(name = "rmdir", minOptions = 1, syntax = "rm [-h] [-r] dirName")
     public static void rm(List<String> options) {
         List<String> filesToBeRemoved = new ArrayList<>();
-        boolean recursivelyDeleteFlag = false;
-        for (String option : options) {
+        final boolean[] recursivelyDeleteFlag = {false};
+        options.forEach(option -> {
             switch (option) {
                 case "-r":
-                    recursivelyDeleteFlag = true;
+                    recursivelyDeleteFlag[0] = true;
                     break;
                 default:
                     filesToBeRemoved.add(option);
                     break;
             }
-        }
+        });
 
-        for (String fileName : filesToBeRemoved) {
+        filesToBeRemoved.forEach(fileName -> {
             File file = new File(JTerm.currentDirectory, fileName);
             if (!file.isFile() && !file.isDirectory()) {
-                JTerm.out.println(fileName + " is not a file or directory");
+                JTerm.out.printf("%s is not a file or directory%n", fileName);
             } else if (file.isDirectory()) {
-                if (recursivelyDeleteFlag) {
+                if (recursivelyDeleteFlag[0]) {
                     try {
                         FileUtils.deleteDirectory(file);
                     } catch (IOException e) {
-                        JTerm.out.println("Error when deleting " + fileName);
+                        JTerm.out.printf("Error when deleting %s%n", fileName);
                     }
                 } else {
                     JTerm.out.println("Attempting to delete a directory. Run the command again with -r.");
@@ -149,6 +146,6 @@ public class Dir {
             }
 
             file.delete();
-        }
+        });
     }
 }

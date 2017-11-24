@@ -1,15 +1,15 @@
 package jterm.util;
 
 import jterm.JTerm;
-import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.TreeSet;
+
+//import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl;
 
 /**
  * Class that autocompletes filenames.

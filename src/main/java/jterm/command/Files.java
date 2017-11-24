@@ -42,18 +42,16 @@ public class Files {
         try {
             java.nio.file.Files.move(source, destination);
         } catch (IOException e) {
-            throw new CommandException("Failed to move \'" + sourceName + "\' to \'" + destinationName + '\'', e);
+            throw new CommandException(String.format("Failed to move '%s' to '%s'", sourceName, destinationName), e);
         }
     }
 
     @Command(name = "rn", minOptions = 2, syntax = "rn [-h] file newName")
     public static void rename(List<String> options) {
-        String fileName = Util.getFullPath(options.get(0));
-        String newName = options.get(1);
+        Path filePath = Paths.get(Util.getFullPath(options.get(0)));
 
-        Path filePath = Paths.get(fileName);
         try {
-            java.nio.file.Files.move(filePath, filePath.resolveSibling(newName), REPLACE_EXISTING);
+            java.nio.file.Files.move(filePath, filePath.resolveSibling(options.get(1)), REPLACE_EXISTING);
         } catch (IOException e) {
             throw new CommandException("Failed to rename file", e);
         }
@@ -70,22 +68,19 @@ public class Files {
                 filenameBuilder.append(option);
             }
         }
-        String filename = filenameBuilder.toString();
 
-        filename = filename.trim();
-        filename = JTerm.currentDirectory + filename;
-
-        if (filename.equals("")) {
+        String fileName = String.format("%s%s", JTerm.currentDirectory, filenameBuilder.toString().trim());
+        if (fileName.equals("")) {
             JTerm.out.println("Error: missing filename; type \"write -h\" for more information.");
             return;
         }
 
-        try {
+        try (FileWriter fileWriter = new FileWriter(fileName)) {
             JTerm.out.println("Enter file contents (press enter after a blank line to quit):");
             String line = JTerm.userInput.readLine();
             StringBuilder output = new StringBuilder(line);
 
-            for (; ; ) {
+            for (;;) {
                 line = JTerm.userInput.readLine();
                 if (line.equals("")) {
                     break;
@@ -95,9 +90,7 @@ public class Files {
                 output.append("\n").append(line);
             }
 
-            FileWriter fileWriter = new FileWriter(filename);
             fileWriter.write(output.toString());
-            fileWriter.close();
         } catch (IOException ioe) {
             JTerm.out.println(String.valueOf(ioe));
         }
@@ -107,23 +100,24 @@ public class Files {
     @Command(name = {"rm", "del", "delete"}, minOptions = 1, syntax = "rm, del, delete [-h] file")
     public static void delete(List<String> options) {
         String fileName = Util.getFullPath(options.get(0));
+
         try {
             java.nio.file.Files.delete(Paths.get(fileName));
         } catch (NoSuchFileException e) {
             throw new CommandException("File does not exist", e);
         } catch (IOException e) {
-            throw new CommandException("Failed to delete \'" + fileName + "\'", e);
+            throw new CommandException(String.format("Failed to delete '%s'", fileName), e);
         }
     }
 
     @Command(name = "read", minOptions = 1, syntax = "read [-h] [file1 file2 ...]")
     public static void read(List<String> options) {
         String fileName = Util.getFullPath(options.get(0));
+
         try {
-            byte[] data = java.nio.file.Files.readAllBytes(Paths.get(fileName));
-            JTerm.out.println(new String(data));
+            JTerm.out.println(new String(java.nio.file.Files.readAllBytes(Paths.get(fileName))));
         } catch (IOException e) {
-            throw new CommandException("Failed to read \'" + fileName + "\' content");
+            throw new CommandException(String.format("Failed to read '%s' content", fileName));
         }
     }
 
@@ -136,6 +130,7 @@ public class Files {
             JTerm.out.println("A URL to a file must be provided as an option");
             return;
         }
+
         long start = System.currentTimeMillis();
         long fileSize;
         long downloadedBytes = 0;
@@ -152,7 +147,7 @@ public class Files {
             fileName += ".html";
         }
 
-        JTerm.out.println("Starting download of file -> " + fileName);
+        JTerm.out.printf("Starting download of file -> %s%n", fileName);
 
         // request file size from server (does not work with HTML files, unimportant because they download so fast)
         HttpURLConnection conn = null;
@@ -170,19 +165,14 @@ public class Files {
             }
         }
 
-        BufferedOutputStream out;
-        BufferedInputStream in;
-        try {
-            // output file
-            out = new BufferedOutputStream(new FileOutputStream(JTerm.currentDirectory + "/" + fileName));
-            // input from server
-            in = new BufferedInputStream(new URL(url).openStream());
+        try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(JTerm.currentDirectory + "/" + fileName));
+             BufferedInputStream in = new BufferedInputStream(new URL(url).openStream())) {
 
             int buffer = 1024;
             byte data[] = new byte[buffer];
             int count, steps = 0;
             // download file, and output information about progress
-            JTerm.out.print(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"));
+            JTerm.out.print(update = (String.format("Download is: %s%% complete", ((double) downloadedBytes / (double) fileSize) * 100d)));
             while ((count = in.read(data, 0, buffer)) != -1) {
                 out.write(data, 0, count);
                 downloadedBytes += count;
@@ -191,16 +181,15 @@ public class Files {
                 //Also, this causes flickering in the GUI, a lower update rate might be good
                 if (steps % 10 == 0) { // print every 10 download steps
                     Util.clearLine(update, update.length(), false);
-                    JTerm.out.print(update = ("Download is: " + (((double) downloadedBytes / (double) fileSize) * 100d) + "% complete"));
+                    JTerm.out.print(update = (String.format("Download is: %s%% complete", ((double) downloadedBytes / (double) fileSize) * 100d)));
                 }
             }
-            out.close();
         } catch (IOException e) {
             JTerm.out.println("Error when downloading file.");
         }
 
         // clear line and notify user of download success
         Util.clearLine(update, update.length(), false);
-        JTerm.out.println("\nFile downloaded successfully in: " + Util.getRunTime(System.currentTimeMillis() - start));
+        JTerm.out.printf("\nFile downloaded successfully in: %s%n", Util.getRunTime(System.currentTimeMillis() - start));
     }
 }
