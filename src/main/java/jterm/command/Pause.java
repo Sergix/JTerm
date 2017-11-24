@@ -30,7 +30,7 @@ public class Pause {
                 JTerm.out.println("Command syntax:\n\tpause [-h] [input]");
                 return;
             } else {
-                JTerm.out.print(Util.getRest(options, 0));
+                JTerm.out.print(Util.getAsString(options));
             }
         }
 
