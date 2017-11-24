@@ -30,6 +30,7 @@ import java.util.List;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class Files {
+
     // @ojles and @Kaperskyguru
     @Command(name = {"mv", "move"}, minOptions = 2, syntax = "move, mv [-h] source destination")
     public static void move(List<String> options) {
@@ -60,6 +61,7 @@ public class Files {
     @Command(name = "write", minOptions = 1, syntax = "write [-h] filename")
     public static void write(List<String> options) {
         StringBuilder filenameBuilder = new StringBuilder();
+
         for (String option : options) {
             if (option.equals("-h")) {
                 JTerm.out.println("Command syntax:\n\twrite [-h] filename\n\nOpens an input PROMPT in which to write text to a new file.");

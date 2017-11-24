@@ -7,9 +7,13 @@ import jterm.io.Keys;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Terminal extends JFrame {
+
     private JPanel contentPane;
     private JTextPane textPane;
     private AttributeSet asWhite;

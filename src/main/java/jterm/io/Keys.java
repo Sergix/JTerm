@@ -1,6 +1,7 @@
 package jterm.io;
 
 public enum Keys {
+
     UP(InputHandler::processUp),
     DOWN(InputHandler::processDown),
     LEFT(InputHandler::processLeft),

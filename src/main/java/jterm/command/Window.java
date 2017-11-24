@@ -25,7 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Window {
-    public static int windowCount = 0;
+
+    private static int windowCount = 0;
     public static final ArrayList<Window> windows = new ArrayList<>();
 
     private int id;
@@ -150,9 +151,9 @@ public class Window {
     }
 
     public static void closeAll() {
-        for (Window window : windows) {
+        windows.forEach(window -> {
             window.getFrame().setVisible(false); //you can't see me!
             window.getFrame().dispose(); //Destroy the JFrame object
-        }
+        });
     }
 }

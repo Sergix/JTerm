@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class Clear {
+
     private static final String ANSI_CLS = "\u001b[2J";
     private static final String ANSI_HOME = "\u001b[H";
 

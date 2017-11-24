@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.util.Locale;
 
 public class PrintStreamCollector extends PromptPrinter {
+
     private StringBuilder lines;
 
     public PrintStreamCollector() {

@@ -23,11 +23,13 @@ import java.util.List;
 import java.util.TreeSet;
 
 public class Help {
+
     @Command(name = "help")
     public static void printHelp(List<String> options) {
         JTerm.out.println("JTerm v" + JTerm.VERSION + "\n"
                 + "Available Commands\n"
                 + "(type [command] -h to view specific help information)");
+
         new TreeSet<>(JTerm.getCommands()).forEach(command -> JTerm.out.printf("\t%s%n", command));
     }
 }

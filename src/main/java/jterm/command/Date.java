@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class Date {
+
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     @Command(name = "date", syntax = "date [-h]")
