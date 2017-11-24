@@ -12,12 +12,9 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-<<<<<<< HEAD
-public class Terminal extends JFrame {
 
-=======
 public class Terminal extends JFrame implements KeyListener {
->>>>>>> upstream/dev
+
     private JPanel contentPane;
     private JTextPane textPane;
 

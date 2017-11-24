@@ -116,7 +116,6 @@ public class JTerm {
         ArrayList<Method> methods = new ArrayList<>();
         String packageName = "jterm.command";
 
-<<<<<<< HEAD
         URL root = Thread.currentThread().getContextClassLoader().getResource(packageName.replace(".", "/"));
         Arrays.stream(new File(root.getFile()).listFiles()).forEach(file -> {
             try {
@@ -131,37 +130,6 @@ public class JTerm {
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
-=======
-                while (true) {
-                    ZipEntry e = zip.getNextEntry();
-
-                    if (e == null) {
-                        break;
-                    }
-
-                    String name = e.getName();
-                    if (name.startsWith("jterm/command")) {
-                        classes.add(name.replace('/', '.').substring(0, name.length() - 6));
-                    }
-                }
-            }
-        } catch (IOException ioe) {
-            out.println(TextColor.ERROR,ioe.toString());
-        }
-
-        // TODO: This line makes the program crash on Linux Kubuntu, don't know about windows
-        classes.remove(0);
-
-        classes.forEach(aClass -> {
-            try {
-                Arrays.stream(Class.forName(aClass).getDeclaredMethods()).forEach(method -> {
-                    if (method.isAnnotationPresent(Command.class)) {
-                        methods.add(method);
-                    }
-                });
-            } catch (ClassNotFoundException cnfe) {
-                out.println(TextColor.ERROR,cnfe.toString());
->>>>>>> upstream/dev
             }
         });
 

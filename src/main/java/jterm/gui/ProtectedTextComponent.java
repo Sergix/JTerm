@@ -13,12 +13,8 @@ import javax.swing.text.JTextComponent;
  *  a) notify the ProtectedDocument class of the text to be protected.
  *  b) notify the ProtectedHighlighter class of the text to be protected.
  */
-<<<<<<< HEAD
-class ProtectedTextComponent {
-
-=======
 public class ProtectedTextComponent {
->>>>>>> upstream/dev
+
     private final JTextComponent component;
     private final ProtectedDocument document;
 

@@ -32,12 +32,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Dir {
-<<<<<<< HEAD
 
-    private static final Consumer<File> SIMPLE_PRINTER = (file) -> JTerm.out.println("\t" + file.getName());
-=======
     private static final Consumer<File> SIMPLE_PRINTER = (file) -> JTerm.out.println(TextColor.INFO, "\t" + file.getName());
->>>>>>> upstream/dev
 
     private static final Consumer<File> FULL_PRINTER = (file) -> JTerm.out.println(TextColor.INFO, "\t"
             + (file.isFile() ? "F" : "D") + " "
@@ -55,11 +51,8 @@ public class Dir {
             return;
         }
 
-<<<<<<< HEAD
-        JTerm.out.printf("[Contents of \"%s\"]%n", JTerm.currentDirectory);
-=======
         JTerm.out.println(TextColor.INFO, "[Contents of \"" + JTerm.currentDirectory + "\"]");
->>>>>>> upstream/dev
+
         Arrays.stream(files).forEach(options.contains("-f") ? FULL_PRINTER : SIMPLE_PRINTER);
     }
 
@@ -95,11 +88,8 @@ public class Dir {
         } else if (newDir.exists() && newDir.isDirectory()) {
             newDirectory = JTerm.currentDirectory + newDirectory;
         } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
-<<<<<<< HEAD
-            JTerm.out.printf("ERROR: Directory \"%s\" either does not exist or is not a valid directory.%n", newDirectory);
-=======
             JTerm.out.println(TextColor.ERROR, "ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
->>>>>>> upstream/dev
+            
             return;
         }
 

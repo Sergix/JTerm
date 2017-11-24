@@ -1,15 +1,10 @@
 package jterm.command;
 
 import jterm.JTerm;
-<<<<<<< HEAD
-import jterm.util.PrintStreamCollector;
-import jterm.util.PromptPrinter;
-import jterm.util.Util;
-=======
 import jterm.io.output.CollectorPrinter;
 import jterm.io.output.Printer;
 import jterm.io.output.TextColor;
->>>>>>> upstream/dev
+import jterm.util.Util;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -35,12 +30,9 @@ public class Regex {
         if (m.find()) {
             exp = m.group(1);
             command = command.replaceFirst("\".*\"", "");
-<<<<<<< HEAD
 
-            PrintStreamCollector collector = new PrintStreamCollector();
-=======
             CollectorPrinter collector = new CollectorPrinter();
->>>>>>> upstream/dev
+
             JTerm.out = collector;
 
             JTerm.executeCommand(command);
@@ -53,15 +45,10 @@ public class Regex {
 
                 while (matcher.find()) {
                     found = true;
-<<<<<<< HEAD
 
                     for (int i = 1; i <= matcher.groupCount(); i++) {
-                        backup.println(matcher.group(i));
-                    }
-=======
-                    for (int i = 1; i <= matcher.groupCount(); i++)
                         backup.println(TextColor.INFO, matcher.group(i));
->>>>>>> upstream/dev
+                    }
                 }
             } else {
                 for (String line : collector.exportArray()) {
@@ -73,14 +60,10 @@ public class Regex {
                     }
                 }
             }
-<<<<<<< HEAD
 
             if (!found) {
-                backup.println("No matches");
+                backup.println(TextColor.ERROR, "No matches");
             }
-=======
-            if (!found) backup.println(TextColor.ERROR, "No matches");
->>>>>>> upstream/dev
         } else {
             backup.println(TextColor.ERROR, "Invalid syntax");
         }
