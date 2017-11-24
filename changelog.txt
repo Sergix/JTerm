@@ -1,3 +1,11 @@
+(#116)[11/24/2017-13:45 0.7.0 Sergix]
+	Wrote documentation for version "0.7.0".
+	Compiled changelog.
+	Compiled source zip
+	Compiled "jterm-v0.7.0.jar".
+	Modified README, CONTRIBUTING, and ROADMAP suffix version.
+	Pushed updates to Git.
+
 (#115)[11/24/2017-13:38 0.6.1 Sergix]
 	Merged #97.
 		- Thanks to @lbenedetto!

@@ -61,7 +61,7 @@ This section provides a list of "foundational" elements that MUST be finished be
 ## Tracking
 To track this list, it is placed in the [v1.0.0 Roadmap](https://github.com/Sergix/JTerm/milestone/1) milestone. All Issues and Pull Requests that are designated to complete a task on the milestone tracker should be marked as so.
 
-> JTerm 0.6.1  
-> `jterm-v0.6.1.jar`  
+> JTerm v0.7.0  
+> `jterm-v0.7.0.jar`  
 > This project and its source are held under the GNU General Public License, located in the LICENSE file in the project's directory.  
 > (c) 2017
