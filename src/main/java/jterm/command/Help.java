@@ -15,46 +15,20 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package main.java.jterm.command;
+package jterm.command;
 
-import java.util.ArrayList;
-import main.java.jterm.JTerm;
+import jterm.JTerm;
+import jterm.io.output.TextColor;
+
+import java.util.List;
+import java.util.TreeSet;
 
 public class Help {
-
-    /*
-	* Help() void
-	* 
-	* Prints help information.
-     */
-    public Help(ArrayList<String> options) {
-
-        for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\thelp [-h]\n\nPrints help information.");
-				return;
-
-            }
-            
-        }
-
-        System.out.println("JTerm v" + JTerm.version);
-        System.out.println("Available commands:");
-        System.out.println("  client");
-        System.out.println("  dir");
-        System.out.println("  echo");
-        System.out.println("  exec");
-        System.out.println("  exit");
-        System.out.println("  files");
-        System.out.println("  pause");
-        System.out.println("  ping");
-        System.out.println("  ps");
-        System.out.println("  server");
-        System.out.println("  set");
-        System.out.println("  window");
-
+    @Command(name = "help")
+    public static void printHelp(List<String> options) {
+        JTerm.out.println(TextColor.INFO, "JTerm v" + JTerm.VERSION + "\n"
+                + "Available Commands\n"
+                + "(type [command] -h to view specific help information)");
+        new TreeSet<>(JTerm.getCommands()).forEach(command -> JTerm.out.printf(TextColor.INFO, "\t%s%n", command));
     }
-
 }

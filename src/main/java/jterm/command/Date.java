@@ -1,3 +1,4 @@
+package jterm.command;
 /*
 * JTerm - a cross-platform terminal
 * Copyright (code) 2017 Sergix, NCSGeek
@@ -14,36 +15,19 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm.command;
+import jterm.JTerm;
+import jterm.io.output.TextColor;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class Date {
-	
-	private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); // DateFormat sdf
-    
-	public Date(ArrayList<String> options)
-	{
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-		
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\tdate [-h]\n\nPrints the system date."); // Options
-				return;
-			  
-			}
-		 
-		}
-		
-		Calendar cal = Calendar.getInstance(); // Display the date
-        System.out.println("The current date is: " + sdf.format(cal.getTime()));
-		
-	}
-	
+    @Command(name = "date", syntax = "date [-h]")
+    public static void printDate(List<String> options) {
+        JTerm.out.println(TextColor.INFO, "The current date is: " + dateFormat.format(Calendar.getInstance().getTime()));
+    }
 }

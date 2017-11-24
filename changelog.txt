@@ -1,3 +1,240 @@
+(#116)[11/24/2017-13:45 0.7.0 Sergix]
+	Wrote documentation for version "0.7.0".
+	Compiled changelog.
+	Compiled source zip
+	Compiled "jterm-v0.7.0.jar".
+	Modified README, CONTRIBUTING, and ROADMAP suffix version.
+	Pushed updates to Git.
+
+(#115)[11/24/2017-13:38 0.6.1 Sergix]
+	Merged #97.
+		- Thanks to @lbenedetto!
+		- Major refactor of code to prepare for text color in headless mode.
+		- Moved RawConsoleInput, InputHandler, and Keys classes to own package jterm.io.input
+		- Added jterm.io.output package
+			- Added CollectorPrinter
+			- Added GUIPrinter
+			- Added HeadlessPrinter
+			- Added Printer
+			- Added TextColor
+		- Removed PrintStreamCollector
+		- Removed PrintStreamInterceptor
+		- Removed PromptInterceptor
+		- Removed PromptPrinter
+		- Added InputHander test to test package
+
+(#114)[11/23/2017-23:39 0.6.1 Sergix]
+	Closed #94.
+		- Added JTerm.setPrompt(prompt)
+		- "cd"/"chdir" now changes prompt
+	Pushed updates to Git.
+
+(#113)[11/23/2017-23:18 0.6.1 Sergix]
+	Merged #96.
+		- Thanks to @DataSecs!
+		- Code cleanup throughout the code.
+	Added "cleanup" and "command" issue labels.
+
+(#112)[11/23/2017-21:22 0.6.1 Sergix]
+	Merged #95.
+		- Thanks to @lbenedetto!
+		- Added "regex" command
+			- Syntax: "regex [-m] "expression" command [commandOptions ...]"
+			- Regex.java
+			- PrintStreamCollector.java (for collecting command output)
+			- Takes the output of a command and compares it to a regular expression string
+		- Added basic unit tests
+			- Created src/test directory
+			- test/UtilTest.java
+			- Added org.junit.jupiter.junit-jupiter-api dependency to POM
+		- Fixed arrow key usage in GUI
+
+(#111)[11/22/2017-18:46 0.6.1 Sergix]
+	Merged #93.
+		- Thanks to @lbenedetto!
+		- Fixes GUI tab parser
+
+(#110)[11/22/2017-10:01 0.6.1 Sergix]
+	Created "Bug Fix" issue label.
+	Merged #91.
+		- Thanks to @nanoandrew4!
+		- Fixes Windows crashing issues
+		- Fixes tab rotation with autocomplete
+	Pushed updates to Git.
+
+(#109)[11/21/2017-17:35 0.6.1 Sergix]
+	Made JTerm.COMMANDS private.
+	Merged #90.
+		- Thanks to @nanoandrew4!
+		- Fixes autocomplete bugs
+		- Fixes character deletion
+
+(#108)[11/20/2017-17:52 0.6.1 Sergix]
+	Help.java now automates command outputs and is no longer hard coded.
+	Added JTerm.getCommands() function.
+	JTerm.COMMANDS is now public.
+	Pushed updates to Git.
+
+(#107)[11/20/2017-16:12 0.6.1 Sergix]
+	Merged #88.
+		- Thanks to @lbenedetto!
+		- A static class was using getters and setters to access its own private static variable.
+		- A lot of things should have been delcared final in other classes.
+		- Removed Key.java.
+
+(#106)[11/20/2017-12:56 0.6.1 Sergix]
+	Merged #85.
+		- Thanks @lbenedetto!
+		- Added PrintStreamInterceptor to System.out.
+		- Removed log() and logln()
+		- Should have been in CL #103.
+	Merged #87.
+		- Thanks to @lbenedetto!
+		- Routes input and output through JTerm.out.
+		- Closes #80.
+		- Added PromptInterceptor class.
+		- Added PromptPrinter class.
+		- Added RawConsoleInput class.
+			- Removed ArrowKeyHandler class.
+			- Removed ArrowKeys enum.
+			- Removed Command (io) class.
+			- Removed Input class.
+			- Removed UnixInput class.
+			- Removed WinInput class.
+	Closed #80.
+
+(#105)[11/20/2017-12:18 0.6.1 Sergix]
+	Fixed PROMPT (@nanoandrew4).
+	Pushed updates to Git.
+
+(#104)[11/20/2017-10:49 0.6.1 Sergix]
+	Merged #86.
+		- Thanks @nanoandrew4!
+		- Removed duplicate Input.java file in jterm.io package.
+		- Simplified UNIX Arrow Key input.
+		- Fixed Windows headless mode.
+	Created I/O, GUI, and ROADMAP Issue labels.
+	Fixed command annotations and gave more syntax information.
+	Pushed updates to Git.
+
+(#103)[11/19/2017-21:48 0.6.1 Sergix]
+	Fixed issue with Echo cutting off extra character.
+	Fixed v0.6.0 docs.
+	v0.6.1 is now DEPRECATED.
+	Updated Help list.
+
+(#102)[11/19/2017-20:44 0.6.1 Sergix]
+	Fixed issue with Command annotation in Files.move().
+	Pushed updates to Git.
+
+(#101)[11/19/2017-16:23 0.6.1 Sergix]
+	Removed org.reflections import. JTerm.initCommands() has been updated to compensate.
+	Closed #40.
+	Closed #47.
+		- PR #78.
+	Closed #48.
+	Closed #52 (wontfix).
+	Closed #53.
+	Closed #71.
+		- PR #74.
+	Closed #73.
+	Closed #75.
+	Closed PR #77.
+		- PR #79.
+	Closed #81.
+	Closed PR #82.
+		- PR #83.
+	Merged #74.
+		- Thanks @lbenedetto!
+		- Added a fully functioning JavaX GUI!
+		- Runs commands without recreating anything.
+		- Added log functions to JTerm.java
+			- log()
+			- logln()
+			- All output should be through these from now on.
+		- Added ProtectedDocument class
+		- Added ProtectedTextComponent class
+		- Added Terminal class (GUI)
+		- Added com.intellij.forms_rt import for Terminal.form GUI layout.
+	Merged #78.
+		- Thanks @nanoandrew4!
+		- Added ArrowKeyHandler class.
+		- Added ArrowKeys enum.
+		- Added Command enum.
+		- Added KeyHandler class.
+		- Added Keys enum.
+		- Moved UNIX and Windows input functions from Input class to UnixInput and WinInput classes, respectively.
+		- Added FileAutocomplete class.
+		- Added Util functions.
+			- removeSpaces()
+			- containsOnlySpaces()
+	Merged #67, #79.
+		- Thanks @ojles!
+		- Added a Command interface.
+		- Command methods now have a @Command annotation.
+		- All commands are automatically updated and stored in a global hashmap.
+		- Added target/ to .gitignore.
+		- Added CommandException class.
+		- Added functions to Util.java.
+			- getRunTime()
+			- clearLine()
+			- getAsArray()
+			- getAsString()
+			- getRest()
+			- getFullPath()
+	Merged #83.
+		- Thanks @Kaperskyguru!
+		- Created Files.move()
+	Updated ROADMAP.md.
+	Pushed updates to Git.
+
+(#100)[11/8/2017-13:28 0.6.1 ojles]
+    Added Command interface with execute() method
+    Added CommandException for package jterm.command.*
+    Implemented Command interface in all command classes
+    Added dynamic loading of command instances using reflection, saving them in a map<String, Command>
+    Fixed some codestyle issues
+    Moved helper methods from JTerm to Util.java
+    Fixed ping command
+    Fixed Exec.java, witch was not printing all the data got from the executed process
+
+(#99)[11/5/2017-14:50 0.6.1 Sergix]
+	Removed lang3 dependency from POM and all imports.
+	Fixed issue where InputHandler was outputting an extra newline.
+	Fixed issue where auto complete was attempting a non existent directory and outputting NullPointerException.
+	Pushed updates to Git.
+
+(#98)[11/4/2017-22:17 0.6.1 Sergix]
+	Fixed some formatting in JTerm.java.
+	Added "setOS()" function to Util.java.
+		- replaces code previously used to determine OS in JTerm.java.
+	Re-added the build process batch files to the root directory.
+	Removed "*.bat" from .gitignore.
+	Pushed updates to Git.
+
+(#97)[10/31/2017-19:49 0.6.1 wuhugh]
+    Closed #68.
+    Edited Dir.java
+        - cd .. no longer adds the .'s to cwd string
+        - Added rm command to delete files/directories
+    Added commons.io dependency to pom.xml
+    Edited JTerm.java
+        - Program starts with cwd instead of "./"
+    Pushed updates to Git.
+
+(#96)[10/23/2017-21:05 0.6.1 Sergix]
+	Closed #45.
+	Closed #49.
+		- Should have been in changelog entry #92.
+	Closed #59.
+	Closed #60.
+	Merged #58.
+		- Thanks to @ojles for formatting!
+	Merged #61.
+		- Thanks to @nanoandrew4!
+	Updated ROADMAP.
+	Pushed updates to Git.
+
 (#95)[10/20/2017-21:28 0.6.1 Sergix]
 	Closed #56.
 		- Accidentally merged the non-updated Exec class.

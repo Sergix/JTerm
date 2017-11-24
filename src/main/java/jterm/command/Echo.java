@@ -16,46 +16,19 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm.command;
+package jterm.command;
 
-import java.util.ArrayList;
+import jterm.JTerm;
+import jterm.io.output.TextColor;
+import jterm.util.Util;
 
-public class Echo
-{
-	
-	/*
-	* Echo() void
-	* 
-	* Echo the input to the terminal.
-	*
-	* ArrayList<String> options - command options
-	*
-	* -h
-	* 	Prints help information
-	* input
-	* 	Text to output
-	*/
-	public Echo(ArrayList<String> options)
-	{
+import java.util.List;
 
-		String output = "";
-		
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\techo [-h] input\n\nPrints the specified input to the console.");
-				return;
-			  
-			}
-			else
-				output += option + " ";
-		 
-		}
-		
-		output = output.trim();
-		System.out.println(output);
-
-	}
-	
+public class Echo {
+    // FIXME: echo is not working correctly, for example: > echo $JAVA_HOME
+    @Command(name = "echo", minOptions = 1, syntax = "echo [-h] input")
+    public static void echo(List<String> options) {
+        String info = Util.getAsString(options);
+        JTerm.out.println(TextColor.INFO, info.substring(0, info.length()));
+    }
 }

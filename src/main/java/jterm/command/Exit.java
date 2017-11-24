@@ -16,36 +16,14 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm.command;
+package jterm.command;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class Exit
-{
-	
-	/*
-	* Exit() void
-	* 
-	* Exits the application.
-	*
-	* ArrayList<String> options - command options
-	*/
+public class Exit {
 
-	public Exit(ArrayList<String> options) {
-
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\texit [-h]\n\nExits the program.");
-				return;
-
-			}
-
-		}
-
-		System.exit(0);
-		
-	}
-	
+    @Command(name = "exit", syntax = "exit [-h]")
+    public static void exit(List<String> options) {
+        System.exit(0);
+    }
 }

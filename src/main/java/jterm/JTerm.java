@@ -15,243 +15,201 @@
 */
 
 // package = folder :P
-package main.java.jterm;
+package jterm;
 
-import org.apache.commons.lang3.SystemUtils;
+import jterm.command.Command;
+import jterm.command.CommandException;
+import jterm.command.CommandExecutor;
+import jterm.gui.Terminal;
+import jterm.io.input.InputHandler;
+import jterm.io.input.Keys;
+import jterm.io.output.Printer;
+import jterm.io.output.TextColor;
+import jterm.io.output.GuiPrinter;
+import jterm.io.output.HeadlessPrinter;
+import jterm.util.Util;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.lang.reflect.Constructor;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.security.CodeSource;
 import java.util.*;
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
-import main.java.jterm.command.Exec;
+public class JTerm {
+    private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
+    public static Printer out;
+    public static final String VERSION = "0.7.0";
+    public static String PROMPT = ">> ";
+    public static String dirChar;
+    public static final String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
+            + "This program comes with ABSOLUTELY NO WARRANTY.\n"
+            + "This is free software, and you are welcome to redistribute it\n"
+            + "under certain conditions.\n";
 
-public class JTerm
-{
+    // Default value of getProperty("user.dir") is equal to the default directory set when the program starts
+    // Global directory variable (use "cd" command to change)
+    public static String currentDirectory = System.getProperty("user.dir");
+    public static final String USER_HOME_DIR = System.getProperty("user.home");
 
-	// Global version variable
-	public static String version = "0.6.1";
+    public static boolean IS_WIN;
+    public static boolean IS_UNIX;
 
-	// Prompt to show user where input is currently at
-	public static String prompt = "   \b\b\b>> ";
+    public static final BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+    private static Terminal terminal;
+    private static boolean headless = false;
 
-	// Global directory variable (use "cd" command to change)
-	// Default value "./" is equal to the default directory set when the program starts
-	public static String currentDirectory = "./";
-	public static boolean isWin = SystemUtils.IS_OS_WINDOWS;
-	public static boolean isUnix = SystemUtils.IS_OS_UNIX || SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_FREE_BSD;
+    public static void main(String[] args) {
+        setOS();
+        initCommands();
+        if (args.length > 0 && args[0].equals("headless")) {
+            out = new HeadlessPrinter();
+            headless = true;
+            TextColor.initHeadless();
+        } else {
+            terminal = new Terminal();
+            terminal.setTitle("JTerm");
+            terminal.setSize(720, 480);
+            terminal.setVisible(true);
+            out = new GuiPrinter(terminal.getTextPane());
+            Keys.initGUI();
+        }
+        JTerm.out.println(TextColor.INFO, JTerm.LICENSE);
+        JTerm.out.printPrompt();
+        if(headless){
+            try {
+                while (true) {
+                    InputHandler.read();
+                }
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
 
-	// User input variable used among all parts of the application
-	public static BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+    public static void executeCommand(String options) {
+        List<String> optionsArray = Util.getAsArray(options);
 
-	// Boolean to determine if caps lock is on, since input system does not distinguish between character cases
-	// Command string which the input system will aggregate characters to
-	public static boolean capsOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
-	public static String command = "";
+        if (optionsArray.size() == 0) {
+            return;
+        }
 
-	/*
-	* main() void
-	*
-	* Function called when the program loads. Sets
-	* up basic input streams.
-	*
-	*
-	* String[] args - arguments passed from the
-	* 				console
-	*/
-	public static void main(String[] args)
-	{
+        String command = optionsArray.remove(0);
+        if (!COMMANDS.containsKey(command)) {
+            out.printf(TextColor.ERROR,"Command \"%s\" is not available%n", command);
+            return;
+        }
 
-		// Print licensing information
-		System.out.println(
-			"JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n" +
-			"This program comes with ABSOLUTELY NO WARRANTY.\n" +
-			"This is free software, and you are welcome to redistribute it\n" +
-			"under certain conditions.\n"
-		);
+        try {
+            if (JTerm.isHeadless()) out.println(TextColor.INFO);
+            COMMANDS.get(command).execute(optionsArray);
+        } catch (CommandException e) {
+            System.err.println(e.getMessage());
+        }
+    }
 
-		/*
-		* Wait until "exit" is typed in to exit
-		* Sends last char received from Input class to Process function
-		*/
+    private static void initCommands() {
+        // Reflections reflections = new Reflections("jterm.command", new MethodAnnotationsScanner());
+        // Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
+        ArrayList<Method> methods = new ArrayList<>();
+        ArrayList<String> classes = new ArrayList<>();
 
-		System.out.print(prompt);
-		while (true)
-			InputHandler.Process();
+        try {
+            CodeSource src = JTerm.class.getProtectionDomain().getCodeSource();
+            if (src != null) {
+                ZipInputStream zip = new ZipInputStream(src.getLocation().openStream());
 
-	}
+                while (true) {
+                    ZipEntry e = zip.getNextEntry();
 
-	/*
-	* Parse() boolean
-	*
-	* Checks input and passes command options to the function
-	* that runs the requested command.
-	*
-	* ArrayList<String> options - command options
-	*/
-	public static boolean Parse(String options)
-	{
+                    if (e == null) {
+                        break;
+                    }
 
-		ArrayList<String> optionsArray = GetAsArray(options);
+                    String name = e.getName();
+                    if (name.startsWith("jterm/command")) {
+                        classes.add(name.replace('/', '.').substring(0, name.length() - 6));
+                    }
+                }
+            }
+        } catch (IOException ioe) {
+            out.println(TextColor.ERROR,ioe.toString());
+        }
 
-		// Default to process/help command if function is not found
-		String method = "Process";
+        // TODO: This line makes the program crash on Linux Kubuntu, don't know about windows
+        classes.remove(0);
 
-		// Get the first string in the options array, which is the command,
-		// and capitalize the first letter of the command
-		String original = optionsArray.get(0).toLowerCase(), command = original;
-		String classChar = command.substring(0, 1);
-		classChar = classChar.toUpperCase();
-		command = command.substring(1);
-		command = "main.java.jterm.command." + classChar + command;
-		optionsArray.remove(0);
+        classes.forEach(aClass -> {
+            try {
+                Arrays.stream(Class.forName(aClass).getDeclaredMethods()).forEach(method -> {
+                    if (method.isAnnotationPresent(Command.class)) {
+                        methods.add(method);
+                    }
+                });
+            } catch (ClassNotFoundException cnfe) {
+                out.println(TextColor.ERROR,cnfe.toString());
+            }
+        });
 
-		// Get the method name
-		if (optionsArray.toArray().length >= 1)
-			method = optionsArray.get(0);
+        methods.forEach(method -> {
+            method.setAccessible(true);
+            Command command = method.getDeclaredAnnotation(Command.class);
+            Arrays.stream(command.name()).forEach(commandName -> {
+                CommandExecutor executor = new CommandExecutor()
+                        .setCommandName(commandName)
+                        .setSyntax(command.syntax())
+                        .setMinOptions(command.minOptions())
+                        .setCommand((List<String> options) -> {
+                            try {
+                                method.invoke(null, options);
+                            } catch (Exception e) {
+                                System.err.println("Weird stuff...");
+                                e.printStackTrace();
+                            }
+                        });
 
-		else
-			optionsArray.add(method);
+                COMMANDS.put(commandName, executor);
+            });
+        });
+    }
 
-		classChar = method.substring(0, 1);
-		classChar = classChar.toUpperCase();
-		method = method.substring(1);
-		method = classChar + method;
+    private static void setOS() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("windows")) {
+            JTerm.IS_WIN = true;
+            dirChar = "\\";
+            Keys.initWindows();
+        } else if ("linux".equals(os) || os.contains("mac") || "sunos".equals(os) || "freebsd".equals(os)) {
+            JTerm.IS_UNIX = true;
+            dirChar = "/";
+            Keys.initUnix();
+        }
+    }
 
-		try
-		{
-			// Get the class of the command
-			Class<?> clazz = Class.forName(command);
-			Constructor<?> constructor = clazz.getConstructor(ArrayList.class);
-			Object obj = constructor.newInstance(optionsArray);
+    public static boolean isHeadless() {
+        return headless;
+    }
 
-			ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(obj.getClass().getDeclaredMethods()));
+    public static Terminal getTerminal() {
+        return terminal;
+    }
 
-			// Invoke the correct method of the class to run, but only if it contains that method
-			Method m = obj.getClass().getMethod(method, ArrayList.class);
-			if(methods.contains(m))
-			{
-				optionsArray.remove(0);
-				m.invoke(options.getClass(), new Object[] {optionsArray});
+    public static Set<String> getCommands() {
+        return JTerm.COMMANDS.keySet();
+    }
 
-			}
+    /** For Unit Tests **/
+    public static void setheadless(boolean b){
+        headless = b;
+    }
 
-		}
+    public static void setTerminal(Terminal terminal) {
+        JTerm.terminal = terminal;
+    }
 
-		// Exceptions
-		catch (ClassNotFoundException cnfe)
-		{
-			ArrayList<String> execFile = new ArrayList<String>();
-			execFile.add(original);
-			if (!Exec.Run(execFile))
-				System.out.println("Unknown Command \"" + original + "\"");
-
-		}
-		catch (InstantiationException ie)
-		{
-			System.out.println(ie);
-
-		}
-		catch (IllegalAccessException iae)
-		{
-			System.out.println(iae);
-
-		}
-		catch (NoSuchMethodException nsme)
-		{
-			//System.out.println(nsme);
-
-		}
-		catch (InvocationTargetException ite)
-		{
-			//System.out.println(ite);
-		}
-
-		return false;
-
-		// 	// Commands to skip in batch files
-		// 	case "bcdedit":
-		// 	case "chkdsk":
-		// 	case "chkntfs":
-		// 	case "cls":
-		// 	case "cmd":
-		// 	case "color":
-		// 	case "convert":
-		// 	case "diskpart":
-		// 	case "driverquery":
-		// 	case "format":
-		// 	case "fsutil":
-		// 	case "gpresult":
-		// 	case "mode":
-		// 	case "sc":
-		// 	case "shutdown":
-		// 	case "start":
-		// 	case "tasklist":
-		// 	case "taskkill":
-		// 	case "ver":
-		// 	case "vol":
-		// 	case "wmic":
-		// 		break;
-
-	}
-
-	/*
-	* GetAsArray() ArrayList<String>
-	* 
-	* Returns a String as an ArrayList of
-	* Strings (spaces as delimiters)
-	*
-	* String options - String to be split
-	*/
-	public static ArrayList<String> GetAsArray(String options)
-	{
-
-		// Get each substring of the command entered
-		Scanner tokenizer = new Scanner(options);
-
-		// options String array will be passed to command functions
-		ArrayList<String> array = new ArrayList<String>();
-
-		// Get command arguments
-		while (tokenizer.hasNext())
-		{
-			String next = tokenizer.next();
-			array.add(next);
-
-		}
-
-		// Close the string stream
-		tokenizer.close();
-
-		return array;
-
-	}
-
-	/*
-	* GetAsString() String
-	* 
-	* Returns an ArrayList of Strings 
-	* as a String (spaced with spaces)
-	*
-	* ArrayList<String> options - array to be split
-	*/
-	public static String GetAsString(ArrayList<String> options)
-	{
-
-		// Get each substring of the command entered
-		String string = "";
-
-		// Get command arguments
-		for (String option: options)
-			string += option + " ";
-
-		string.trim();
-
-		return string;
-
-	}
-
+    public static void setPrompt(String prompt) {
+        PROMPT = prompt;
+    }
 }

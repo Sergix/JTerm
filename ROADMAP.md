@@ -35,33 +35,33 @@ This section provides a list of "foundational" elements that MUST be finished be
 - [ ] Files
 	- [x] Reading (I #16) (PR #17) (CL #68)
 	- [x] Writing (PR #1) (CL #9)
-	- [ ] Moving
+	- [x] Moving (I #81) (PR #79) (CL #101)
 	- [x] Deleting (PR #5) (CL #40)
 	- [ ] Editing
-	- [ ] Renaming
-- [ ] Directories
+	- [x] Renaming (PR #67) (CL #101)
+- [x] Directories
 	- [x] Listing (PR #2) (CL #17)
-	- [ ] Moving
+	- [x] Moving (PR #79) (CL #101)
 	- [x] Change working directory (PR #3) (CL #28)
-	- [ ] Deleting
+	- [x] Deleting (PR #67) (CL #101)
 	- [x] Creating (PR #5) (CL #41)
-	- [ ] Renaming
-- [x] Clear screen (I #33) (PR #44)
-- [ ] Full help information (I #40)
-	- [ ] Command help (`-h`/`help`)
+	- [x] Renaming (PR #67) (CL #101)
+- [x] Clear screen (I #33) (PR #44) (CL #91)
+- [x] Full help information (I #40) (PR #79) (CL #101)
+	- [x] Command help (`-h`/`help`) (I #40) (PR #79) (CL #101)
 - [x] Run external executable programs (I #32) (PR #46) (CL #93)
 - [x] Tab completion (I #31) (PR #34) (CL #88)
 - [x] System process listing (PR #9) (CL #60)
 - [ ] Edit prompt text
-- [ ] Date/time printing
-- [ ] Environment Variables (I #) (CL #74)
+- [x] Date/time printing (I #49) (PR #54) (CL #96)
+- [ ] Environment Variables (CL #74)
 - [ ] Create new terminal window instance
-- [ ] Internet file downloader (I #45)
+- [x] Internet file downloader (I #45) (PR #61) (CL #96)
 
 ## Tracking
 To track this list, it is placed in the [v1.0.0 Roadmap](https://github.com/Sergix/JTerm/milestone/1) milestone. All Issues and Pull Requests that are designated to complete a task on the milestone tracker should be marked as so.
 
-> JTerm 0.5.1  
-> `jterm-v0.5.1.jar`  
+> JTerm v0.7.0  
+> `jterm-v0.7.0.jar`  
 > This project and its source are held under the GNU General Public License, located in the LICENSE file in the project's directory.  
 > (c) 2017

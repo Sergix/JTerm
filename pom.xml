@@ -5,9 +5,12 @@
 
     <groupId>sergix</groupId>
     <artifactId>jterm</artifactId>
-    <version>0.6.1</version>
+    <version>0.7.0</version>
     <packaging>jar</packaging>
-    <description>JTerm is a cross-platform terminal designed for simple use and to run batch files. JTerm is hosted on GitHub by Sergix and NCSGeek.</description>
+    <description>
+        JTerm is a cross-platform terminal designed for simple use and to run batch files.
+        JTerm is hosted on GitHub by Sergix and NCSGeek.
+    </description>
 
     <name>jterm</name>
     <url>http://sergix.github.io/projects/JTerm</url>
@@ -43,7 +46,7 @@
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>main.java.jterm.JTerm</mainClass>
+                                    <mainClass>jterm.JTerm</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>
@@ -55,20 +58,26 @@
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit-dep</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.6</version>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
         </dependency>
         <dependency>
             <groupId>com.github.waffle</groupId>
             <artifactId>waffle-jna</artifactId>
             <version>1.8.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.intellij/forms_rt -->
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>forms_rt</artifactId>
+            <version>7.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

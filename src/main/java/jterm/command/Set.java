@@ -14,88 +14,51 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main.java.jterm.command;
+package jterm.command;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.ArrayList;
+import jterm.JTerm;
+import jterm.io.output.TextColor;
+import jterm.util.Util;
 
-public class Set
-{
+import java.util.HashMap;
+import java.util.List;
 
-	// Global variable hashtable
-	public static Hashtable<String, String> vars = new Hashtable<String, String>();
+public class Set {
+    public static final HashMap<String, String> vars = new HashMap<>();
 
-	/*
-	* Set() void
-	* 
-	* Creates a new variable or prints all
-	* stored variables.
-	*
-	* ArrayList<String> options - command options
-	*/
-	public Set(ArrayList<String> options)
-	{
+    @Command(name = "set", minOptions = 3, syntax = "set [-h] <name> = <value>")
+    public static void set(List<String> options) {
+        if (options.size() == 0) {
+            vars.forEach((key, value) -> JTerm.out.printf(TextColor.INFO, "%s=%s%n", key, value));
+            return;
+        }
 
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\tset [-h] name = value\n\nSets an environment variable.");
-				return;
+        // Get the variable name
+        String key = options.get(0);
 
-			}
+        // The name can't include spaces
+        if (options.toArray().length > 2) {
+            if (!options.get(1).equals("=")) {
+                return;
+            }
+        } else {
+            return;
+        }
 
-		}
+        // If the type is a window, create a new one
+        if (options.get(2).equals("window")) {
+            // Pass the rest of the options to create a new Window
+            Window newWindow = new Window(options);
 
-		// Print the value of all current variables
-		if (options.size() == 0)
-		{
-			String element = "";
-	
-			// For each key...
-			for (Enumeration<String> e = vars.keys(); e.hasMoreElements();)
+            // Put the window ID into the vars hashtable
+            // associated with its key
+            vars.put(key, Integer.toString(newWindow.getId()));
 
-				// ...print in the format of "key=value"
-				System.out.println((element = e.nextElement()) + "=" + vars.get(element));
+            // Add the window to the global list
+            Window.windows.add(newWindow);
+            return;
+        }
 
-			return;
-
-		}
-		
-		// Get the variable name
-		String key = options.get(0);
-
-		// The name can't include spaces
-		if (options.toArray().length > 2)
-		{
-			if ( !options.get(1).equals("=") )
-				return;
-			
-		}
-		else
-			return;
-		
-		// If the type is a window, create a new one
-		if (options.get(2).equals("window"))
-		{	
-			// Pass the rest of the options to create a new Window
-			Window newWindow = new Window(options);
-
-			// Put the window ID into the vars hashtable
-			// associated with its key
-			vars.put(key, Integer.toString(newWindow.GetId()));
-
-			// Add the window to the global list
-			Window.windows.add(newWindow);
-
-			return;
-			
-		}
-		
-		// Put the variable contents into the global hashtable
-		vars.put(key, Exec.GetRest(options, 2));
-
-	}
-
+        vars.put(key, Util.getAsString(options).substring(2));
+    }
 }

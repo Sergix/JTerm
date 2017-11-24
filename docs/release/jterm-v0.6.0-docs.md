@@ -7,8 +7,10 @@ II. Overview
 III. Build Targets  
 IV. Changelog    
 V. New Features  
-    A. Commands  
-    B. Wrapfile  
+    A. Tab Autocompletion  
+	B. Application Execution  
+    C. Commands  
+	D. Command Package  
 VI. Active Command List
 ```
 

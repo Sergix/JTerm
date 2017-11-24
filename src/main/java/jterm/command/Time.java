@@ -13,36 +13,21 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+package jterm.command;
 
-package main.java.jterm.command;
+import jterm.JTerm;
+import jterm.io.output.TextColor;
 
-import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class Time {
-	
-    
-	public Time(ArrayList<String> options)
-	{
-		
-		for (String option: options)
-		{
-			if (option.equals("-h"))
-			{
-				System.out.println("Command syntax:\n\ttime [-h] input\n\nPrints the system time to the console."); // Options
-				return;
-			  
-			}
-		 
-		}
-		
-		DateFormat df = new SimpleDateFormat("HH:mm:ss , z");
-	    Date dateobj = new Date();
-	    System.out.println("The Current Time is: " + df.format(dateobj));
-		
-	}
-	
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss , z");
+
+    @Command(name = "time")
+    public static void printTime(List<String> options) {
+        JTerm.out.printf(TextColor.INFO, "The Current Time is: %s%n", DATE_FORMAT.format(new Date()));
+    }
 }
