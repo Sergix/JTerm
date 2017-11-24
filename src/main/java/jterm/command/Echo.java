@@ -19,6 +19,7 @@
 package jterm.command;
 
 import jterm.JTerm;
+import jterm.io.output.TextColor;
 import jterm.util.Util;
 
 import java.util.List;
@@ -28,6 +29,6 @@ public class Echo {
     @Command(name = "echo", minOptions = 1, syntax = "echo [-h] input")
     public static void echo(List<String> options) {
         String info = Util.getAsString(options);
-        JTerm.out.println(info.substring(0, info.length()));
+        JTerm.out.println(TextColor.INFO, info.substring(0, info.length()));
     }
 }

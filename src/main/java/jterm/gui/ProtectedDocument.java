@@ -1,6 +1,7 @@
 package jterm.gui;
 
 import jterm.JTerm;
+import jterm.io.output.TextColor;
 
 import javax.swing.text.*;
 import java.awt.*;
@@ -49,7 +50,7 @@ class ProtectedDocument {
         try {
             positions.put(doc.createPosition(start), doc.createPosition(end));
         } catch (BadLocationException ble) {
-            JTerm.out.println(ble);
+            JTerm.out.println(TextColor.ERROR, ble.toString());
         }
     }
 

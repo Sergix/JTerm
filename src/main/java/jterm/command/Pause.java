@@ -17,6 +17,7 @@
 package jterm.command;
 
 import jterm.JTerm;
+import jterm.io.output.TextColor;
 import jterm.util.Util;
 
 import java.io.IOException;
@@ -27,15 +28,15 @@ public class Pause {
     public void execute(List<String> options) {
         for (String option : options) {
             if (option.equals("-h")) {
-                JTerm.out.println("Command syntax:\n\tpause [-h] [input]");
+                JTerm.out.println(TextColor.INFO, "Command syntax:\n\tpause [-h] [input]");
                 return;
             } else {
-                JTerm.out.print(Util.getAsString(options));
+                JTerm.out.print(TextColor.INFO, Util.getAsString(options));
             }
         }
 
         if (options.size() == 0) {
-            JTerm.out.print("Press enter to continue...");
+            JTerm.out.print(TextColor.INFO, "Press enter to continue...");
         }
 
         // TODO: Figure out what this is doing and how to do it in GUI
@@ -43,7 +44,7 @@ public class Pause {
             JTerm.userInput.read();
             JTerm.userInput.skip(1);
         } catch (IOException e) {
-            JTerm.out.println(e);
+            JTerm.out.println(TextColor.ERROR, e.toString());
         }
     }
 }
