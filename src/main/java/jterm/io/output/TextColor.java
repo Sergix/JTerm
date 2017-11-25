@@ -1,6 +1,7 @@
 package jterm.io.output;
 
 import java.awt.*;
+import java.util.Random;
 
 public enum TextColor {
     INPUT, PATH, PROMPT, INFO, ERROR;
@@ -10,16 +11,15 @@ public enum TextColor {
 
     public static void initHeadless() {
         //TODO: Switch these back when ANSI is fixed in terminal
-        INPUT.ansi = "";
-        PATH.ansi = "";
-        PROMPT.ansi = "";
-        INFO.ansi = "";
-        ERROR.ansi = "";
-//        INPUT.ansi = "\\u001b[31m";
-//        PATH.ansi = "\\u001b[31m";
-//        PROMPT.ansi = "\\u001b[31m";
-//        INFO.ansi = "\\u001b[31m";
-//        ERROR.ansi = "\\u001b[31m";
+        INPUT.ansi = (char) 27 + "[0m";
+        PATH.ansi = (char) 27 + "[38;5;178m";
+        PROMPT.ansi = (char) 27 + "[38;5;172m";
+        INFO.ansi = (char) 27 + "[38;5;110m";
+        ERROR.ansi = (char) 27 + "[38;5;80m";
+    }
+
+    public static String getANSIColor() {
+        return (char) 27 + "[38;5;" + (new Random().nextInt(255)) + "m";
     }
 
     public static void initGui() {
