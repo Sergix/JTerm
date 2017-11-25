@@ -1,3 +1,9 @@
+(#118)[11/25/2017-17:02 0.7.0 Sergix]
+	Merged #101.
+		- Thanks to @nanoandrew4!
+		- Added ANSI colors
+		- Fixed tabbing bug
+
 (#117)[11/24/2017-18:49 0.7.0 Sergix]
 	Merged #99.
 		- Thanks to @DataSecs!
