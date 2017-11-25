@@ -132,13 +132,10 @@ public class JTerm {
                     String name = e.getName();
                     if (name.startsWith("jterm/command")) {
                         Class clazz = Class.forName(name.replace('/', '.').substring(0, name.length() - 6));
-
                         if (!clazz.getSimpleName().startsWith("Command")) {
-                            Arrays.stream(clazz.getDeclaredMethods()).forEach(method -> {
-                                if (method.isAnnotationPresent(Command.class)) {
-                                    methods.add(method);
-                                }
-                            });
+                            Arrays.stream(clazz.getDeclaredMethods())
+                                    .filter(method -> method.isAnnotationPresent(Command.class))
+                                    .forEach(methods::add);
                         }
                     }
                 }
