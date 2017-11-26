@@ -42,7 +42,7 @@ public class JTerm {
 
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
     public static Printer out;
-    public static final String VERSION = "0.7.0";
+    public static final String VERSION = "0.7.1";
     public static String PROMPT = ">> ";
     public static String dirChar;
     public static final String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
@@ -134,7 +134,8 @@ public class JTerm {
                     }
 
                     String name = e.getName();
-                    if (name.startsWith("jterm/command")) {
+                    if (name.startsWith("jterm/command")
+                            && (name.compareTo("jterm/command/") != 0)) {
                         classes.add(name.replace('/', '.').substring(0, name.length() - 6));
                     }
                 }
@@ -142,9 +143,6 @@ public class JTerm {
         } catch (IOException ioe) {
             out.println(TextColor.ERROR, ioe.toString());
         }
-
-        // TODO: This line makes the program crash on Linux Kubuntu, don't know about windows
-        classes.remove(0);
 
         classes.forEach(aClass -> {
             try {
