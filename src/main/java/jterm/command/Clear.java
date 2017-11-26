@@ -21,9 +21,6 @@ import java.util.List;
 
 public class Clear {
 
-    private static final String ANSI_CLS = "\u001b[2J";
-    private static final String ANSI_HOME = "\u001b[H";
-
     @Command(name = {"clear", "cls"}, syntax = "clear [-h]")
     public static void clearScreen(List<String> options) {
         JTerm.out.clearAll();
