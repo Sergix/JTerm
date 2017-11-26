@@ -23,19 +23,20 @@ import jterm.command.CommandExecutor;
 import jterm.gui.Terminal;
 import jterm.io.input.InputHandler;
 import jterm.io.input.Keys;
-import jterm.io.output.Printer;
-import jterm.io.output.TextColor;
 import jterm.io.output.GuiPrinter;
 import jterm.io.output.HeadlessPrinter;
+import jterm.io.output.Printer;
+import jterm.io.output.TextColor;
 import jterm.util.Util;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.net.URL;
+import java.security.CodeSource;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class JTerm {
 
@@ -64,6 +65,7 @@ public class JTerm {
     public static void main(String[] args) {
         setOS();
         initCommands();
+
         if (args.length > 0 && args[0].equals("headless")) {
             out = new HeadlessPrinter();
             headless = true;
@@ -76,9 +78,11 @@ public class JTerm {
             out = new GuiPrinter(terminal.getTextPane());
             Keys.initGUI();
         }
+
         JTerm.out.println(TextColor.INFO, JTerm.LICENSE);
         JTerm.out.printPrompt();
-        if(headless){
+
+        if (headless) {
             try {
                 while (true) {
                     InputHandler.read();
@@ -103,7 +107,10 @@ public class JTerm {
         }
 
         try {
-            if (JTerm.isHeadless()) out.println(TextColor.INFO);
+            if (JTerm.isHeadless()) {
+                out.println(TextColor.INFO);
+            }
+
             COMMANDS.get(command).execute(optionsArray);
         } catch (CommandException e) {
             System.err.println(e.getMessage());
@@ -114,24 +121,28 @@ public class JTerm {
         // Reflections reflections = new Reflections("jterm.command", new MethodAnnotationsScanner());
         // Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
         ArrayList<Method> methods = new ArrayList<>();
-        String packageName = "jterm.command";
 
-        URL root = Thread.currentThread().getContextClassLoader().getResource(packageName.replace(".", "/"));
-        Arrays.stream(new File(root.getFile()).listFiles()).forEach(file -> {
-            try {
-                Class clazz = Class.forName(String.format("%s.%s", packageName, file.getName().replaceAll(".class$", "")));
+        try {
+            CodeSource src = JTerm.class.getProtectionDomain().getCodeSource();
+            if (src != null) {
+                ZipInputStream zip = new ZipInputStream(src.getLocation().openStream());
 
-                if (!clazz.getSimpleName().startsWith("Command")) {
-                    Arrays.stream(clazz.getDeclaredMethods()).forEach(method -> {
-                        if (method.isAnnotationPresent(Command.class)) {
-                            methods.add(method);
+                ZipEntry e;
+                while ((e = zip.getNextEntry()) != null) {
+                    String name = e.getName();
+                    if (name.startsWith("jterm/command")) {
+                        Class clazz = Class.forName(name.replace('/', '.').substring(0, name.length() - 6));
+                        if (!clazz.getSimpleName().startsWith("Command")) {
+                            Arrays.stream(clazz.getDeclaredMethods())
+                                    .filter(method -> method.isAnnotationPresent(Command.class))
+                                    .forEach(methods::add);
                         }
-                    });
+                    }
                 }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
             }
-        });
+        } catch (IOException | ClassNotFoundException e) {
+            out.println(TextColor.ERROR, e.toString());
+        }
 
         methods.forEach(method -> {
             method.setAccessible(true);
