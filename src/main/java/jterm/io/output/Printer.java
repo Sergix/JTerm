@@ -5,7 +5,7 @@ public interface Printer {
 
     void print(TextColor color, char x);
 
-    void println(TextColor color);
+    void println();
 
     void println(TextColor color, String x);
 

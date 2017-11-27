@@ -108,7 +108,7 @@ public class JTerm {
 
         try {
             if (JTerm.isHeadless()) {
-                out.println(TextColor.INFO);
+                out.println();
             }
 
             COMMANDS.get(command).execute(optionsArray);
