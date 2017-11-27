@@ -1,3 +1,54 @@
+(#121)[11/26/2017-10:05 0.7.0 Sergix]
+	Added checking for commands directory in JTerm.initCommands(), otherwise it would return NullPointerException.
+	Updated JTerm.VERSION to 0.7.1 (dev build).
+	Pushed updates to Git.
+
+(#120)[11/25/2017-19:29 0.7.0 Sergix]
+	Reverted JTerm.initCommands() again to previous.
+	Pushed updates to Git.
+
+(#119)[11/25/2017-19:12 0.7.0 Sergix]
+	Merged #102.
+		- Thanks to @DataSecs!
+		- Reverted JTerm.initCommands() to previous loader method to work on Windows.
+
+(#118)[11/25/2017-17:02 0.7.0 Sergix]
+	Merged #101.
+		- Thanks to @nanoandrew4!
+		- Added ANSI colors
+		- Fixed tabbing bug
+
+(#117)[11/24/2017-18:49 0.7.0 Sergix]
+	Merged #99.
+		- Thanks to @DataSecs!
+		- General code formatting and cleanup.
+		- Reworked JTerm.initCommands() to be more concise and fix issues with it running on other systems.
+
+(#116)[11/24/2017-13:45 0.7.0 Sergix]
+	Wrote documentation for version "0.7.0".
+	Compiled changelog.
+	Compiled source zip
+	Compiled "jterm-v0.7.0.jar".
+	Modified README, CONTRIBUTING, and ROADMAP suffix version.
+	Pushed updates to Git.
+
+(#115)[11/24/2017-13:38 0.6.1 Sergix]
+	Merged #97.
+		- Thanks to @lbenedetto!
+		- Major refactor of code to prepare for text color in headless mode.
+		- Moved RawConsoleInput, InputHandler, and Keys classes to own package jterm.io.input
+		- Added jterm.io.output package
+			- Added CollectorPrinter
+			- Added GUIPrinter
+			- Added HeadlessPrinter
+			- Added Printer
+			- Added TextColor
+		- Removed PrintStreamCollector
+		- Removed PrintStreamInterceptor
+		- Removed PromptInterceptor
+		- Removed PromptPrinter
+		- Added InputHander test to test package
+
 (#114)[11/23/2017-23:39 0.6.1 Sergix]
 	Closed #94.
 		- Added JTerm.setPrompt(prompt)

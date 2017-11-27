@@ -14,6 +14,7 @@ import javax.swing.text.JTextComponent;
  *  b) notify the ProtectedHighlighter class of the text to be protected.
  */
 public class ProtectedTextComponent {
+
     private final JTextComponent component;
     private final ProtectedDocument document;
 

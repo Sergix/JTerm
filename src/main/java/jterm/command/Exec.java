@@ -50,7 +50,7 @@ public class Exec {
 
             in.close();
         } catch (IOException e) {
-            throw new CommandException("Failed to execute command \"" + command + "\"");
+            throw new CommandException(String.format("Failed to execute command \"%s\"", command));
         }
     }
 }

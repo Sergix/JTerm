@@ -23,10 +23,10 @@ import jterm.command.CommandExecutor;
 import jterm.gui.Terminal;
 import jterm.io.input.InputHandler;
 import jterm.io.input.Keys;
-import jterm.io.output.Printer;
-import jterm.io.output.TextColor;
 import jterm.io.output.GuiPrinter;
 import jterm.io.output.HeadlessPrinter;
+import jterm.io.output.Printer;
+import jterm.io.output.TextColor;
 import jterm.util.Util;
 
 import java.io.BufferedReader;
@@ -39,9 +39,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class JTerm {
+
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
     public static Printer out;
-    public static final String VERSION = "0.7.0";
+    public static final String VERSION = "0.7.1";
     public static String PROMPT = ">> ";
     public static String dirChar;
     public static final String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
@@ -64,6 +65,7 @@ public class JTerm {
     public static void main(String[] args) {
         setOS();
         initCommands();
+
         if (args.length > 0 && args[0].equals("headless")) {
             out = new HeadlessPrinter();
             headless = true;
@@ -76,9 +78,11 @@ public class JTerm {
             out = new GuiPrinter(terminal.getTextPane());
             Keys.initGUI();
         }
+
         JTerm.out.println(TextColor.INFO, JTerm.LICENSE);
         JTerm.out.printPrompt();
-        if(headless){
+
+        if (headless) {
             try {
                 while (true) {
                     InputHandler.read();
@@ -103,7 +107,10 @@ public class JTerm {
         }
 
         try {
-            if (JTerm.isHeadless()) out.println(TextColor.INFO);
+            if (JTerm.isHeadless()) {
+                out.println(TextColor.INFO);
+            }
+
             COMMANDS.get(command).execute(optionsArray);
         } catch (CommandException e) {
             System.err.println(e.getMessage());
@@ -111,8 +118,6 @@ public class JTerm {
     }
 
     private static void initCommands() {
-        // Reflections reflections = new Reflections("jterm.command", new MethodAnnotationsScanner());
-        // Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
         ArrayList<Method> methods = new ArrayList<>();
         ArrayList<String> classes = new ArrayList<>();
 
@@ -129,17 +134,15 @@ public class JTerm {
                     }
 
                     String name = e.getName();
-                    if (name.startsWith("jterm/command")) {
+                    if (name.startsWith("jterm/command")
+                            && (name.compareTo("jterm/command/") != 0)) {
                         classes.add(name.replace('/', '.').substring(0, name.length() - 6));
                     }
                 }
             }
         } catch (IOException ioe) {
-            out.println(TextColor.ERROR,ioe.toString());
+            out.println(TextColor.ERROR, ioe.toString());
         }
-
-        // TODO: This line makes the program crash on Linux Kubuntu, don't know about windows
-        classes.remove(0);
 
         classes.forEach(aClass -> {
             try {

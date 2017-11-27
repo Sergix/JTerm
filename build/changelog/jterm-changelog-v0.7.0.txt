@@ -1,0 +1,122 @@
+Changelog entry:
+
+(#116)[11/24/2017-13:45 0.7.0 Sergix]
+	Wrote documentation for version "0.7.0".
+	Compiled changelog.
+	Compiled source zip
+	Compiled "jterm-v0.7.0.jar".
+	Modified README, CONTRIBUTING, and ROADMAP suffix version.
+	Pushed updates to Git.
+
+Full changes include:
+	- cd .. no longer adds the .'s to current directory
+	- Added rm command to delete files/directories
+	- Added commons.io dependency to POM
+	- Program starts with prompt instead of ./
+	- Fixed some formatting in JTerm.java
+	- Added setOS() function to Util.java
+		- Replaces code previously used to determine OS in JTerm.java
+	- Re-added the build process batch files to the root directory
+	- Removed *.bat from .gitignore
+	- Removed lang3 dependency from POM and all imports
+	- Fixed issue where InputHandler was outputting an extra newline
+	- Fixed issue where autocomplete was attempting a non existent directory and outputting NullPointerException
+	- Added Command interface with execute() method (@ojles)
+	- Added CommandException for package jterm.command.* (@ojles)
+	- Implemented Command interface in all command classes (@ojles)
+	- Added dynamic loading of command instances using reflection, saving them in a Map<String, Command> (@ojles)
+	- Moved helper methods from JTerm.java to Util.java (@ojles)
+	- Fixed ping command (@ojles)
+	- Fixed Exec.java, which was not printing all the data got from the executed process
+	- Removed org.reflections POM import
+	- Updated ROADMAP.md
+	- Fixed issue with Echo cutting off extra character
+	- Fixed v0.6.0 documentation table
+	- v0.6.1 is now DEPRECATED
+	- Output now routes through JTerm.out
+	- Created "I/O", "GUI", "bug fix", "ROADMAP", "cleanup", and "command" Issue labels
+	- Help.java now automates commands output
+	- Added JTerm.getCommands() function
+	- JTerm.COMMANDS is now public
+	- Added a fully functioning JavaX GUI (@lbenedetto)
+		- Runs commands without recreating anything
+		- Added ProtectedDocument class
+		- Added ProtectedTextComponent class
+		- Added Terminal class (GUI)
+		- Added com.intellij.forms_rt import to POM for Terminal.form GUI layout
+	- New autocompltete classes (@nanoandrew4)
+		- Added KeyHandler class
+		- Added Keys enum
+		- Added FileAutocomplete class
+	- Added Util functions
+		- removeSpaces()
+		- containsOnlySpaces()
+		- getRunTime()
+		- clearLine()
+		- getAsArray()
+		- getAsString()
+		- getRest()
+		- getFullPath()
+	- Added a command interface (@ojles)
+		- Command methods now have a @Command annotation
+		- All commands are automatically updated and stored in a global hashmap
+		- Added CommandException class
+	- Added target/ to .gitignore
+	- Created Files.move()
+	- Simplified UNIX Arrow Key input
+	- Moved UNIX and Windows input functions to RawConsoleInput class from UnixInput and WinInput classes
+	- Added "regex" command (@lbenedetto)
+		- Added Regex.java
+	- Added basic unit tests
+		- Created src/test directory
+		- Added UtilTest.java
+	- Added org.junit.jupiter.junit-jupiter-api dependency to the POM
+	- Added JTerm.setPrompt()
+	- cd/chdir command now changes input prompt
+	- Major refactor of code to prepare for text color in headless mode
+		- Moved RawConsoleInput.java, InputHandler.java, and Keys.java classes to own package jterm.io.input
+	- Added jterm.io.output package
+		- Added CollectorPrinter.java
+		- Added GUIPrinter.java
+		- Added HeadlessPrinter.java
+		- Added Printer.java
+		- Added TextColor.java
+	- Added InputHander.java test to tests
+	- Fixed autocomplete bugs
+	- Fixed Windows-based bugs
+	- Fixed GUI tab parser
+	- Closed #45
+	- Closed #49
+	- Closed #59
+	- Closed #60
+	- Closed #68
+	- Closed #40
+	- Closed #47 (PR #78)
+	- Closed #48
+	- Closed #52 (wontfix)
+	- Closed #53
+	- Closed #71 (PR #74)
+	- Closed #73
+	- Closed #75
+	- Closed PR #77 (PR #79)
+	- Closed #80
+	- Closed #81
+	- Closed #94
+	- Closed PR #82 (PR #83)
+	- Merged #58 (@ojles)
+	- Merged #61 (@nanoandrew4)
+	- Merged #67 (@ojles)
+	- Merged #74 (@lbenedetto)
+	- Merged #78 (@nanoandrew4)
+	- Merged #79 (@ojles)
+	- Merged #83 (@Kaperskyguru)
+	- Merged #85 (@lbenedetto)
+	- Merged #86 (@nanoandrew4)
+	- Merged #87 (@lbenedetto)
+	- Merged #88 (@lbenedetto)
+	- Merged #90 (@nanoandrew4)
+	- Merged #91 (@nanoandrew4)
+	- Merged #93 (@lbenedetto)
+	- Merged #95 (@lbenedetto)
+	- Merged #96 (@DataSecs)
+	- Merged #97 (@lbenedetto)

@@ -25,6 +25,7 @@ import jterm.util.Util;
 import java.util.List;
 
 public class Echo {
+
     // FIXME: echo is not working correctly, for example: > echo $JAVA_HOME
     @Command(name = "echo", minOptions = 1, syntax = "echo [-h] input")
     public static void echo(List<String> options) {
