@@ -24,7 +24,7 @@ public class CollectorPrinter implements Printer {
     }
 
     @Override
-    public void println(TextColor color) {
+    public void println() {
         lines.append("\n");
     }
 
