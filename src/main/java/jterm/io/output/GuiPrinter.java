@@ -10,11 +10,15 @@ import java.util.Locale;
 
 public class GuiPrinter implements Printer {
     private final JTextPane textPane;
-    private ProtectedTextComponent ptc;
+    private ProtectedTextComponent protectedDoc;
+    private SimpleAttributeSet style;
 
     public GuiPrinter(JTextPane textPane) {
         this.textPane = textPane;
-        ptc = new ProtectedTextComponent(textPane);
+        protectedDoc = new ProtectedTextComponent(textPane);
+        style = new SimpleAttributeSet();
+        StyleConstants.setFontFamily(style, "Monospace Regular");
+        StyleConstants.setBold(style, true);
     }
 
     public void print(TextColor color, String x) {
@@ -30,8 +34,8 @@ public class GuiPrinter implements Printer {
         print(String.valueOf(x), color);
     }
 
-    public void println(TextColor color) {
-        print("\n", color);
+    public void println() {
+        print("\n", TextColor.INPUT);
     }
 
     public void println(TextColor color, String x) {
@@ -72,12 +76,12 @@ public class GuiPrinter implements Printer {
             print("", TextColor.INPUT);
             int promptIndex = textPane.getDocument().getLength();
             textPane.setCaretPosition(promptIndex);
-            ptc.protectText(0, promptIndex - 1);
+            protectedDoc.protectText(0, promptIndex - 1);
         });
     }
 
     public void clearLine(String line, int cursorPosition, boolean clearPrompt) {
-        if (clearPrompt) ptc.clearProtections();
+        if (clearPrompt) protectedDoc.clearProtections();
         String text = textPane.getText().replaceAll("\r", "");
         int ix = text.lastIndexOf("\n") + 1;
         int len = line.length();
@@ -94,16 +98,15 @@ public class GuiPrinter implements Printer {
 
     @Override
     public void clearAll() {
-        ptc.clearProtections();
+        protectedDoc.clearProtections();
         textPane.setText("");
     }
 
     private void print(String s, TextColor c) {
-        StyleContext sc = StyleContext.getDefaultStyleContext();
-        AttributeSet color = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c.getColor());
+        StyleConstants.setForeground(style, c.getColor());
         int len = textPane.getDocument().getLength();
         textPane.setCaretPosition(len);
-        textPane.setCharacterAttributes(color, false);
+        textPane.setCharacterAttributes(style, false);
         textPane.replaceSelection(s);
     }
 

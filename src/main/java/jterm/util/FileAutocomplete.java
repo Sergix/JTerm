@@ -239,7 +239,7 @@ public class FileAutocomplete {
 
         if (fileNames.size() > 0 && newList) {
             // Re-output command after clearing lines
-            JTerm.out.println(TextColor.INPUT);
+            JTerm.out.println();
             JTerm.out.printWithPrompt(TextColor.INPUT, getCommand());
         }
     }
