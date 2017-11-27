@@ -17,8 +17,6 @@ public class HTTPRequest {
 
         private ReturnType returnType;
 
-        private boolean outputFile;
-
         private String postData;
 
         private String userAgent;
@@ -34,11 +32,6 @@ public class HTTPRequest {
             this.requestMethod = requestMethod;
             this.returnType = returnType;
             userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101 Firefox/52.0";
-        }
-
-        public RequestBuilder outputFile(boolean outputFile) {
-            this.outputFile = outputFile;
-            return this;
         }
 
         public RequestBuilder postData(String postData) {
