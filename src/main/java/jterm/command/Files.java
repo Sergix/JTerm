@@ -22,9 +22,7 @@ import jterm.util.Util;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.List;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -33,6 +31,8 @@ import static jterm.JTerm.log;
 import static jterm.JTerm.logln;
 
 public class Files {
+    private static final String renameHelp = "rename [-h] [-f] path name\n\tpath\tpath to file\n\tname\tnew name\n\t-h\tshow this message and exit\n\t-f\treplace existing";
+
     @Command(name = "mv", minOptions = 2)
     public static void move(List<String> options) {
         String sourceName = Util.getFullPath(options.get(0));
@@ -58,6 +58,58 @@ public class Files {
             java.nio.file.Files.move(filePath, filePath.resolveSibling(newName), REPLACE_EXISTING);
         } catch (IOException e) {
             throw new CommandException("Failed to rename file", e);
+        }
+    }
+
+    @Command(name = "rn2", minOptions = 2)
+    public static void rename2(List<String> options) {
+        boolean overwrite = false;
+        int numArgs = 2, i = 0;
+        String[] args = new String[numArgs];
+
+        for (String option : options) {
+            switch (option) {
+                case "-f":
+                    overwrite = true;
+                    break;
+                case "-h":
+                    logln(renameHelp, true);
+                    break;
+                default:
+                    if (i < numArgs) {
+                        args[i++] = option;
+                    } else {
+                        logln(renameHelp, true);
+                        return;
+                    }
+            }
+        }
+
+        if (i == numArgs) {
+            try {
+                String path = args[0];
+                String newName = args[1];
+
+                Path source = Paths.get(Util.getFullPath(path));
+                Path target = source.resolveSibling(newName);
+
+                if (overwrite) {
+                    java.nio.file.Files.move(source, target, REPLACE_EXISTING);
+                } else {
+                    java.nio.file.Files.move(source, target);
+                }
+            } catch (FileAlreadyExistsException e) {
+                logln("File with this name already exists. Use -f to replace existing.", true);
+                throw new CommandException("File with this name already exists. Use -f to replace existing.", e);
+            } catch (NoSuchFileException e) {
+                logln("File with this path does not exist.", true);
+                throw new CommandException("File with this path does not exist.", e);
+            } catch (IOException | SecurityException | InvalidPathException e) {
+                logln("Cannot rename file.", true);
+                throw new CommandException("Cannot rename file.", e);
+            }
+        } else {
+            System.out.println(renameHelp);
         }
     }
 
@@ -205,15 +257,15 @@ public class Files {
         Util.clearLine(update, false);
         logln("\nFile downloaded successfully in: " + Util.getRunTime(System.currentTimeMillis() - start), true);
     }
-    
-    	@Command(name = {"move", "mv"}, minOptions = 2)
-	public static void moveFile(File fileName, String newLocation){
-		if(fileName.renameTo(new File(newLocation + fileName.getName()))){
-			System.out.println(fileName + "Successfully Moved");
-		}else{
-			System.out.println(fileName + "Failed to Moved");
-		}
-		
-	}
-    
+
+    @Command(name = {"move", "mv"}, minOptions = 2)
+    public static void moveFile(File fileName, String newLocation) {
+        if (fileName.renameTo(new File(newLocation + fileName.getName()))) {
+            System.out.println(fileName + "Successfully Moved");
+        } else {
+            System.out.println(fileName + "Failed to Moved");
+        }
+
+    }
+
 }
