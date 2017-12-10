@@ -23,14 +23,13 @@ import jterm.util.Util;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.List;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class Files {
+    private static final String renameHelp = "rename [-h] [-f] path name\n\tpath\tpath to file\n\tname\tnew name\n\t-h\tshow this message and exit\n\t-f\treplace existing";
 
     // @ojles and @Kaperskyguru
     @Command(name = {"mv", "move"}, minOptions = 2, syntax = "move, mv [-h] source destination")
@@ -56,6 +55,55 @@ public class Files {
             java.nio.file.Files.move(filePath, filePath.resolveSibling(options.get(1)), REPLACE_EXISTING);
         } catch (IOException e) {
             throw new CommandException("Failed to rename file", e);
+        }
+    }
+
+    @Command(name = "rn2", minOptions = 2)
+    public static void rename2(List<String> options) {
+        boolean overwrite = false;
+        int numArgs = 2, i = 0;
+        String[] args = new String[numArgs];
+
+        for (String option : options) {
+            switch (option) {
+                case "-f":
+                    overwrite = true;
+                    break;
+                case "-h":
+                    JTerm.out.println(TextColor.INFO, renameHelp);
+                    break;
+                default:
+                    if (i < numArgs) {
+                        args[i++] = option;
+                    } else {
+                        JTerm.out.println(TextColor.INFO, renameHelp);
+                        return;
+                    }
+            }
+        }
+
+        if (i == numArgs) {
+            try {
+                String path = args[0];
+                String newName = args[1];
+
+                Path source = Paths.get(Util.getFullPath(path));
+                Path target = source.resolveSibling(newName);
+
+                if (overwrite) {
+                    java.nio.file.Files.move(source, target, REPLACE_EXISTING);
+                } else {
+                    java.nio.file.Files.move(source, target);
+                }
+            } catch (FileAlreadyExistsException e) {
+                JTerm.out.println(TextColor.ERROR, "File with this name already exists. Use -f to replace existing.");
+            } catch (NoSuchFileException e) {
+                JTerm.out.println(TextColor.ERROR,"File with this path does not exist.");
+            } catch (IOException | SecurityException | InvalidPathException e) {
+                JTerm.out.println(TextColor.ERROR,"Cannot rename file.");
+            }
+        } else {
+            JTerm.out.println(TextColor.INFO, renameHelp);
         }
     }
 
