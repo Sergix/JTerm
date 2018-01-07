@@ -1,3 +1,13 @@
+(#126)[1/7/2018-14:30 0.7.0 Sergix]
+	Merged #107.
+		- Thanks to @lbenedetto!
+		- Improved tests.
+			- GUIUtilTest
+			- HeadlessUtilTest
+		- Refactoring of dissasembleCommand().
+		- Refactoring of Window.java parser.
+		- Added JTerm.setCurrentDirectory().
+
 (#125)[12/4/2017-11:19 0.7.0 Sergix]
 	Closed #105 (PR #106).
 	Merged #106.
