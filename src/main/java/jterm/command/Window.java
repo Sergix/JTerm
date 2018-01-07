@@ -69,35 +69,42 @@ public class Window {
         boolean heightNext = false;
         boolean widthNext = false;
 
-        // TODO: use switch instead of else-if? FROM DATASEC: Yes do it!
+        StringBuilder titleBuilder = new StringBuilder();
         for (String option : options) {
-            if (option.equals("-h")) {
-                JTerm.out.println(TextColor.INFO, "Command syntax:\t\nwindow [-h] [-r] [-v] [-w width] [-l height] [-t title]"
-                        + "\n\nCreates a new programmable GUI window."
-                        + "\nDefault title is \"JTerm Window\", and the default width and height of the window is 500 x 500.");
-                return;
-            } else if (option.equals("-v")) {
-                visible = true;
-            } else if (option.equals("-t")) {
-                title = "";
-                titleNext = true;
-            } else if (option.equals("-w")) {
-                widthNext = true;
-            } else if (option.equals("-l")) {
-                heightNext = true;
-            } else if (widthNext) {
-                width = Integer.parseInt(option);
-                widthNext = false;
-            } else if (heightNext) {
-                height = Integer.parseInt(option);
-                heightNext = false;
-            } else if (option.equals("-r")) {
-                resizable = true;
-            } else if (titleNext) {
-                title += option + " ";
+            switch (option){
+                case "-h":
+                    JTerm.out.println(TextColor.INFO, "Command syntax:\t\nwindow [-h] [-r] [-v] [-w width] [-l height] [-t title]"
+                            + "\n\nCreates a new programmable GUI window."
+                            + "\nDefault title is \"JTerm Window\", and the default width and height of the window is 500 x 500.");
+                    return;
+                case "-v":
+                    visible = true;
+                    break;
+                case "-t":
+                    title = "";
+                    titleNext = true;
+                    break;
+                case "-w":
+                    widthNext = true;
+                    break;
+                case "-l":
+                    heightNext = true;
+                    break;
+                default:
+                    if (widthNext) {
+                        width = Integer.parseInt(option);
+                        widthNext = false;
+                    } else if (heightNext) {
+                        height = Integer.parseInt(option);
+                        heightNext = false;
+                    } else if (option.equals("-r")) {
+                        resizable = true;
+                    } else if (titleNext) {
+                        titleBuilder.append(option).append(" ");
+                    }
             }
         }
-
+        title = titleBuilder.toString();
         id = ++windowCount;
 
         if (title == null) {

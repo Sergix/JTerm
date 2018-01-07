@@ -72,8 +72,8 @@ public class GuiPrinter implements Printer {
     public void printPrompt() {
         invoke(() -> {
             print(JTerm.currentDirectory, TextColor.PATH);
-            print(JTerm.PROMPT, TextColor.PROMPT);
-            print("", TextColor.INPUT);
+            print(">>", TextColor.PROMPT);
+            print(" ", TextColor.INPUT);
             int promptIndex = textPane.getDocument().getLength();
             textPane.setCaretPosition(promptIndex);
             protectedDoc.protectText(0, promptIndex - 1);
