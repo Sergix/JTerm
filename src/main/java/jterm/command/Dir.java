@@ -26,9 +26,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Dir {
@@ -73,28 +71,68 @@ public class Dir {
         File dir = new File(newDirectory);
         File newDir = new File(JTerm.currentDirectory + newDirectory);
 
-        if (newDirectory.equals("/")) {
-            newDirectory = "/";
-        } else if (newDirectory.equals(".")) {
-            return;
-        } else if (newDirectory.equals("..")) {
-            if (JTerm.currentDirectory.equals("/")) {
-                return;
-            } else {
-                //TODO: Fix this to actually remove a directory level
-                newDirectory = JTerm.currentDirectory.substring(0, JTerm.currentDirectory.length() - 2);
-                newDirectory = newDirectory.substring(0, newDirectory.lastIndexOf('/'));
-            }
-        } else if (newDir.exists() && newDir.isDirectory()) {
-            newDirectory = JTerm.currentDirectory + newDirectory;
-        } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
-            JTerm.out.println(TextColor.ERROR, "ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
-            
-            return;
+        boolean isAbsoluteDirectory;
+        if ( (JTerm.IS_UNIX && newDirectory.charAt(0) == '/') || (JTerm.IS_WIN && newDirectory.startsWith(".+:")) ) {
+            isAbsoluteDirectory = true;
+        } else {
+            isAbsoluteDirectory = false;
         }
 
-        if (!newDirectory.endsWith("/")) {
-            newDirectory += "/";
+        // Store each subdirectory into an array
+        String subdirectories[];
+        if (isAbsoluteDirectory) {
+            if (JTerm.IS_WIN) {
+                subdirectories = newDirectory.split("\\\\");
+            } else {
+                subdirectories = newDirectory.split("/");
+            }
+        } else {
+            if (JTerm.IS_WIN) {
+                newDirectory = JTerm.currentDirectory + "\\" + newDirectory;
+                subdirectories = newDirectory.split("\\\\");
+            } else {
+                newDirectory = JTerm.currentDirectory + "/" + newDirectory;
+                subdirectories = newDirectory.split("/");
+            }
+        }
+
+        // For each subdirectory in the array, we build the new directory
+        Deque directoriesDeque = new LinkedList<>();
+        for (int i = 0; i < subdirectories.length; i++) {
+            if (subdirectories[i].equals(".") || subdirectories[i].trim().equals("")) {
+                continue;
+            } else if (subdirectories[i].equals("..")) {
+                // If ".." is in the directory path, remove the last directory
+                // added to the deque to "move up" the directory tree
+                if(!directoriesDeque.isEmpty()) {
+                    directoriesDeque.removeLast();
+                }
+            } else {
+                directoriesDeque.add(subdirectories[i]);
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        if (JTerm.IS_UNIX) {
+            sb.append("/");
+        }
+
+        while (!directoriesDeque.isEmpty()) {
+            sb.append(directoriesDeque.pop());
+            if (JTerm.IS_WIN) {
+                sb.append("\\");
+            } else {
+                sb.append("/");
+            }
+        }
+
+        newDirectory = sb.toString();
+
+        if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
+            JTerm.out.println(TextColor.ERROR, "ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
+
+            return;
         }
 
         // It does exist, and it is a directory, so just change the global working directory variable to the input
