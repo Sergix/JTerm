@@ -1,3 +1,11 @@
+(#127)[2/16/2018-14:21 0.7.0 Sergix]
+	Closed #108.
+	Merged #109.
+		- Thanks to @PabloPaglill!
+		- Added "find" command.
+			- "find [-h] [-r] searchText"
+			- Files.find()
+
 (#126)[1/7/2018-14:30 0.7.0 Sergix]
 	Merged #107.
 		- Thanks to @lbenedetto!
