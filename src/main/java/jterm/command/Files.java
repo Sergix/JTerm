@@ -26,6 +26,7 @@ import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -278,15 +279,15 @@ public class Files {
 			}
 
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-				if (file.toFile().getName().equals(searchName)) {
+				if (file.toFile().getName().contains(searchName)) {
 					entries.add(file);
 				}
 				return FileVisitResult.CONTINUE;
 			}
 
 			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-				if (dir.toFile().getName().equals(searchName)) {
-					entries.add(dir);
+				if (dir.toFile().getName().contains(searchName)) {
+					entries.add(0, dir);
 				}
 				return (recursiveFlag || dir.equals(searchPath)) ? FileVisitResult.CONTINUE
 						: FileVisitResult.SKIP_SUBTREE;
@@ -300,7 +301,7 @@ public class Files {
 		try {
 			java.nio.file.Files.walkFileTree(searchPath, fileVisitor);
 		} catch (IOException e) {
-			JTerm.out.println(TextColor.ERROR, "Search failed");
+			JTerm.out.println(TextColor.ERROR, "Search interrupted");
 		}
 
 		if (entries.isEmpty()) {
@@ -311,9 +312,9 @@ public class Files {
 		JTerm.out.println(TextColor.INFO, "Found entries: ");
 		for (Path entry : entries) {
 			if (entry.toFile().isDirectory()) {
-				JTerm.out.print(TextColor.INFO, "Directory\t\t");
+				JTerm.out.print(TextColor.INFO, "Directory\t\t\t");
 			} else {
-				JTerm.out.print(TextColor.INFO, "File\t" + entry.toFile().length()/1024 + " KB\t\t\t");
+				JTerm.out.print(TextColor.INFO, "File\t" + entry.toFile().length()/1024 + " KB\t\t");
 			}
 			JTerm.out.println(TextColor.INFO, entry.toString());
 		}
