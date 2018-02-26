@@ -26,7 +26,6 @@ import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -48,6 +47,42 @@ public class Files {
 		} catch (IOException e) {
 			throw new CommandException(String.format("Failed to move '%s' to '%s'", sourceName, destinationName), e);
 		}
+	}
+
+	@Command(name = { "cp", "copy" }, minOptions = 2, syntax = "copy, cp [-h] source destination")
+	public static void copy(List<String> options) {
+		
+		String sourceName = Util.getFullPath(options.get(0));
+		String destinationName = Util.getFullPath(options.get(1));
+		
+		//Using a 1MB buffer
+		byte[] buffer = new byte[1024 * 1024];
+		long bytesSent = 0, fileSize;
+		int bytesRead;
+		int percentage = 0, currentPercentage = 0;
+
+		StringBuilder builder = new StringBuilder("Copying ").append(sourceName).append(" to ").append(destinationName);
+		JTerm.out.println(TextColor.INFO, builder.toString());
+
+		try (BufferedInputStream sourceStream = new BufferedInputStream(new FileInputStream(sourceName));
+				BufferedOutputStream destinationStream = new BufferedOutputStream(
+						new FileOutputStream(new File(destinationName)));) {
+			fileSize = sourceStream.available();
+			while ((bytesRead = sourceStream.read(buffer)) != -1) {
+				destinationStream.write(buffer, 0, bytesRead);
+				bytesSent += bytesRead;
+				currentPercentage = (int) (((float) bytesSent / (float) fileSize) * 100);
+				if (currentPercentage > percentage) {
+					builder.setLength(0);
+					builder.append(currentPercentage).append("% copied");
+					JTerm.out.println(TextColor.INFO, builder.toString());
+					percentage = currentPercentage;
+				}
+			}
+		} catch (IOException e) {
+			throw new CommandException(String.format("Failed to copy '%s' to '%s'", sourceName, destinationName), e);
+		}
+		JTerm.out.println(TextColor.INFO, "Copy successful");
 	}
 
 	@Command(name = "rn", minOptions = 2, syntax = "rn [-h] file newName")
@@ -308,13 +343,13 @@ public class Files {
 			JTerm.out.println(TextColor.INFO, "No matches");
 			return;
 		}
-		
+
 		JTerm.out.println(TextColor.INFO, "Found entries: ");
 		for (Path entry : entries) {
 			if (entry.toFile().isDirectory()) {
 				JTerm.out.print(TextColor.INFO, "Directory\t\t\t");
 			} else {
-				JTerm.out.print(TextColor.INFO, "File\t" + entry.toFile().length()/1024 + " KB\t\t");
+				JTerm.out.print(TextColor.INFO, "File\t" + entry.toFile().length() / 1024 + " KB\t\t");
 			}
 			JTerm.out.println(TextColor.INFO, entry.toString());
 		}
