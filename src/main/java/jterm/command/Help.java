@@ -31,6 +31,9 @@ public class Help {
                 + "Available Commands\n"
                 + "(type [command] -h to view specific help information)");
 
-        new TreeSet<>(JTerm.getCommands()).forEach(command -> JTerm.out.printf(TextColor.INFO, "\t%s%n", command));
+        new TreeSet<>(JTerm.getCommands())
+            .forEach(command -> 
+                JTerm.out.printf(TextColor.INFO, "\t%s%n", command)
+            );
     }
 }

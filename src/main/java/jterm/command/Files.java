@@ -31,8 +31,6 @@ import java.util.List;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class Files {
-	private static final String renameHelp = "rename [-h] [-f] path name\n\tpath\tpath to file\n\tname\tnew name\n\t-h\tshow this message and exit\n\t-f\treplace existing";
-
 	// @ojles and @Kaperskyguru
 	@Command(name = { "mv", "move" }, minOptions = 2, syntax = "move, mv [-h] source destination")
 	public static void move(List<String> options) {
@@ -96,7 +94,7 @@ public class Files {
 		}
 	}
 
-	@Command(name = "rn2", minOptions = 2)
+	@Command(name = "rn2", minOptions = 2, syntax = "rename [-h] [-f] path name\n\tpath\tpath to file\n\tname\tnew name\n\t-h\tshow this message and exit\n\t-f\treplace existing")
 	public static void rename2(List<String> options) {
 		boolean overwrite = false;
 		int numArgs = 2, i = 0;
