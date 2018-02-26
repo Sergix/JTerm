@@ -1,3 +1,10 @@
+(#128)[2/26/2018-10:47 0.7.0 Sergix]
+	Merged #111.
+		- Thanks to @PabloPaglill!
+		- Added "copy" command.
+			- "copy, cp [-h] source destination"
+			- Files.copy()
+
 (#127)[2/16/2018-14:21 0.7.0 Sergix]
 	Closed #108.
 	Merged #109.
