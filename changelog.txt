@@ -1,3 +1,8 @@
+(#123)[3/1/2018-09:32 0.7.0 wuhugh]
+    Closes #72
+        - cd should work properly on Windows now
+    OS type is no longer automatically set to UNIX from Terminal.java
+
 (#123)[11/27/2017-18:12 0.7.0 Sergix]
 	Merged #104.
 		- Thanks to @DataSecs!

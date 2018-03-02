@@ -71,40 +71,51 @@ public class Dir {
         File dir = new File(newDirectory);
         File newDir = new File(JTerm.currentDirectory + newDirectory);
 
+        // Perform checks to see if the path is relative to the current or is an absolute path
         boolean isAbsoluteDirectory;
-        if ( (JTerm.IS_UNIX && newDirectory.charAt(0) == '/') || (JTerm.IS_WIN && newDirectory.startsWith(".+:")) ) {
+        if (JTerm.IS_UNIX && newDirectory.charAt(0) == '/') {
             isAbsoluteDirectory = true;
+        } else if (JTerm.IS_WIN) {
+            // Window paths are all relative unless they start with the drive string or a backslash
+            if (newDirectory.matches("((?i)(?s)[A-Z]):.*") || newDirectory.charAt(0) == '\\') {
+                isAbsoluteDirectory = true;
+            } else {
+                isAbsoluteDirectory = false;
+            }
         } else {
             isAbsoluteDirectory = false;
         }
 
-        // Store each subdirectory into an array
         String subdirectories[];
-        if (isAbsoluteDirectory) {
-            if (JTerm.IS_WIN) {
-                subdirectories = newDirectory.split("\\\\");
-            } else {
-                subdirectories = newDirectory.split("/");
-            }
-        } else {
-            if (JTerm.IS_WIN) {
-                newDirectory = JTerm.currentDirectory + "\\" + newDirectory;
-                subdirectories = newDirectory.split("\\\\");
-            } else {
-                newDirectory = JTerm.currentDirectory + "/" + newDirectory;
-                subdirectories = newDirectory.split("/");
-            }
+        if (!isAbsoluteDirectory) {
+            newDirectory = JTerm.currentDirectory + "/" + newDirectory;
         }
 
+        // Store each subdirectory into an array by splitting them based on forward or backslashes
+        // In the case of Windows, the forward slashes are replaced by backslashes
+        if (JTerm.IS_WIN) {
+            newDirectory = newDirectory.replace("/", "\\");
+            subdirectories = newDirectory.split("\\\\");
+        } else {
+            subdirectories = newDirectory.split("/");
+        }
+
+        // Holds the root location (either something like C: or \)
+        String windowsRootLocation = newDirectory.charAt(0) == '\\' ? "\\" : subdirectories[0];
+
         // For each subdirectory in the array, we build the new directory
-        Deque directoriesDeque = new LinkedList<>();
+        Deque<String> directoriesDeque = new LinkedList<>();
         for (int i = 0; i < subdirectories.length; i++) {
             if (subdirectories[i].equals(".") || subdirectories[i].trim().equals("")) {
                 continue;
             } else if (subdirectories[i].equals("..")) {
+                // Check if the drive name is the only directory left and avoid erasing it
+                if (directoriesDeque.size() == 1 && directoriesDeque.peek().equals(windowsRootLocation)) {
+                    continue;
+                }
                 // If ".." is in the directory path, remove the last directory
                 // added to the deque to "move up" the directory tree
-                if(!directoriesDeque.isEmpty()) {
+                else if (!directoriesDeque.isEmpty()) {
                     directoriesDeque.removeLast();
                 }
             } else {
@@ -114,10 +125,13 @@ public class Dir {
 
         StringBuilder sb = new StringBuilder();
 
-        if (JTerm.IS_UNIX) {
+        if (JTerm.IS_WIN && newDirectory.charAt(0) == '\\') {
+            sb.append(windowsRootLocation);
+        } else if (JTerm.IS_UNIX) {
             sb.append("/");
         }
 
+        // Reconstruct the path string
         while (!directoriesDeque.isEmpty()) {
             sb.append(directoriesDeque.pop());
             if (JTerm.IS_WIN) {
