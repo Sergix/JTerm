@@ -77,7 +77,7 @@ public class Dir {
             isAbsoluteDirectory = true;
         } else if (JTerm.IS_WIN) {
             // Window paths are all relative unless they start with the drive string or a backslash
-            if (newDirectory.matches("((?i)(?s)[A-Z]):.*") || newDirectory.charAt(0) == '\\') {
+            if (newDirectory.matches("((?i)(?s)[A-Z]):.*") || newDirectory.charAt(0) == '\\' || newDirectory.charAt(0) == '/') {
                 isAbsoluteDirectory = true;
             } else {
                 isAbsoluteDirectory = false;
