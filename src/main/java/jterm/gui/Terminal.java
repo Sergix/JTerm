@@ -21,8 +21,8 @@ public class Terminal extends JFrame implements KeyListener {
 
     public Terminal() {
         TextColor.initGui();
-        JTerm.IS_WIN = false;
-        JTerm.IS_UNIX = true;
+        // JTerm.IS_WIN = false;
+        // JTerm.IS_UNIX = true;
 
         setContentPane(contentPane);
         // call onCancel() when cross is clicked

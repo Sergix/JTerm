@@ -26,9 +26,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Dir {
@@ -73,28 +71,82 @@ public class Dir {
         File dir = new File(newDirectory);
         File newDir = new File(JTerm.currentDirectory + newDirectory);
 
-        if (newDirectory.equals("/")) {
-            newDirectory = "/";
-        } else if (newDirectory.equals(".")) {
-            return;
-        } else if (newDirectory.equals("..")) {
-            if (JTerm.currentDirectory.equals("/")) {
-                return;
+        // Perform checks to see if the path is relative to the current or is an absolute path
+        boolean isAbsoluteDirectory;
+        if (JTerm.IS_UNIX && newDirectory.charAt(0) == '/') {
+            isAbsoluteDirectory = true;
+        } else if (JTerm.IS_WIN) {
+            // Window paths are all relative unless they start with the drive string or a backslash
+            if (newDirectory.matches("((?i)(?s)[A-Z]):.*") || newDirectory.charAt(0) == '\\' || newDirectory.charAt(0) == '/') {
+                isAbsoluteDirectory = true;
             } else {
-                //TODO: Fix this to actually remove a directory level
-                newDirectory = JTerm.currentDirectory.substring(0, JTerm.currentDirectory.length() - 2);
-                newDirectory = newDirectory.substring(0, newDirectory.lastIndexOf('/'));
+                isAbsoluteDirectory = false;
             }
-        } else if (newDir.exists() && newDir.isDirectory()) {
-            newDirectory = JTerm.currentDirectory + newDirectory;
-        } else if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
-            JTerm.out.println(TextColor.ERROR, "ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
-            
-            return;
+        } else {
+            isAbsoluteDirectory = false;
         }
 
-        if (!newDirectory.endsWith("/")) {
-            newDirectory += "/";
+        String subdirectories[];
+        if (!isAbsoluteDirectory) {
+            newDirectory = JTerm.currentDirectory + "/" + newDirectory;
+        }
+
+        // Store each subdirectory into an array by splitting them based on forward or backslashes
+        // In the case of Windows, the forward slashes are replaced by backslashes
+        if (JTerm.IS_WIN) {
+            newDirectory = newDirectory.replace("/", "\\");
+            subdirectories = newDirectory.split("\\\\");
+        } else {
+            subdirectories = newDirectory.split("/");
+        }
+
+        // Holds the root location (either something like C: or \)
+        String windowsRootLocation = newDirectory.charAt(0) == '\\' ? "\\" : subdirectories[0];
+
+        // For each subdirectory in the array, we build the new directory
+        Deque<String> directoriesDeque = new LinkedList<>();
+        for (int i = 0; i < subdirectories.length; i++) {
+            if (subdirectories[i].equals(".") || subdirectories[i].trim().equals("")) {
+                continue;
+            } else if (subdirectories[i].equals("..")) {
+                // Check if the drive name is the only directory left and avoid erasing it
+                if (directoriesDeque.size() == 1 && directoriesDeque.peek().equals(windowsRootLocation)) {
+                    continue;
+                }
+                // If ".." is in the directory path, remove the last directory
+                // added to the deque to "move up" the directory tree
+                else if (!directoriesDeque.isEmpty()) {
+                    directoriesDeque.removeLast();
+                }
+            } else {
+                directoriesDeque.add(subdirectories[i]);
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        if (JTerm.IS_WIN && newDirectory.charAt(0) == '\\') {
+            sb.append(windowsRootLocation);
+        } else if (JTerm.IS_UNIX) {
+            sb.append("/");
+        }
+
+        // Reconstruct the path string
+        while (!directoriesDeque.isEmpty()) {
+            sb.append(directoriesDeque.pop());
+            if (JTerm.IS_WIN) {
+                sb.append("\\");
+            } else {
+                sb.append("/");
+            }
+        }
+
+        newDirectory = sb.toString();
+
+        if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
+            JTerm.out.println(TextColor.ERROR, "ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
+
+            return;
         }
 
         // It does exist, and it is a directory, so just change the global working directory variable to the input
