@@ -215,4 +215,8 @@ public class JTerm {
     public static void setPrompt(String prompt) {
         PROMPT = prompt;
     }
+
+    public static void setCurrentDirectory(String currentDirectory) {
+        JTerm.currentDirectory = currentDirectory;
+    }
 }

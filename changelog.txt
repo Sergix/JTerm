@@ -1,7 +1,42 @@
-(#123)[3/1/2018-09:32 0.7.0 wuhugh]
-    Closes #72
-        - cd should work properly on Windows now
-    OS type is no longer automatically set to UNIX from Terminal.java
+(#129)[3/1/2018-09:32 0.7.0 wuhugh]
+  Closes #72
+    - cd should work properly on Windows now
+  OS type is no longer automatically set to UNIX from Terminal.java
+
+(#128)[2/26/2018-10:47 0.7.0 Sergix]
+	Merged #111.
+		- Thanks to @PabloPaglill!
+		- Added "copy" command.
+			- "copy, cp [-h] source destination"
+			- Files.copy()
+
+(#127)[2/16/2018-14:21 0.7.0 Sergix]
+	Closed #108.
+	Merged #109.
+		- Thanks to @PabloPaglill!
+		- Added "find" command.
+			- "find [-h] [-r] searchText"
+			- Files.find()
+
+(#126)[1/7/2018-14:30 0.7.0 Sergix]
+	Merged #107.
+		- Thanks to @lbenedetto!
+		- Improved tests.
+			- GUIUtilTest
+			- HeadlessUtilTest
+		- Refactoring of dissasembleCommand().
+		- Refactoring of Window.java parser.
+		- Added JTerm.setCurrentDirectory().
+
+(#125)[12/4/2017-11:19 0.7.0 Sergix]
+	Closed #105 (PR #106).
+	Merged #106.
+		- Thanks to @saringer!
+		- Created "rn2" command.
+		- Improvements from original rename command.
+
+(#124)[11/27/2017-18:12 0.7.0 Sergix]
+	Added "networking" issue label.
 
 (#123)[11/27/2017-18:12 0.7.0 Sergix]
 	Merged #104.
