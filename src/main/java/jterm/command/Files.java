@@ -105,15 +105,9 @@ public class Files {
 			case "-f":
 				overwrite = true;
 				break;
-			case "-h":
-				JTerm.out.println(TextColor.INFO, renameHelp);
-				break;
 			default:
 				if (i < numArgs) {
 					args[i++] = option;
-				} else {
-					JTerm.out.println(TextColor.INFO, renameHelp);
-					return;
 				}
 			}
 		}
@@ -138,8 +132,6 @@ public class Files {
 			} catch (IOException | SecurityException | InvalidPathException e) {
 				JTerm.out.println(TextColor.ERROR, "Cannot rename file.");
 			}
-		} else {
-			JTerm.out.println(TextColor.INFO, renameHelp);
 		}
 	}
 

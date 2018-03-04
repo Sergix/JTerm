@@ -1,7 +1,12 @@
+(#130)[3/3/2018-22:03 0.7.0 Sergix]
+	Fixed slight formatting issue in changelog entry #129.
+	Removed extra output from "rn2" command that was causing error. Command will now fail silently.
+	Pushed updates to Git.
+
 (#129)[3/1/2018-09:32 0.7.0 wuhugh]
-  Closes #72
-    - cd should work properly on Windows now
-  OS type is no longer automatically set to UNIX from Terminal.java
+  	Closes #72
+    	- cd should work properly on Windows now
+  	OS type is no longer automatically set to UNIX from Terminal.java
 
 (#128)[2/26/2018-10:47 0.7.0 Sergix]
 	Merged #111.
