@@ -1,3 +1,8 @@
+(#131)[4/6/2018-12:44 0.7.0 Sergix]
+	Merged #113.
+		- Thanks to @importjo!
+		- Fixed typos in README.md
+
 (#130)[3/3/2018-22:03 0.7.0 Sergix]
 	Fixed slight formatting issue in changelog entry #129.
 	Removed extra output from "rn2" command that was causing error. Command will now fail silently.
