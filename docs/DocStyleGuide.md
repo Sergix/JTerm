@@ -1,7 +1,7 @@
 # Documentation Style Guide
 
 ## Introduction
-This document provides information on how to format documentation published for new releases of the JTerm project. A new "release" is defined as a build where either its version "major" or "minor" section was increased (e.g. "1.2.3"->"1.3.0"). More information on versioning [here](https://github.com/mojombo/semver/blob/master/semver.md). If the build's patch version has incremented (e.g. ""->""), please see the [Patch Note Documentation Style Guide](), and use the rules stated in that document.  
+This document provides information on how to format documentation published for new releases of the JTerm project. A new "release" is defined as a build where either its version "major" or "minor" section was increased (e.g. "1.2.3"->"1.3.0"). More information on versioning [here](https://github.com/mojombo/semver/blob/master/semver.md). If the build's patch version has incremented (e.g. ""->""), please see the [Patch Note Documentation Style Guide](), and use the rules stated in that document.
 The examples in this document are the literal formatting that would be used in Markdown. Therefore, if you see a `#` character in an example, it is not meaning to say that you put a `#` in the actual document (unless it does not abide by the standard Markdown rules or otherwise specified.)
 
 > The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
@@ -11,10 +11,10 @@ The examples in this document are the literal formatting that would be used in M
 
 ## Formatting and Styling
 ### File Name and Title
-Documentation for versions are written in Markdown. The file name of the document MUST be formatted as follows:  
-`jterm-v1.0.0-docs.md`  
-Here, `1.0.0` is to be replaced with the version numver of the associated release that the documentation is published for. The title of the document is to be:  
-`JTerm Documentation v1.0.0`  
+Documentation for versions are written in Markdown. The file name of the document MUST be formatted as follows:
+`jterm-v1.0.0-docs.md`
+Here, `1.0.0` is to be replaced with the version number of the associated release that the documentation is published for. The title of the document is to be:
+`JTerm Documentation v1.0.0`
 Where `1.0.0` is also to be replaced with the version number. The title is to be the very first line of the document. It is styled using first-level heading style (e.g. `# JTerm Documentation v1.0.0`).
 
 ### Headings
@@ -35,7 +35,7 @@ The following tokens are reserved by the language:
 ...
 ```
 ## Documentation Contents
-Release and development documentation MUST include the following sections in the following order, with any amound of extra sections describing new features and implementations in-between. Required documentation contents are as follows, and in the following order:
+Release and development documentation MUST include the following sections in the following order, with any amount of extra sections describing new features and implementations in-between. Required documentation contents are as follows, and in the following order:
 1. Table of Contents - formatted as shown in the section "Table of Contents"
 2. Overview - introduction describing the documentation and its contents
 3. Build Targets - formatted as shown in the section "Build Targets"
@@ -57,7 +57,7 @@ I. Top-level
     B. Second-level
 II. Top-level
 ```
-An implied rule for this listing format is, except for top-level, "where there is an A, there is a B; where there is a 1, there is a 2, etc." If there is only one point on a level, and it does not have sub-levels, use the format as show for "Note" above: the line is preceded by the "-" character.  
+An implied rule for this listing format is, except for top-level, "where there is an A, there is a B; where there is a 1, there is a 2, etc." If there is only one point on a level, and it does not have sub-levels, use the format as show for "Note" above: the line is preceded by the "-" character.
 The table of contents MUST include _every_ section in the document, including the required sections. It must also include itself as the first point.
 
 ### Build Targets
