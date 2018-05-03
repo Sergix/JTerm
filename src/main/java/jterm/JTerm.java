@@ -80,6 +80,9 @@ public class JTerm {
         }
 
         JTerm.out.println(TextColor.INFO, JTerm.LICENSE);
+
+        JTerm.out.printf(TextColor.INFO, "TEST LINE (OS): %b\n\n", JTerm.IS_UNIX);
+
         JTerm.out.printPrompt();
 
         if (headless) {
@@ -102,7 +105,8 @@ public class JTerm {
 
         String command = optionsArray.remove(0);
         if (!COMMANDS.containsKey(command)) {
-            out.printf(TextColor.ERROR,"Command \"%s\" is not available%n", command);
+            out.printf(TextColor.INFO, "\nTEST LINE (INPUT): %s\n\n", command);
+            out.printf(TextColor.ERROR,"Command \"%s\" is not available\n", command);
             return;
         }
 

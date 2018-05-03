@@ -33,7 +33,8 @@ public class Help {
 
         new TreeSet<>(JTerm.getCommands())
             .forEach(command -> 
-                JTerm.out.printf(TextColor.INFO, "\t%s%n", command)
+                JTerm.out.printf(TextColor.INFO, "%s\t", command)
             );
+        JTerm.out.println(TextColor.INFO, "");
     }
 }
