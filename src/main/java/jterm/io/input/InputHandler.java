@@ -3,6 +3,7 @@ package jterm.io.input;
 import jterm.JTerm;
 import jterm.io.output.TextColor;
 import jterm.util.FileAutocomplete;
+import jterm.util.CommandAutocomplete;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,6 +49,8 @@ public class InputHandler {
         lastChar = c;
         if (key != Keys.TAB)
             resetVars = true;
+
+        JTerm.out.printf(TextColor.INFO, "TEST LINE (C_INPUT): %c", c);
         key.executeAction();
     }
 
@@ -118,6 +121,7 @@ public class InputHandler {
     }
 
     static void newLineEvent() {
+        JTerm.out.printf(TextColor.INFO, "TEST LINE (N_INPUT): %s", command);
         lastArrowPress = Keys.NONE;
         boolean empty = command.trim().isEmpty();
 
@@ -130,7 +134,8 @@ public class InputHandler {
         currCommand = "";
         setCursorPos(0);
         setResetVars(true);
-        System.out.println();
+        //System.out.println();
+        JTerm.out.printf(TextColor.INFO, "TEST LINE (E_INPUT): %s", command);
         parse();
         command = "";
         JTerm.out.printPrompt();
@@ -177,6 +182,7 @@ public class InputHandler {
      * Sends command to terminal class for parsing, source is the newlineEvent in the key processor
      */
     private static void parse() {
+        JTerm.out.printf(TextColor.INFO, "TEST LINE (P_INPUT): %s", command);
         Arrays.stream(command.split("&&")).forEach(command -> JTerm.executeCommand(command.trim()));
     }
 
@@ -212,6 +218,30 @@ public class InputHandler {
 
         // Get variables and set cursor position
         setCursorPos(FileAutocomplete.getCursorPos());
+        moveToCursorPos();
+    }
+
+    /**
+     * Autocompletes desired file name similar to how terminals do it.
+     */
+    private static void commandAutocomplete() {
+
+        if (resetVars)
+            CommandAutocomplete.resetVars();
+
+        if (CommandAutocomplete.getPossibleCommands() == null) {
+             CommandAutocomplete.init(disassembleCommand(command), false, false);
+             resetVars = false;
+        } else
+            CommandAutocomplete.commandAutocomplete();
+
+        command = CommandAutocomplete.getCommand();
+
+        if (CommandAutocomplete.isResetVars())
+            CommandAutocomplete.resetVars();
+
+        // Get variables and set cursor position
+        setCursorPos(CommandAutocomplete.getCursorPos());
         moveToCursorPos();
     }
 
