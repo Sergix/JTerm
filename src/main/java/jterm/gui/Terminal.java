@@ -1,6 +1,5 @@
 package jterm.gui;
 
-import jterm.JTerm;
 import jterm.io.input.InputHandler;
 import jterm.io.input.Keys;
 import jterm.io.output.TextColor;
@@ -61,9 +60,9 @@ public class Terminal extends JFrame implements KeyListener {
         }
         if ((int) e.getKeyChar() == 65535) {
             //An arrow key was pressed. Switch the key code into the negatives so it wont interfere with any real chars
-            new Thread(() -> InputHandler.process(Keys.getKeyByValue(e.getKeyCode() * -1), e.getKeyChar())).start();
+            new Thread(() -> InputHandler.process(Keys.getKeyByValue(String.valueOf(e.getKeyCode() * -1)), String.valueOf(e.getKeyCode()))).start();
         } else
-            new Thread(() -> InputHandler.process(Keys.getKeyByValue((int) e.getKeyChar()), e.getKeyChar())).start();
+            new Thread(() -> InputHandler.process(Keys.getKeyByValue(String.valueOf(e.getKeyCode())), String.valueOf((int) e.getKeyChar()))).start();
     }
 
     private void onCancel() {

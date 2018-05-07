@@ -13,7 +13,7 @@ public enum Keys {
     CTRL_C(3, InputHandler::ctrlCEvent),
     CTRL_Z(26, InputHandler::ctrlZEvent),
     NONE(-1, null);
-    int value;
+    String value;
     final Runnable r;
 
     Keys(Runnable r) {
@@ -26,48 +26,30 @@ public enum Keys {
 
     Keys(int value, Runnable r) {
         this.r = r;
-        this.value = value;
+        this.value = String.valueOf(value);
     }
 
-    public int getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
-    public static void initWindows() {
-        UP.value = 57416;
-        DOWN.value = 57424;
-        RIGHT.value = 57421;
-        LEFT.value = 57419;
-        BACKSPACE.value = 8;
-        NWLN.value = 13;
-    }
-
-    public static void initUnix() {
-        UP.value = -183;
-        DOWN.value = -184;
-        RIGHT.value = -185;
-        LEFT.value = -186;
-        BACKSPACE.value = 127;
-        NWLN.value = 10;
-    }
-
     public static void initGUI() {
-        UP.value = -38;
-        DOWN.value = -40;
-        RIGHT.value = -39;
-        LEFT.value = -37;
-        BACKSPACE.value = 8;
-        NWLN.value = 10;
+        UP.value = "-38";
+        DOWN.value = "-40";
+        RIGHT.value = "-39";
+        LEFT.value = "-37";
+        BACKSPACE.value = "8";
+        NWLN.value = "10";
     }
 
-    public static Keys getKeyByValue(int c) {
+    public static Keys getKeyByValue(String input) {
         Keys[] keys = Keys.values();
         for (Keys key : keys) {
-            if (c == (key.value))
+            if (input.equals(key.value))
                 return key;
         }
         return CHAR;
