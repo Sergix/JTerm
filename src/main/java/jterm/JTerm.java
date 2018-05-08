@@ -71,7 +71,7 @@ public class JTerm {
             out = new HeadlessPrinter();
             headless = true;
             TextColor.initHeadless();
-            new IOHeadlessInit();
+            IOHeadlessInit.init();
         } else {
             terminal = new Terminal();
             terminal.setTitle("JTerm");
