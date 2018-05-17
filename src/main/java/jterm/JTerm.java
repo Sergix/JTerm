@@ -21,6 +21,7 @@ import jterm.command.Command;
 import jterm.command.CommandException;
 import jterm.command.CommandExecutor;
 import jterm.gui.Terminal;
+import jterm.io.IOHeadlessInit;
 import jterm.io.input.InputHandler;
 import jterm.io.input.Keys;
 import jterm.io.output.GuiPrinter;
@@ -70,6 +71,7 @@ public class JTerm {
             out = new HeadlessPrinter();
             headless = true;
             TextColor.initHeadless();
+            IOHeadlessInit.init();
         } else {
             terminal = new Terminal();
             terminal.setTitle("JTerm");
@@ -81,7 +83,7 @@ public class JTerm {
 
         JTerm.out.println(TextColor.INFO, JTerm.LICENSE);
 
-        JTerm.out.printf(TextColor.INFO, "TEST LINE (OS): %b\n\n", JTerm.IS_UNIX);
+//        JTerm.out.printf(TextColor.INFO, "TEST LINE (OS): %b\n\n", JTerm.IS_UNIX);
 
         JTerm.out.printPrompt();
 
@@ -105,7 +107,7 @@ public class JTerm {
 
         String command = optionsArray.remove(0);
         if (!COMMANDS.containsKey(command)) {
-            out.printf(TextColor.INFO, "\nTEST LINE (INPUT): %s\n\n", command);
+//            out.printf(TextColor.INFO, "\nTEST LINE (INPUT): %s\n\n", command);
             out.printf(TextColor.ERROR,"Command \"%s\" is not available\n", command);
             return;
         }
@@ -172,7 +174,7 @@ public class JTerm {
                             try {
                                 method.invoke(null, options);
                             } catch (Exception e) {
-                                System.err.println("Weird stuff...");
+//                                System.err.println("Weird stuff...");
                                 e.printStackTrace();
                             }
                         });
@@ -187,11 +189,9 @@ public class JTerm {
         if (os.contains("windows")) {
             JTerm.IS_WIN = true;
             dirChar = "\\";
-            Keys.initWindows();
         } else if ("linux".equals(os) || os.contains("mac") || "sunos".equals(os) || "freebsd".equals(os)) {
             JTerm.IS_UNIX = true;
             dirChar = "/";
-            Keys.initUnix();
         }
     }
 

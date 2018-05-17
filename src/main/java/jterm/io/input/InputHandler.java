@@ -2,8 +2,8 @@ package jterm.io.input;
 
 import jterm.JTerm;
 import jterm.io.output.TextColor;
-import jterm.util.FileAutocomplete;
 import jterm.util.CommandAutocomplete;
+import jterm.util.FileAutocomplete;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,21 +36,27 @@ public class InputHandler {
 
 
     public static void read() throws IOException {
-        int c1 = RawConsoleInput.read(true);
-        int c2 = RawConsoleInput.read(false);
-        int c3 = RawConsoleInput.read(false);
+        StringBuilder input = new StringBuilder();
+        input.append(RawConsoleInput.read(true));
+        int val = RawConsoleInput.read(false);
+        while (val != -2) {
+            input.append("-");
+            input.append(val);
+            val = RawConsoleInput.read(false);
+        }
         Keys keyType;
-        if (!(c2 == -2 && c3 == -2)) c1 = (c1 + c2 + c3) * -1;
-        keyType = Keys.getKeyByValue(c1);
-        process(keyType, (char) c1);
+        keyType = Keys.getKeyByValue(input.toString());
+        process(keyType, input.toString());
     }
 
-    public static void process(Keys key, char c) {
-        lastChar = c;
+    public static void process(Keys key, String input) {
+        if (key == Keys.CHAR) {
+            int c = Integer.valueOf(input);
+            lastChar = (char) c;
+        }
         if (key != Keys.TAB)
             resetVars = true;
 
-        JTerm.out.printf(TextColor.INFO, "TEST LINE (C_INPUT): %c", c);
         key.executeAction();
     }
 
@@ -121,7 +127,7 @@ public class InputHandler {
     }
 
     static void newLineEvent() {
-        JTerm.out.printf(TextColor.INFO, "TEST LINE (N_INPUT): %s", command);
+//        JTerm.out.printf(TextColor.INFO, "TEST LINE (N_INPUT): %s", command);
         lastArrowPress = Keys.NONE;
         boolean empty = command.trim().isEmpty();
 
@@ -135,7 +141,7 @@ public class InputHandler {
         setCursorPos(0);
         setResetVars(true);
         //System.out.println();
-        JTerm.out.printf(TextColor.INFO, "TEST LINE (E_INPUT): %s", command);
+//        JTerm.out.printf(TextColor.INFO, "TEST LINE (E_INPUT): %s", command);
         parse();
         command = "";
         JTerm.out.printPrompt();
@@ -182,7 +188,7 @@ public class InputHandler {
      * Sends command to terminal class for parsing, source is the newlineEvent in the key processor
      */
     private static void parse() {
-        JTerm.out.printf(TextColor.INFO, "TEST LINE (P_INPUT): %s", command);
+//        JTerm.out.printf(TextColor.INFO, "TEST LINE (P_INPUT): %s", command);
         Arrays.stream(command.split("&&")).forEach(command -> JTerm.executeCommand(command.trim()));
     }
 
@@ -201,7 +207,6 @@ public class InputHandler {
      * Autocompletes desired file name similar to how terminals do it.
      */
     private static void fileAutocomplete() {
-
         if (resetVars)
             FileAutocomplete.resetVars();
 
@@ -259,7 +264,6 @@ public class InputHandler {
      * in element 1
      */
     private static String[] disassembleCommandOld(String command) {
-
         if (!command.contains("&&"))
             return new String[]{"", command, ""};
 
