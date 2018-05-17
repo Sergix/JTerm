@@ -5,7 +5,6 @@ import jterm.io.input.Keys;
 import jterm.io.input.RawConsoleInput;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -24,6 +23,7 @@ public class IOHeadlessInit {
 
 	public static void setupVals() {
 		try {
+			Files.deleteIfExists(Paths.get(JTerm.USER_HOME_DIR + "/.jterm_config"));
 			LinkedList<String> vals = new LinkedList<>();
 			Keys[] keys = {Keys.BACKSPACE, Keys.UP, Keys.DOWN, Keys.LEFT, Keys.RIGHT, Keys.TAB, Keys.NWLN, Keys.CTRL_C, Keys.CTRL_Z};
 			String[] keyNames = {"BACKSPACE", "UP_ARR", "DOWN_ARR", "LEFT_ARR", "RIGHT_ARR", "TAB", "NEWLINE", "SIGTERM", "SIGKILL"};
@@ -36,7 +36,7 @@ public class IOHeadlessInit {
 			for (String s : vals)
 				pw.println(s);
 			pw.close();
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

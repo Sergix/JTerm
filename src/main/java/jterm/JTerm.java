@@ -174,7 +174,7 @@ public class JTerm {
                             try {
                                 method.invoke(null, options);
                             } catch (Exception e) {
-                                System.err.println("Weird stuff...");
+//                                System.err.println("Weird stuff...");
                                 e.printStackTrace();
                             }
                         });
