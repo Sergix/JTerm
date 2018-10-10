@@ -1,5 +1,3 @@
-# This project's development has halted indefinitely. Feel free, of course, to fork this project!
-
 ![JTerm](https://www.sergix.net/assets/img/logo/jterm.png)
 
 ## What is it?
@@ -14,8 +12,3 @@ Plus, it's open source, so if you find any issues, you can help out everyone els
 
 ## Where do I get it?
 Check the [releases](https://github.com/Sergix/JTerm/releases) page for binaries, as well as the source code. You can also look in the `/builds` directory for changelogs and other build-related files.
-
-> JTerm v0.7.0  
-> `jterm-v0.7.0.jar`  
-> This project and its source are held under the GNU General Public License, located in the LICENSE file in the project's directory.  
-> 2018
