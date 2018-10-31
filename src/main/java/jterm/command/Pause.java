@@ -23,6 +23,10 @@ import jterm.util.Util;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Pause command
+ * @Usage - Pauses until user inputs a value
+ */
 public class Pause {
     @Command(name = "pause", syntax = "pause [-h] [input]")
     public void execute(List<String> options) {

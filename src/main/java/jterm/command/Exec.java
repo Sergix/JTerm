@@ -23,6 +23,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Exec command
+ * @Usage - runs executable jar
+ */
 public class Exec {
 
     @Command(name = "exec", minOptions = 1, syntax = "exec executable")

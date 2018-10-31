@@ -25,6 +25,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Client implements Runnable {
+
     private static BufferedReader input;
 
     public void run() {
@@ -40,6 +41,10 @@ public class Client implements Runnable {
         }
     }
 
+    /**
+     * Creates new connection to server
+     * @param options
+     */
     public static void connect(ArrayList<String> options) {
         String address = "0.0.0.0";
         String portInput = "80";

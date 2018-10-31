@@ -23,6 +23,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Time Command
+ * @Usage - prints current time to terminal
+ */
 public class Time {
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss , z");
 

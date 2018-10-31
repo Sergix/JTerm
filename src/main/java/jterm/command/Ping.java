@@ -24,6 +24,10 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.List;
 
+/**
+ * Ping command
+ * @Usage - Validate a connection to a server & port
+ */
 public class Ping {
     @Command(name = "ping", minOptions = 1, syntax = "ping [-h] [-p port] host")
     public static void ping(List<String> options) {

@@ -20,6 +20,10 @@ package jterm.command;
 
 import java.util.List;
 
+/**
+ * Exit Command
+ * @Usage - exits terminal
+ */
 public class Exit {
 
     @Command(name = "exit", syntax = "exit [-h]")

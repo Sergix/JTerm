@@ -89,6 +89,9 @@ public class FileAutocomplete {
         FileAutocomplete.currText = command.endsWith(" ") ? "" : commandArr[commandArr.length - 1];
     }
 
+    /**
+     * Resets variables to default values
+     */
     public static void resetVars() {
         files = null;
         fileNames = new TreeSet<>();
