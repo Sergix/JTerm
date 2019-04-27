@@ -129,7 +129,7 @@ public class RawConsoleInput {
         return c;
     }                                             // normal key
 
-    private static synchronized void initWindows() throws IOException {
+    private static synchronized void initWindows() {
         if (initDone) {
             return;
         }
