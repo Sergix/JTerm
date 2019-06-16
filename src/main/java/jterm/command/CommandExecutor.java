@@ -40,7 +40,7 @@ public class CommandExecutor {
             return;
         }
         if (options.size() < minOptions) {
-            throw new CommandException("To few arguments for \'" + commandName + '\'');
+            throw new CommandException("Too few arguments for \'" + commandName + '\'');
         }
         command.accept(options);
     }

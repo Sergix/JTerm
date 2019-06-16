@@ -37,14 +37,29 @@ public class Util {
         return builder.toString();
     }
 
+    /**
+     * Turn string to array by splitting at each space in string
+     * @param options
+     * @return ArrayList<String>
+     */
     public static ArrayList<String> getAsArray(String options) {
         return new ArrayList<>(Arrays.asList(options.split(" ")));
     }
 
+    /**
+     * Turn List into long string
+     * @param options
+     * @return string
+     */
     public static String getAsString(List<String> options) {
         return options.toString().replaceAll("[,\\[\\]]", "");
     }
 
+    /**
+     * Get filepath for a file
+     * @param fileName
+     * @return String filepath
+     */
     public static String getFullPath(String fileName) {
         return !fileName.startsWith("/") ? String.format("%s/%s", JTerm.currentDirectory, fileName) : fileName;
     }

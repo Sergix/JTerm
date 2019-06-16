@@ -20,6 +20,10 @@ import jterm.JTerm;
 
 import java.util.List;
 
+/**
+ * Ps Command
+ * @Usage - Print a list of running processes
+ */
 public class Ps {
     private static final String PS_COMMAND;
 

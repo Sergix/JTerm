@@ -23,6 +23,10 @@ import jterm.io.output.TextColor;
 import java.util.List;
 import java.util.TreeSet;
 
+/**
+ * Help command
+ * @Usage - View info about commands
+ */
 public class Help {
     @Command(name = "help")
     public static void printHelp(List<String> options) {

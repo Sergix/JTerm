@@ -25,6 +25,10 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Window command
+ * @Usage - creates a new window with certain characteristics
+ */
 public class Window {
     public static int windowCount = 0;
     public static final ArrayList<Window> windows = new ArrayList<>();

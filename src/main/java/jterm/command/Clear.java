@@ -19,6 +19,10 @@ import jterm.JTerm;
 
 import java.util.List;
 
+/**
+ * Clear command
+ * @Usage - clears terminal
+ */
 public class Clear {
 
 

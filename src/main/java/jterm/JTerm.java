@@ -89,6 +89,10 @@ public class JTerm {
         }
     }
 
+    /**
+     * Exectues a command string
+     * @param options
+     */
     public static void executeCommand(String options) {
         List<String> optionsArray = Util.getAsArray(options);
 
@@ -110,6 +114,9 @@ public class JTerm {
         }
     }
 
+    /**
+     * Initialize commands
+     */
     private static void initCommands() {
         // Reflections reflections = new Reflections("jterm.command", new MethodAnnotationsScanner());
         // Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
@@ -175,6 +182,9 @@ public class JTerm {
         });
     }
 
+    /**
+     * Sets operating system
+     */
     private static void setOS() {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("windows")) {
@@ -188,14 +198,26 @@ public class JTerm {
         }
     }
 
+    /**
+     * Check if headless
+     * @return true if headless
+     */
     public static boolean isHeadless() {
         return headless;
     }
 
+    /**
+     * Gets terminal
+     * @return terminal
+     */
     public static Terminal getTerminal() {
         return terminal;
     }
 
+    /**
+     * Gets commands
+     * @return Set<String> commands
+     */
     public static Set<String> getCommands() {
         return JTerm.COMMANDS.keySet();
     }
@@ -205,10 +227,18 @@ public class JTerm {
         headless = b;
     }
 
+    /**
+     * Sets terminal
+     * @param terminal
+     */
     public static void setTerminal(Terminal terminal) {
         JTerm.terminal = terminal;
     }
 
+    /**
+     * Sets prompt
+     * @param prompt
+     */
     public static void setPrompt(String prompt) {
         PROMPT = prompt;
     }

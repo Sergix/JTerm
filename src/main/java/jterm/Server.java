@@ -35,6 +35,10 @@ public class Server implements Runnable {
     public static int port = 0;
     private static String line;
 
+    /**
+     * Create a server instance
+     * @param newSocket
+     */
     public Server(Socket newSocket) {
         socket = newSocket;
     }
@@ -60,6 +64,10 @@ public class Server implements Runnable {
         }
     }
 
+    /**
+     * Start server
+     * @param options
+     */
     public static void start(ArrayList<String> options) {
         String portInput = "80";
         for (String option : options) {

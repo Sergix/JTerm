@@ -30,6 +30,10 @@ import java.util.List;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
+/**
+ * Files Command
+ * @Usage- Moves, Renames, Writes, Deletes, Reads, or Downloads a file
+ */
 public class Files {
     // @ojles and @Kaperskyguru
     @Command(name = {"mv", "move"}, minOptions = 2, syntax = "move, mv [-h] source destination")
