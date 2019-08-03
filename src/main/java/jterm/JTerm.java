@@ -21,12 +21,12 @@ import jterm.command.Command;
 import jterm.command.CommandException;
 import jterm.command.CommandExecutor;
 import jterm.gui.Terminal;
-import jterm.io.input.InputHandler;
 import jterm.io.input.Keys;
-import jterm.io.output.Printer;
-import jterm.io.output.TextColor;
 import jterm.io.output.GuiPrinter;
 import jterm.io.output.HeadlessPrinter;
+import jterm.io.output.Printer;
+import jterm.io.output.TextColor;
+import jterm.io.terminal.HeadlessTerminal;
 import jterm.util.Util;
 
 import java.io.BufferedReader;
@@ -78,15 +78,8 @@ public class JTerm {
         }
         JTerm.out.println(TextColor.INFO, JTerm.LICENSE);
         JTerm.out.printPrompt();
-        if(headless){
-            try {
-                while (true) {
-                    InputHandler.read();
-                }
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
+		if (headless)
+			new HeadlessTerminal().run();
     }
 
     public static void executeCommand(String options) {

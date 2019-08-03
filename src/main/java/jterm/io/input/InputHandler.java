@@ -34,9 +34,9 @@ public class InputHandler {
 
 
     public static void read() throws IOException {
-        int c1 = RawConsoleInput.read(true);
-        int c2 = RawConsoleInput.read(false);
-        int c3 = RawConsoleInput.read(false);
+        int c1 = Input.read(true);
+        int c2 = Input.read(false);
+        int c3 = Input.read(false);
         Keys keyType;
         if (!(c2 == -2 && c3 == -2)) c1 = (c1 + c2 + c3) * -1;
         keyType = Keys.getKeyByValue(c1);
