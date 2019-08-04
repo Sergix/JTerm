@@ -8,11 +8,9 @@ import java.io.IOException;
 
 /**
  * Abstract class specifying how input should be handled.
- * Each module must run its own implementation of this class.
  */
 public abstract class InputHandler {
 
-	// Key handlers for module
 	protected ArrowKeyHandler arrowKeyHandler;
 	protected KeyHandler keyHandler;
 
@@ -20,7 +18,7 @@ public abstract class InputHandler {
 	 * Determines how long the program will ignore user input (in ms).
 	 * Prevents program from going visually insane, by not overloading the system with too much output.
 	 */
-	public static int minWaitTime = 30;
+	public static int minWaitTime = 10;
 
 	/**
 	 * Create key handler object with null arrow key handler and key handler.
@@ -33,10 +31,10 @@ public abstract class InputHandler {
 	}
 
 	/**
-	 * Set KeyHandler and ArrowKeyHandler for module.
+	 * Set KeyHandler and ArrowKeyHandler for JTerm.
 	 * <p>
 	 * Classes extending KeyHandler and ArrowKeyHandler should passed as parameters,
-	 * so they can be later used to process input for this module.
+	 * so they can be later used to process input.
 	 *
 	 * @param kh  Key handler to use
 	 * @param akh Arrow key handler to use
@@ -47,7 +45,7 @@ public abstract class InputHandler {
 	}
 
 	/**
-	 * Code to run when processing input for module.
+	 * Code to run when processing input for JTerm headless mode.
 	 * Can (and should) make use of keyHandler and/or arrowKeyHandler for input processing.
 	 */
 	public abstract void process(int input);

@@ -32,7 +32,6 @@ public class InputHandler {
         commandListPosition = commandListPos;
     }
 
-
     public static void read() throws IOException {
         int c1 = Input.read(true);
         int c2 = Input.read(false);

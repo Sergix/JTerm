@@ -51,7 +51,7 @@ public class JTerm {
 
     // Default value of getProperty("user.dir") is equal to the default directory set when the program starts
     // Global directory variable (use "cd" command to change)
-    public static String currentDirectory = System.getProperty("user.dir");
+    public static String currentDirectory = System.getProperty("user.dir") + "/";
     public static final String USER_HOME_DIR = System.getProperty("user.home");
 
     public static boolean IS_WIN;
@@ -82,24 +82,24 @@ public class JTerm {
 			new HeadlessTerminal().run();
     }
 
-    public static void executeCommand(String options) {
-        List<String> optionsArray = Util.getAsArray(options);
+    public static boolean executeCommand(final String options) {
+        final List<String> optionsArray = Util.getAsArray(options);
 
         if (optionsArray.size() == 0) {
-            return;
+            return false;
         }
 
-        String command = optionsArray.remove(0);
-        if (!COMMANDS.containsKey(command)) {
-            out.printf(TextColor.ERROR,"Command \"%s\" is not available%n", command);
-            return;
-        }
+        final String command = optionsArray.remove(0);
+        if (!COMMANDS.containsKey(command))
+            return false;
 
         try {
             if (JTerm.isHeadless()) out.println(TextColor.INFO);
             COMMANDS.get(command).execute(optionsArray);
+            return true;
         } catch (CommandException e) {
             System.err.println(e.getMessage());
+            return false;
         }
     }
 

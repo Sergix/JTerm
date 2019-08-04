@@ -7,7 +7,7 @@ import jterm.io.input.Keys;
 import jterm.io.output.TextColor;
 
 /**
- * Processes arrow keys for Terminal module.
+ * Processes arrow keys for JTerm headless terminal.
  *
  * @see HeadlessTerminal
  * @see TermInputProcessor

@@ -9,7 +9,6 @@ import java.util.HashMap;
 
 /**
  * Abstract class specifying methods needed to process key events properly.
- * Each module must run its own implementation of this class.
  */
 public abstract class KeyHandler {
 

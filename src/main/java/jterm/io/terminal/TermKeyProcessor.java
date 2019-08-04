@@ -6,7 +6,7 @@ import jterm.io.handlers.KeyHandler;
 import jterm.io.output.TextColor;
 
 /**
- * Processes key presses (except arrow keys) for Terminal module.
+ * Processes key presses (except arrow keys) for JTerm headless terminal.
  *
  * @see HeadlessTerminal
  */

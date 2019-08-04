@@ -5,7 +5,6 @@ import jterm.io.input.Keys;
 
 /**
  * Abstract class specifying how arrow keys should be handled.
- * Each module must implement its own set of Events.
  *
  * @see Event
  */
@@ -77,9 +76,6 @@ public abstract class ArrowKeyHandler {
 
 	/**
 	 * Process an arrow key press.
-	 * <p>
-	 * Handles sending event status to all Modules, so they can react appropriately, as well
-	 * relegating to the appropriate lambda expression.
 	 *
 	 * @param ak Arrow key to process
 	 */

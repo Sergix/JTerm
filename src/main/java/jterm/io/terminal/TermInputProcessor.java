@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Input processor for terminal module.
+ * Input processor for JTerm headless terminal.
  *
  * @see HeadlessTerminal
  * @see TermKeyProcessor

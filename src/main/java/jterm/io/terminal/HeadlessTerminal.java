@@ -4,16 +4,13 @@ import jterm.JTerm;
 import jterm.io.handlers.InputHandler;
 import jterm.io.output.TextColor;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
 /**
- * Terminal module. Interfaces directly with bash, so it is as if you were running a normal terminal session.
+ * Headless terminal module. Interfaces directly with bash, so it is as if you were running a normal terminal session.
  */
 public class HeadlessTerminal {
 
@@ -33,15 +30,10 @@ public class HeadlessTerminal {
 
 	public void run() {
 		exit = false;
-		JTerm.PROMPT = JTerm.currentDirectory + " >> ";
-
-		JTerm.out.println(TextColor.INFO, "Entered terminal mode");
-		JTerm.out.print(TextColor.PROMPT, JTerm.PROMPT);
 		while (!exit)
 			inputProcessor.process(InputHandler.getKey());
 
 		writeCommandsToFile();
-		JTerm.PROMPT = ">> ";
 	}
 
 	public void parse(String rawCommand) {
@@ -50,6 +42,9 @@ public class HeadlessTerminal {
 
 		for (String command : split) {
 			command = command.trim();
+
+			if (JTerm.executeCommand(command))
+				continue;
 
 			/*
 			 * cd command has to be interpreted separately, since once the JVM runs any cd commands do not take effect
@@ -71,19 +66,42 @@ public class HeadlessTerminal {
 			final Process p;
 			try { // Assumes unix, Windows would require a separate implementation...
 				pb = new ProcessBuilder("/bin/bash", "-c", command);
-				pb.inheritIO(); // Make program and process share IO to allow user to interact with program
+//				pb.inheritIO(); // Make program and process share IO to allow user to interact with program
+				pb.redirectInput(ProcessBuilder.Redirect.PIPE);
+				pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+				pb.redirectError(ProcessBuilder.Redirect.PIPE);
 				pb.directory(new File(JTerm.currentDirectory)); // Set working directory for command
 				p = pb.start();
 				p.waitFor();
+
+				if (p.exitValue() == 0)
+					JTerm.out.println(TextColor.INFO, readInputStream(p.getInputStream()));
+				else
+					JTerm.out.println(TextColor.ERROR, readInputStream(p.getErrorStream()));
 				p.destroy();
 			} catch (IOException | IllegalArgumentException | InterruptedException e) {
-				System.err.println("Parsing command \"" + command + "\" failed, enter \"t-help\" for help using module.");
+				System.err.println("Parsing command \"" + command + "\" failed, enter \"help\" for help using JTerm.");
 			}
-
-			JTerm.currentDirectory = System.getProperty("user.dir") + "/";
 		}
 
-		JTerm.out.print(TextColor.PROMPT, JTerm.PROMPT);
+		JTerm.out.printPrompt();
+	}
+
+	/**
+	 * Reads an {@link InputStream} and returns its contents as a {@link String}.
+	 *
+	 * @param inputStream Input stream to read from
+	 * @return Contents of the input stream, as a String
+	 * @throws IOException If the stream is null
+	 */
+	private String readInputStream(final InputStream inputStream) throws IOException {
+		final BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+		final StringBuilder responseBuffer = new StringBuilder();
+
+		String line;
+		while ((line = in.readLine()) != null)
+			responseBuffer.append(line);
+		return responseBuffer.toString();
 	}
 
 	/**
@@ -194,7 +212,6 @@ public class HeadlessTerminal {
 
 				System.setProperty("user.dir", newPath.toString());
 				JTerm.currentDirectory = newPath.toString();
-				JTerm.PROMPT = JTerm.currentDirectory + " >> ";
 				return;
 			}
 
@@ -217,7 +234,6 @@ public class HeadlessTerminal {
 			if (f.exists() && f.isDirectory()) {
 				System.setProperty("user.dir", f.getAbsolutePath());
 				JTerm.currentDirectory = f.getAbsolutePath() + "/";
-				JTerm.PROMPT = JTerm.currentDirectory + " >> ";
 			} else {
 				JTerm.out.println(TextColor.INFO, "Please enter a valid directory to change to");
 			}
