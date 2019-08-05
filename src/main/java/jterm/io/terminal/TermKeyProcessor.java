@@ -20,6 +20,8 @@ public class TermKeyProcessor extends KeyHandler {
 		setUpNWLNEvent();
 		setUpCharEvents();
 		setUpBackspaceEvent();
+		setUpCtrlCEvent();
+		setupCtrlZEvent();
 	}
 
 	private void setUpTabEvents() {
