@@ -66,7 +66,6 @@ public class HeadlessTerminal {
 			final Process p;
 			try { // Assumes unix, Windows would require a separate implementation...
 				pb = new ProcessBuilder("/bin/bash", "-c", command);
-//				pb.inheritIO(); // Make program and process share IO to allow user to interact with program
 				pb.redirectInput(ProcessBuilder.Redirect.PIPE);
 				pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 				pb.redirectError(ProcessBuilder.Redirect.PIPE);

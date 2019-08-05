@@ -40,16 +40,18 @@ public class TermArrowKeyProcessor extends ArrowKeyHandler {
 	}
 
 	private void setLArrowBehaviour() {
-		lArrEvent = () -> {
+		leftArrEvent = () -> {
 			if (inputProcessor.getCursorPos() > 0) {
 				JTerm.out.print(TextColor.INPUT, "\b");
 				inputProcessor.decreaseCursorPos();
 			}
 		};
+
+		Keys.LEFT.setEvent(leftArrEvent);
 	}
 
 	private void setRArrowBehaviour() {
-		rArrEvent = () -> {
+		rightArrEvent = () -> {
 			if (inputProcessor.getCursorPos() < inputProcessor.getCommand().length()) {
 				InputHandler.clearLine(inputProcessor.getCommand(), true);
 				JTerm.out.print(TextColor.PROMPT, JTerm.PROMPT);
@@ -58,20 +60,26 @@ public class TermArrowKeyProcessor extends ArrowKeyHandler {
 				inputProcessor.moveToCursorPos();
 			}
 		};
+
+		Keys.RIGHT.setEvent(rightArrEvent);
 	}
 
 	private void setUArrowBehaviour() {
-		uArrEvent = () -> {
+		upArrEvent = () -> {
 			prevCommandIterator(Keys.UP);
 			inputProcessor.setCursorPos(inputProcessor.getCommand().length());
 		};
+
+		Keys.UP.setEvent(upArrEvent);
 	}
 
 	private void setDArrowBehaviour() {
-		dArrEvent = () -> {
+		downArrEvent = () -> {
 			prevCommandIterator(Keys.DOWN);
 			inputProcessor.setCursorPos(inputProcessor.getCommand().length());
 		};
+
+		Keys.DOWN.setEvent(downArrEvent);
 	}
 
 	/**

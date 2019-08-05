@@ -1,9 +1,11 @@
 package jterm.gui;
 
 import jterm.JTerm;
-import jterm.io.input.InputHandler;
+import jterm.io.handlers.InputHandler;
 import jterm.io.input.Keys;
 import jterm.io.output.TextColor;
+import jterm.io.terminal.HeadlessTerminal;
+import jterm.io.terminal.TermInputProcessor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +18,8 @@ public class Terminal extends JFrame implements KeyListener {
     private JPanel contentPane;
     private JTextPane textPane;
 
+	private HeadlessTerminal headlessTerminal = new HeadlessTerminal();
+	private InputHandler inputHandler = new TermInputProcessor(headlessTerminal);
 
     public Terminal() {
         TextColor.initGui();
@@ -58,10 +62,10 @@ public class Terminal extends JFrame implements KeyListener {
                 return;
         }
         if ((int) e.getKeyChar() == 65535) {
-            //An arrow key was pressed. Switch the key code into the negatives so it wont interfere with any real chars
-            new Thread(() -> InputHandler.process(Keys.getKeyByValue(e.getKeyCode() * -1), e.getKeyChar())).start();
+//            An arrow key was pressed. Switch the key code into the negatives so it wont interfere with any real chars
+			new Thread(() -> inputHandler.process(Keys.getKeyByValue(e.getKeyCode() * -1))).start();
         } else
-            new Thread(() -> InputHandler.process(Keys.getKeyByValue((int) e.getKeyChar()), e.getKeyChar())).start();
+			new Thread(() -> inputHandler.process(Keys.getKeyByValue(e.getKeyChar()))).start();
     }
 
     private void onCancel() {

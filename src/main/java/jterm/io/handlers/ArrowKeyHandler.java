@@ -16,10 +16,10 @@ public abstract class ArrowKeyHandler {
 	private long lastPress = System.currentTimeMillis();
 
 	// Events to be implemented by any class that inherits ArrowKeyHandler
-	public Event lArrEvent;
-	public Event rArrEvent;
-	public Event uArrEvent;
-	public Event dArrEvent;
+	public Event leftArrEvent;
+	public Event rightArrEvent;
+	public Event upArrEvent;
+	public Event downArrEvent;
 
 	/**
 	 * Checks if last input was arrow key (only on Windows).
@@ -84,16 +84,16 @@ public abstract class ArrowKeyHandler {
 			lastPress = System.currentTimeMillis();
 			switch (ak) {
 				case UP:
-					uArrEvent.process();
+					upArrEvent.process();
 					break;
 				case DOWN:
-					dArrEvent.process();
+					downArrEvent.process();
 					break;
 				case LEFT:
-					lArrEvent.process();
+					leftArrEvent.process();
 					break;
 				case RIGHT:
-					rArrEvent.process();
+					rightArrEvent.process();
 					break;
 			}
 		}

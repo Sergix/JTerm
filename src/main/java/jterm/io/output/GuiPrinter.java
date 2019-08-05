@@ -17,49 +17,49 @@ public class GuiPrinter implements Printer {
         ptc = new ProtectedTextComponent(textPane);
     }
 
-    public void print(TextColor color, String x) {
+    public void print(final TextColor color, String x) {
         print(x, color);
     }
 
     @Override
-    public void print(TextColor color, char x) {
+    public void print(final TextColor color, final char x) {
         print(String.valueOf(x), color);
     }
 
-    public void print(TextColor color, Object x) {
+    public void print(final TextColor color, final Object x) {
         print(String.valueOf(x), color);
     }
 
-    public void println(TextColor color) {
+    public void println(final TextColor color) {
         print("\n", color);
     }
 
-    public void println(TextColor color, String x) {
+    public void println(final TextColor color, final String x) {
         print(x + "\n", color);
     }
 
     @Override
-    public void println(TextColor color, char x) {
+    public void println(final TextColor color, final char x) {
         print(String.valueOf(x) + "\n", color);
     }
 
-    public void println(TextColor color, Object x) {
+    public void println(final TextColor color, final Object x) {
         print(String.valueOf(x) + "\n", color);
     }
 
-    public GuiPrinter printf(TextColor color, String format, Object... args) {
+    public GuiPrinter printf(final TextColor color, final String format, final Object... args) {
         print(String.format(format, args), color);
         return this;
     }
 
-    public GuiPrinter printf(TextColor color, Locale l, String format, Object... args) {
+    public GuiPrinter printf(final TextColor color, final Locale l, final String format, final Object... args) {
         print(String.format(l, format, args), color);
         return this;
     }
 
 
     @Override
-    public void printWithPrompt(TextColor color, String s) {
+    public void printWithPrompt(final TextColor color, final String s) {
         printPrompt();
         print(s, color);
     }
@@ -76,17 +76,17 @@ public class GuiPrinter implements Printer {
         });
     }
 
-    public void clearLine(String line, int cursorPosition, boolean clearPrompt) {
-        if (clearPrompt) ptc.clearProtections();
-        String text = textPane.getText().replaceAll("\r", "");
-        int ix = text.lastIndexOf("\n") + 1;
-        int len = line.length();
-        int fullPromptLen = JTerm.PROMPT.length() + JTerm.currentDirectory.length();
-        if (clearPrompt) len += fullPromptLen;
-        else ix += fullPromptLen;
-        if (ix >= text.length()) return;
+    public void clearLine(final String line, final int cursorPosition, final boolean clearPrompt) {
+        if (clearPrompt)
+            ptc.clearProtections();
+
+        String textToClear = "";
+        if (clearPrompt)
+            textToClear += JTerm.currentDirectory + JTerm.PROMPT;
+        textToClear += line;
+
         try {
-            textPane.getDocument().remove(ix, len);
+            textPane.getDocument().remove(textPane.getText().lastIndexOf(textToClear), textToClear.length());
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -98,16 +98,16 @@ public class GuiPrinter implements Printer {
         textPane.setText("");
     }
 
-    private void print(String s, TextColor c) {
-        StyleContext sc = StyleContext.getDefaultStyleContext();
-        AttributeSet color = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c.getColor());
-        int len = textPane.getDocument().getLength();
+    private void print(final String s, final TextColor c) {
+        final StyleContext sc = StyleContext.getDefaultStyleContext();
+        final AttributeSet color = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c.getColor());
+        final int len = textPane.getDocument().getLength();
         textPane.setCaretPosition(len);
         textPane.setCharacterAttributes(color, false);
         textPane.replaceSelection(s);
     }
 
-    private void invoke(Runnable action) {
+    private void invoke(final Runnable action) {
         try {
             SwingUtilities.invokeAndWait(action);
         } catch (InterruptedException | InvocationTargetException e) {

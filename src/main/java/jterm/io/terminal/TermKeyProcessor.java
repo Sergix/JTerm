@@ -1,8 +1,8 @@
 package jterm.io.terminal;
 
 import jterm.JTerm;
-import jterm.io.handlers.InputHandler;
 import jterm.io.handlers.KeyHandler;
+import jterm.io.input.Keys;
 import jterm.io.output.TextColor;
 
 /**
@@ -28,10 +28,8 @@ public class TermKeyProcessor extends KeyHandler {
 
 	private void setUpNWLNEvent() {
 		newLineEvent = () -> {
-
-			String command = inputProcessor.getCommand();
-
-			boolean empty = "".equals(command.trim());
+			final String command = inputProcessor.getCommand();
+			final boolean empty = "".equals(command.trim());
 
 			if (!empty)
 				inputProcessor.commandHistory.add(command);
@@ -43,45 +41,67 @@ public class TermKeyProcessor extends KeyHandler {
 
 			inputProcessor.setCommand("");
 		};
+
+		Keys.NWLN.setEvent(newLineEvent);
 	}
 
 	private void setUpCharEvents() {
 		charEvent = (char input) -> {
-			String command = inputProcessor.getCommand();
+			final String command = inputProcessor.getCommand();
 			int cursorPos = inputProcessor.getCursorPos();
 
-			InputHandler.clearLine(command, true);
+			if (JTerm.isHeadless())
+				JTerm.out.clearLine(command, cursorPos, true);
 
-			if (inputProcessor.getCursorPos() == command.length()) {
-				JTerm.out.print(TextColor.PROMPT, JTerm.PROMPT);
-				JTerm.out.print(TextColor.INPUT, command + input);
+			if (inputProcessor.getCursorPos() == command.length())
 				inputProcessor.setCommand(command + input);
-			} else {
+			else
 				inputProcessor.setCommand(new StringBuilder(command).insert(cursorPos, input).toString());
-				JTerm.out.print(TextColor.PROMPT, JTerm.PROMPT);
-				JTerm.out.print(TextColor.INPUT, inputProcessor.getCommand());
-			}
+
+			if (JTerm.isHeadless())
+				JTerm.out.printWithPrompt(TextColor.INPUT, inputProcessor.getCommand());
 
 			inputProcessor.increaseCursorPos();
 			inputProcessor.moveToCursorPos();
 		};
+
+		Keys.CHAR.setCharEvent(charEvent);
 	}
 
 	private void setUpBackspaceEvent() {
 		backspaceEvent = () -> {
 			if (inputProcessor.getCommand().length() > 0 && inputProcessor.getCursorPos() > 0) {
 				int charToDelete = inputProcessor.getCursorPos() - 1;
-				String command = inputProcessor.getCommand();
+				final String command = inputProcessor.getCommand();
 
-				InputHandler.clearLine(command, true);
+				if (JTerm.isHeadless())
+					JTerm.out.clearLine(command, inputProcessor.getCursorPos(), true);
 
 				inputProcessor.setCommand(new StringBuilder(command).deleteCharAt(charToDelete).toString());
-				JTerm.out.print(TextColor.PROMPT, JTerm.PROMPT);
-				JTerm.out.print(TextColor.INPUT, inputProcessor.getCommand());
+				if (JTerm.isHeadless())
+					JTerm.out.printWithPrompt(TextColor.INPUT, inputProcessor.getCommand());
 
 				inputProcessor.decreaseCursorPos();
 				inputProcessor.moveToCursorPos();
 			}
 		};
+
+		Keys.BACKSPACE.setEvent(backspaceEvent);
+	}
+
+	private void setUpCtrlCEvent() {
+		ctrlCEvent = () -> {
+			System.exit(130);
+		};
+
+		Keys.CTRL_C.setEvent(ctrlCEvent);
+	}
+
+	private void setupCtrlZEvent() {
+		ctrlZEvent = () -> {
+			System.exit(131);
+		};
+
+		Keys.CTRL_Z.setEvent(ctrlZEvent);
 	}
 }

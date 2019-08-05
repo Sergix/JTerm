@@ -22,6 +22,8 @@ public abstract class KeyHandler {
 	public Event newLineEvent;
 	public CharEvent charEvent;
 	public Event backspaceEvent;
+	public Event ctrlCEvent;
+	public Event ctrlZEvent;
 
 	// Returns a map pairing key values stored as ints to values in Keys enum
 	public static HashMap<Integer, Keys> getKeymap() {
@@ -32,11 +34,9 @@ public abstract class KeyHandler {
 	 * Processes all input by relegating it to the appropriate lambda expression
 	 * and triggering events so that other Modules can react appropriately.
 	 *
-	 * @param input ASCII key code representing key pressed
+	 * @param key Key pressed
 	 */
-	public void process(int input) {
-		Keys key = getKey(input);
-
+	public void process(final Keys key) {
 		if (System.currentTimeMillis() - lastPress < InputHandler.minWaitTime)
 			return;
 		lastPress = System.currentTimeMillis();
@@ -47,10 +47,10 @@ public abstract class KeyHandler {
 			tabEvent.process();
 		else if (key == Keys.NWLN)
 			newLineEvent.process();
-		else if (input > 31 && input < 127)
-			charEvent.process((char) input);
+		else if (key == Keys.CHAR)
+			charEvent.process((char) key.getValue());
 
-		signalCatch(input);
+		signalCatch(key);
 	}
 
 	/**
@@ -58,16 +58,12 @@ public abstract class KeyHandler {
 	 * Useful for running while waiting for some process to finish, so user can cancel if they wish.
 	 * For use in above use case, loop while process is not done and pass input.read(false) to this method.
 	 *
-	 * @param input ASCII key code value of key pressed
+	 * @param key Key pressed
 	 * @return true if process should be cancelled, false if no signals were caught
 	 */
-	public static Keys signalCatch(int input) {
-		if (input == 3) // Ctrl+C
-			return Keys.CTRL_C;
-		if (input == 26) { // Ctrl+Z -> force quit program
-			System.out.println();
-			System.exit(122);
-		}
+	public static Keys signalCatch(final Keys key) {
+		if (key == Keys.CTRL_C || key == Keys.CTRL_Z)
+			key.executeAction();
 		return Keys.NONE;
 	}
 

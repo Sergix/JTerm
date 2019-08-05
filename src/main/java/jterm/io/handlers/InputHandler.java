@@ -3,6 +3,7 @@ package jterm.io.handlers;
 
 import jterm.JTerm;
 import jterm.io.input.Input;
+import jterm.io.input.Keys;
 
 import java.io.IOException;
 
@@ -48,21 +49,21 @@ public abstract class InputHandler {
 	 * Code to run when processing input for JTerm headless mode.
 	 * Can (and should) make use of keyHandler and/or arrowKeyHandler for input processing.
 	 */
-	public abstract void process(int input);
+	public abstract void process(final Keys key);
 
 	/**
 	 * Returns key char value of last key pressed.
 	 *
 	 * @return Char value of key pressed
 	 */
-	public static char getKey() {
+	public static Keys getKey() {
 		try {
-			return (char) Input.read(true);
+			return Keys.getKeyByValue(Input.read(true));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		return 0;
+		return Keys.NONE;
 	}
 
 	/**

@@ -5,6 +5,7 @@ import jterm.io.handlers.ArrowKeyHandler;
 import jterm.io.handlers.InputHandler;
 import jterm.io.handlers.KeyHandler;
 import jterm.io.input.Input;
+import jterm.io.input.Keys;
 import jterm.io.output.TextColor;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class TermInputProcessor extends InputHandler {
 
 	private int cursorPos = 0;
 
-	TermInputProcessor(HeadlessTerminal headlessTerminal) {
+	public TermInputProcessor(HeadlessTerminal headlessTerminal) {
 		super();
 		this.headlessTerminal = headlessTerminal;
 
@@ -75,10 +76,10 @@ public class TermInputProcessor extends InputHandler {
 	 * Calls appropriate method for handling input read from the input class.
 	 */
 	@Override
-	public void process(int input) {
+	public void process(final Keys key) {
 		if (JTerm.IS_WIN) {
-			arrowKeyHandler.process(ArrowKeyHandler.arrowKeyCheckWindows(input));
-			keyHandler.process(input);
+			arrowKeyHandler.process(ArrowKeyHandler.arrowKeyCheckWindows(key.getValue()));
+			keyHandler.process(key);
 		} else if (JTerm.IS_UNIX) {
 			int c1, c2;
 			try {
@@ -86,9 +87,9 @@ public class TermInputProcessor extends InputHandler {
 				c2 = Input.read(false);
 
 				if (c1 == -2 && c2 == -2)
-					keyHandler.process(input);
+					keyHandler.process(key);
 				else
-					arrowKeyHandler.process(ArrowKeyHandler.arrowKeyCheckUnix(input, c1, c2));
+					arrowKeyHandler.process(ArrowKeyHandler.arrowKeyCheckUnix(key.getValue(), c1, c2));
 			} catch (IOException e) {
 				System.err.println("Error reading arrow key press");
 			}
