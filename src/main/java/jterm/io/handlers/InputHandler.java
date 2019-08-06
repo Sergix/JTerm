@@ -1,7 +1,6 @@
 package jterm.io.handlers;
 
 
-import jterm.JTerm;
 import jterm.io.input.Input;
 import jterm.io.input.Keys;
 
@@ -64,22 +63,5 @@ public abstract class InputHandler {
 		}
 
 		return Keys.NONE;
-	}
-
-	/**
-	 * Clears a line in the console of size line.length().
-	 *
-	 * @param line        line to be cleared
-	 * @param clearPrompt choose to clear prompt along with line (only use true if prompt exists)
-	 */
-	public static void clearLine(String line, boolean clearPrompt) {
-		for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
-			System.out.print("\b");
-
-		for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
-			System.out.print(" ");
-
-		for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
-			System.out.print("\b");
 	}
 }

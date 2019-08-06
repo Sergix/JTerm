@@ -10,32 +10,32 @@ public class HeadlessPrinter implements Printer {
     private static final String ANSI_HOME = "\u001b[H";
 
     @Override
-    public void print(TextColor color, String x) {
-        System.out.print(color.ansi + x);
+	public void print(final TextColor color, final String str) {
+		System.out.print(color.ansi + str);
     }
 
     @Override
-    public void print(TextColor color, char x) {
-        System.out.print(color.ansi + x);
+	public void print(final TextColor color, final char c) {
+		System.out.print(color.ansi + c);
     }
 
     @Override
-    public void println(TextColor color) {
+	public void println(final TextColor color) {
         System.out.println(color.ansi);
     }
 
     @Override
-    public void println(TextColor color, String x) {
-        System.out.println(color.ansi + x);
+	public void println(final TextColor color, final String str) {
+		System.out.println(color.ansi + str);
     }
 
     @Override
-    public void println(TextColor color, char x) {
-        System.out.println(color.ansi + x);
+	public void println(final TextColor color, final char c) {
+		System.out.println(color.ansi + c);
     }
 
     @Override
-    public Printer printf(TextColor color, String format, Object... args) {
+	public Printer printf(final TextColor color, final String format, final Object... args) {
         System.out.println(color.ansi + String.format(format, args));
         return this;
     }
@@ -45,19 +45,20 @@ public class HeadlessPrinter implements Printer {
         System.out.print(TextColor.PROMPT.ansi + JTerm.PROMPT);
     }
 
-    public void printWithPrompt(TextColor color, String s) {
+	public void printWithPrompt(final TextColor color, final String s) {
         printPrompt();
-        System.out.print(color + s);
+		System.out.print(color.ansi + s);
     }
 
     @Override
-    public void clearLine(String line, int cursorPosition, boolean clearPrompt) {
-        for (int i = 0; i < cursorPosition + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
-            JTerm.out.print(TextColor.INFO, '\b');
-        for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
-            JTerm.out.print(TextColor.INFO, ' ');
-        for (int i = 0; i < line.length() + (clearPrompt ? JTerm.PROMPT.length() : 0); i++)
-            JTerm.out.print(TextColor.INFO, '\b');
+	public void clearLine(final String line, final int cursorPosition, final boolean clearPrompt) {
+		final int charsToClear = line.length() + (clearPrompt ? JTerm.PROMPT.length() + JTerm.currentDirectory.length() : 0);
+		for (int i = 0; i < charsToClear; i++)
+			System.out.print('\b');
+		for (int i = 0; i < charsToClear; i++)
+			System.out.print(' ');
+		for (int i = 0; i < charsToClear; i++)
+			System.out.print('\b');
     }
 
     @Override

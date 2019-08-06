@@ -2,7 +2,6 @@ package jterm.io.terminal;
 
 import jterm.JTerm;
 import jterm.io.handlers.ArrowKeyHandler;
-import jterm.io.handlers.InputHandler;
 import jterm.io.input.Keys;
 import jterm.io.output.TextColor;
 
@@ -23,7 +22,7 @@ public class TermArrowKeyProcessor extends ArrowKeyHandler {
 	// Stores current TermInputProcessor.command when iterating through prevCommands
 	private String currCommand = "";
 
-	TermArrowKeyProcessor(TermInputProcessor inputProcessor) {
+	TermArrowKeyProcessor(final TermInputProcessor inputProcessor) {
 		this.inputProcessor = inputProcessor;
 		setLArrowBehaviour();
 		setRArrowBehaviour();
@@ -31,11 +30,11 @@ public class TermArrowKeyProcessor extends ArrowKeyHandler {
 		setDArrowBehaviour();
 	}
 
-	protected void setCurrCommand(String currCommand) {
+	protected void setCurrCommand(final String currCommand) {
 		this.currCommand = currCommand;
 	}
 
-	protected void setCommandListPosition(int commandListPosition) {
+	protected void setCommandListPosition(final int commandListPosition) {
 		this.commandListPosition = commandListPosition;
 	}
 
@@ -53,9 +52,8 @@ public class TermArrowKeyProcessor extends ArrowKeyHandler {
 	private void setRArrowBehaviour() {
 		rightArrEvent = () -> {
 			if (inputProcessor.getCursorPos() < inputProcessor.getCommand().length()) {
-				InputHandler.clearLine(inputProcessor.getCommand(), true);
-				JTerm.out.print(TextColor.PROMPT, JTerm.PROMPT);
-				JTerm.out.print(TextColor.INPUT, inputProcessor.getCommand());
+				JTerm.out.clearLine(inputProcessor.getCommand(), inputProcessor.getCursorPos(), true);
+				JTerm.out.printWithPrompt(TextColor.INPUT, inputProcessor.getCommand());
 				inputProcessor.increaseCursorPos();
 				inputProcessor.moveToCursorPos();
 			}
@@ -88,7 +86,7 @@ public class TermArrowKeyProcessor extends ArrowKeyHandler {
 	 *
 	 * @param ak Arrow key to process
 	 */
-	private void prevCommandIterator(Keys ak) {
+	private void prevCommandIterator(final Keys ak) {
 		if (inputProcessor.commandHistory.size() == 0)
 			return;
 
@@ -101,7 +99,7 @@ public class TermArrowKeyProcessor extends ArrowKeyHandler {
 			// Move through the list towards first typed command
 
 			lastArrowPress = ak;
-			InputHandler.clearLine(inputProcessor.getCommand(), true);
+			JTerm.out.clearLine(inputProcessor.getCommand(), inputProcessor.getCursorPos(), true);
 
 			if (commandListPosition > inputProcessor.commandHistory.size())
 				commandListPosition = inputProcessor.commandHistory.size();
@@ -115,14 +113,14 @@ public class TermArrowKeyProcessor extends ArrowKeyHandler {
 
 			if (commandListPosition < cmdHistorySize) {
 				// Move through list towards last typed element
-				InputHandler.clearLine(inputProcessor.getCommand(), true);
+				JTerm.out.clearLine(inputProcessor.getCommand(), inputProcessor.getCursorPos(), true);
 
 				JTerm.out.print(TextColor.PROMPT, JTerm.PROMPT);
 				JTerm.out.print(TextColor.INPUT, inputProcessor.commandHistory.get(++commandListPosition));
 				inputProcessor.setCommand(inputProcessor.commandHistory.get(commandListPosition));
 			} else if (!inputProcessor.getCommand().equals(currCommand)) {
 				// Print command that was stored before iteration through list began
-				InputHandler.clearLine(inputProcessor.getCommand(), true);
+				JTerm.out.clearLine(inputProcessor.getCommand(), inputProcessor.getCursorPos(), true);
 				commandListPosition++;
 
 				JTerm.out.print(TextColor.PROMPT, JTerm.PROMPT);

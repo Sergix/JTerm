@@ -14,7 +14,7 @@ public class TermKeyProcessor extends KeyHandler {
 
 	private TermInputProcessor inputProcessor;
 
-	TermKeyProcessor(TermInputProcessor inputProcessor) {
+	TermKeyProcessor(final TermInputProcessor inputProcessor) {
 		this.inputProcessor = inputProcessor;
 		setUpTabEvents();
 		setUpNWLNEvent();
@@ -80,6 +80,7 @@ public class TermKeyProcessor extends KeyHandler {
 					JTerm.out.clearLine(command, inputProcessor.getCursorPos(), true);
 
 				inputProcessor.setCommand(new StringBuilder(command).deleteCharAt(charToDelete).toString());
+
 				if (JTerm.isHeadless())
 					JTerm.out.printWithPrompt(TextColor.INPUT, inputProcessor.getCommand());
 
