@@ -34,7 +34,7 @@ public class TermArrowKeyProcessor extends ArrowKeyHandler {
 		this.currCommand = currCommand;
 	}
 
-	protected void setCommandListPosition(final int commandListPosition) {
+	public void setCommandListPosition(final int commandListPosition) {
 		this.commandListPosition = commandListPosition;
 	}
 

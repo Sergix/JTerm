@@ -125,7 +125,7 @@ public class TermInputProcessor extends InputHandler {
 	 * @return Returns disassembled string, with non relevant info in elements 0 and 2, and the string to autocomplete
 	 * in element 1
 	 */
-	protected static String[] disassembleCommand(final String command, final Integer cursorPos) {
+	public static String[] disassembleCommand(final String command, final Integer cursorPos) {
 
 		if (!command.contains("&&"))
 			return new String[]{"", command, ""};

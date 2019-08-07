@@ -61,7 +61,7 @@ public abstract class KeyHandler {
 	 * @param key Key pressed
 	 * @return true if process should be cancelled, false if no signals were caught
 	 */
-	public static Keys signalCatch(final Keys key) {
+	public Keys signalCatch(final Keys key) {
 		if (key == Keys.CTRL_C || key == Keys.CTRL_Z)
 			key.executeAction();
 		return Keys.NONE;
