@@ -104,24 +104,22 @@ public class JTerm {
     }
 
     private static void initCommands() {
-        // Reflections reflections = new Reflections("jterm.command", new MethodAnnotationsScanner());
-        // Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
-        ArrayList<Method> methods = new ArrayList<>();
-        ArrayList<String> classes = new ArrayList<>();
+        final ArrayList<Method> methods = new ArrayList<>();
+        final ArrayList<String> classes = new ArrayList<>();
 
         try {
-            CodeSource src = JTerm.class.getProtectionDomain().getCodeSource();
+            final CodeSource src = JTerm.class.getProtectionDomain().getCodeSource();
             if (src != null) {
-                ZipInputStream zip = new ZipInputStream(src.getLocation().openStream());
+                final ZipInputStream zip = new ZipInputStream(src.getLocation().openStream());
 
                 while (true) {
-                    ZipEntry e = zip.getNextEntry();
+                    final ZipEntry e = zip.getNextEntry();
 
                     if (e == null) {
                         break;
                     }
 
-                    String name = e.getName();
+                    final String name = e.getName();
                     if (name.startsWith("jterm/command")) {
                         classes.add(name.replace('/', '.').substring(0, name.length() - 6));
                     }
@@ -148,9 +146,9 @@ public class JTerm {
 
         methods.forEach(method -> {
             method.setAccessible(true);
-            Command command = method.getDeclaredAnnotation(Command.class);
+            final Command command = method.getDeclaredAnnotation(Command.class);
             Arrays.stream(command.name()).forEach(commandName -> {
-                CommandExecutor executor = new CommandExecutor()
+                final CommandExecutor executor = new CommandExecutor()
                         .setCommandName(commandName)
                         .setSyntax(command.syntax())
                         .setMinOptions(command.minOptions())
@@ -169,7 +167,7 @@ public class JTerm {
     }
 
     private static void setOS() {
-        String os = System.getProperty("os.name").toLowerCase();
+        final String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("windows")) {
             JTerm.IS_WIN = true;
             dirChar = "\\";
@@ -194,7 +192,7 @@ public class JTerm {
     }
 
     /** For Unit Tests **/
-    public static void setheadless(boolean b){
+    public static void setHeadless(boolean b) {
         headless = b;
     }
 

@@ -2,16 +2,17 @@ package jterm.util;
 
 import jterm.JTerm;
 import jterm.gui.Terminal;
-import jterm.io.output.HeadlessPrinter;
-import jterm.io.output.TextColor;
 import jterm.io.output.CollectorPrinter;
 import jterm.io.output.GuiPrinter;
+import jterm.io.output.HeadlessPrinter;
+import jterm.io.output.TextColor;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.text.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UtilTest {
     @Test
@@ -21,18 +22,18 @@ class UtilTest {
 
     @Test
     void clearLineHeadless() throws BadLocationException {
-        JTerm.setheadless(true);
+        JTerm.setHeadless(true);
         CollectorPrinter collector = new CollectorPrinter(new HeadlessPrinter());
         JTerm.out = collector;
         JTerm.setPrompt("/dir>> ");
 
         JTerm.out.printPrompt();
         JTerm.out.clearLine("", 0, true);
-        assertEquals("/dir>> \b\b\b\b\b\b\b       \b\b\b\b\b\b\b", collector.export());
+        assertEquals("/dir>> ", collector.export());
 
         JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
         JTerm.out.clearLine("stuff", 5, true);
-        assertEquals("/dir>> stuff\b\b\b\b\b\b\b\b\b\b\b\b            \b\b\b\b\b\b\b\b\b\b\b\b", collector.export());
+        assertEquals("/dir>> stuff", collector.export());
 
         JTerm.out.printPrompt();
         JTerm.out.clearLine("", 0, false);
@@ -40,12 +41,12 @@ class UtilTest {
 
         JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
         JTerm.out.clearLine("stuff", 5, false);
-        assertEquals("/dir>> stuff\b\b\b\b\b     \b\b\b\b\b", collector.export());
+        assertEquals("/dir>> stuff", collector.export());
     }
 
     @Test
     void clearLineGUI() throws BadLocationException {
-        JTerm.setheadless(false);
+        JTerm.setHeadless(false);
         Terminal terminal = new Terminal();
         terminal.setTitle("JTerm");
         terminal.setSize(720, 480);

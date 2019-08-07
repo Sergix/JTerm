@@ -75,6 +75,9 @@ public class Input {
 		}
 	}
 
+	/**
+	 * Handles registering of shutdown hook to return console to normal line mode.
+	 */
 	protected static void registerShutdownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread(Input::shutdownHook));
 	}

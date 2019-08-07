@@ -1,5 +1,8 @@
 package jterm.io.output;
 
+/**
+ * Interface meant to replace System.out, so that custom printers can be implemented for GUI and headless mode.
+ */
 public interface Printer {
     void print(TextColor color, String x);
 
