@@ -48,9 +48,9 @@ public class HeadlessPrinter implements Printer {
 		System.out.print(TextColor.PROMPT.ansi + JTerm.PROMPT);
 	}
 
-	public void printWithPrompt(final TextColor color, final String s) {
+	public void printWithPrompt(final TextColor color, final String str) {
 		printPrompt();
-		System.out.print(color.ansi + s);
+		System.out.print(color.ansi + str);
 	}
 
 	@Override

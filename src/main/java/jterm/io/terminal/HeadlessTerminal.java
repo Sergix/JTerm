@@ -35,7 +35,7 @@ public class HeadlessTerminal {
 		writeCommandsToFile();
 	}
 
-	public void parse(String rawCommand) {
+	public void parse(final String rawCommand) {
 		final String[] split = rawCommand.split("&&");
 		JTerm.out.println(TextColor.INFO);
 
@@ -190,7 +190,7 @@ public class HeadlessTerminal {
 	 *
 	 * @param command cd command to parse
 	 */
-	public void changeDir(String command) {
+	public void changeDir(final String command) {
 		final String[] chdirSplit = command.split(" ");
 
 		if (chdirSplit.length != 2 || !"cd".equals(chdirSplit[0])) {

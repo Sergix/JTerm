@@ -45,7 +45,7 @@ public class Dir {
 
     @Command(name = "ls", syntax = "ls [-f] [-h] [directory]")
     public static void ls(List<String> options) {
-        File[] files = new File(JTerm.currentDirectory).listFiles();
+		final File[] files = new File(JTerm.currentDirectory).listFiles();
         if (files == null) {
             return;
         }
@@ -68,8 +68,8 @@ public class Dir {
         }
 
         // Test if the input exists and if it is a directory
-        File dir = new File(newDirectory);
-        File newDir = new File(JTerm.currentDirectory + newDirectory);
+		final File dir = new File(newDirectory);
+		final File newDir = new File(JTerm.currentDirectory + newDirectory);
 
         if (newDirectory.equals("/")) {
             newDirectory = "/";
@@ -105,7 +105,7 @@ public class Dir {
 
     @Command(name = {"md", "mkdir"}, minOptions = 1, syntax = "md [-h] dirName")
     public static void md(List<String> options) {
-        String dirName = Util.getFullPath(options.get(0));
+		final String dirName = Util.getFullPath(options.get(0));
 
         try {
             java.nio.file.Files.createDirectory(Paths.get(dirName));
@@ -116,21 +116,17 @@ public class Dir {
 
     @Command(name = "rmdir", minOptions = 1, syntax = "rm [-h] [-r] dirName")
     public static void rm(List<String> options) {
-        List<String> filesToBeRemoved = new ArrayList<>();
+		final List<String> filesToBeRemoved = new ArrayList<>();
         final boolean[] recursivelyDeleteFlag = {false};
         options.forEach(option -> {
-            switch (option) {
-                case "-r":
-                    recursivelyDeleteFlag[0] = true;
-                    break;
-                default:
-                    filesToBeRemoved.add(option);
-                    break;
-            }
+			if ("-r".equals(option))
+				recursivelyDeleteFlag[0] = true;
+			else
+				filesToBeRemoved.add(option);
         });
 
         filesToBeRemoved.forEach(fileName -> {
-            File file = new File(JTerm.currentDirectory, fileName);
+			final File file = new File(JTerm.currentDirectory, fileName);
             if (!file.isFile() && !file.isDirectory()) {
                 JTerm.out.printf(TextColor.ERROR, "%s is not a file or directory%n", fileName);
             } else if (file.isDirectory()) {

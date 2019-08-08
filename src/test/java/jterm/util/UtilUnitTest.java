@@ -25,6 +25,7 @@ public class UtilUnitTest {
     @After
     public void cleanup() {
         JTerm.setPrompt(">>");
+        JTerm.out.clearAll();
     }
 
     @Test

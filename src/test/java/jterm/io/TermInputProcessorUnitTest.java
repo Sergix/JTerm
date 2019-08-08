@@ -20,11 +20,11 @@ public class TermInputProcessorUnitTest {
 	public static void disableOutput() {
 		JTerm.out = new Printer() {
 			@Override
-			public void print(TextColor color, String x) {
+			public void print(TextColor color, String str) {
 			}
 
 			@Override
-			public void print(TextColor color, char x) {
+			public void print(TextColor color, char c) {
 			}
 
 			@Override
@@ -32,11 +32,11 @@ public class TermInputProcessorUnitTest {
 			}
 
 			@Override
-			public void println(TextColor color, String x) {
+			public void println(TextColor color, String str) {
 			}
 
 			@Override
-			public void println(TextColor color, char x) {
+			public void println(TextColor color, char c) {
 			}
 
 			@Override
@@ -45,7 +45,7 @@ public class TermInputProcessorUnitTest {
 			}
 
 			@Override
-			public void printWithPrompt(TextColor color, String s) {
+			public void printWithPrompt(TextColor color, String str) {
 			}
 
 			@Override

@@ -14,13 +14,13 @@ public class CollectorPrinter implements Printer {
     }
 
     @Override
-    public void print(TextColor color, String x) {
-        lines.append(x);
+	public void print(TextColor color, String str) {
+		lines.append(str);
     }
 
     @Override
-    public void print(TextColor color, char x) {
-        lines.append(x);
+	public void print(TextColor color, char c) {
+		lines.append(c);
     }
 
     @Override
@@ -29,13 +29,13 @@ public class CollectorPrinter implements Printer {
     }
 
     @Override
-    public void println(TextColor color, String x) {
-        lines.append(x);
+	public void println(TextColor color, String str) {
+		lines.append(str);
     }
 
     @Override
-    public void println(TextColor color, char x) {
-        lines.append(x);
+	public void println(TextColor color, char c) {
+		lines.append(c);
     }
 
     @Override
@@ -60,8 +60,8 @@ public class CollectorPrinter implements Printer {
     }
 
     @Override
-    public void printWithPrompt(TextColor c, String s) {
-        lines.append(JTerm.PROMPT).append(s);
+	public void printWithPrompt(TextColor c, String str) {
+		lines.append(JTerm.PROMPT).append(str);
     }
 
     public String[] exportArray() {

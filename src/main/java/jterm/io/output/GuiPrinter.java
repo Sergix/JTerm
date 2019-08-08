@@ -62,9 +62,9 @@ public class GuiPrinter implements Printer {
 
 
     @Override
-    public void printWithPrompt(final TextColor color, final String s) {
+	public void printWithPrompt(final TextColor color, final String str) {
         printPrompt();
-        print(s, color);
+		print(str, color);
     }
 
     @Override

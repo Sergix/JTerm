@@ -11,8 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.IOException;
+
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -51,6 +54,26 @@ public class InputUnitTest {
 	}
 
 	@Test
+	public void readInput_readWindowsThrowsException_returnInvalidInput() {
+		try {
+			doAnswer(invocation -> {throw new IOException();}).when(winInput).readWindows(anyBoolean());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		boolean prevWindowsVal = JTerm.IS_WIN;
+		boolean prevUnixVal = JTerm.IS_UNIX;
+		JTerm.IS_WIN = true;
+		JTerm.IS_UNIX = false;
+
+		final int ret = input.read(false);
+		assertEquals(-1, ret);
+
+		JTerm.IS_WIN = prevWindowsVal;
+		JTerm.IS_UNIX = prevUnixVal;
+	}
+
+	@Test
 	public void readInput_isUnixFlagFalse_returnWindowsInput() {
 		boolean prevWindowsVal = JTerm.IS_WIN;
 		boolean prevUnixVal = JTerm.IS_UNIX;
@@ -59,6 +82,26 @@ public class InputUnitTest {
 
 		final int ret = input.read(false);
 		assertEquals(1, ret);
+
+		JTerm.IS_WIN = prevWindowsVal;
+		JTerm.IS_UNIX = prevUnixVal;
+	}
+
+	@Test
+	public void readInput_readUnixThrowException_returnInvalidInput() {
+		try {
+			doAnswer(invocation -> {throw new IOException();}).when(unixInput).readUnix(anyBoolean());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		boolean prevWindowsVal = JTerm.IS_WIN;
+		boolean prevUnixVal = JTerm.IS_UNIX;
+		JTerm.IS_WIN = false;
+		JTerm.IS_UNIX = true;
+
+		final int ret = input.read(false);
+		assertEquals(-1, ret);
 
 		JTerm.IS_WIN = prevWindowsVal;
 		JTerm.IS_UNIX = prevUnixVal;

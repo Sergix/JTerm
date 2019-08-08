@@ -91,7 +91,7 @@ public enum Keys {
 			if (c == (key.value))
 				return key;
 		}
-		if (c >= 48 && c < 128) {
+		if ((c >= 48 && c < 128) || c == 32) {
 			CHAR.setValue(c);
 			return CHAR;
 		}

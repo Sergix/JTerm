@@ -72,14 +72,14 @@ public class UnixInput {
 		}
 	}
 
-	private static int readSingleCharFromByteStream(InputStream inputStream) throws IOException {
+	private static int readSingleCharFromByteStream(final InputStream inputStream) throws IOException {
 		final byte[] inBuf = new byte[4];
 		int inLen = 0;
 		while (true) {
 			if (inLen >= inBuf.length) {                         // input buffer overflow
 				return invalidKey;
 			}
-			int b = inputStream.read();                          // read next byte
+			final int b = inputStream.read();                          // read next byte
 			if (b == -1) {                                       // EOF
 				return -1;
 			}
