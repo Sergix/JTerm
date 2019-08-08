@@ -13,6 +13,8 @@ package jterm.io.input;
 //
 // Home page: http://www.source-code.biz/snippets/java/RawConsoleInput
 
+import jterm.JTerm;
+
 import java.io.IOException;
 
 /**
@@ -23,14 +25,15 @@ import java.io.IOException;
  */
 
 public class Input {
-
-	protected static final boolean isWindows = System.getProperty("os.name").startsWith("Windows");
 	protected static final int invalidKey = 0xFFFE;
 	protected static final String invalidKeyStr = String.valueOf((char) invalidKey);
 
 	protected static boolean initDone;
 	protected static boolean stdinIsConsole;
 	protected static boolean consoleModeAltered;
+
+	private UnixInput unixInput = new UnixInput();
+	private WinInput winInput = new WinInput();
 
 	/**
 	 * Reads a character from the console without echo.
@@ -41,14 +44,18 @@ public class Input {
 	 * -1 on EOF.
 	 * Otherwise an Unicode character code within the range 0 to 0xFFFF.
 	 */
-	public static int read(boolean wait) throws IOException {
-		if (isWindows) {
-			return WinInput.readWindows(wait);
-		} else {
+	public int read(boolean wait) {
+		if (JTerm.IS_WIN) {
 			try {
-				return UnixInput.readUnix(wait);
+				return winInput.readWindows(wait);
+			} catch (IOException e) {
+				System.err.println("Error reading input using Windows reader");
+			}
+		} else if (JTerm.IS_UNIX) {
+			try {
+				return unixInput.readUnix(wait);
 			} catch (Exception e) {
-				System.err.println("Error reading input");
+				System.err.println("Error reading input using Unix reader");
 			}
 		}
 
@@ -64,9 +71,9 @@ public class Input {
 	 * read() leaves the console in non-echo mode.
 	 */
 	private static void resetConsoleMode() throws IOException {
-		if (isWindows) {
+		if (JTerm.IS_WIN) {
 			WinInput.resetConsoleModeWindows();
-		} else {
+		} else if (JTerm.IS_UNIX) {
 			try {
 				UnixInput.resetConsoleModeUnix();
 			} catch (Exception e) {

@@ -31,7 +31,7 @@ public class UnixInput {
 	private static Termios rawTermios;
 	private static Termios intermediateTermios;
 
-	protected static int readUnix(boolean wait) throws Exception {
+	public int readUnix(final boolean wait) throws Exception {
 		initUnix();
 		if (!stdinIsConsole) {                                  // STDIN is not a console
 			return readSingleCharFromByteStream(System.in);
@@ -48,10 +48,10 @@ public class UnixInput {
 		}
 	}   // reset some console attributes
 
-	private static Termios getTerminalAttrs(int fd) throws Exception {
-		Termios termios = new Termios();
+	private static Termios getTerminalAttrs(final int fd) throws Exception {
+		final Termios termios = new Termios();
 		try {
-			int rc = libc.tcgetattr(fd, termios);
+			final int rc = libc.tcgetattr(fd, termios);
 			if (rc != 0) {
 				throw new Exception("tcgetattr() failed.");
 			}
@@ -61,9 +61,9 @@ public class UnixInput {
 		return termios;
 	}
 
-	private static void setTerminalAttrs(int fd, Termios termios) throws Exception {
+	private static void setTerminalAttrs(final int fd, final Termios termios) throws Exception {
 		try {
-			int rc = libc.tcsetattr(fd, LibcDefs.TCSANOW, termios);
+			final int rc = libc.tcsetattr(fd, LibcDefs.TCSANOW, termios);
 			if (rc != 0) {
 				throw new Exception("tcsetattr() failed.");
 			}
@@ -73,7 +73,7 @@ public class UnixInput {
 	}
 
 	private static int readSingleCharFromByteStream(InputStream inputStream) throws IOException {
-		byte[] inBuf = new byte[4];
+		final byte[] inBuf = new byte[4];
 		int inLen = 0;
 		while (true) {
 			if (inLen >= inBuf.length) {                         // input buffer overflow
@@ -92,12 +92,12 @@ public class UnixInput {
 	}
 
 	// (This method is synchronized because the charsetDecoder must only be used by a single thread at once.)
-	private static synchronized int decodeCharFromBytes(byte[] inBytes, int inLen) {
+	private static synchronized int decodeCharFromBytes(final byte[] inBytes, final int inLen) {
 		charsetDecoder.reset();
 		charsetDecoder.onMalformedInput(CodingErrorAction.REPLACE);
 		charsetDecoder.replaceWith(invalidKeyStr);
-		ByteBuffer in = ByteBuffer.wrap(inBytes, 0, inLen);
-		CharBuffer out = CharBuffer.allocate(1);
+		final ByteBuffer in = ByteBuffer.wrap(inBytes, 0, inLen);
+		final CharBuffer out = CharBuffer.allocate(1);
 		charsetDecoder.decode(in, out, false);
 		if (out.position() == 0) {
 			return -1;
@@ -148,7 +148,7 @@ public class UnixInput {
 		Termios() {
 		}
 
-		Termios(Termios t) {
+		Termios(final Termios t) {
 			c_iflag = t.c_iflag;
 			c_oflag = t.c_oflag;
 			c_cflag = t.c_cflag;
@@ -169,11 +169,11 @@ public class UnixInput {
 
 	private interface Libc extends Library {
 		// termios.h
-		int tcgetattr(int fd, Termios termios) throws LastErrorException;
+		int tcgetattr(final int fd, final Termios termios) throws LastErrorException;
 
-		int tcsetattr(int fd, int opt, Termios termios) throws LastErrorException;
+		int tcsetattr(final int fd, final int opt, final Termios termios) throws LastErrorException;
 
 		// unistd.h
-		int isatty(int fd);
+		int isatty(final int fd);
 	}
 }

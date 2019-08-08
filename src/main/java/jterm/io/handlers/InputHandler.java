@@ -4,8 +4,6 @@ package jterm.io.handlers;
 import jterm.io.input.Input;
 import jterm.io.input.Keys;
 
-import java.io.IOException;
-
 /**
  * Abstract class specifying how input should be handled.
  */
@@ -13,6 +11,8 @@ public abstract class InputHandler {
 
 	protected ArrowKeyHandler arrowKeyHandler;
 	protected KeyHandler keyHandler;
+
+	private final Input input = new Input();
 
 	/**
 	 * Determines how long the program will ignore user input (in ms).
@@ -55,13 +55,7 @@ public abstract class InputHandler {
 	 *
 	 * @return Char value of key pressed
 	 */
-	public static Keys getKey() {
-		try {
-			return Keys.getKeyByValue(Input.read(true));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return Keys.NONE;
+	public Keys getKey() {
+		return Keys.getKeyByValue(input.read(true));
 	}
 }

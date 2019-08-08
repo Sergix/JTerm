@@ -18,7 +18,7 @@ public class WinInput {
 	private static Pointer consoleHandle;
 	private static int originalConsoleMode;
 
-	protected static int readWindows(boolean wait) throws IOException {
+	public int readWindows(final boolean wait) throws IOException {
 		initWindows();
 		if (!stdinIsConsole) {
 			int c = msvcrt.getwchar();
@@ -79,8 +79,8 @@ public class WinInput {
 		return handle;
 	}
 
-	private static int getConsoleMode(Pointer handle) throws IOException {
-		IntByReference mode = new IntByReference();
+	private static int getConsoleMode(final Pointer handle) throws IOException {
+		final IntByReference mode = new IntByReference();
 		int rc = kernel32.getConsoleMode(handle, mode);
 		if (rc == 0) {
 			throw new IOException("GetConsoleMode() failed.");
@@ -88,8 +88,8 @@ public class WinInput {
 		return mode.getValue();
 	}
 
-	private static void setConsoleMode(Pointer handle, int mode) throws IOException {
-		int rc = kernel32.setConsoleMode(handle, mode);
+	private static void setConsoleMode(final Pointer handle, final int mode) throws IOException {
+		final int rc = kernel32.setConsoleMode(handle, mode);
 		if (rc == 0) {
 			throw new IOException("SetConsoleMode() failed.");
 		}
@@ -118,11 +118,11 @@ public class WinInput {
 	}
 
 	private interface Kernel32 extends Library {
-		int getConsoleMode(Pointer hConsoleHandle, IntByReference lpMode);
+		int getConsoleMode(final Pointer hConsoleHandle, final IntByReference lpMode);
 
-		int setConsoleMode(Pointer hConsoleHandle, int dwMode);
+		int setConsoleMode(final Pointer hConsoleHandle, final int dwMode);
 
-		Pointer getStdHandle(int nStdHandle);
+		Pointer getStdHandle(final int nStdHandle);
 	}
 
 }

@@ -112,8 +112,6 @@ public class FileAutocomplete {
      * Otherwise autocompletes the file name.
      */
     public static void fileAutocomplete() {
-
-
         String[] commandArr = originalCommand.split(" ");
         FileAutocomplete.currText = originalCommand.endsWith(" ") ? " " : commandArr[commandArr.length - 1];
 

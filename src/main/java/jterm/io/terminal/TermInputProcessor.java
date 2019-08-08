@@ -8,7 +8,6 @@ import jterm.io.input.Input;
 import jterm.io.input.Keys;
 import jterm.io.output.TextColor;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -22,6 +21,8 @@ import java.util.LinkedList;
 public class TermInputProcessor extends InputHandler {
 
 	private HeadlessTerminal headlessTerminal;
+
+	private final Input input = new Input();
 
 	// Stores all entered commands
 	public ArrayList<String> commandHistory = new ArrayList<>();
@@ -82,17 +83,13 @@ public class TermInputProcessor extends InputHandler {
 			keyHandler.process(key);
 		} else if (JTerm.IS_UNIX) {
 			int c1, c2;
-			try {
-				c1 = Input.read(false);
-				c2 = Input.read(false);
+			c1 = input.read(false);
+			c2 = input.read(false);
 
-				if (c1 == -2 && c2 == -2)
-					keyHandler.process(key);
-				else
-					arrowKeyHandler.process(ArrowKeyHandler.arrowKeyCheckUnix(key.getValue(), c1, c2));
-			} catch (IOException e) {
-				System.err.println("Error reading arrow key press");
-			}
+			if (c1 == -2 && c2 == -2)
+				keyHandler.process(key);
+			else
+				arrowKeyHandler.process(ArrowKeyHandler.arrowKeyCheckUnix(key.getValue(), c1, c2));
 		}
 	}
 

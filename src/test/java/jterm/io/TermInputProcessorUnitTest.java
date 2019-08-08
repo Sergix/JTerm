@@ -9,14 +9,14 @@ import jterm.io.terminal.HeadlessTerminal;
 import jterm.io.terminal.TermArrowKeyProcessor;
 import jterm.io.terminal.TermInputProcessor;
 import jterm.io.terminal.TermKeyProcessor;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotSame;
 
-class TermInputProcessorTest {
-	@BeforeAll
+public class TermInputProcessorUnitTest {
+	@BeforeClass
 	public static void disableOutput() {
 		JTerm.out = new Printer() {
 			@Override
@@ -316,7 +316,7 @@ class TermInputProcessorTest {
 			keyProcessor.process(Keys.getKeyByValue(t == 26 ? t + 1 : t)); // To avoid crashing due to Ctrl+Z being emulated
 		}
 
-		assertNotEquals("", inputProcessor.getCommand());
+		assertNotSame("", inputProcessor.getCommand());
 		keyProcessor.newLineEvent.process();
 		assertEquals(1000, inputProcessor.commandHistory.get(0).length());
 	}

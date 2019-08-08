@@ -6,22 +6,29 @@ import jterm.io.output.CollectorPrinter;
 import jterm.io.output.GuiPrinter;
 import jterm.io.output.HeadlessPrinter;
 import jterm.io.output.TextColor;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Test;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static junit.framework.Assert.assertEquals;
 
-class UtilTest {
+public class UtilUnitTest {
+
     @Test
-    void getRunTime() {
+    public void getRunTime() {
         assertEquals(Util.getRunTime(172799999), "1 days, 23 hours, 59 minutes, 59 seconds, 999 millis");
     }
 
+    @After
+    public void cleanup() {
+        JTerm.setPrompt(">>");
+    }
+
     @Test
-    void clearLineHeadless() throws BadLocationException {
+    public void clearLineHeadless() {
         JTerm.setHeadless(true);
         CollectorPrinter collector = new CollectorPrinter(new HeadlessPrinter());
         JTerm.out = collector;
@@ -45,7 +52,7 @@ class UtilTest {
     }
 
     @Test
-    void clearLineGUI() throws BadLocationException {
+    public void clearLineGUI() throws BadLocationException {
         JTerm.setHeadless(false);
         Terminal terminal = new Terminal();
         terminal.setTitle("JTerm");
@@ -64,7 +71,7 @@ class UtilTest {
         JTerm.out.clearAll();
         JTerm.out.printPrompt();
         JTerm.out.clearLine("", 0, false);
-        assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
+        assertEquals("/dir>>", doc.getText(0, doc.getLength()));
 
         JTerm.out.clearAll();
         JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
@@ -74,23 +81,23 @@ class UtilTest {
         JTerm.out.clearAll();
         JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
         JTerm.out.clearLine("stuff", 0, false);
-        assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
+        assertEquals("/dir>>", doc.getText(0, doc.getLength()));
     }
 
     @Test
-    void getAsArray() {
+    public void getAsArray() {
         assertEquals(Util.getAsArray("This function is just splitting on spaces"),
                 Arrays.asList("This", "function", "is", "just", "splitting", "on", "spaces"));
     }
 
     @Test
-    void getAsString() {
+    public void getAsString() {
         assertEquals("This function is just concatenating an array",
                 Util.getAsString(Arrays.asList("This", "function", "is", "just", "concatenating", "an", "array")));
     }
 
     @Test
-    void getFullPath() {
+    public void getFullPath() {
         assertEquals("/file.txt", Util.getFullPath("/file.txt"));
         JTerm.currentDirectory = "/blah";
         assertEquals("/blah/file.txt", Util.getFullPath("file.txt"));

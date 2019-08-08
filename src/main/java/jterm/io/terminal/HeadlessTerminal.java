@@ -1,7 +1,6 @@
 package jterm.io.terminal;
 
 import jterm.JTerm;
-import jterm.io.handlers.InputHandler;
 import jterm.io.output.TextColor;
 
 import java.io.*;
@@ -31,7 +30,7 @@ public class HeadlessTerminal {
 	public void run() {
 		exit = false;
 		while (!exit)
-			inputProcessor.process(InputHandler.getKey());
+			inputProcessor.process(inputProcessor.getKey());
 
 		writeCommandsToFile();
 	}
