@@ -18,7 +18,7 @@ public class GuiUtilTest {
 
     @BeforeAll
     static void init() {
-        JTerm.setheadless(false);
+        JTerm.setHeadless(false);
     }
 
     @BeforeEach

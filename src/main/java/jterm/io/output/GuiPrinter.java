@@ -29,6 +29,11 @@ public class GuiPrinter implements Printer {
         print(String.valueOf(c), color);
     }
 
+    @Override
+    public void println() {
+        System.out.println();
+    }
+
     public void print(final TextColor color, final Object o) {
         print(String.valueOf(o), color);
     }

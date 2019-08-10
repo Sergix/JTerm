@@ -15,9 +15,9 @@ public class HeadlessUtilTest {
 
     @BeforeAll
     static void init() {
-        JTerm.setheadless(true);
+        JTerm.setHeadless(true);
         JTerm.setPrompt(">> ");
-        JTerm.setCurrentDirectory("/dir");
+        JTerm.currentDirectory = "/dir";
     }
 
     @BeforeEach

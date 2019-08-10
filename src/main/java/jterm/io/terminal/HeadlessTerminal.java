@@ -38,7 +38,7 @@ public class HeadlessTerminal {
 
 	public void parse(String rawCommand) {
 		final String[] split = rawCommand.split("&&");
-		JTerm.out.println(TextColor.INFO);
+		JTerm.out.println();
 
 		for (String command : split) {
 			command = command.trim();

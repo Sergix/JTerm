@@ -94,7 +94,7 @@ public class JTerm {
             return false;
 
         try {
-            if (JTerm.isHeadless()) out.println(TextColor.INFO);
+            if (JTerm.isHeadless()) out.println();
             COMMANDS.get(command).execute(optionsArray);
             return true;
         } catch (CommandException e) {
