@@ -17,38 +17,29 @@
 package jterm.command;
 
 import jterm.JTerm;
-import jterm.io.output.TextColor;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.util.List;
 
 public class Ping {
-    @Command(name = "ping", minOptions = 1, syntax = "ping [-h] [-p port] host")
-    public static void ping(List<String> options) {
-        String port = "80";
-        int portIndex = options.indexOf("-p");
+    @Command(name = "ping", minOptions = 1, syntax = "ping [-h] host")
+    public static void ping(final List<String> options) {
+        final String host = options.get(0);
+        try {
+            final String cmd;
+            if (JTerm.IS_WIN)
+                // For Windows
+                cmd = "ping -n 1 " + host;
+            else
+                // For Linux and OSX
+                cmd = "ping -c 1 " + host;
 
-        if (portIndex != -1) {
-            if ((options.size() != 3) || (portIndex + 1 == options.size())) {
-                throw new CommandException("Invalid ping usage");
-            } else {
-                port = options.get(portIndex + 1);
-                options.remove("-p");
-                options.remove(port);
-            }
-        }
+            final Process myProcess = Runtime.getRuntime().exec(cmd);
+            myProcess.waitFor();
 
-        String host = options.get(options.size() - 1);
-        try (Socket socket = new Socket()) {
-            JTerm.out.println(TextColor.INFO, "Pinging " + host + "...");
-            socket.connect(new InetSocketAddress(host, Integer.parseInt(port)), 3000);
-            JTerm.out.println(TextColor.INFO, "Ping Successful");
-        } catch (IOException e) {
-            throw new CommandException("Ping failed", e);
-        } catch (NumberFormatException e) {
-            throw new CommandException("Invalid port value", e);
+            if (myProcess.exitValue() != 0)
+                throw new CommandException("Ping failed");
+        } catch (Exception e) {
+            throw new CommandException("Ping command failed");
         }
     }
 }

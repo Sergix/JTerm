@@ -37,10 +37,10 @@ public class Exec {
     public static void run(final String command) {
         final ProcessBuilder pb;
         final Process p;
-        try { // Assumes unix, Windows would require a separate implementation...
+        try {
             pb = new ProcessBuilder(command.split(" "));
             pb.redirectInput(ProcessBuilder.Redirect.PIPE);
-            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectOutput(ProcessBuilder.Redirect.PIPE);
             pb.redirectError(ProcessBuilder.Redirect.PIPE);
             pb.directory(new File(JTerm.currentDirectory)); // Set working directory for command
             p = pb.start();

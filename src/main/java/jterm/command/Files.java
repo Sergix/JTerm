@@ -28,17 +28,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-
 public class Files {
     // @ojles and @Kaperskyguru
     @Command(name = {"mv", "move"}, minOptions = 2, syntax = "move, mv [-h] source destination")
-    public static void move(List<String> options) {
-        String sourceName = Util.getFullPath(options.get(0));
-        String destinationName = Util.getFullPath(options.get(1));
+    public static void move(final List<String> options) {
+        final String sourceName = Util.getFullPath(options.get(0));
+        final String destinationName = Util.getFullPath(options.get(1));
 
-        Path source = Paths.get(sourceName);
-        Path destination = Paths.get(destinationName);
+        final Path source = Paths.get(sourceName);
+        final Path destination = Paths.get(destinationName);
 
         try {
             java.nio.file.Files.move(source, destination);
@@ -48,18 +46,22 @@ public class Files {
     }
 
     @Command(name = "rn", minOptions = 2, syntax = "rn [-h] file newName")
-    public static void rename(List<String> options) {
-        Path filePath = Paths.get(Util.getFullPath(options.get(0)));
+    public static void rename(final List<String> options) {
+        final String sourceName = Util.getFullPath(options.get(0));
+        final String destinationName = Util.getFullPath(options.get(1));
+
+        final Path source = Paths.get(sourceName);
+        final Path destination = Paths.get(destinationName);
 
         try {
-            java.nio.file.Files.move(filePath, filePath.resolveSibling(options.get(1)), REPLACE_EXISTING);
+            java.nio.file.Files.move(source, destination);
         } catch (IOException e) {
-            throw new CommandException("Failed to rename file", e);
+            throw new CommandException("Failed to rename file");
         }
     }
 
     @Command(name = "write", minOptions = 1, syntax = "write [-h] filename")
-    public static void write(List<String> options) {
+    public static void write(final List<String> options) {
         StringBuilder filenameBuilder = new StringBuilder();
         for (String option : options) {
             if (option.equals("-h")) {
@@ -95,12 +97,11 @@ public class Files {
         } catch (IOException ioe) {
             JTerm.out.println(TextColor.ERROR, ioe.toString());
         }
-
     }
 
     @Command(name = {"rm", "del", "delete"}, minOptions = 1, syntax = "rm, del, delete [-h] file")
-    public static void delete(List<String> options) {
-        String fileName = Util.getFullPath(options.get(0));
+    public static void delete(final List<String> options) {
+        final String fileName = Util.getFullPath(options.get(0));
 
         try {
             java.nio.file.Files.delete(Paths.get(fileName));
@@ -112,18 +113,20 @@ public class Files {
     }
 
     @Command(name = "read", minOptions = 1, syntax = "read [-h] [file1 file2 ...]")
-    public static void read(List<String> options) {
-        String fileName = Util.getFullPath(options.get(0));
+    public static void read(final List<String> options) {
+        for (String str : options) {
+            final String fileName = Util.getFullPath(str);
 
-        try {
-            JTerm.out.println(TextColor.INFO, new String(java.nio.file.Files.readAllBytes(Paths.get(fileName))));
-        } catch (IOException e) {
-            throw new CommandException(String.format("Failed to read '%s' content", fileName));
+            try {
+                JTerm.out.println(TextColor.INFO, new String(java.nio.file.Files.readAllBytes(Paths.get(fileName))));
+            } catch (IOException e) {
+                throw new CommandException(String.format("Failed to read '%s' content", fileName));
+            }
         }
     }
 
     @Command(name = "download", minOptions = 1, syntax = "download [-h] url")
-    public static void download(List<String> options) {
+    public static void download(final List<String> options) {
         String url;
         if (options.size() > 0) {
             url = options.get(options.size() - 1);
@@ -132,18 +135,17 @@ public class Files {
             return;
         }
 
-        long start = System.currentTimeMillis();
-        long fileSize;
+        final long start = System.currentTimeMillis();
+        final long fileSize;
         long downloadedBytes = 0;
 
         String update = "";
 
         // split url provided to find file name (will be last element if split by "/" char)
-        String[] split = url.split("/");
+        final String[] split = url.split("/");
         String fileName = split[split.length - 1];
         // if no file extension, assume HTML
         if (!split[split.length - 1].contains(".")) {
-            url += ".html";
             split[split.length - 1] += ".html";
             fileName += ".html";
         }
@@ -169,8 +171,8 @@ public class Files {
         try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(JTerm.currentDirectory + "/" + fileName));
              BufferedInputStream in = new BufferedInputStream(new URL(url).openStream())) {
 
-            int buffer = 1024;
-            byte data[] = new byte[buffer];
+            final int buffer = 1024;
+            final byte[] data = new byte[buffer];
             int count, steps = 0;
             // download file, and output information about progress
             JTerm.out.print(TextColor.INFO, update = (String.format("Download is: %s%% complete", ((double) downloadedBytes / (double) fileSize) * 100d)));

@@ -126,7 +126,12 @@ public class Dir {
         });
 
         filesToBeRemoved.forEach(fileName -> {
-			final File file = new File(JTerm.currentDirectory, fileName);
+			final File file;
+			if (fileName.startsWith("/"))
+				file = new File(fileName);
+			else
+				file = new File(JTerm.currentDirectory, fileName);
+
             if (!file.isFile() && !file.isDirectory()) {
                 JTerm.out.printf(TextColor.ERROR, "%s is not a file or directory%n", fileName);
             } else if (file.isDirectory()) {

@@ -51,8 +51,9 @@ public class TestPrinter implements Printer {
 
 	@Override
 	public void clearLine(final String line, final int cursorPosition, final boolean clearPrompt) {
-		final int lIdx = stringBuilder.lastIndexOf("\n");
-		stringBuilder = new StringBuilder(stringBuilder.substring(0, lIdx));
+		final int lastIdx = stringBuilder.lastIndexOf("\n");
+		if (lastIdx > 0)
+			stringBuilder = new StringBuilder(stringBuilder.substring(0, lastIdx));
 	}
 
 	@Override

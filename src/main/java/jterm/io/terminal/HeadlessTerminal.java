@@ -1,6 +1,7 @@
 package jterm.io.terminal;
 
 import jterm.JTerm;
+import jterm.command.Exec;
 import jterm.io.output.TextColor;
 
 import java.io.*;
@@ -61,25 +62,7 @@ public class HeadlessTerminal {
 				return;
 			}
 
-			final ProcessBuilder pb;
-			final Process p;
-			try { // Assumes unix, Windows would require a separate implementation...
-				pb = new ProcessBuilder("/bin/bash", "-c", command);
-				pb.redirectInput(ProcessBuilder.Redirect.PIPE);
-				pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-				pb.redirectError(ProcessBuilder.Redirect.PIPE);
-				pb.directory(new File(JTerm.currentDirectory)); // Set working directory for command
-				p = pb.start();
-				p.waitFor();
-
-				if (p.exitValue() == 0)
-					JTerm.out.println(TextColor.INFO, readInputStream(p.getInputStream()));
-				else
-					JTerm.out.println(TextColor.ERROR, readInputStream(p.getErrorStream()));
-				p.destroy();
-			} catch (IOException | IllegalArgumentException | InterruptedException e) {
-				System.err.println("Parsing command \"" + command + "\" failed, enter \"help\" for help using JTerm.");
-			}
+			Exec.run(command);
 		}
 
 		JTerm.out.printPrompt();
