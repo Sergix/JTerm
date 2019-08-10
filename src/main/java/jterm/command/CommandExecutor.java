@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class CommandExecutor {
+
     private Consumer<List<String>> command;
     private String commandName;
     private int minOptions;
@@ -14,21 +15,25 @@ public class CommandExecutor {
 
     public CommandExecutor setCommand(Consumer<List<String>> command) {
         this.command = command;
+
         return this;
     }
 
     public CommandExecutor setCommandName(String commandName) {
         this.commandName = commandName;
+
         return this;
     }
 
     public CommandExecutor setMinOptions(int minOptions) {
         this.minOptions = minOptions;
+
         return this;
     }
 
     public CommandExecutor setSyntax(String syntax) {
         this.syntax = syntax;
+
         return this;
     }
 
@@ -37,11 +42,12 @@ public class CommandExecutor {
             if (syntax == null || !syntax.isEmpty()) {
                 JTerm.out.println(TextColor.INFO, syntax);
             }
-            return;
+        } else {
+            if (options.size() < minOptions) {
+                throw new CommandException(String.format("To few arguments for '%s'", commandName));
+            }
+
+            command.accept(options);
         }
-        if (options.size() < minOptions) {
-            throw new CommandException("To few arguments for \'" + commandName + '\'');
-        }
-        command.accept(options);
     }
 }

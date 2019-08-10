@@ -24,11 +24,17 @@ import java.util.List;
 import java.util.TreeSet;
 
 public class Help {
+
     @Command(name = "help")
     public static void printHelp(List<String> options) {
         JTerm.out.println(TextColor.INFO, "JTerm v" + JTerm.VERSION + "\n"
                 + "Available Commands\n"
                 + "(type [command] -h to view specific help information)");
-        new TreeSet<>(JTerm.getCommands()).forEach(command -> JTerm.out.printf(TextColor.INFO, "\t%s%n", command));
+
+        new TreeSet<>(JTerm.getCommands())
+            .forEach(command -> 
+                JTerm.out.printf(TextColor.INFO, "%s\t", command)
+            );
+        JTerm.out.println(TextColor.INFO, "");
     }
 }

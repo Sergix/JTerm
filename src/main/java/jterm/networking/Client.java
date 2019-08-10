@@ -16,8 +16,9 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package jterm;
+package jterm.networking;
 
+import jterm.JTerm;
 import jterm.io.output.TextColor;
 
 import java.io.*;
@@ -25,6 +26,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Client implements Runnable {
+
     private static BufferedReader input;
 
     public void run() {
