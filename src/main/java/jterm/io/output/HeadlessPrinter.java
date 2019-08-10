@@ -14,43 +14,43 @@ public class HeadlessPrinter implements Printer {
 
 	@Override
 	public void print(final TextColor color, final String str) {
-		System.out.print(color.ansi + str);
+		System.out.print(color.getANSIColor() + str);
 	}
 
 	@Override
 	public void print(final TextColor color, final char c) {
-		System.out.print(color.ansi + c);
+		System.out.print(color.getANSIColor() + c);
 	}
 
 	@Override
 	public void println(final TextColor color) {
-		System.out.println(color.ansi);
+		System.out.println(color.getANSIColor());
 	}
 
 	@Override
 	public void println(final TextColor color, final String str) {
-		System.out.println(color.ansi + str);
+		System.out.println(color.getANSIColor() + str);
 	}
 
 	@Override
 	public void println(final TextColor color, final char c) {
-		System.out.println(color.ansi + c);
+		System.out.println(color.getANSIColor() + c);
 	}
 
 	@Override
 	public Printer printf(final TextColor color, final String format, final Object... args) {
-		System.out.println(color.ansi + String.format(format, args));
+		System.out.println(color.getANSIColor() + String.format(format, args));
 		return this;
 	}
 
 	public void printPrompt() {
-		System.out.print(TextColor.PATH.ansi + JTerm.currentDirectory);
-		System.out.print(TextColor.PROMPT.ansi + JTerm.PROMPT);
+		System.out.print(TextColor.PATH.getANSIColor() + JTerm.currentDirectory);
+		System.out.print(TextColor.PROMPT.getANSIColor() + JTerm.PROMPT);
 	}
 
 	public void printWithPrompt(final TextColor color, final String str) {
 		printPrompt();
-		System.out.print(color.ansi + str);
+		System.out.print(color.getANSIColor() + str);
 	}
 
 	@Override

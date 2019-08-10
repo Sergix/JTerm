@@ -62,7 +62,7 @@ public class Exec {
 
         String line;
         while ((line = in.readLine()) != null)
-            responseBuffer.append(line);
+            responseBuffer.append(line).append("\n");
         return responseBuffer.toString();
     }
 }

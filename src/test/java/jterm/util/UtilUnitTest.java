@@ -72,7 +72,7 @@ public class UtilUnitTest {
         JTerm.out.clearAll();
         JTerm.out.printPrompt();
         JTerm.out.clearLine("", 0, false);
-        assertEquals("/dir>>", doc.getText(0, doc.getLength()));
+        assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
 
         JTerm.out.clearAll();
         JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
@@ -82,7 +82,7 @@ public class UtilUnitTest {
         JTerm.out.clearAll();
         JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
         JTerm.out.clearLine("stuff", 0, false);
-        assertEquals("/dir>>", doc.getText(0, doc.getLength()));
+        assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
     }
 
     @Test

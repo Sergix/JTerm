@@ -4,25 +4,26 @@ import jterm.JTerm;
 import jterm.gui.Terminal;
 import jterm.io.output.GuiPrinter;
 import jterm.io.output.TextColor;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GuiUtilTest {
     private static Document doc;
 
-    @BeforeAll
-    static void init() {
-        JTerm.setheadless(false);
+    @BeforeClass
+    public static void init() {
+        JTerm.setHeadless(false);
     }
 
-    @BeforeEach
-    void setup() {
+    @Before
+    public void setup() {
         Terminal terminal = new Terminal();
         terminal.setTitle("JTerm");
         terminal.setSize(720, 480);
@@ -36,29 +37,28 @@ public class GuiUtilTest {
     }
 
     @Test
-    void clearLineGUI1() throws BadLocationException {
+    public void clearLineGUI1() throws BadLocationException {
         JTerm.out.clearLine("", 0, true);
         assertEquals("", doc.getText(0, doc.getLength()));
     }
 
     @Test
-    void clearLineGUI2() throws BadLocationException {
+    public void clearLineGUI2() throws BadLocationException {
         JTerm.out.clearLine("", 0, false);
-        assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
+        assertTrue(doc.getText(0, doc.getLength()).startsWith("/dir>>"));
     }
 
     @Test
-    void clearLineGUI3() throws BadLocationException {
+    public void clearLineGUI3() throws BadLocationException {
         JTerm.out.print(TextColor.INPUT, "stuff");
         JTerm.out.clearLine("stuff", 0, true);
         assertEquals("", doc.getText(0, doc.getLength()));
     }
 
     @Test
-    void clearLineGUI4() throws BadLocationException {
+    public void clearLineGUI4() throws BadLocationException {
         JTerm.out.print(TextColor.INPUT, "stuff");
         JTerm.out.clearLine("stuff", 0, false);
-        assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
+        assertTrue(doc.getText(0, doc.getLength()).startsWith("/dir>>"));
     }
-
 }
