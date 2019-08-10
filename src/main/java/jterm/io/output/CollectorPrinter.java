@@ -24,7 +24,7 @@ public class CollectorPrinter implements Printer {
     }
 
     @Override
-    public void println(TextColor color) {
+    public void println() {
         lines.append("\n");
     }
 
@@ -56,12 +56,13 @@ public class CollectorPrinter implements Printer {
 
     @Override
     public void printPrompt() {
-        lines.append(JTerm.PROMPT);
+        lines.append(JTerm.currentDirectory).append(JTerm.PROMPT);
     }
 
     @Override
     public void printWithPrompt(TextColor c, String s) {
-        lines.append(JTerm.PROMPT).append(s);
+        printPrompt();
+        lines.append(s);
     }
 
     public String[] exportArray() {

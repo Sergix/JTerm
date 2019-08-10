@@ -1,3 +1,93 @@
+(#131)[4/4/2018-13:57 0.7.0 importjo]
+	Fixed Docs Typo.
+
+(#130)[3/3/2018-22:03 0.7.0 Sergix]
+	Fixed slight formatting issue in changelog entry #129.
+	Removed extra output from "rn2" command that was causing error. Command will now fail silently.
+	Pushed updates to Git.
+
+(#129)[3/1/2018-09:32 0.7.0 wuhugh]
+  	Closes #72
+    	- cd should work properly on Windows now
+  	OS type is no longer automatically set to UNIX from Terminal.java
+
+(#128)[2/26/2018-10:47 0.7.0 Sergix]
+	Merged #111.
+		- Thanks to @PabloPaglill!
+		- Added "copy" command.
+			- "copy, cp [-h] source destination"
+			- Files.copy()
+
+(#127)[2/16/2018-14:21 0.7.0 Sergix]
+	Closed #108.
+	Merged #109.
+		- Thanks to @PabloPaglill!
+		- Added "find" command.
+			- "find [-h] [-r] searchText"
+			- Files.find()
+
+(#126)[1/7/2018-14:30 0.7.0 Sergix]
+	Merged #107.
+		- Thanks to @lbenedetto!
+		- Improved tests.
+			- GUIUtilTest
+			- HeadlessUtilTest
+		- Refactoring of dissasembleCommand().
+		- Refactoring of Window.java parser.
+		- Added JTerm.setCurrentDirectory().
+
+(#125)[12/4/2017-11:19 0.7.0 Sergix]
+	Closed #105 (PR #106).
+	Merged #106.
+		- Thanks to @saringer!
+		- Created "rn2" command.
+		- Improvements from original rename command.
+
+(#124)[11/27/2017-18:12 0.7.0 Sergix]
+	Added "networking" issue label.
+
+(#123)[11/27/2017-18:12 0.7.0 Sergix]
+	Merged #104.
+		- Thanks to @DataSecs!
+		- Added jterm.networking package
+			- Added HTTPRequest class
+			- Added RequestMethod enum
+			- Added ReturnType enum
+		- Handles HTTP request functions to be used by networking applications within JTerm (i.e. "download")
+
+(#122)[11/27/2017-12:20 0.7.0 Sergix]
+	Merged #103.
+		- Thanks to @lbenedetto!
+		- Improved GUI look
+		- Fixed Linux ANSI colors
+		- Removed randomized coloring
+
+(#121)[11/26/2017-10:05 0.7.0 Sergix]
+	Added checking for commands directory in JTerm.initCommands(), otherwise it would return NullPointerException.
+	Updated JTerm.VERSION to 0.7.1 (dev build).
+	Pushed updates to Git.
+
+(#120)[11/25/2017-19:29 0.7.0 Sergix]
+	Reverted JTerm.initCommands() again to previous.
+	Pushed updates to Git.
+
+(#119)[11/25/2017-19:12 0.7.0 Sergix]
+	Merged #102.
+		- Thanks to @DataSecs!
+		- Reverted JTerm.initCommands() to previous loader method to work on Windows.
+
+(#118)[11/25/2017-17:02 0.7.0 Sergix]
+	Merged #101.
+		- Thanks to @nanoandrew4!
+		- Added ANSI colors
+		- Fixed tabbing bug
+
+(#117)[11/24/2017-18:49 0.7.0 Sergix]
+	Merged #99.
+		- Thanks to @DataSecs!
+		- General code formatting and cleanup.
+		- Reworked JTerm.initCommands() to be more concise and fix issues with it running on other systems.
+
 (#116)[11/24/2017-13:45 0.7.0 Sergix]
 	Wrote documentation for version "0.7.0".
 	Compiled changelog.
@@ -279,7 +369,7 @@
 		- Added "Text editor"
 	Updated CONTRIBUTING.md.
 	Pushed updates to Git.
-	
+
 (#90)[10/1/2017-17:05 0.5.1 Sergix]
 	Moved command classes into their own package (main.java.jterm.command).
 	Created imports for "main.java.jterm.JTerm" in multiple classes.
@@ -483,7 +573,7 @@
 (#67)[7/6/2017-11:25 0.4.0 Sergix]
 	Fixed issue #15 (2). (https://github.com/Sergix/JTerm/issues/15)
 	ChangeDir() accepts directory paths enclosed in quotes.
-	Pushed updates to Git. 
+	Pushed updates to Git.
 
 (#66)[7/6/2017-11:25 0.4.0 Sergix]
 	Fixed issue #15. (https://github.com/Sergix/JTerm/issues/15)
@@ -492,12 +582,12 @@
 		- WriteFile() was not taking arguments with multiple spaces
 		- Delete() was not taking arguments with multiple spaces
 		- Echo() was outputting an extra space
-	Pushed updates to Git. 
+	Pushed updates to Git.
 
 (#65)[7/4/2017-13:48 0.4.0 Sergix]
 	Updated WriteFile(); input stream is closed when a blank line is entered.
 	A single space on a line can be used to output a blank line into a file.
-	Pushed updates to Git. 
+	Pushed updates to Git.
 
 (#64)[7/4/2017-11:41 0.4.0 Sergix]
 	Fixed #14 (https://github.com/Sergix/JTerm/issues/14).
@@ -515,7 +605,7 @@
 	Edited "Ps" and "Ping" classes for function names and option processing. Original credit goes to @chromechris for writing these methods.
 	Wrote docs for v0.4.0 and compiled binaries and other dependencies.
 	EventHandler() is currently unneeded, so it has been removed.
-	Included a wrapfile in the build/src/ directory for the release. More info in the documentation. 
+	Included a wrapfile in the build/src/ directory for the release. More info in the documentation.
 	Added @chromechris to list of contributers at startup. Thanks again! :)
 	Pushed updates to Git.
 
@@ -554,7 +644,7 @@
 (#56)[6/16/2017-23:15 0.3.1 Sergix]
 	Fixed pause key listener.
 	Known issues:
-		- When pressing a key during pause, that key is read and automatically passed to the BufferedReader in the command loop; it is able to be backspaced, 
+		- When pressing a key during pause, that key is read and automatically passed to the BufferedReader in the command loop; it is able to be backspaced,
 			but doing so and then entering more characters crashes the program.
 		- (Linked with above issue) Hitting enter for a pause command outputs two command input prompts and an extra newline before
 
@@ -821,11 +911,11 @@
 	Working and past builds can be viewed at https://travis-ci.org/Sergix/JTerm
 	Edited the directories for the java package.
 	Pushed updates to Git.
-	
+
 (#11)[5/18/2017-17:02 pre-alpha Sergix]
 	Created gradle dependencies.
 	Pushed updates to Git.
-	
+
 (#10)[5/18/2017-16:46 pre-alpha Sergix]
 	Been messing around with getting Travis CI to automate build tests for the project.
 	Attempting to get Gradle to work.... with not much luck yet.
@@ -837,7 +927,7 @@
 	Uploaded files to the Write-File branch.
 	Opened a PR to merge to master.
 	Pushed to GitHub.
-	
+
 (#8)[5/17/2017-21:38 pre-alpha Sergix]
 	Added a logo to the readme, viewable online.
 	Also added a project page at https://sergix.github.io/projects/jterm/index.html

@@ -21,7 +21,6 @@ import java.util.List;
 
 public class Clear {
 
-
     @Command(name = {"clear", "cls"}, syntax = "clear [-h]")
     public static void clearScreen(List<String> options) {
         JTerm.out.clearAll();

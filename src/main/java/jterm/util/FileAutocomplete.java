@@ -71,9 +71,6 @@ public class FileAutocomplete {
         FileAutocomplete.lockTab = lockTab;
         FileAutocomplete.cursorPos = getCommand().length();
 
-        if ("".equals(command[1]) && (JTerm.isHeadless() || JTerm.IS_WIN))
-            FileAutocomplete.command = " ";
-
         // Stores original command so that command does not keep adding to itself
         originalCommand = FileAutocomplete.command;
 
@@ -115,7 +112,7 @@ public class FileAutocomplete {
 
 
         String[] commandArr = originalCommand.split(" ");
-        FileAutocomplete.currText = originalCommand.endsWith(" ") ? " " : commandArr[commandArr.length - 1];
+        FileAutocomplete.currText = originalCommand.endsWith(" ") ? "" : commandArr[commandArr.length - 1];
 
         // Whether a new list of files should be created or not
         newList = false;
@@ -143,7 +140,7 @@ public class FileAutocomplete {
         else if ((endsWithDirChar || currText.startsWith("~")) && !blockClear) {
             fileNames.clear();
             blockClear = true;
-            currText = " ";
+            currText = "";
         }
 
         if (fileNames.size() == 0) {
@@ -170,7 +167,7 @@ public class FileAutocomplete {
         assert files != null;
         for (File f : files) {
             String fileName = f.getName();
-            if ((fileName.startsWith(currText) || " ".equals(currText)) && (!f.isHidden() || currText.startsWith(".")))
+            if ((fileName.startsWith(currText) || "".equals(currText)) && (!f.isHidden() || currText.startsWith(".")))
                 fileNames.add(f.getName());
         }
 
@@ -216,7 +213,7 @@ public class FileAutocomplete {
     private static void fileNamesIterator() {
 
         // Clear line
-        if (fileNames.size() > 0 || " ".equals(currText))
+        if (fileNames.size() > 0 || "".equals(currText))
             JTerm.out.clearLine(getCommand(), getCommand().length(), true);
 
         // Print matching file names
@@ -224,22 +221,25 @@ public class FileAutocomplete {
             for (String s : fileNames)
                 JTerm.out.print(TextColor.INFO, s + "\t");
 
-            // Rotate
+        // Rotate
         else if (!lockTab || endsWithDirChar) {
-            JTerm.out.clearLine(command, getCommand().length(), false);
+            JTerm.out.clearLine(getCommand(), getCommand().length(), true);
 
-            String currFile = iterator.next();
+            String currFile;
+            if (iterator.hasNext())
+                currFile = iterator.next();
+            else {
+                iterator = fileNames.iterator();
+                currFile = iterator.next();
+            }
 
             command = originalCommand + currFile.substring(startComplete);
-            JTerm.out.print(TextColor.INPUT, getCommand());
-
-            // Add to end of list (rotate through list)
-            fileNames.add(currFile);
+            JTerm.out.printWithPrompt(TextColor.INPUT, getCommand());
         }
 
         if (fileNames.size() > 0 && newList) {
             // Re-output command after clearing lines
-            JTerm.out.println(TextColor.INPUT);
+            JTerm.out.println();
             JTerm.out.printWithPrompt(TextColor.INPUT, getCommand());
         }
     }
