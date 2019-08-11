@@ -104,8 +104,7 @@ public class TermArrowKeyProcessor extends ArrowKeyHandler {
 			if (commandListPosition > inputProcessor.commandHistory.size())
 				commandListPosition = inputProcessor.commandHistory.size();
 
-			JTerm.out.print(TextColor.PROMPT, JTerm.PROMPT);
-			JTerm.out.print(TextColor.INPUT, inputProcessor.commandHistory.get(--commandListPosition));
+			JTerm.out.printWithPrompt(TextColor.INPUT, inputProcessor.commandHistory.get(--commandListPosition));
 			inputProcessor.setCommand(inputProcessor.commandHistory.get(commandListPosition));
 
 		} else if (ak == Keys.DOWN) {
@@ -115,16 +114,14 @@ public class TermArrowKeyProcessor extends ArrowKeyHandler {
 				// Move through list towards last typed element
 				JTerm.out.clearLine(inputProcessor.getCommand(), inputProcessor.getCursorPos(), true);
 
-				JTerm.out.print(TextColor.PROMPT, JTerm.PROMPT);
-				JTerm.out.print(TextColor.INPUT, inputProcessor.commandHistory.get(++commandListPosition));
+				JTerm.out.printWithPrompt(TextColor.INPUT, inputProcessor.commandHistory.get(++commandListPosition));
 				inputProcessor.setCommand(inputProcessor.commandHistory.get(commandListPosition));
 			} else if (!inputProcessor.getCommand().equals(currCommand)) {
 				// Print command that was stored before iteration through list began
 				JTerm.out.clearLine(inputProcessor.getCommand(), inputProcessor.getCursorPos(), true);
 				commandListPosition++;
 
-				JTerm.out.print(TextColor.PROMPT, JTerm.PROMPT);
-				JTerm.out.print(TextColor.INPUT, currCommand);
+				JTerm.out.printWithPrompt(TextColor.INPUT, currCommand);
 				inputProcessor.setCommand(currCommand);
 			}
 		}
