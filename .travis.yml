@@ -4,3 +4,5 @@ jdk:
 dist: xenial
 services:
   - xvfb
+notifications:
+  slack: sergix:qb9AYlJo8QqPybBY1FQ5V6my
