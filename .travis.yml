@@ -1,10 +1,8 @@
-#
-# Travis CI
-# Build File
-#
-
 language: java
 jdk:
-  - oraclejdk8
+  - openjdk8
+dist: xenial
+services:
+  - xvfb
 notifications:
   slack: sergix:qb9AYlJo8QqPybBY1FQ5V6my

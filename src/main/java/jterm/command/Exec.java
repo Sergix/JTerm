@@ -19,14 +19,13 @@ package jterm.command;
 import jterm.JTerm;
 import jterm.io.output.TextColor;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
-import java.util.Scanner;
 
 public class Exec {
 
     @Command(name = "exec", minOptions = 1, syntax = "exec executable")
-    public static void execute(List<String> options) {
+    public static void execute(final List<String> options) {
         String command = options.get(0);
         if (!command.startsWith("java") && command.endsWith(".jar")) {
             command = "java -jar " + command;
@@ -35,22 +34,35 @@ public class Exec {
         run(command);
     }
 
-    public static void run(String command) {
+    public static void run(final String command) {
+        final ProcessBuilder pb;
+        final Process p;
         try {
-            Process process = Runtime.getRuntime().exec(command);
-            Scanner in = new Scanner(process.getInputStream());
+            pb = new ProcessBuilder(command.split(" "));
+            pb.redirectInput(ProcessBuilder.Redirect.PIPE);
+            pb.redirectOutput(ProcessBuilder.Redirect.PIPE);
+            pb.redirectError(ProcessBuilder.Redirect.PIPE);
+            pb.directory(new File(JTerm.currentDirectory)); // Set working directory for command
+            p = pb.start();
+            p.waitFor();
 
-            while (process.isAlive() && in.hasNextLine()) {
-                JTerm.out.println(TextColor.INFO, in.nextLine());
-            }
-
-            while (in.hasNextLine()) {
-                JTerm.out.println(TextColor.INFO, in.nextLine());
-            }
-
-            in.close();
-        } catch (IOException e) {
-            throw new CommandException(String.format("Failed to execute command \"%s\"", command));
+            if (p.exitValue() == 0)
+                JTerm.out.println(TextColor.INFO, readInputStream(p.getInputStream()));
+            else
+                JTerm.out.println(TextColor.ERROR, readInputStream(p.getErrorStream()));
+            p.destroy();
+        } catch (IOException | IllegalArgumentException | InterruptedException e) {
+            System.err.println("Parsing command \"" + command + "\" failed, enter \"help\" for help using JTerm.");
         }
+    }
+
+    private static String readInputStream(final InputStream inputStream) throws IOException {
+        final BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+        final StringBuilder responseBuffer = new StringBuilder();
+
+        String line;
+        while ((line = in.readLine()) != null)
+            responseBuffer.append(line).append("\n");
+        return responseBuffer.toString();
     }
 }

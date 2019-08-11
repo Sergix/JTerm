@@ -109,8 +109,6 @@ public class FileAutocomplete {
      * Otherwise autocompletes the file name.
      */
     public static void fileAutocomplete() {
-
-
         String[] commandArr = originalCommand.split(" ");
         FileAutocomplete.currText = originalCommand.endsWith(" ") ? "" : commandArr[commandArr.length - 1];
 
@@ -239,7 +237,7 @@ public class FileAutocomplete {
 
         if (fileNames.size() > 0 && newList) {
             // Re-output command after clearing lines
-            JTerm.out.println();
+            JTerm.out.println(TextColor.INPUT);
             JTerm.out.printWithPrompt(TextColor.INPUT, getCommand());
         }
     }

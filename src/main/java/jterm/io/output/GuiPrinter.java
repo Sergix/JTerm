@@ -8,109 +8,111 @@ import javax.swing.text.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
+/**
+ * Custom {@link Printer} implementation for the JTerm GUI mode.
+ */
 public class GuiPrinter implements Printer {
     private final JTextPane textPane;
-    private ProtectedTextComponent protectedDoc;
-    private SimpleAttributeSet style;
+    private ProtectedTextComponent ptc;
 
-    public GuiPrinter(JTextPane textPane) {
+    public GuiPrinter(final JTextPane textPane) {
         this.textPane = textPane;
-        protectedDoc = new ProtectedTextComponent(textPane);
-        style = new SimpleAttributeSet();
-        StyleConstants.setFontFamily(style, "Monospace Regular");
-        StyleConstants.setBold(style, true);
+        ptc = new ProtectedTextComponent(textPane);
     }
 
-    public void print(TextColor color, String x) {
-        print(x, color);
+    public void print(final TextColor color, final String str) {
+        print(str, color);
     }
 
     @Override
-    public void print(TextColor color, char x) {
-        print(String.valueOf(x), color);
+    public void print(final TextColor color, final char c) {
+        print(String.valueOf(c), color);
     }
 
-    public void print(TextColor color, Object x) {
-        print(String.valueOf(x), color);
+    public void print(final TextColor color, final Object o) {
+        print(String.valueOf(o), color);
     }
 
-    public void println() {
-        print("\n", TextColor.INPUT);
+    public void println(final TextColor color) {
+        print("\n", color);
     }
 
-    public void println(TextColor color, String x) {
-        print(x + "\n", color);
+    public void println(final TextColor color, final String str) {
+        print(str + "\n", color);
     }
 
     @Override
-    public void println(TextColor color, char x) {
-        print(String.valueOf(x) + "\n", color);
+    public void println(final TextColor color, final char c) {
+        print(c + "\n", color);
     }
 
-    public void println(TextColor color, Object x) {
-        print(String.valueOf(x) + "\n", color);
+    public void println(final TextColor color, final Object o) {
+        print(o + "\n", color);
     }
 
-    public GuiPrinter printf(TextColor color, String format, Object... args) {
+    public GuiPrinter printf(final TextColor color, final String format, final Object... args) {
         print(String.format(format, args), color);
         return this;
     }
 
-    public GuiPrinter printf(TextColor color, Locale l, String format, Object... args) {
+    public GuiPrinter printf(final TextColor color, final Locale l, final String format, final Object... args) {
         print(String.format(l, format, args), color);
         return this;
     }
 
 
     @Override
-    public void printWithPrompt(TextColor color, String s) {
+	public void printWithPrompt(final TextColor color, final String str) {
         printPrompt();
-        print(s, color);
+		print(str, color);
     }
 
     @Override
     public void printPrompt() {
         invoke(() -> {
             print(JTerm.currentDirectory, TextColor.PATH);
-            print(">>", TextColor.PROMPT);
-            print(" ", TextColor.INPUT);
+            print(JTerm.PROMPT, TextColor.PROMPT);
+            print("", TextColor.INPUT);
             int promptIndex = textPane.getDocument().getLength();
             textPane.setCaretPosition(promptIndex);
-            protectedDoc.protectText(0, promptIndex - 1);
+            ptc.protectText(0, promptIndex - 1);
         });
     }
 
-    public void clearLine(String line, int cursorPosition, boolean clearPrompt) {
-        if (clearPrompt) protectedDoc.clearProtections();
-        String text = textPane.getText().replaceAll("\r", "");
-        int ix = text.lastIndexOf("\n") + 1;
-        int len = line.length();
-        int fullPromptLen = JTerm.PROMPT.length() + JTerm.currentDirectory.length();
-        if (clearPrompt) len += fullPromptLen;
-        else ix += fullPromptLen;
-        if (ix >= text.length()) return;
-        try {
-            textPane.getDocument().remove(ix, len);
-        } catch (BadLocationException e) {
-            e.printStackTrace();
+    public void clearLine(final String line, final int cursorPosition, final boolean clearPrompt) {
+        if (clearPrompt || line.length() > 0) {
+            if (clearPrompt)
+                ptc.clearProtections();
+
+            String textToClear = "";
+            if (clearPrompt)
+                textToClear += JTerm.currentDirectory + JTerm.PROMPT;
+            textToClear += line;
+
+            try {
+                textPane.getDocument().remove(textPane.getText().lastIndexOf(textToClear), textToClear.length());
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     public void clearAll() {
-        protectedDoc.clearProtections();
+        ptc.clearProtections();
         textPane.setText("");
     }
 
-    private void print(String s, TextColor c) {
-        StyleConstants.setForeground(style, c.getColor());
-        int len = textPane.getDocument().getLength();
+    private void print(final String s, final TextColor c) {
+        final StyleContext sc = StyleContext.getDefaultStyleContext();
+        final AttributeSet color = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c.getColor());
+        final int len = textPane.getDocument().getLength();
         textPane.setCaretPosition(len);
-        textPane.setCharacterAttributes(style, false);
+        textPane.setCharacterAttributes(color, false);
         textPane.replaceSelection(s);
     }
 
-    private void invoke(Runnable action) {
+    private void invoke(final Runnable action) {
         try {
             SwingUtilities.invokeAndWait(action);
         } catch (InterruptedException | InvocationTargetException e) {

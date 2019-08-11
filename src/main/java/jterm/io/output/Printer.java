@@ -1,23 +1,26 @@
 package jterm.io.output;
 
+/**
+ * Interface meant to replace System.out, so that custom printers can be implemented for GUI and headless mode.
+ */
 public interface Printer {
-    void print(TextColor color, String x);
+	void print(final TextColor color, final String str);
 
-    void print(TextColor color, char x);
+	void print(final TextColor color, final char c);
 
-    void println();
+	void println(final TextColor color);
 
-    void println(TextColor color, String x);
+	void println(final TextColor color, final String str);
 
-    void println(TextColor color, char x);
+	void println(final TextColor color, final char c);
 
-    Printer printf(TextColor color, String format, Object... args);
+	Printer printf(final TextColor color, final String format, final Object... args);
 
-    void printWithPrompt(TextColor color, String s);
+	void printWithPrompt(final TextColor color, final String str);
 
     void printPrompt();
 
-    void clearLine(String line, int cursorPosition, boolean clearPrompt);
+	void clearLine(final String line, final int cursorPosition, final boolean clearPrompt);
 
     void clearAll();
 }

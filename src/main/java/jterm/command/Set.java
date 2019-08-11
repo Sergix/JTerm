@@ -29,6 +29,7 @@ public class Set {
 
     @Command(name = "set", minOptions = 3, syntax = "set [-h] <name> = <value>")
     public static void set(List<String> options) {
+        System.out.println(options);
         if (options.size() == 0) {
             vars.forEach((key, value) -> JTerm.out.printf(TextColor.INFO, "%s=%s%n", key, value));
             return;
@@ -47,7 +48,7 @@ public class Set {
         }
 
         // If the type is a window, create a new one
-        if (options.get(2).equals("window")) {
+        if (key.equals("window")) {
             // Pass the rest of the options to create a new Window
             Window newWindow = new Window(options);
 
