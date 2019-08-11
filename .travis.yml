@@ -1,14 +1,6 @@
-#
-# Travis CI
-# Build File
-#
-
 language: java
 jdk:
   - openjdk8
 dist: xenial
 services:
   - xvfb
-script: xvfb-run make test
-notifications:
-  slack: sergix:qb9AYlJo8QqPybBY1FQ5V6my
