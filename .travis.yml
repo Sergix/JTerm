@@ -9,6 +9,6 @@ jdk:
 dist: xenial
 services:
   - xvfb
-script: xvfb-run --server-args="-screen 0 1024x768x24" make test
+script: xvfb-run make test
 notifications:
   slack: sergix:qb9AYlJo8QqPybBY1FQ5V6my
