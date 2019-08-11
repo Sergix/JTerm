@@ -1,41 +1,62 @@
 package jterm.io.input;
 
+import jterm.io.handlers.events.CharEvent;
+import jterm.io.handlers.events.Event;
+
 public enum Keys {
-
-    UP(InputHandler::processUp),
-    DOWN(InputHandler::processDown),
-    LEFT(InputHandler::processLeft),
-    RIGHT(InputHandler::processRight),
-    TAB(9, InputHandler::tabEvent),
-    BACKSPACE(InputHandler::backspaceEvent),
-    NWLN(InputHandler::newLineEvent),
-    CHAR(InputHandler::charEvent),
-    CTRL_C(3, InputHandler::ctrlCEvent),
-    CTRL_Z(26, InputHandler::ctrlZEvent),
-    NONE(-1, null);
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT,
+	TAB(9),
+	BACKSPACE,
+	NWLN,
+	CHAR,
+	CTRL_C(3),
+	CTRL_Z(26),
+	NONE(-1);
     int value;
-    final Runnable r;
+	Event event;
+	CharEvent charEvent;
 
-    Keys(Runnable r) {
-        this.r = r;
+	Keys() {
     }
 
-    public void executeAction() {
-        if (r != null) r.run();
-    }
-
-    Keys(int value, Runnable r) {
-        this.r = r;
+	Keys(final int value) {
         this.value = value;
     }
+
+	public boolean executeAction() {
+		if (event != null) {
+			event.process();
+			return true;
+		}
+		return false;
+	}
+
+	public boolean executeAction(final char c) {
+		if (charEvent != null) {
+			charEvent.process(c);
+			return true;
+		}
+		return false;
+	}
 
     public int getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+	public void setValue(final int value) {
         this.value = value;
     }
+
+	public void setEvent(final Event event) {
+		this.event = event;
+	}
+
+	public void setCharEvent(CharEvent charEvent) {
+		this.charEvent = charEvent;
+	}
 
     public static void initWindows() {
         UP.value = 57416;
@@ -64,12 +85,13 @@ public enum Keys {
         NWLN.value = 10;
     }
 
-    public static Keys getKeyByValue(int c) {
-        Keys[] keys = Keys.values();
+	public static Keys getKeyByValue(final int c) {
+		final Keys[] keys = Keys.values();
         for (Keys key : keys) {
             if (c == (key.value))
                 return key;
         }
+		CHAR.setValue(c);
         return CHAR;
     }
 }
