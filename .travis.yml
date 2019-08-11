@@ -5,6 +5,6 @@
 
 language: java
 jdk:
-  - oraclejdk8
+  - openjdk8
 notifications:
   slack: sergix:qb9AYlJo8QqPybBY1FQ5V6my
