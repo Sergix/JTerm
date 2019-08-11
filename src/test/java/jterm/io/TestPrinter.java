@@ -46,14 +46,16 @@ public class TestPrinter implements Printer {
 
 	@Override
 	public void printPrompt() {
-		stringBuilder.append(JTerm.PROMPT);
+		stringBuilder.append(JTerm.currentDirectory).append(JTerm.PROMPT);
 	}
 
 	@Override
 	public void clearLine(final String line, final int cursorPosition, final boolean clearPrompt) {
-		final int lastIdx = stringBuilder.lastIndexOf("\n");
+		final int lastIdx = stringBuilder.lastIndexOf("\n" + (clearPrompt ? "" : JTerm.currentDirectory + JTerm.PROMPT));
 		if (lastIdx > 0)
 			stringBuilder = new StringBuilder(stringBuilder.substring(0, lastIdx));
+		else
+			stringBuilder = new StringBuilder((clearPrompt ? "" : JTerm.currentDirectory + JTerm.PROMPT));
 	}
 
 	@Override

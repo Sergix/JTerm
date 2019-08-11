@@ -39,8 +39,8 @@ public class HeadlessTerminalUnitTest {
 	public void changeDir_goFromHomeDir_setDir() {
 		if (JTerm.IS_UNIX) {
 			JTerm.currentDirectory = "/test/welp";
-			headlessTerminal.changeDir("cd ~/Documents");
-			assertTrue(JTerm.currentDirectory.contains("Documents"));
+			headlessTerminal.changeDir("cd ~/.m2");
+			assertTrue(JTerm.currentDirectory.contains(".m2"));
 		}
 	}
 

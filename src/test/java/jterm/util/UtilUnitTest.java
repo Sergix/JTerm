@@ -1,16 +1,13 @@
 package jterm.util;
 
 import jterm.JTerm;
-import jterm.gui.Terminal;
-import jterm.io.output.CollectorPrinter;
-import jterm.io.output.GuiPrinter;
-import jterm.io.output.HeadlessPrinter;
+import jterm.io.TestPrinter;
 import jterm.io.output.TextColor;
 import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import java.util.Arrays;
 
 import static junit.framework.Assert.assertEquals;
@@ -22,67 +19,41 @@ public class UtilUnitTest {
         assertEquals(Util.getRunTime(172799999), "1 days, 23 hours, 59 minutes, 59 seconds, 999 millis");
     }
 
+    @BeforeClass
+    public static void classSetup() {
+        JTerm.setOS();
+    }
+
+    @Before
+    public void setup() {
+        JTerm.out = new TestPrinter();
+        JTerm.currentDirectory = "/dir";
+    }
+
     @After
     public void cleanup() {
-        JTerm.setPrompt(">>");
         JTerm.out.clearAll();
     }
 
     @Test
     public void clearLineHeadless() {
         JTerm.setHeadless(true);
-        CollectorPrinter collector = new CollectorPrinter(new HeadlessPrinter());
-        JTerm.out = collector;
-        JTerm.setPrompt("/dir>> ");
 
         JTerm.out.printPrompt();
         JTerm.out.clearLine("", 0, true);
-        assertEquals("/dir>> ", collector.export());
+        assertEquals("", JTerm.out.toString());
 
         JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
         JTerm.out.clearLine("stuff", 5, true);
-        assertEquals("/dir>> stuff", collector.export());
+        assertEquals("", JTerm.out.toString());
 
         JTerm.out.printPrompt();
         JTerm.out.clearLine("", 0, false);
-        assertEquals("/dir>> ", collector.export());
+        assertEquals("/dir>> ", JTerm.out.toString());
 
         JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
         JTerm.out.clearLine("stuff", 5, false);
-        assertEquals("/dir>> stuff", collector.export());
-    }
-
-    @Test
-    public void clearLineGUI() throws BadLocationException {
-        JTerm.setHeadless(false);
-        Terminal terminal = new Terminal();
-        terminal.setTitle("JTerm");
-        terminal.setSize(720, 480);
-        terminal.setVisible(true);
-        JTerm.setTerminal(terminal);
-        JTerm.out = new GuiPrinter(terminal.getTextPane());
-        Document doc = terminal.getTextPane().getDocument();
-        JTerm.currentDirectory = "/dir";
-
-        JTerm.out.clearAll();
-        JTerm.out.printPrompt();
-        JTerm.out.clearLine("", 0, true);
-        assertEquals("", doc.getText(0, doc.getLength()));
-
-        JTerm.out.clearAll();
-        JTerm.out.printPrompt();
-        JTerm.out.clearLine("", 0, false);
-        assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
-
-        JTerm.out.clearAll();
-        JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
-        JTerm.out.clearLine("stuff", 0, true);
-        assertEquals("", doc.getText(0, doc.getLength()));
-
-        JTerm.out.clearAll();
-        JTerm.out.printWithPrompt(TextColor.INPUT, "stuff");
-        JTerm.out.clearLine("stuff", 0, false);
-        assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
+        assertEquals("/dir>> ", JTerm.out.toString());
     }
 
     @Test
