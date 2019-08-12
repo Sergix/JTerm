@@ -58,7 +58,6 @@ public class FileAutocomplete {
      * @param lockTab    Whether the tab key should be processed or not
      */
     public static void init(String[] command, boolean blockClear, boolean lockTab) {
-
         if (!available)
             return;
 
@@ -109,8 +108,6 @@ public class FileAutocomplete {
      * Otherwise autocompletes the file name.
      */
     public static void fileAutocomplete() {
-
-
         String[] commandArr = originalCommand.split(" ");
         FileAutocomplete.currText = originalCommand.endsWith(" ") ? "" : commandArr[commandArr.length - 1];
 

@@ -4,6 +4,7 @@ import jterm.JTerm;
 import jterm.io.handlers.KeyHandler;
 import jterm.io.input.Keys;
 import jterm.io.output.TextColor;
+import jterm.util.FileAutocomplete;
 
 /**
  * Processes key presses (except arrow keys) for JTerm headless terminal.
@@ -13,6 +14,8 @@ import jterm.io.output.TextColor;
 public class TermKeyProcessor extends KeyHandler {
 
 	private TermInputProcessor inputProcessor;
+
+	private boolean resetVars;
 
 	TermKeyProcessor(final TermInputProcessor inputProcessor) {
 		this.inputProcessor = inputProcessor;
@@ -25,7 +28,26 @@ public class TermKeyProcessor extends KeyHandler {
 	}
 
 	private void setUpTabEvents() {
-		tabEvent = () -> {};
+		tabEvent = () -> {
+			if (resetVars)
+				FileAutocomplete.resetVars();
+
+			if (FileAutocomplete.getFiles() == null) {
+				FileAutocomplete.init(TermInputProcessor.disassembleCommand(inputProcessor.getCommand(), inputProcessor.getCursorPos()),
+									  false, false);
+				resetVars = false;
+			} else
+				FileAutocomplete.fileAutocomplete();
+
+			inputProcessor.setCommand(FileAutocomplete.getCommand());
+
+			if (FileAutocomplete.isResetVars())
+				FileAutocomplete.resetVars();
+
+			// Get variables and set cursor position
+			inputProcessor.setCursorPos(FileAutocomplete.getCursorPos());
+			inputProcessor.moveToCursorPos();
+		};
 	}
 
 	private void setUpNWLNEvent() {
@@ -42,6 +64,7 @@ public class TermKeyProcessor extends KeyHandler {
 			inputProcessor.parse();
 
 			inputProcessor.setCommand("");
+			resetVars = true;
 		};
 
 		Keys.NWLN.setEvent(newLineEvent);
@@ -65,6 +88,7 @@ public class TermKeyProcessor extends KeyHandler {
 
 			inputProcessor.increaseCursorPos();
 			inputProcessor.moveToCursorPos();
+			resetVars = true;
 		};
 
 		Keys.CHAR.setCharEvent(charEvent);
@@ -86,6 +110,7 @@ public class TermKeyProcessor extends KeyHandler {
 
 				inputProcessor.decreaseCursorPos();
 				inputProcessor.moveToCursorPos();
+				resetVars = true;
 			}
 		};
 

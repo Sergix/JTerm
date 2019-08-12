@@ -126,11 +126,10 @@ public class TermInputProcessor extends InputHandler {
 	 * in element 1
 	 */
 	protected static String[] disassembleCommand(final String command, final Integer cursorPos) {
-
 		if (!command.contains("&&"))
 			return new String[]{"", command, ""};
 
-		LinkedList<Integer> ampPos = new LinkedList<>();
+		final LinkedList<Integer> ampPos = new LinkedList<>();
 		for (int i = 0; i < command.length() - 1; i++) {
 			if (command.substring(i, i + 2).equals("&&")) {
 				ampPos.add(i);
@@ -139,7 +138,7 @@ public class TermInputProcessor extends InputHandler {
 			}
 		}
 
-		String[] splitCommand = new String[3];
+		final String[] splitCommand = new String[3];
 
 		final String rightSideSplit = command.substring(cursorPos);
 		if (ampPos.size() > 1) {
@@ -148,7 +147,7 @@ public class TermInputProcessor extends InputHandler {
 				if (ampPos.get(i) > cursorPos) {
 					splitCommand[0] = command.substring(0, ampPos.get(i - 1) + 2) + " ";
 					splitCommand[1] = command.substring(ampPos.get(i - 1) + 2, cursorPos);
-					splitCommand[2] = " " + rightSideSplit;
+					splitCommand[2] = rightSideSplit;
 				} else if (i + 1 == ampPos.size()) {
 					splitCommand[0] = command.substring(0, ampPos.get(i) + 2) + " ";
 					splitCommand[1] = command.substring(ampPos.get(i) + 2, cursorPos);
@@ -176,6 +175,8 @@ public class TermInputProcessor extends InputHandler {
 		// Remove spaces so that autocomplete can work properly
 		splitCommand[1] = splitCommand[1].trim();
 
+		System.out.println();
+		System.out.println(splitCommand[0] + splitCommand[1] + splitCommand[2]);
 		return splitCommand;
 	}
 }
