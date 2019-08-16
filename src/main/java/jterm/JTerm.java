@@ -166,7 +166,7 @@ public class JTerm {
         });
     }
 
-    private static void setOS() {
+    public static void setOS() {
         final String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("windows")) {
             JTerm.IS_WIN = true;
