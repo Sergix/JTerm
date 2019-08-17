@@ -21,12 +21,12 @@ import jterm.command.Command;
 import jterm.command.CommandException;
 import jterm.command.CommandExecutor;
 import jterm.gui.Terminal;
-import jterm.io.input.InputHandler;
 import jterm.io.input.Keys;
 import jterm.io.output.GuiPrinter;
 import jterm.io.output.HeadlessPrinter;
 import jterm.io.output.Printer;
 import jterm.io.output.TextColor;
+import jterm.io.terminal.HeadlessTerminal;
 import jterm.util.Util;
 
 import java.io.BufferedReader;
@@ -39,10 +39,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class JTerm {
-
     private static final Map<String, CommandExecutor> COMMANDS = new HashMap<>();
     public static Printer out;
-    public static final String VERSION = "0.7.1";
+    public static final String VERSION = "0.7.0";
     public static String PROMPT = ">> ";
     public static String dirChar;
     public static final String LICENSE = "JTerm Copyright (C) 2017 Sergix, NCSGeek, chromechris\n"
@@ -52,7 +51,7 @@ public class JTerm {
 
     // Default value of getProperty("user.dir") is equal to the default directory set when the program starts
     // Global directory variable (use "cd" command to change)
-    public static String currentDirectory = System.getProperty("user.dir");
+    public static String currentDirectory = System.getProperty("user.dir") + "/";
     public static final String USER_HOME_DIR = System.getProperty("user.home");
 
     public static boolean IS_WIN;
@@ -65,7 +64,6 @@ public class JTerm {
     public static void main(String[] args) {
         setOS();
         initCommands();
-
         if (args.length > 0 && args[0].equals("headless")) {
             out = new HeadlessPrinter();
             headless = true;
@@ -78,75 +76,61 @@ public class JTerm {
             out = new GuiPrinter(terminal.getTextPane());
             Keys.initGUI();
         }
-
         JTerm.out.println(TextColor.INFO, JTerm.LICENSE);
-
-        JTerm.out.printf(TextColor.INFO, "TEST LINE (OS): %b\n\n", JTerm.IS_UNIX);
-
         JTerm.out.printPrompt();
-
-        if (headless) {
-            try {
-                while (true) {
-                    InputHandler.read();
-                }
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
+		if (headless)
+			new HeadlessTerminal().run();
     }
 
-    public static void executeCommand(String options) {
-        List<String> optionsArray = Util.getAsArray(options);
+    public static boolean executeCommand(final String options) {
+        final List<String> optionsArray = Util.getAsArray(options);
 
         if (optionsArray.size() == 0) {
-            return;
+            return false;
         }
 
-        String command = optionsArray.remove(0);
-        if (!COMMANDS.containsKey(command)) {
-            out.printf(TextColor.INFO, "\nTEST LINE (INPUT): %s\n\n", command);
-            out.printf(TextColor.ERROR,"Command \"%s\" is not available\n", command);
-            return;
-        }
+        final String command = optionsArray.remove(0);
+        if (!COMMANDS.containsKey(command))
+            return false;
 
         try {
-            if (JTerm.isHeadless()) {
-                out.println();
-            }
-
+            if (JTerm.isHeadless()) out.println();
             COMMANDS.get(command).execute(optionsArray);
+            return true;
         } catch (CommandException e) {
             System.err.println(e.getMessage());
+            return false;
         }
     }
 
     private static void initCommands() {
-        ArrayList<Method> methods = new ArrayList<>();
-        ArrayList<String> classes = new ArrayList<>();
+        final ArrayList<Method> methods = new ArrayList<>();
+        final ArrayList<String> classes = new ArrayList<>();
 
         try {
-            CodeSource src = JTerm.class.getProtectionDomain().getCodeSource();
+            final CodeSource src = JTerm.class.getProtectionDomain().getCodeSource();
             if (src != null) {
-                ZipInputStream zip = new ZipInputStream(src.getLocation().openStream());
+                final ZipInputStream zip = new ZipInputStream(src.getLocation().openStream());
 
                 while (true) {
-                    ZipEntry e = zip.getNextEntry();
+                    final ZipEntry e = zip.getNextEntry();
 
                     if (e == null) {
                         break;
                     }
 
-                    String name = e.getName();
-                    if (name.startsWith("jterm/command")
-                            && (name.compareTo("jterm/command/") != 0)) {
+                    final String name = e.getName();
+                    if (name.startsWith("jterm/command")) {
                         classes.add(name.replace('/', '.').substring(0, name.length() - 6));
                     }
                 }
             }
         } catch (IOException ioe) {
-            out.println(TextColor.ERROR, ioe.toString());
+            out.println(TextColor.ERROR,ioe.toString());
         }
+
+        // TODO: This line makes the program crash on Linux Kubuntu, don't know about windows
+        classes.remove(0);
 
         classes.forEach(aClass -> {
             try {
@@ -162,9 +146,9 @@ public class JTerm {
 
         methods.forEach(method -> {
             method.setAccessible(true);
-            Command command = method.getDeclaredAnnotation(Command.class);
+            final Command command = method.getDeclaredAnnotation(Command.class);
             Arrays.stream(command.name()).forEach(commandName -> {
-                CommandExecutor executor = new CommandExecutor()
+                final CommandExecutor executor = new CommandExecutor()
                         .setCommandName(commandName)
                         .setSyntax(command.syntax())
                         .setMinOptions(command.minOptions())
@@ -182,8 +166,8 @@ public class JTerm {
         });
     }
 
-    private static void setOS() {
-        String os = System.getProperty("os.name").toLowerCase();
+    public static void setOS() {
+        final String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("windows")) {
             JTerm.IS_WIN = true;
             dirChar = "\\";
@@ -208,7 +192,7 @@ public class JTerm {
     }
 
     /** For Unit Tests **/
-    public static void setheadless(boolean b){
+    public static void setHeadless(boolean b) {
         headless = b;
     }
 
@@ -218,9 +202,5 @@ public class JTerm {
 
     public static void setPrompt(String prompt) {
         PROMPT = prompt;
-    }
-
-    public static void setCurrentDirectory(String currentDirectory) {
-        JTerm.currentDirectory = currentDirectory;
     }
 }
