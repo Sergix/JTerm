@@ -9,7 +9,7 @@ public enum TextColor {
     private Color color;
 
     public static void initHeadless() {
-        //TODO: Switch these back when ANSI is fixed in terminal
+        // TODO: Switch these back when ANSI is fixed in terminal
         INPUT.ansi = (char) 27 + "[0m";
         PATH.ansi = (char) 27 + "[38;5;178m";
         PROMPT.ansi = (char) 27 + "[38;5;172m";

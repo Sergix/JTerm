@@ -39,13 +39,11 @@ public class CommandExecutor {
 
     public void execute(List<String> options) {
         if (options.contains("-h")) {
-            if (syntax == null || !syntax.isEmpty()) {
+            if (syntax == null || !syntax.isEmpty())
                 JTerm.out.println(TextColor.INFO, syntax);
-            }
         } else {
-            if (options.size() < minOptions) {
+            if (options.size() < minOptions)
                 throw new CommandException(String.format("To few arguments for '%s'", commandName));
-            }
 
             command.accept(options);
         }

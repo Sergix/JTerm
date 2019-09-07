@@ -66,10 +66,9 @@ public enum Keys {
 
     public static Keys getKeyByValue(int c) {
         Keys[] keys = Keys.values();
-        for (Keys key : keys) {
+        for (Keys key : keys)
             if (c == (key.value))
                 return key;
-        }
         return CHAR;
     }
 }

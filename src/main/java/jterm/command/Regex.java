@@ -17,12 +17,10 @@ public class Regex {
     @Command(name = {"regex", "grep"}, syntax = "regex [-m] \"regex\" command")
     public static void clearScreen(List<String> options) {
         Printer backup = JTerm.out;
-        StringBuilder commandBuilder = new StringBuilder();
         boolean multiline = options.get(0).equals("-m");
 
-        if (multiline) {
+        if (multiline)
             options.remove(0);
-        }
 
         String command = Util.getAsString(options);
         Matcher m = regex.matcher(command);
@@ -46,9 +44,8 @@ public class Regex {
                 while (matcher.find()) {
                     found = true;
 
-                    for (int i = 1; i <= matcher.groupCount(); i++) {
+                    for (int i = 1; i <= matcher.groupCount(); i++)
                         backup.println(TextColor.INFO, matcher.group(i));
-                    }
                 }
             } else {
                 for (String line : collector.exportArray()) {
@@ -61,9 +58,8 @@ public class Regex {
                 }
             }
 
-            if (!found) {
+            if (!found)
                 backup.println(TextColor.ERROR, "No matches");
-            }
         } else {
             backup.println(TextColor.ERROR, "Invalid syntax");
         }

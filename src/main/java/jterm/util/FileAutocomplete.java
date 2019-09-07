@@ -51,14 +51,16 @@ public class FileAutocomplete {
     }
 
     /**
-     * Sets all variables needed for attempting to autocomplete a file or directory name, and then runs the algorithm.
+     * Sets all variables needed for attempting to autocomplete a file
+     * or directory name, and then runs the algorithm.
      *
-     * @param command    Command with complete path to autocomplete (not necessarily the same as currText)
-     * @param blockClear True if method should not delete the file names currently stored, which enables tab rotation
+     * @param command    Command with complete path to autocomplete(not
+     *                   necessarily the same as currText)
+     * @param blockClear True if method should not delete the file names
+     *                   currently stored, which enables tab rotation
      * @param lockTab    Whether the tab key should be processed or not
      */
     public static void init(String[] command, boolean blockClear, boolean lockTab) {
-
         if (!available)
             return;
 
@@ -105,12 +107,10 @@ public class FileAutocomplete {
 
     /**
      * Using a string of text representing what has been typed presently,
-     * displays all files that match the current input, if more than one options are available.
-     * Otherwise autocompletes the file name.
+     * displays all files that match the current input, if more than
+     * one options are available. Otherwise autocompletes the file name.
      */
     public static void fileAutocomplete() {
-
-
         String[] commandArr = originalCommand.split(" ");
         FileAutocomplete.currText = originalCommand.endsWith(" ") ? "" : commandArr[commandArr.length - 1];
 
@@ -124,19 +124,16 @@ public class FileAutocomplete {
                 ? Paths.get(path) : Paths.get(JTerm.currentDirectory + path);
         files = p.toFile().listFiles();
 
-        if (files == null)
-            return;
+        if (files == null) return;
 
         if (!endsWithDirChar && !currText.startsWith("~") && !command.endsWith(" ")) {
             String[] split = currText.split(JTerm.IS_WIN ? "\\\\" : "/");
             currText = split[split.length - 1];
         }
 
-        /*
-         * If ends with slash directory and list not yet cleared from previous tab, clear,
-         * block clear so tab rotation works and set modText to empty string,
-         * so that all files in the directory are output
-         */
+        // If ends with slash directory and list not yet cleared from previous tab, clear,
+        // block clear so tab rotation works and set modText to empty string,
+        // so that all files in the directory are output
         else if ((endsWithDirChar || currText.startsWith("~")) && !blockClear) {
             fileNames.clear();
             blockClear = true;
@@ -160,14 +157,13 @@ public class FileAutocomplete {
      * Populates the fileNames list with all files and folders matching currText.
      */
     private static void populateFileNames() {
-
         // For tab rotation
         startComplete = (endsWithDirChar || currText.endsWith(" ")) ? 0 : currText.endsWith(" ") ? 0 : currText.length();
 
         assert files != null;
         for (File f : files) {
             String fileName = f.getName();
-            if ((fileName.startsWith(currText) || "".equals(currText)) && (!f.isHidden() || currText.startsWith(".")))
+            if (fileName.startsWith(currText) && (!f.isHidden() || currText.startsWith(".")))
                 fileNames.add(f.getName());
         }
 
@@ -176,6 +172,7 @@ public class FileAutocomplete {
 
     /**
      * Autocompletes a string currText using files and folders contained in path.
+     * <p>
      * Not for rotating through a list of possibilities, this method should only run
      * when there is only one option to autocomplete.
      */
@@ -203,7 +200,6 @@ public class FileAutocomplete {
 
     /**
      * First will display all files and directories matching 'currText' when tab key is pressed.
-     * <br></br>
      * <p>
      * After this has happened, provided no other keys have been pressed (excluding tab),
      * it will iterate through all the file and directory names that match 'currText', printing the
@@ -211,7 +207,6 @@ public class FileAutocomplete {
      * characters to the end of the command variable.
      */
     private static void fileNamesIterator() {
-
         // Clear line
         if (fileNames.size() > 0 || "".equals(currText))
             JTerm.out.clearLine(getCommand(), getCommand().length(), true);
@@ -226,9 +221,9 @@ public class FileAutocomplete {
             JTerm.out.clearLine(getCommand(), getCommand().length(), true);
 
             String currFile;
-            if (iterator.hasNext())
+            if (iterator.hasNext()) {
                 currFile = iterator.next();
-            else {
+            } else {
                 iterator = fileNames.iterator();
                 currFile = iterator.next();
             }
@@ -245,9 +240,7 @@ public class FileAutocomplete {
     }
 
     /**
-     * Returns the path to the specified directory given a string.
-     *
-     * @return Path found
+     * Returns the path to the specified directory given a string
      */
     private static String getPath() {
         boolean startsAtRoot = originalCommand.startsWith("/") || currText.startsWith("/")
@@ -265,7 +258,7 @@ public class FileAutocomplete {
         // Get path from string (discard all text after the last '/')
         for (int i = currText.length() - 1; i >= 0; i--) {
             if (currText.charAt(i) == JTerm.dirChar.charAt(0)) {
-                path.append(currText.substring(0, i));
+                path.append(currText, 0, i);
                 break;
             } else if (i == 0)
                 path = new StringBuilder(JTerm.currentDirectory);

@@ -40,12 +40,12 @@ class ProtectedDocument {
         positions = new HashMap<>();
     }
 
-    /*
-     *  Specify a portion of text to be protected
+    /**
+     * Specify a portion of text to be protected.
      *
-     *  Note: when protecting and entire line the start offset should be the line
-     *        start - 1. This prevents a character from being inserted at the
-     *        start of the line.
+     * Note: when protecting and entire line the start offset should be the line
+     *       start - 1. This prevents a character from being inserted at the
+     *       start of the line.
      */
     void protect(int start, int end) {
         try {
@@ -55,13 +55,13 @@ class ProtectedDocument {
         }
     }
 
-    /*
-     *  Class to prevent the removal or changing of text in protected areas
-     *  of the Document.
+    /**
+     * Class to prevent the removal or changing of text in protected areas
+     * of the Document.
      */
     class ProtectedDocumentFilter extends DocumentFilter {
-        /*
-         *	Prevent inserts by the program
+        /**
+         * Prevent inserts by the program
          */
         public void insertString(FilterBypass fb, int offset, String str, AttributeSet a)
                 throws BadLocationException {
@@ -72,8 +72,8 @@ class ProtectedDocument {
             }
         }
 
-        /*
-         *  Prevent removal and insertions by the GUI components
+        /**
+         * Prevent removal and insertions by the GUI components
          */
         public void replace(FilterBypass fb, int offset, int length, String str, AttributeSet a)
                 throws BadLocationException {
@@ -86,8 +86,8 @@ class ProtectedDocument {
             }
         }
 
-        /*
-         *  Prevent removal of text
+        /**
+         * Prevent removal of text
          */
         public void remove(DocumentFilter.FilterBypass fb, int offset, int length)
                 throws BadLocationException {
@@ -99,13 +99,15 @@ class ProtectedDocument {
                 super.remove(fb, offset, length);
         }
 
-        /*
-         *	Check if we are attempting to remove protected text. Don't
-         *  remove when:
+        /**
+         * Check if we are attempting to remove protected text.
          *
-         *  a) the starting offset is contained within a protected block
-         *  b) the ending offset is contained within a protected block
-         *  c) the start and end offsets span a contained block
+         * Don't remove when:
+         * <ul>
+         *     <li>the starting offset is contained within a protected block</li>
+         *     <li>the ending offset is contained within a protected block</li>
+         *     <li>the start and end offsets span a contained block</li>
+         * </ul>
          */
         private boolean isRemoveProtected(int start, int length) {
             int end = start + length - 1;
@@ -127,15 +129,17 @@ class ProtectedDocument {
             return false;
         }
 
-        /*
-         *  Check if we are attempting to insert text in the middle of a
-         *  protected block. This should never happen since the navigation
-         *  filter should prevent the caret from being positioned here.
-         *  However, the program could invoke an insertString(...) method.
+        /**
+         * Check if we are attempting to insert text in the middle of a
+         * protected block.
          *
-         *  Offset 0, is a special case because the Position object managed by
-         *  the Document will never update its start position, so the size of
-         *  protected area would continue to grow as text is inserted.
+         * This should never happen since the navigation filter should
+         * prevent the caret from being positioned here. However, the program
+         * could invoke an <code>insertString(...)</code> method.
+         *
+         * Offset 0 is a special case because the Position object managed by
+         * the Document will never update its start position, so the size of
+         * protected area would continue to grow as text is inserted.
          */
         private boolean isInsertProtected(int start) {
             for (Map.Entry<Position, Position> me : positions.entrySet()) {
@@ -152,12 +156,12 @@ class ProtectedDocument {
             return false;
         }
 
-    }    // end ProtectedDocumentFilter
+    }
 
-    /*
-     *  This class will control the navigation of the caret. The caret will
-     *  skip over protected pieces of text and position itself at the
-     *  next unprotected text.
+    /**
+     * This class will control the navigation of the caret. The caret will
+     * skip over protected pieces of text and position itself at the
+     * next unprotected text.
      */
     class ProtectedNavigationFilter extends NavigationFilter implements MouseListener {
         private final JTextComponent component;
@@ -170,8 +174,8 @@ class ProtectedDocument {
             this.component.addMouseListener(this);
         }
 
-        /*
-         *  Override for normal caret movement
+        /**
+         * Override for normal caret movement
          */
         public void setDot(NavigationFilter.FilterBypass fb, int dot, Position.Bias bias) {
             // Moving forwards in the Document
@@ -179,8 +183,7 @@ class ProtectedDocument {
             if (dot > lastDot) {
                 dot = getForwardDot(dot);
                 super.setDot(fb, dot, bias);
-            } else  // Moving backwards in the Document
-            {
+            } else {    // Moving backwards in the Document
                 dot = getBackwardDot(dot);
                 super.setDot(fb, dot, bias);
             }
@@ -188,8 +191,8 @@ class ProtectedDocument {
             lastDot = dot;
         }
 
-        /*
-         *  Override for text selection as the caret is moved
+        /**
+         * Override for text selection as the caret is moved
          */
         public void moveDot(NavigationFilter.FilterBypass fb, int dot, Position.Bias bias) {
             //  The mouse dot is used when dragging the mouse to prevent flickering
@@ -202,8 +205,7 @@ class ProtectedDocument {
                 lastDot = dot;
                 dot = getForwardDot(dot);
                 super.moveDot(fb, dot, bias);
-            } else  //  Moving backwards in the Document
-            {
+            } else {    //  Moving backwards in the Document
                 lastDot = dot;
                 dot = getBackwardDot(dot);
                 super.moveDot(fb, dot, bias);
@@ -212,9 +214,9 @@ class ProtectedDocument {
             lastDot = dot;
         }
 
-        /*
-         *  Attempting to move the caret forward in the Document. Skip forward
-         *  when we attempt to position the caret at a protected offset.
+        /**
+         * Attempting to move the caret forward in the Document. Skip forward
+         * when we attempt to position the caret at a protected offset.
          */
         private int getForwardDot(int dot) {
             for (Map.Entry<Position, Position> me : positions.entrySet()) {
@@ -228,9 +230,9 @@ class ProtectedDocument {
             return dot;
         }
 
-        /*
-         *  Attempting to move the caret forward in the Document. Skip forward
-         *  when we attempt to position the caret at a protected offset.
+        /**
+         * Attempting to move the caret forward in the Document. Skip forward
+         * when we attempt to position the caret at a protected offset.
          */
         private int getBackwardDot(int dot) {
             for (Map.Entry<Position, Position> me : positions.entrySet()) {
@@ -244,12 +246,11 @@ class ProtectedDocument {
             return dot;
         }
 
-        //  Implement the MouseListener
+        // Implement the MouseListener
 
         public void mousePressed(MouseEvent e) {
-            //  Track the caret position so it is easier to determine whether
-            //  we are moving forwards/backwards when dragging the mouse.
-
+            // Track the caret position so it is easier to determine whether
+            // we are moving forwards/backwards when dragging the mouse.
             isMousePressed = true;
             mouseDot = component.getCaretPosition();
         }

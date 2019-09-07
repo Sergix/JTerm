@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.Set;
 
 /**
- * Class that autocompletes filenames.
+ * Class that autocompletes command names.
  */
 public class CommandAutocomplete {
 
@@ -20,7 +20,6 @@ public class CommandAutocomplete {
     private static int cursorPos;
 
     private static boolean resetVars = false;
-
     private static boolean available = true;
 
     public static int getCursorPos() {
@@ -40,14 +39,12 @@ public class CommandAutocomplete {
     }
 
     public static void init(String[] commands, boolean blockClear, boolean lockTab) {
-        if (!available)
-            return;
+        if (!available) return;
 
         available = false;
         resetVars = false;
 
         CommandAutocomplete.possibleCommands = commands;
-
         commandAutocomplete();
 
         available = true;
@@ -57,17 +54,14 @@ public class CommandAutocomplete {
         Set<String> commandList = JTerm.getCommands();
         Set<String> possibilities;
 
-        if(CommandAutocomplete.possibleCommands == null) {
+        if(CommandAutocomplete.possibleCommands == null)
             return;
-        }
 
-        for (String compareCommand : commandList) {
-            for (String inputCommand : CommandAutocomplete.possibleCommands) {
+        for (String compareCommand : commandList)
+            for (String inputCommand : CommandAutocomplete.possibleCommands)
                 if (compareCommand.startsWith(inputCommand)) {
 
                 }
-            }
-        }
     }
 
     private static void autocomplete() {

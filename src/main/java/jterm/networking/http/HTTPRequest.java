@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class HTTPRequest {
 
@@ -18,11 +19,8 @@ public class HTTPRequest {
         private ReturnType returnType;
 
         private String postData;
-
         private String userAgent;
-
         private String contentType;
-
         private String accept;
 
         private boolean doOutput;
@@ -62,7 +60,7 @@ public class HTTPRequest {
         /**
          * Builds depending of the specified return type a response.
          *
-         * @return Returns the data type that is specified by the variable returnType
+         * @return Data type specified by the variable returnType
          */
         public <T> T build() {
             T result = null;
@@ -76,24 +74,23 @@ public class HTTPRequest {
                         conn.setRequestMethod("GET");
                         break;
                     case POST:
-                        byte[] postdataBytes = postData.getBytes("UTF-8");
+                        byte[] postDataBytes = postData.getBytes(StandardCharsets.UTF_8);
                         conn.setRequestMethod("POST");
                         conn.setRequestProperty("Content-Type", contentType);
                         conn.setRequestProperty("Accept", accept);
-                        conn.setRequestProperty("Content-Length", String.valueOf(postdataBytes.length));
+                        conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
                         conn.setDoOutput(doOutput);
-                        conn.getOutputStream().write(postdataBytes);
+                        conn.getOutputStream().write(postDataBytes);
                         break;
                 }
 
                 switch (returnType) {
                     case STRING:
-                        Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                        Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
 
                         StringBuilder builder = new StringBuilder();
-                        for (int i; (i = in.read()) >= 0;) {
+                        for (int i; (i = in.read()) >= 0;)
                             builder.append((char) i);
-                        }
 
                         result = (T) builder.toString();
 

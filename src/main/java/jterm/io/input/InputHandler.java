@@ -34,7 +34,6 @@ public class InputHandler {
         commandListPosition = commandListPos;
     }
 
-
     public static void read() throws IOException {
         int c1 = RawConsoleInput.read(true);
         int c2 = RawConsoleInput.read(false);
@@ -73,10 +72,9 @@ public class InputHandler {
     }
 
     static void processLeft() {
-        if (getCursorPos() > 0) {
+        if (getCursorPos() > 0)
             if (JTerm.isHeadless()) JTerm.out.print(TextColor.INPUT, "\b");
             decreaseCursorPos();
-        }
     }
 
     static void processRight() {
@@ -146,7 +144,8 @@ public class InputHandler {
         int cursorPos = getCursorPos();
 
         if (getCursorPos() == command.length()) {
-            if (JTerm.isHeadless()) JTerm.out.print(TextColor.INPUT, lastChar);
+            if (JTerm.isHeadless())
+                JTerm.out.print(TextColor.INPUT, lastChar);
             command += lastChar;
         } else {
             JTerm.out.clearLine(command, cursorPos, false);
@@ -162,7 +161,6 @@ public class InputHandler {
     static void backspaceEvent() {
         lastArrowPress = Keys.NONE;
         if (command.length() > 0 && getCursorPos() > 0) {
-
             int charToDelete = getCursorPos() - 1;
             if (JTerm.isHeadless())
                 JTerm.out.clearLine(command, cursorPos, false);
@@ -179,7 +177,8 @@ public class InputHandler {
     }
 
     /**
-     * Sends command to terminal class for parsing, source is the newlineEvent in the key processor
+     * Sends command to terminal class for parsing, source is
+     * the newlineEvent in the key processor
      */
     private static void parse() {
         JTerm.out.printf(TextColor.INFO, "TEST LINE (P_INPUT): %s", command);
@@ -187,29 +186,29 @@ public class InputHandler {
     }
 
     /**
-     * Moves the cursor from the end of the command to where it should be (if the user is using arrow keys)
-     * Usually only used after modifying 'command'
+     * Moves the cursor from the end of the command to where it
+     * should be (if the user is using arrow keys). Usually only
+     * used after modifying 'command'
      */
     private static void moveToCursorPos() {
-        if (JTerm.isHeadless()) {
+        if (JTerm.isHeadless())
             for (int i = command.length(); i > cursorPos; i--)
-                JTerm.out.print(TextColor.INPUT, "\b");
-        }
+                 JTerm.out.print(TextColor.INPUT, "\b");
     }
 
     /**
      * Autocompletes desired file name similar to how terminals do it.
      */
     private static void fileAutocomplete() {
-
         if (resetVars)
             FileAutocomplete.resetVars();
 
         if (FileAutocomplete.getFiles() == null) {
             FileAutocomplete.init(disassembleCommand(command), false, false);
             resetVars = false;
-        } else
+        } else {
             FileAutocomplete.fileAutocomplete();
+        }
 
         command = FileAutocomplete.getCommand();
 
@@ -225,15 +224,15 @@ public class InputHandler {
      * Autocompletes desired file name similar to how terminals do it.
      */
     private static void commandAutocomplete() {
-
         if (resetVars)
             CommandAutocomplete.resetVars();
 
         if (CommandAutocomplete.getPossibleCommands() == null) {
-             CommandAutocomplete.init(disassembleCommand(command), false, false);
-             resetVars = false;
-        } else
+            CommandAutocomplete.init(disassembleCommand(command), false, false);
+            resetVars = false;
+        } else {
             CommandAutocomplete.commandAutocomplete();
+        }
 
         command = CommandAutocomplete.getCommand();
 
@@ -255,22 +254,20 @@ public class InputHandler {
      * the autocomplete class will operate on.
      *
      * @param command Command to split
-     * @return Returns disassembled string, with non relevant info in elements 0 and 2, and the string to autocomplete
-     * in element 1
+     * @return Returns disassembled string, with non relevant info in elements 0 and 2,
+     * and the string to autocomplete in element 1
      */
     private static String[] disassembleCommandOld(String command) {
-
         if (!command.contains("&&"))
             return new String[]{"", command, ""};
 
         LinkedList<Integer> ampPos = new LinkedList<>();
-        for (int i = 0; i < command.length() - 1; i++) {
+        for (int i = 0; i < command.length() - 1; i++)
             if (command.substring(i, i + 2).equals("&&")) {
                 ampPos.add(i);
-                if (cursorPos - i < 2 && cursorPos - i > 0)
+                if (cursorPos - i == 1)
                     return new String[]{"", command, ""};
             }
-        }
 
         String[] splitCommand = new String[3];
 
@@ -280,11 +277,11 @@ public class InputHandler {
                 if (ampPos.get(i) > cursorPos) {
                     splitCommand[0] = command.substring(0, ampPos.get(i - 1) + 2) + " ";
                     splitCommand[1] = command.substring(ampPos.get(i - 1) + 2, cursorPos);
-                    splitCommand[2] = " " + command.substring(cursorPos, command.length());
+                    splitCommand[2] = " " + command.substring(cursorPos);
                 } else if (i + 1 == ampPos.size()) {
                     splitCommand[0] = command.substring(0, ampPos.get(i) + 2) + " ";
                     splitCommand[1] = command.substring(ampPos.get(i) + 2, cursorPos);
-                    splitCommand[2] = " " + command.substring(cursorPos, command.length());
+                    splitCommand[2] = " " + command.substring(cursorPos);
                 }
             }
         } else {
@@ -292,11 +289,11 @@ public class InputHandler {
             if (cursorPos > ampPos.get(0)) {
                 splitCommand[0] = command.substring(0, ampPos.get(0) + 2) + " ";
                 splitCommand[1] = command.substring(ampPos.get(0) + 2, cursorPos);
-                splitCommand[2] = command.substring(cursorPos, command.length());
+                splitCommand[2] = command.substring(cursorPos);
             } else if (cursorPos < ampPos.get(0)) {
                 splitCommand[0] = "";
                 splitCommand[1] = command.substring(0, cursorPos);
-                splitCommand[2] = command.substring(cursorPos, command.length());
+                splitCommand[2] = command.substring(cursorPos);
             } else {
                 String[] split = command.split("&&");
                 splitCommand[0] = split[0];

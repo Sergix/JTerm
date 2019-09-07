@@ -13,12 +13,13 @@ import javax.swing.text.Document;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class GuiUtilTest {
+class GuiUtilTest {
+
     private static Document doc;
 
     @BeforeAll
     static void init() {
-        JTerm.setheadless(false);
+        JTerm.setHeadless(false);
     }
 
     @BeforeEach
@@ -36,26 +37,26 @@ public class GuiUtilTest {
     }
 
     @Test
-    void clearLineGUI1() throws BadLocationException {
+    void clearLineGui1() throws BadLocationException {
         JTerm.out.clearLine("", 0, true);
         assertEquals("", doc.getText(0, doc.getLength()));
     }
 
     @Test
-    void clearLineGUI2() throws BadLocationException {
+    void clearLineGui2() throws BadLocationException {
         JTerm.out.clearLine("", 0, false);
         assertEquals("/dir>> ", doc.getText(0, doc.getLength()));
     }
 
     @Test
-    void clearLineGUI3() throws BadLocationException {
+    void clearLineGui3() throws BadLocationException {
         JTerm.out.print(TextColor.INPUT, "stuff");
         JTerm.out.clearLine("stuff", 0, true);
         assertEquals("", doc.getText(0, doc.getLength()));
     }
 
     @Test
-    void clearLineGUI4() throws BadLocationException {
+    void clearLineGui4() throws BadLocationException {
         JTerm.out.print(TextColor.INPUT, "stuff");
         JTerm.out.clearLine("stuff", 0, false);
         assertEquals("/dir>> ", doc.getText(0, doc.getLength()));

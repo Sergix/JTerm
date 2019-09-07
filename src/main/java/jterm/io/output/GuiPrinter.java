@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
 public class GuiPrinter implements Printer {
+
     private final JTextPane textPane;
     private ProtectedTextComponent protectedDoc;
     private SimpleAttributeSet style;
@@ -44,11 +45,11 @@ public class GuiPrinter implements Printer {
 
     @Override
     public void println(TextColor color, char x) {
-        print(String.valueOf(x) + "\n", color);
+        print(x + "\n", color);
     }
 
     public void println(TextColor color, Object x) {
-        print(String.valueOf(x) + "\n", color);
+        print(x + "\n", color);
     }
 
     public GuiPrinter printf(TextColor color, String format, Object... args) {
@@ -60,7 +61,6 @@ public class GuiPrinter implements Printer {
         print(String.format(l, format, args), color);
         return this;
     }
-
 
     @Override
     public void printWithPrompt(TextColor color, String s) {
