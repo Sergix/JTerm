@@ -15,25 +15,21 @@ public class CommandExecutor {
 
     public CommandExecutor setCommand(Consumer<List<String>> command) {
         this.command = command;
-
         return this;
     }
 
     public CommandExecutor setCommandName(String commandName) {
         this.commandName = commandName;
-
         return this;
     }
 
     public CommandExecutor setMinOptions(int minOptions) {
         this.minOptions = minOptions;
-
         return this;
     }
 
     public CommandExecutor setSyntax(String syntax) {
         this.syntax = syntax;
-
         return this;
     }
 

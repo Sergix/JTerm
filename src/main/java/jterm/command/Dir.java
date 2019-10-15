@@ -49,8 +49,7 @@ public class Dir {
     @Command(name = "ls", syntax = "ls [-f] [-h] [directory]")
     public static void ls(List<String> options) {
         File[] files = new File(JTerm.currentDirectory).listFiles();
-        if (files == null)
-            return;
+        if (files == null) return;
 
         JTerm.out.println(TextColor.INFO, "[Contents of \"" + JTerm.currentDirectory + "\"]");
 
@@ -129,10 +128,8 @@ public class Dir {
         // Reconstruct the path string
         while (!directoriesDeque.isEmpty()) {
             sb.append(directoriesDeque.pop());
-            if (JTerm.IS_WIN)
-                sb.append("\\");
-            else
-                sb.append("/");
+            if (JTerm.IS_WIN) sb.append("\\");
+            else sb.append("/");
         }
 
         newDirectory = sb.toString();

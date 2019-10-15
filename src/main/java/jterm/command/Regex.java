@@ -43,7 +43,6 @@ public class Regex {
 
                 while (matcher.find()) {
                     found = true;
-
                     for (int i = 1; i <= matcher.groupCount(); i++)
                         backup.println(TextColor.INFO, matcher.group(i));
                 }
