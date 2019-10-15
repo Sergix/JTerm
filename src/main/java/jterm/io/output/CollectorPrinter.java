@@ -3,6 +3,7 @@ package jterm.io.output;
 import jterm.JTerm;
 
 public class CollectorPrinter implements Printer {
+
     private StringBuilder lines = new StringBuilder();
     private Printer printer;
 

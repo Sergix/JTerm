@@ -1,23 +1,21 @@
 package jterm.gui;
 
-import jterm.JTerm;
 import jterm.io.input.InputHandler;
 import jterm.io.input.Keys;
 import jterm.io.output.TextColor;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-
 public class Terminal extends JFrame implements KeyListener {
 
     private JPanel contentPane;
     private JTextPane textPane;
-
 
     public Terminal() {
         TextColor.initGui();
@@ -44,26 +42,28 @@ public class Terminal extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        //Consume under certain conditions
+        // Consume under certain conditions
         switch (e.getKeyCode()) {
-            //These keys need to be handled by InputHandler only
+            // These keys need to be handled by InputHandler only
             case KeyEvent.VK_TAB:
             case KeyEvent.VK_UP:
             case KeyEvent.VK_DOWN:
                 e.consume();
                 break;
-            //Consume without processing shift and capslock keys
-            //These keys are modifiers. We can ignore them
+            // Consume without processing shift and capslock keys
+            // These keys are modifiers. We can ignore them
             case KeyEvent.VK_SHIFT:
             case KeyEvent.VK_CAPS_LOCK:
                 e.consume();
                 return;
         }
-        if ((int) e.getKeyChar() == 65535) {
-            //An arrow key was pressed. Switch the key code into the negatives so it wont interfere with any real chars
-            new Thread(() -> InputHandler.process(Keys.getKeyByValue(e.getKeyCode() * -1), e.getKeyChar())).start();
-        } else
-            new Thread(() -> InputHandler.process(Keys.getKeyByValue((int) e.getKeyChar()), e.getKeyChar())).start();
+        if ((int) e.getKeyChar() == 65535)
+            // An arrow key was pressed. Switch the key code into the negatives so it wont interfere with any real chars
+            new Thread(() -> InputHandler.process(Keys.getKeyByValue(
+                    e.getKeyCode() * -1), e.getKeyChar())).start();
+        else
+            new Thread(() -> InputHandler.process(Keys.getKeyByValue(
+                    e.getKeyChar()), e.getKeyChar())).start();
     }
 
     private void onCancel() {

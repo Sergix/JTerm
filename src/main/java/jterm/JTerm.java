@@ -1,18 +1,18 @@
 /*
-* JTerm - a cross-platform terminal
-* Copyright (code) 2017 Sergix, NCSGeek
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * JTerm - a cross-platform terminal
+ * Copyright (code) 2017 Sergix, NCSGeek
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 // package = folder :P
 package jterm;
@@ -85,35 +85,31 @@ public class JTerm {
 
         JTerm.out.printPrompt();
 
-        if (headless) {
+        if (headless)
             try {
-                while (true) {
+                while (true)
                     InputHandler.read();
-                }
-            } catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
     }
 
     public static void executeCommand(String options) {
         List<String> optionsArray = Util.getAsArray(options);
 
-        if (optionsArray.size() == 0) {
+        if (optionsArray.size() == 0)
             return;
-        }
 
         String command = optionsArray.remove(0);
         if (!COMMANDS.containsKey(command)) {
             out.printf(TextColor.INFO, "\nTEST LINE (INPUT): %s\n\n", command);
-            out.printf(TextColor.ERROR,"Command \"%s\" is not available\n", command);
+            out.printf(TextColor.ERROR, "Command \"%s\" is not available\n", command);
             return;
         }
 
         try {
-            if (JTerm.isHeadless()) {
+            if (JTerm.isHeadless())
                 out.println();
-            }
 
             COMMANDS.get(command).execute(optionsArray);
         } catch (CommandException e) {
@@ -133,15 +129,11 @@ public class JTerm {
                 while (true) {
                     ZipEntry e = zip.getNextEntry();
 
-                    if (e == null) {
-                        break;
-                    }
+                    if (e == null) break;
 
                     String name = e.getName();
-                    if (name.startsWith("jterm/command")
-                            && (name.compareTo("jterm/command/") != 0)) {
+                    if (name.startsWith("jterm/command") && (name.compareTo("jterm/command/") != 0))
                         classes.add(name.replace('/', '.').substring(0, name.length() - 6));
-                    }
                 }
             }
         } catch (IOException ioe) {
@@ -151,12 +143,11 @@ public class JTerm {
         classes.forEach(aClass -> {
             try {
                 Arrays.stream(Class.forName(aClass).getDeclaredMethods()).forEach(method -> {
-                    if (method.isAnnotationPresent(Command.class)) {
+                    if (method.isAnnotationPresent(Command.class))
                         methods.add(method);
-                    }
                 });
-            } catch (ClassNotFoundException cnfe) {
-                out.println(TextColor.ERROR,cnfe.toString());
+            } catch (ClassNotFoundException e) {
+                out.println(TextColor.ERROR, e.toString());
             }
         });
 
@@ -207,8 +198,10 @@ public class JTerm {
         return JTerm.COMMANDS.keySet();
     }
 
-    /** For Unit Tests **/
-    public static void setheadless(boolean b){
+    /**
+     * Used for unit tests
+     */
+    public static void setHeadless(boolean b) {
         headless = b;
     }
 

@@ -9,8 +9,6 @@ import java.util.List;
 public class Util {
 
     /**
-     * getRuntime() String
-     * <br></br><br></br>
      * Takes an interval of time in milliseconds, and returns amount of time it represents.
      * Useful for determining runtime of a program in a more readable format.
      *
@@ -21,18 +19,15 @@ public class Util {
         long seconds = interval / 1000;
         StringBuilder builder = new StringBuilder();
 
-        if ((seconds / 86400) >= 1) {
-            builder.append(String.valueOf(seconds / 86400)).append(" days, ");
-        }
-        if ((seconds / 3600) >= 1) {
-            builder.append(String.valueOf((seconds / 3600) % 24)).append(" hours, ");
-        }
-        if ((seconds / 60) >= 1) {
-            builder.append(String.valueOf((seconds / 60) % 60)).append(" minutes, ");
-        }
+        if ((seconds / 86400) >= 1)
+            builder.append(seconds / 86400).append(" days, ");
+        if ((seconds / 3600) >= 1)
+            builder.append((seconds / 3600) % 24).append(" hours, ");
+        if ((seconds / 60) >= 1)
+            builder.append((seconds / 60) % 60).append(" minutes, ");
 
-        builder.append(String.valueOf(seconds % 60)).append(" seconds, ");
-        builder.append(String.valueOf(interval % 1000)).append(" millis");
+        builder.append(seconds % 60).append(" seconds, ");
+        builder.append(interval % 1000).append(" millis");
 
         return builder.toString();
     }

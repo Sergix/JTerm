@@ -1,18 +1,18 @@
 /*
-* JTerm - a cross-platform terminal
-* Copyright (C) 2017 Sergix, NCSGeek
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * JTerm - a cross-platform terminal
+ * Copyright (C) 2017 Sergix, NCSGeek
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package jterm.command;
 
@@ -31,6 +31,7 @@ import java.util.List;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class Files {
+
 	// @ojles and @Kaperskyguru
 	@Command(name = { "mv", "move" }, minOptions = 2, syntax = "move, mv [-h] source destination")
 	public static void move(List<String> options) {
@@ -49,22 +50,21 @@ public class Files {
 
 	@Command(name = { "cp", "copy" }, minOptions = 2, syntax = "copy, cp [-h] source destination")
 	public static void copy(List<String> options) {
-		
 		String sourceName = Util.getFullPath(options.get(0));
 		String destinationName = Util.getFullPath(options.get(1));
-		
-		//Using a 1MB buffer
+
+		// using a 1MB buffer
 		byte[] buffer = new byte[1024 * 1024];
 		long bytesSent = 0, fileSize;
 		int bytesRead;
-		int percentage = 0, currentPercentage = 0;
+		int percentage = 0, currentPercentage;
 
 		StringBuilder builder = new StringBuilder("Copying ").append(sourceName).append(" to ").append(destinationName);
 		JTerm.out.println(TextColor.INFO, builder.toString());
 
 		try (BufferedInputStream sourceStream = new BufferedInputStream(new FileInputStream(sourceName));
 				BufferedOutputStream destinationStream = new BufferedOutputStream(
-						new FileOutputStream(new File(destinationName)));) {
+						new FileOutputStream(new File(destinationName)))) {
 			fileSize = sourceStream.available();
 			while ((bytesRead = sourceStream.read(buffer)) != -1) {
 				destinationStream.write(buffer, 0, bytesRead);
@@ -101,15 +101,10 @@ public class Files {
 		String[] args = new String[numArgs];
 
 		for (String option : options) {
-			switch (option) {
-			case "-f":
+			if ("-f".equals(option))
 				overwrite = true;
-				break;
-			default:
-				if (i < numArgs) {
-					args[i++] = option;
-				}
-			}
+			else if (i < numArgs)
+				args[i++] = option;
 		}
 
 		if (i == numArgs) {
@@ -120,11 +115,10 @@ public class Files {
 				Path source = Paths.get(Util.getFullPath(path));
 				Path target = source.resolveSibling(newName);
 
-				if (overwrite) {
+				if (overwrite)
 					java.nio.file.Files.move(source, target, REPLACE_EXISTING);
-				} else {
+				else
 					java.nio.file.Files.move(source, target);
-				}
 			} catch (FileAlreadyExistsException e) {
 				JTerm.out.println(TextColor.ERROR, "File with this name already exists. Use -f to replace existing.");
 			} catch (NoSuchFileException e) {
@@ -139,7 +133,7 @@ public class Files {
 	public static void write(List<String> options) {
 		StringBuilder filenameBuilder = new StringBuilder();
 
-		for (String option : options) {
+		for (String option : options)
 			if (option.equals("-h")) {
 				JTerm.out.println(TextColor.INFO,
 						"Command syntax:\n\twrite [-h] filename\n\nOpens an input PROMPT in which to write text to a new file.");
@@ -147,7 +141,6 @@ public class Files {
 			} else {
 				filenameBuilder.append(option);
 			}
-		}
 
 		String fileName = String.format("%s%s", JTerm.currentDirectory, filenameBuilder.toString().trim());
 		if (fileName.equals("")) {
@@ -162,11 +155,10 @@ public class Files {
 
 			for (;;) {
 				line = JTerm.userInput.readLine();
-				if (line.equals("")) {
+				if (line.equals(""))
 					break;
-				} else if (line.equals(" ")) {
+				else if (line.equals(" "))
 					output.append("\n");
-				}
 				output.append("\n").append(line);
 			}
 
@@ -174,7 +166,6 @@ public class Files {
 		} catch (IOException ioe) {
 			JTerm.out.println(TextColor.ERROR, ioe.toString());
 		}
-
 	}
 
 	@Command(name = { "rm", "del", "delete" }, minOptions = 1, syntax = "rm, del, delete [-h] file")
@@ -217,8 +208,7 @@ public class Files {
 
 		String update = "";
 
-		// split url provided to find file name (will be last element if split by "/"
-		// char)
+		// split url provided to find file name (will be last element if split by "/" char)
 		String[] split = url.split("/");
 		String fileName = split[split.length - 1];
 		// if no file extension, assume HTML
@@ -242,9 +232,8 @@ public class Files {
 			JTerm.out.println(TextColor.ERROR, "Error when getting file information. Download cancelled.");
 			return;
 		} finally {
-			if (conn != null) {
+			if (conn != null)
 				conn.disconnect();
-			}
 		}
 
 		try (BufferedOutputStream out = new BufferedOutputStream(
@@ -252,7 +241,7 @@ public class Files {
 				BufferedInputStream in = new BufferedInputStream(new URL(url).openStream())) {
 
 			int buffer = 1024;
-			byte data[] = new byte[buffer];
+			byte[] data = new byte[buffer];
 			int count, steps = 0;
 			// download file, and output information about progress
 			JTerm.out.print(TextColor.INFO, update = (String.format("Download is: %s%% complete",
@@ -282,19 +271,17 @@ public class Files {
 	@Command(name = "find", minOptions = 1, syntax = "find [-h] [-r] searchName [searchDirectory]")
 	public static void find(List<String> options) {
 		final boolean recursiveFlag = options.get(0).equals("-r");
-		if (recursiveFlag) {
+		if (recursiveFlag)
 			options.remove(0);
-		}
 		final String searchName = options.remove(0);
 		String path;
-		if (!options.isEmpty()) {
+		if (!options.isEmpty())
 			path = options.get(0);
-		} else {
+		else
 			path = JTerm.currentDirectory;
-		}
 		JTerm.out.println(TextColor.INFO, "Searching " + path + " for " + searchName);
 
-		final ArrayList<Path> entries = new ArrayList<Path>();
+		final ArrayList<Path> entries = new ArrayList<>();
 		final Path searchPath = Paths.get(path);
 		FileVisitor<Path> fileVisitor = new FileVisitor<Path>() {
 
@@ -304,16 +291,14 @@ public class Files {
 			}
 
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-				if (file.toFile().getName().contains(searchName)) {
+				if (file.toFile().getName().contains(searchName))
 					entries.add(file);
-				}
 				return FileVisitResult.CONTINUE;
 			}
 
 			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-				if (dir.toFile().getName().contains(searchName)) {
+				if (dir.toFile().getName().contains(searchName))
 					entries.add(0, dir);
-				}
 				return (recursiveFlag || dir.equals(searchPath)) ? FileVisitResult.CONTINUE
 						: FileVisitResult.SKIP_SUBTREE;
 			}
@@ -336,11 +321,10 @@ public class Files {
 
 		JTerm.out.println(TextColor.INFO, "Found entries: ");
 		for (Path entry : entries) {
-			if (entry.toFile().isDirectory()) {
+			if (entry.toFile().isDirectory())
 				JTerm.out.print(TextColor.INFO, "Directory\t\t\t");
-			} else {
+			else
 				JTerm.out.print(TextColor.INFO, "File\t" + entry.toFile().length() / 1024 + " KB\t\t");
-			}
 			JTerm.out.println(TextColor.INFO, entry.toString());
 		}
 

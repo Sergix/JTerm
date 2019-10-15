@@ -1,20 +1,20 @@
 /*
-* JTerm - a cross-platform terminal
-* Copyright (C) 2017 Sergix, NCSGeek
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * JTerm - a cross-platform terminal
+ * Copyright (C) 2017 Sergix, NCSGeek
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package jterm.networking;
 
@@ -33,9 +33,8 @@ public class Client implements Runnable {
         while (true) {
             try {
                 String output = Client.input.readLine();
-                if (output != null) {
+                if (output != null)
                     JTerm.out.println(TextColor.INFO, output);
-                }
             } catch (IOException e) {
                 return;
             }
@@ -63,8 +62,9 @@ public class Client implements Runnable {
             }
         }
 
-        int port = Integer.valueOf(portInput);
-        try (Socket connection = new Socket(address, port); InputStream input = connection.getInputStream(); OutputStream output = connection.getOutputStream();
+        int port = Integer.parseInt(portInput);
+        try (Socket connection = new Socket(address, port); InputStream input = connection.getInputStream();
+             OutputStream output = connection.getOutputStream();
              BufferedReader bufferedSocketOutput = new BufferedReader(new InputStreamReader(System.in), 1)) {
 
             JTerm.out.printf(TextColor.INFO, "Connecting to %s:%d%n", address, port);
@@ -78,9 +78,8 @@ public class Client implements Runnable {
             JTerm.out.println(TextColor.INFO, "Connected to server. Enter a blank line to quit. Reading for input...");
 
             String line;
-            while ((line = bufferedSocketOutput.readLine()) != null && !line.equals("")) {
+            while ((line = bufferedSocketOutput.readLine()) != null && !line.equals(""))
                 output.write(line.getBytes());
-            }
         } catch (IOException e) {
             JTerm.out.println(TextColor.ERROR, "Connection severed.");
         }

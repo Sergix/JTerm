@@ -1,27 +1,27 @@
 /*
-* JTerm - a cross-platform terminal
-* Copyright (C) 2017 Sergix, NCSGeek
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
+ * JTerm - a cross-platform terminal
+ * Copyright (C) 2017 Sergix, NCSGeek
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
 
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
 
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package jterm.command;
 
 import jterm.JTerm;
 import jterm.io.output.TextColor;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,31 +35,28 @@ public class Window {
     private String title = null;
     private boolean visible = false;
 
-    /*
-    * Window() void
-    *
-    * Create a new JFrame window.
-    *
-    * ArrayList<String> options - command options
-    *
-    * -h
-    *     Prints help information
-    *
-    * -t title
-    * 	  Sets the window title in
-    * 	  the header
-    *
-    * -w width
-    * 	  Sets the width of the window
-    *
-    * -l height
-    * 	  Sets the height of the window
-    *
-    * -r
-    * 	  Sets the window to be able to
-    *	  be resized
-    *
-    */
+    /**
+     * Create a new JFrame window.
+     *
+     * @param options - command options:
+     * <br>
+     * -h
+     *     Prints help information
+     * <br>
+     * -t title
+     * 	  Sets the window title in
+     * 	  the header
+     * <br>
+     * -w width
+     * 	  Sets the width of the window
+     * <br>
+     * -l height
+     * 	  Sets the height of the window
+     * <br>
+     * -r
+     * 	  Sets the window to be able to
+     *	  be resized
+     */
     public Window(List<String> options) {
         int width = 500;
         int height = 500;
@@ -71,7 +68,7 @@ public class Window {
 
         StringBuilder titleBuilder = new StringBuilder();
         for (String option : options) {
-            switch (option){
+            switch (option) {
                 case "-h":
                     JTerm.out.println(TextColor.INFO, "Command syntax:\t\nwindow [-h] [-r] [-v] [-w width] [-l height] [-t title]"
                             + "\n\nCreates a new programmable GUI window."
@@ -107,9 +104,8 @@ public class Window {
         title = titleBuilder.toString();
         id = ++windowCount;
 
-        if (title == null) {
+        if (title == null)
             title = "JTerm Window";
-        }
 
         JFrame window = new JFrame(title);
         window.setSize(width, height);
@@ -120,48 +116,38 @@ public class Window {
         windows.add(this);
     }
 
-    // TODO: Refactor these methods to use proper JavaDoc
-    /*
-    * toggleVisible() void
-    *
-    * Toggles the visibility of the window
-    */
+    /**
+     * Toggles the visibility of the window
+     */
     public void toggleVisible() {
         window.setVisible(visible = !visible);
     }
 
-    /*
-    * getId() int
-    *
-    * Returns the process ID of the window
-    */
+    /**
+     * Returns the process ID of the window
+     */
     public int getId() {
         return id;
     }
 
-    /*
-    * getId() JFrame
-    *
-    * Returns the JFrame object displaying
-    * the window
-    */
+    /**
+     * Returns JFrame object displaying the window
+     */
     public JFrame getFrame() {
         return this.window;
     }
 
-    /*
-    * getTitle() String
-    *
-    * Returns the title of the window
-    */
+    /**
+     * Returns the title of the window
+     */
     public String getTitle() {
         return title;
     }
 
     public static void closeAll() {
         windows.forEach(window -> {
-            window.getFrame().setVisible(false); //you can't see me!
-            window.getFrame().dispose(); //Destroy the JFrame object
+            window.getFrame().setVisible(false); // you can't see me!
+            window.getFrame().dispose(); // destroy the JFrame object
         });
     }
 }

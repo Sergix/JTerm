@@ -6,6 +6,7 @@ import jterm.command.CommandException;
 import java.io.IOException;
 
 public class HeadlessPrinter implements Printer {
+
     private static final String ANSI_CLS = "\u001b[2J";
     private static final String ANSI_HOME = "\u001b[H";
 

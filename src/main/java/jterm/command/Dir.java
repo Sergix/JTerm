@@ -1,20 +1,20 @@
 /*
-* JTerm - a cross-platform terminal
-* Copyright (C) 2017 Sergix, NCSGeek
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * JTerm - a cross-platform terminal
+ * Copyright (C) 2017 Sergix, NCSGeek
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package jterm.command;
 
@@ -26,7 +26,11 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class Dir {
@@ -45,9 +49,7 @@ public class Dir {
     @Command(name = "ls", syntax = "ls [-f] [-h] [directory]")
     public static void ls(List<String> options) {
         File[] files = new File(JTerm.currentDirectory).listFiles();
-        if (files == null) {
-            return;
-        }
+        if (files == null) return;
 
         JTerm.out.println(TextColor.INFO, "[Contents of \"" + JTerm.currentDirectory + "\"]");
 
@@ -58,9 +60,8 @@ public class Dir {
     @Command(name = {"cd", "chdir"}, minOptions = 1, syntax = "cd [-h] directory")
     public static void cd(List<String> options) {
         String newDirectory = Util.getAsString(options).trim();
-        if (newDirectory.startsWith("\"") && newDirectory.endsWith("\"")) {
+        if (newDirectory.startsWith("\"") && newDirectory.endsWith("\""))
             newDirectory = newDirectory.substring(1, newDirectory.length() - 1);
-        }
 
         if (newDirectory.equals("")) {
             JTerm.out.println(TextColor.ERROR, "Path not specified. Type \"cd -h\" for more information.");
@@ -77,19 +78,15 @@ public class Dir {
             isAbsoluteDirectory = true;
         } else if (JTerm.IS_WIN) {
             // Window paths are all relative unless they start with the drive string or a backslash
-            if (newDirectory.matches("((?i)(?s)[A-Z]):.*") || newDirectory.charAt(0) == '\\' || newDirectory.charAt(0) == '/') {
-                isAbsoluteDirectory = true;
-            } else {
-                isAbsoluteDirectory = false;
-            }
+            isAbsoluteDirectory = newDirectory.matches(
+                    "((?i)(?s)[A-Z]):.*") || newDirectory.charAt(0) == '\\' || newDirectory.charAt(0) == '/';
         } else {
             isAbsoluteDirectory = false;
         }
 
-        String subdirectories[];
-        if (!isAbsoluteDirectory) {
+        String[] subdirectories;
+        if (!isAbsoluteDirectory)
             newDirectory = JTerm.currentDirectory + "/" + newDirectory;
-        }
 
         // Store each subdirectory into an array by splitting them based on forward or backslashes
         // In the case of Windows, the forward slashes are replaced by backslashes
@@ -105,13 +102,11 @@ public class Dir {
 
         // For each subdirectory in the array, we build the new directory
         Deque<String> directoriesDeque = new LinkedList<>();
-        for (int i = 0; i < subdirectories.length; i++) {
-            if (subdirectories[i].equals(".") || subdirectories[i].trim().equals("")) {
-                continue;
-            } else if (subdirectories[i].equals("..")) {
+        for (String subdirectory : subdirectories) {
+            if (subdirectory.equals(".") || subdirectory.trim().equals("")) {
+            } else if (subdirectory.equals("..")) {
                 // Check if the drive name is the only directory left and avoid erasing it
                 if (directoriesDeque.size() == 1 && directoriesDeque.peek().equals(windowsRootLocation)) {
-                    continue;
                 }
                 // If ".." is in the directory path, remove the last directory
                 // added to the deque to "move up" the directory tree
@@ -119,33 +114,29 @@ public class Dir {
                     directoriesDeque.removeLast();
                 }
             } else {
-                directoriesDeque.add(subdirectories[i]);
+                directoriesDeque.add(subdirectory);
             }
         }
 
         StringBuilder sb = new StringBuilder();
 
-        if (JTerm.IS_WIN && newDirectory.charAt(0) == '\\') {
+        if (JTerm.IS_WIN && newDirectory.charAt(0) == '\\')
             sb.append(windowsRootLocation);
-        } else if (JTerm.IS_UNIX) {
+        else if (JTerm.IS_UNIX)
             sb.append("/");
-        }
 
         // Reconstruct the path string
         while (!directoriesDeque.isEmpty()) {
             sb.append(directoriesDeque.pop());
-            if (JTerm.IS_WIN) {
-                sb.append("\\");
-            } else {
-                sb.append("/");
-            }
+            if (JTerm.IS_WIN) sb.append("\\");
+            else sb.append("/");
         }
 
         newDirectory = sb.toString();
 
         if ((!dir.exists() || !dir.isDirectory()) && (!newDir.exists() || !newDir.isDirectory())) {
-            JTerm.out.println(TextColor.ERROR, "ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
-
+            JTerm.out.println(TextColor.ERROR,
+                    "ERROR: Directory \"" + newDirectory + "\" either does not exist or is not a valid directory.");
             return;
         }
 
@@ -174,16 +165,11 @@ public class Dir {
         List<String> filesToBeRemoved = new ArrayList<>();
         boolean recursivelyDeleteFlag = false;
 
-        for (String option : options) {
-            switch (option) {
-                case "-r":
-                    recursivelyDeleteFlag = true;
-                    break;
-                default:
-                    filesToBeRemoved.add(option);
-                    break;
-            }
-        }
+        for (String option : options)
+            if ("-r".equals(option))
+                recursivelyDeleteFlag = true;
+            else
+                filesToBeRemoved.add(option);
 
         boolean finalRecursivelyDeleteFlag = recursivelyDeleteFlag;
         filesToBeRemoved.forEach(fileName -> {

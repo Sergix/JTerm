@@ -8,8 +8,9 @@ import java.lang.reflect.Method;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class InputHandlerTest {
+
     @Test
-    void testDissassembleCommand1e() {
+    void testDisassembleCommand1e() {
         //Testing single command, cursor at the very end
         InputHandler.setCursorPos(5);
         //                                                             cursor:    v
@@ -17,7 +18,7 @@ class InputHandlerTest {
     }
 
     @Test
-    void testDissassembleCommand1t() {
+    void testDisassembleCommand1t() {
         //Testing single command, cursor in the autocomplete target
         InputHandler.setCursorPos(4);
         //                                                            cursor:    v
@@ -25,7 +26,7 @@ class InputHandlerTest {
     }
 
     @Test
-    void testDissassembleCommand2e() {
+    void testDisassembleCommand2e() {
         //Testing two commands, cursor at the very end
         InputHandler.setCursorPos(14);
         //                                                                               cursor:    v
@@ -33,7 +34,7 @@ class InputHandlerTest {
     }
 
     @Test
-    void testDissassembleCommand2t() {
+    void testDisassembleCommand2t() {
         //Testing two commands, cursor in the autocomplete target
         InputHandler.setCursorPos(13);
         //                                                                              cursor:    v
@@ -41,7 +42,7 @@ class InputHandlerTest {
     }
 
     @Test
-    void testDissassembleCommand3e() {
+    void testDisassembleCommand3e() {
         //Testing three commands, cursor at the very end
         InputHandler.setCursorPos(26);
         //                                                                                                       cursor:    v
@@ -49,7 +50,7 @@ class InputHandlerTest {
     }
 
     @Test
-    void testDissassembleCommand3t() {
+    void testDisassembleCommand3t() {
         //Testing three commands, cursor in the autocomplete target
         InputHandler.setCursorPos(25);
         //                                                                                                      cursor:    v
@@ -57,7 +58,7 @@ class InputHandlerTest {
     }
 
     @Test
-    void testDissassembleCommand3m() {
+    void testDisassembleCommand3m() {
         //Testing three commands, cursor in the middle command and in the autocomplete target
         InputHandler.setCursorPos(13);
         //                                                                                        cursor:    v
