@@ -72,11 +72,6 @@ public class Window {
         StringBuilder titleBuilder = new StringBuilder();
         for (String option : options) {
             switch (option){
-                case "-h":
-                    JTerm.out.println(TextColor.INFO, "Command syntax:\t\nwindow [-h] [-r] [-v] [-w width] [-l height] [-t title]"
-                            + "\n\nCreates a new programmable GUI window."
-                            + "\nDefault title is \"JTerm Window\", and the default width and height of the window is 500 x 500.");
-                    return;
                 case "-v":
                     visible = true;
                     break;

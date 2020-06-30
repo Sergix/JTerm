@@ -50,7 +50,7 @@ public class InputHandler {
         if (key != Keys.TAB)
             resetVars = true;
 
-        JTerm.out.printf(TextColor.INFO, "TEST LINE (C_INPUT): %c", c);
+        //JTerm.out.printf(TextColor.INFO, "TEST LINE (C_INPUT): %c", c);
         key.executeAction();
     }
 
@@ -117,6 +117,7 @@ public class InputHandler {
     static void tabEvent() {
         lastArrowPress = Keys.NONE;
         fileAutocomplete();
+        commandAutocomplete();
         setResetVars(false);
     }
 
